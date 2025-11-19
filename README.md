@@ -49,7 +49,31 @@ Nuestra plataforma web requiere registro e inicio de sesión para acceder a la p
 En el Home, las actividades se generan dinámicamente, ya que cada una es una instancia de una clase, permitiendo añadirlas en tiempo real, en un futuro se seguira implementando de esa manera.
 
 La web también incluye una sección "Cómo funciona" (para roles de Organizador y Participante) y guarda la preferencia del tema (claro/oscuro) en localStorage para mantener la elección del usuario.
-    
+
+## 📋 Guía de Commits
+
+Para mantener un historial limpio y comprensible, utilizamos la siguiente convención para los mensajes de commit:
+
+`tipo(alcance): descripción corta`
+
+### Tipos de Commit
+
+| Tipo | Descripción / Uso | Emoji (Opcional) |
+| :--- | :--- | :---: |
+| **`feat`** | **Nueva funcionalidad**. Una nueva característica para el usuario. | ✨ |
+| **`fix`** | **Corrección de errores**. Solución a un bug. | 🐛 |
+| **`docs`** | **Documentación**. Cambios en el README, comentarios, etc. | 📝 |
+| **`style`** | **Estilo**. Formato en general, CSS. | 💄 |
+| **`refactor`** | **Refactorización**. Cambios de código que no añaden features ni arreglan bugs. | ♻️ |
+| **`test`** | **Tests**. Añadir o corregir pruebas unitarias/integración. | ✅ |
+| **`chore`** | **Mantenimiento**. Actualización de tareas de build, paquetes, configs. | 🔧 |
+| **`del`** | **Eliminación**. Borrado de código o archivos obsoletos. | 🔥 |
+
+### Ejemplos
+
+* `feat(auth): implementar login con Google`
+* `fix(api): corregir error 500 en endpoint de usuarios`
+* `del(assets): eliminar imágenes no utilizadas`
     
 ## Imagenes
 **https://imgur.com/gallery/imagenes-grupo-5-v1-3-92sLKTH**
