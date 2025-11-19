@@ -1,0 +1,16 @@
+/* Enlace "¿Olvidaste tu contraseña?" */
+.forgot-password {
+    display: block;
+    text-align: left;
+    color: var(--brand-primary);
+    font-size: 14px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 5px;
+    margin-bottom: 25px;
+    transition: color 0.2s;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}

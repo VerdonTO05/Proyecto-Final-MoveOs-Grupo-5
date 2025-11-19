@@ -1,0 +1,71 @@
+/* Contenedor en fila con ancho completo */
+.user-type-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    width: 100%;
+    margin: 10px 0 20px;
+}
+
+/* Cada opción ocupa el 50% */
+.user-type-group .option {
+    flex: 1;
+}
+
+/* Ocultar radios */
+.user-type-group input[type="radio"] {
+    display: none;
+}
+
+/* Tarjetas */
+.user-type-card {
+    display: block;
+    width: 83%;
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 25px 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+}
+
+/* Icono FontAwesome */
+.user-type-card .icon {
+    font-size: 26px;
+    margin-bottom: 10px;
+    color: var(--text-secondary);
+}
+
+/* Título */
+.user-type-card h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--text-primary);
+}
+
+/* Subtexto */
+.user-type-card p {
+    font-size: 13px;
+    margin-top: 5px;
+    color: var(--text-secondary);
+}
+
+/* Hover */
+.user-type-card:hover {
+    border-color: var(--brand-primary);
+}
+
+/* Estado seleccionado */
+.user-type-group input[type="radio"]:checked + .user-type-card {
+    background-color: var(--bg-surface);
+    border-color: var(--brand-primary);
+    box-shadow: 0 6px 25px rgba(0,0,0,0.12);
+}
+
+/* Icono seleccionado */
+.user-type-group input[type="radio"]:checked + .user-type-card .icon {
+    color: var(--brand-primary);
+}

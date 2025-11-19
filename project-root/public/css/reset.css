@@ -1,0 +1,37 @@
+/* * {  box-sizing: border-box;  margin: 0;  padding: 0; } */
+
+/* reset.css — paso 1: márgenes y rellenos básicos */
+html, body, h1, h2, h3, p, ul, li, figure, figcaption {
+  margin: 0;
+  padding: 0;
+}
+
+/* reset.css — paso 2: listas y enlaces */
+ul, ol {
+  list-style: none; /* elimina viñetas y números */
+}
+
+a {
+  text-decoration: none; /* quita el subrayado */
+  color: inherit;        /* hereda el color del texto padre */
+}
+
+
+/* reset.css — paso 3: imágenes y multimedia */
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+
+
+/* reset.css — paso 4: formularios coherentes */
+input, button, textarea, select {
+  font: inherit;   /* heredan la tipografía del body */
+  margin: 0;       /* eliminamos márgenes por defecto */
+}
+
+button {
+  background: none; /* eliminamos el fondo nativo */
+  border: none;     /* quitamos el borde automático */
+}
+
