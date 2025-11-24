@@ -11,12 +11,16 @@
   --accent-green: #2ecc71;
   --accent-purple: #9b59b6;
   --border-color: #e0e0e0;
-  --accent-blue: #3498db;
-  --accent-orange: #e67e22;
+  --accent-blue: #83b5d5;
+  --accent-orange: #e0a572;
   --pending: #fff8e6;
+  --pending-border:#dda444;
   --approved: #e8f8eb;
+  --approved-border:#6ac788;
   --rejected: #fdeaea;
+  --rejected-border:#e7030e;
   --total: #f3e8f7;
+  --total-border:#713a41;
 }
 
 /* Dark mode */
@@ -32,11 +36,16 @@
   --accent-green: #27ae60;
   --accent-purple: #8e44ad;
   --border-color: #382527;
-  --accent-blue: #2980b9;
-  --accent-orange: #d35400;
-  --pending: #e7c278;
-  --approved: #66df76;
-  --rejected: #e46464;
-  --total: #b853e0;
+  --accent-blue: #3b85b7;
+  --accent-orange: #cd6c2c;
+  --pending: #503b22;
+  --pending-border:#f8c300;
+  --approved: #36422a;
+  --approved-border:#c4fd92;
+  --rejected: #4b2629;
+  --rejected-border:#f06668;
+  --total: #462f32;
+  --total-border:#c47c80;
+
 }
 

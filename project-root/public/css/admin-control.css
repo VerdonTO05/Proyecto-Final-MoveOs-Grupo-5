@@ -1,3 +1,6 @@
+body{
+    background-color: var(--bg-surface);
+}
 .user-profile .user-initials {
     background: var(--accent-purple);
     color: var(--text-on-primary);
@@ -42,37 +45,72 @@
     background: var(--bg-surface);
     color: var(--text-primary);
     border: 1px solid var(--border-color);
-    border-radius: 12px;
+    border-radius: 16px;
     padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    position: relative;
 }
 
 .stat-card h2 {
-    font-size: 1.1rem;
-    color: var(--brand-dark);
-    margin-bottom: 10px;
+    font-size: 1.3rem;
+    margin-bottom: 8px;
+}
+
+.stat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.stat-header h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.stat-header i {
+    font-size: 1.25rem;
+    opacity: 0.9;
 }
 
 .stat-number {
     font-size: 2rem;
     font-weight: 700;
-    margin-bottom: 8px;
+    margin-top: 5px;
+    margin-bottom: 6px;
     display: block;
 }
 
 .pending {
     background: var(--pending);
+    border-color: var(--pending-border);
+}
+.pending i {
+    color: var(--pending-border);
 }
 
 .approved {
     background: var(--approved);
+    border-color: var(--approved-border);
+}
+.approved i {
+    color: var(--approved-border);
 }
 
 .rejected {
     background: var(--rejected);
+    border-color: var(--rejected-border);
+}
+.rejected i {
+    color: var(--rejected-border);
 }
 
 .total {
     background: var(--total);
+    border-color: var(--total-border);
+}
+.total i {
+    color: var(--total-border);
 }
 
 /* --------------------------------------------------
@@ -123,9 +161,9 @@
 .activity-card {
     display: grid;
     grid-template-columns: 250px auto;
-    background: var(--bg-surface);
+    background-color: var(--bg-main) ;
     border-radius: 16px;
-    padding: 15px;
+    padding: 3%;
     border: 1px solid var(--border-color);
     gap: 20px;
 }
@@ -151,30 +189,22 @@
 }
 
 .tag {
-    background: #e6edff;
-    color: #3252ad;
+    background: var(--accent-blue);
+    color: var(--bg-muted);
     padding: 3px 8px;
     border-radius: 6px;
     font-size: 0.8rem;
 }
 
 .status-pending {
-    background: #fff3d2;
-    color: #ad8a2e;
+    background: var(--accent-orange);
+    color: var(--bg-muted);
 }
 
 /* Títulos y texto */
 .activity-title {
     font-size: 1.3rem;
     color: var(--brand-dark);
-}
-
-.activity-description {
-    color: var(--text-secondary);
-}
-
-.activity-organizer {
-    color: #6f4f4f;
 }
 
 /* Info inferior */
@@ -189,7 +219,6 @@
 
 .price {
     font-weight: 700;
-    color: var(--brand-dark);
 }
 
 /* Botones */
@@ -207,12 +236,71 @@
     font-size: 0.9rem;
 }
 
+/*Cambiar color botones*/
 .btn-success {
-    background: var(--accent-green);
+    background: var(--approved);
     color: var(--text-on-primary);
 }
 
 .btn-danger {
-    background: #cc4252;
+    background: var(--rejected);
     color: var(--text-on-primary);
+}
+
+
+/* -------------------------------------------
+   RESPONSIVE PARA TABLETS Y MÓVILES (<= 768px)
+------------------------------------------- */
+@media (max-width: 768px) {
+
+    .stats-grid {
+        margin: 20px;
+        grid-template-columns: 1fr; /* Una tarjeta por fila */
+        gap: 15px;
+    }
+
+    .admin-tabs {
+        margin: 15px 20px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .activities-list {
+        margin: 20px;
+        gap: 20px;
+    }
+
+    .activity-card {
+        grid-template-columns: 1fr; /* Imagen arriba, contenido abajo */
+        padding: 20px;
+    }
+
+    .activity-image img {
+        height: 180px;
+        width: 100%;
+    }
+
+    .activity-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+/* -------------------------------------------
+   RESPONSIVE PARA MÓVILES PEQUEÑOS (<= 480px)
+------------------------------------------- */
+@media (max-width: 480px) {
+
+    .panel-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .activity-title {
+        font-size: 1.1rem;
+    }
+
+    .btn, .btn-primary {
+        width: 100%; /* Botones más fáciles de presionar */
+        text-align: center;
+    }
 }

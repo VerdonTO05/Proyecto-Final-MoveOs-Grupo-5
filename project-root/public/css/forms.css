@@ -206,16 +206,89 @@ input:-webkit-autofill:active {
 
 
 
-/* Responsive para pantallas pequeñas */
-@media (max-width: 480px) {
+/* =============================
+   RESPONSIVE TABLET (<=768px)
+============================= */
+@media (max-width: 768px) {
+
     .container {
-        max-width: 90%;
-        transform: scale(1);
-        padding: 25px 18px;  
+        padding: 35px 28px;
+        max-width: 420px;
     }
 
-    .user-type-group {
-        flex-direction: column;
+    .header h1 {
+        font-size: 22px;
+    }
+
+    .header p {
+        font-size: 15px;
+    }
+
+    .tab-btn {
+        font-size: 16px;
+        padding: 10px 14px;
+    }
+
+    .input-group input {
+        font-size: 16px;
+    }
+
+    .submit-btn {
+        padding: 15px;
+        font-size: 17px;
+    }
+}
+
+/* =============================
+   RESPONSIVE MÓVIL PEQUEÑO (<=480px)
+============================= */
+@media (max-width: 480px) {
+
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 25px 20px;
+        max-width: 100%;
+    }
+
+    .close-btn {
+        font-size: 20px;
+        top: 10px;
+        right: 10px;
+    }
+
+    .header h1 {
+        font-size: 20px;
+    }
+
+    .header p {
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+    .tab-switch {
+        padding: 3px;
+    }
+
+    .tab-btn {
+        font-size: 15px;
+        padding: 9px 10px;
+    }
+
+    .input-group {
+        padding: 6px 4px;
+    }
+
+    .input-group input {
+        font-size: 15px;
+        padding: 10px 8px;
+    }
+
+    .submit-btn {
+        padding: 14px;
+        font-size: 16px;
     }
 }
 
