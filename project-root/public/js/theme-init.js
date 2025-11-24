@@ -8,3 +8,8 @@
     html.classList.add(darkModeEnabled ? 'dark-mode' : 'light-mode');
   } catch (e) {}
 })();
+
+
+/*La estructura de esta función es así debido a que es una IIFE (Immediately Invoked Function Expression), es decir, 
+una función auto-ejecutada. Se usa en muchos scripts, especialmente cuando se necesita ejecutar algo inmediatamente al cargar,
+antes de que la página renderice.*/
