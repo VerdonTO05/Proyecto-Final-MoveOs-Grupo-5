@@ -69,3 +69,4 @@
 .user-type-group input[type="radio"]:checked + .user-type-card .icon {
     color: var(--brand-primary);
 }
+

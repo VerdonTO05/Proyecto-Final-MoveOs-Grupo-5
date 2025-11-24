@@ -188,6 +188,24 @@ input:-webkit-autofill:active {
     transition: background-color 0.3s;
 }
 
+/* Visualización icono para ver contraseña */
+.input-group {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+
+
 /* Responsive para pantallas pequeñas */
 @media (max-width: 480px) {
     .container {
