@@ -12,7 +12,7 @@
   --accent-purple: #9b59b6;
   --border-color: #e0e0e0;
   --accent-blue: #83b5d5;
-  --accent-orange: #e0a572;
+  --accent-orange: #e0a572; /*Usar color de los border*/
   --pending: #fff8e6;
   --pending-border:#dda444;
   --approved: #e8f8eb;
@@ -21,6 +21,9 @@
   --rejected-border:#e7030e;
   --total: #f3e8f7;
   --total-border:#713a41;
+
+  --btn-approved:#38cc44;
+  --btn-denied: #e4333b;
 }
 
 /* Dark mode */

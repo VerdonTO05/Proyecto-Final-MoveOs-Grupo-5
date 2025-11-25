@@ -23,7 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 li.innerHTML = `
                     <strong>Usuario:</strong> ${usuario.username} <br>
                     <strong>Nombre:</strong> ${usuario.fullname} <br>
-                    <strong>Email:</strong> ${usuario.email}
+                    <strong>Email:</strong> ${usuario.email} <br>
+                    <strong>Rol:</strong> ${usuario.rol}
                     
                 `;
                 

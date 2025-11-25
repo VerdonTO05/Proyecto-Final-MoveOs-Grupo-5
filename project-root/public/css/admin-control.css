@@ -238,12 +238,12 @@ body{
 
 /*Cambiar color botones*/
 .btn-success {
-    background: var(--approved);
+    background: var(--btn-approved);
     color: var(--text-on-primary);
 }
 
 .btn-danger {
-    background: var(--rejected);
+    background: var(--btn-denied);
     color: var(--text-on-primary);
 }
 

@@ -1,12 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
   const registerForm = document.querySelector(".register-form");
 
-    const closeBtn = document.querySelector('.close-btn');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', () => {
-            window.location.href = 'landing.html'; 
-        });
-    }
+  const closeBtn = document.querySelector('.close-btn');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      window.location.href = 'landing.html';
+    });
+  }
 
   if (registerForm) {
     // --- FUNCIONES DE VALIDACIÓN ---
@@ -47,6 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const username = document.getElementById("username").value.trim();
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value; // No se suele hacer trim a la contraseña
+      const rol = document.querySelector('input[name="type"]:checked')?.value || null;
 
       // 2. Ejecutar Validaciones
       // Si alguna falla, muestra alerta y detiene la ejecución con 'return'
@@ -76,6 +77,11 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      if (!rol) {
+        alert("Debes seleccionar un rol.");
+        return;
+      }
+
       // --- Si TODAS las validaciones pasan ---
 
       // 4. Crear el objeto usuario
@@ -83,7 +89,8 @@ document.addEventListener("DOMContentLoaded", () => {
         fullname,
         username,
         email,
-        password, // En una app real, esto debería ir cifrado
+        password,  // En una app real, esto debería ir cifrado
+        rol,
       };
 
       // 5. Guardar en localStorage
