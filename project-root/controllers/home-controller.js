@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-
   document.getElementById("btn_users").addEventListener("click", function () {
     window.location.href = "users.html";
   });
@@ -19,7 +18,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const li = document.createElement('li');
     const a = document.createElement('a');
     a.href = 'home.html';
-    a.textContent = 'Explorar Actividades';
+
+    if (currentUser.rol == 'participante') {
+      a.textContent = 'Explorar Actividades';
+    } else {
+      a.textContent = 'Explorar Peticiones';
+    }
 
     li.appendChild(a);
     ul.appendChild(li);
