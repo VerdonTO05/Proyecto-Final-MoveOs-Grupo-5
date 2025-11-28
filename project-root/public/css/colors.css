@@ -12,7 +12,7 @@
   --accent-purple: #9b59b6;
   --border-color: #e0e0e0;
   --accent-blue: #83b5d5;
-  --accent-orange: #e0a572; /*Usar color de los border*/
+  --accent-pending: #e0a572; 
   --pending: #fff8e6;
   --pending-border:#dda444;
   --approved: #e8f8eb;
@@ -40,7 +40,7 @@
   --accent-purple: #8e44ad;
   --border-color: #382527;
   --accent-blue: #3b85b7;
-  --accent-orange: #cd6c2c;
+  --accent-pending: #cd6c2c;
   --pending: #503b22;
   --pending-border:#f8c300;
   --approved: #36422a;

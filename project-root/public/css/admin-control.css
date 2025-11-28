@@ -196,8 +196,9 @@ body{
     font-size: 0.8rem;
 }
 
+/* TODO: Crear tamb para aceptada y rechazadas*/
 .status-pending {
-    background: var(--accent-orange);
+    background: var(--accent-pending);
     color: var(--bg-muted);
 }
 
