@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-
+    
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,7 +16,8 @@
     <script src="../../public/assets/js/theme-init.js"></script>
     <script src="../../public/assets/js/main.js"></script>
 
-    <script src="../controllers/login-controller.js"></script>
+    <!-- <script src="../controllers/login-controller.js"></script> -->
+    <?php include "../controllers/login.php"  ?>
 </head>
 
 <body>
@@ -59,9 +60,9 @@
 
             <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
 
-            <button type="submit" class="submit-btn">
-                Iniciar Sesión
-            </button>
+            <input type="submit" class="submit-btn" name="login" value="Iniciar Sesión">
+                
+            
 
         </form>
     </div>

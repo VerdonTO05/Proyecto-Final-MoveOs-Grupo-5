@@ -14,9 +14,10 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-    <script src="../controllers/register-controller.js"></script>
-    <script src="../models/validation.js"></script>
+    <!-- <script src="../controllers/register-controller.js"></script> -->
+    <!-- <script src="../models/validation.js"></script> -->
     <script src="../models/user-model.js"></script>
+    <?php include "../controllers/register.php" ?>
 </head>
 
 <body>
@@ -79,7 +80,7 @@
                 </div>
 
                 <div class="option">
-                    <input type="radio" id="organizador" name="type" value="ofertante">
+                    <input type="radio" id="organizador" name="type" value="organizador">
                     <label for="organizador" class="user-type-card">
                         <i class="fas fa-user-cog icon"></i>
                         <h3>Organizador</h3>
@@ -88,9 +89,7 @@
                 </div>
             </div>
 
-            <button type="submit" class="submit-btn">
-                Registrarse
-            </button>
+            <input type="submit" class="submit-btn" name="registrarse" value="Registrarse">
 
         </form>
     </div>

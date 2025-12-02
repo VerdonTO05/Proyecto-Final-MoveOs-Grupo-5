@@ -10,21 +10,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const li = document.createElement('li');
         const a = document.createElement('a');
-        a.href = '../views/home.php';
+        a.href = '../../../../app/views/home.php';
         a.textContent = 'Explorar Actividades';
 
         li.appendChild(a);
         ul.appendChild(li);
 
         const aExplore = document.getElementById("a-explore");     
-        aExplore.href = '../views/home.php';
+        aExplore.href = '../../../../app/views/home.php';
     }
 
     // Si `pulsa el boton de Explorar actividades muestra aletar y lo redirige al formulario de login
     buttonExplore.addEventListener("click",()=>{
         if(!currentUser){
             alert("Debes iniciar sesión o registrarte para explorar actividades");
-            window.location.href="../views/login.php";
+            window.location.href="../../../../app/views/login.php";
         }
     });
 
