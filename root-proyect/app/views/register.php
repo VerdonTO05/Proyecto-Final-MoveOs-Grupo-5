@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrarse - MOVEos</title>
+
+    <script src="../../public/assets/js/theme-init.js"></script>
+    <script src="../../public/assets/js/main.js"></script>
+    <link rel="stylesheet" href="../../public/assets/css/forms.css">
+    <link rel="stylesheet" href="../../public/assets/css/register.css">
+    <link rel="icon" type="image/ico" href="root-proyect\public\assets\img\ico\icono.png" id="icon.ico">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <script src="../controllers/register-controller.js"></script>
+    <script src="../models/validation.js"></script>
+    <script src="../models/user-model.js"></script>
+</head>
+
+<body>
+    <!-- Switch del tema -->
+    <div class="icons">
+        <label class="switch">
+            <input type="checkbox" id="theme-toggle">
+            <span class="slider"></span>
+        </label>
+    </div>
+    <!-- Contenedor principal -->
+    <div class="container">
+        <button class="close-btn">&times;</button>
+
+        <header class="header">
+            <h1>BIENVENIDO a MOVEos</h1>
+            <p>Crea una cuenta para comenzar tu aventura</p>
+        </header>
+
+        <div class="tab-switch">
+            <a href="login.php">
+                <button class="tab-btn">Iniciar sesión</button>
+            </a>
+            <button class="tab-btn active">Registrarse</button>
+        </div>
+        <!-- Formulario -->
+        <form id="register-form" method="POST" class="register-form">
+
+            <label for="fullname">Nombre Completo *</label>
+            <div class="input-group">
+                <i class="fas fa-user icon"></i>
+                <input type="text" id="fullname" name="fullname" placeholder="Juan Pérez García" required>
+            </div>
+
+            <label for="username">Nombre de Usuario *</label>
+            <div class="input-group">
+                <i class="fas fa-user icon"></i>
+                <input type="text" id="username" name="username" placeholder="juanperez" required>
+            </div>
+
+            <label for="email">Correo Electrónico *</label>
+            <div class="input-group">
+                <i class="fas fa-envelope icon"></i>
+                <input type="email" id="email" name="email" placeholder="juan@email.com" required>
+            </div>
+
+            <label for="password">Contraseña *</label>
+            <div class="input-group">
+                <input type="password" id="password" name="password" placeholder="••••••••" required>
+            </div>
+
+            <div class="user-type-group">
+                <div class="option">
+                    <input type="radio" id="participante" name="type" value="participante" required>
+                    <label for="participante" class="user-type-card">
+                        <i class="fas fa-users icon"></i>
+                        <h3>Participante</h3>
+                        <p>Buscar e inscribirse en actividades</p>
+                    </label>
+                </div>
+
+                <div class="option">
+                    <input type="radio" id="organizador" name="type" value="ofertante">
+                    <label for="organizador" class="user-type-card">
+                        <i class="fas fa-user-cog icon"></i>
+                        <h3>Organizador</h3>
+                        <p>Publicar y gestionar actividades</p>
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                Registrarse
+            </button>
+
+        </form>
+    </div>
+</body>
+
+</html>

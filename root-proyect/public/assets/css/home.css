@@ -1,0 +1,183 @@
+/*Importamos los css necesarios en el orden correcto, para evitar importar en el html varios*/
+@import url(reset.css);
+@import url(colors.css);
+@import url(base.css);
+@import url(theme.css);
+
+
+/* Filtros */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: stretch;
+  margin-bottom: 2rem;
+}
+
+.filters input[type="text"],
+.filters select,
+.filters .btn-filters {
+  flex: 1;
+  min-width: 250px;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  font-size: 1rem;
+  background-color: var(--bg-surface);
+  color: var(--text-color);
+  box-sizing: border-box;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filters select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.filters .btn-filters {
+  flex: 0 0 auto;
+  padding: 0.75rem 1.25rem;
+  font-weight: 500;
+}
+
+/* Actividades */
+.grid-activities {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+  justify-items: center;
+}
+
+/* Actividad */
+.activity {
+  background-color: var(--bg-surface);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  width: 450px;
+  max-width: 550px;
+  margin: 0 auto;
+}
+
+.activity:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* Imagenes actividades */
+.activity-image {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+
+.activity-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tag {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 0.3rem 0.8rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-on-primary);
+}
+
+.tag.destacado {
+  background-color: var(--accent-green);
+}
+
+.tag.nuevo {
+  background-color: var(--accent-purple);
+}
+
+/* Contenido actividad */
+.activity-content {
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background-color: var(--bg-main);
+}
+
+.activity-content h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.1rem;
+  font-weight: 600;
+}
+
+.activity-content p {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.details {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.3rem 0;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.details li {
+  margin-bottom: 0.25rem;
+}
+
+/* Elementos actividad */
+.price {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--brand-dark);
+  margin-top: auto;
+  margin-bottom: 1rem;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-detail,
+.btn-signup {
+  flex: 1;
+  border: none;
+  border-radius: 10px;
+  padding: 0.75rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.btn-signup {
+  background-color: var(--brand-primary);
+  color: var(--text-secondary);
+}
+
+/* Boton prueba ver usuarios */
+#btn_users {
+  background-color: var(--brand-primary);
+  color: var(--text-on-primary);
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  margin-left: 45.7%;
+  margin-bottom: 1rem;
+}
+
+
