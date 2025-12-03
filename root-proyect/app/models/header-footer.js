@@ -16,7 +16,7 @@ const headerHTML = `<header>
                 <input type="checkbox" id="theme-toggle">
                 <span class="slider"></span>
             </label>
-            <a href="login.html"><i class="fas fa-user"></i></a>
+            <a href="login.php"><i class="fas fa-user"></i></a>
         </div>
     </nav>
 </header>`;

@@ -44,9 +44,22 @@
       <section class="grid-activities" id="gridActivities"></section>
       </div>
     </section>
-    <div>
-      <button id="btn_users">Mostrar Usuarios</button>
-    </div>
+    <?php
+    session_start();
+    if (isset($_SESSION['rol']) and $_SESSION['rol'] === 'administrador') {
+
+      ?>
+
+      <div>
+        <button id="btn_users">Mostrar Usuarios</button>
+      </div>
+      <?php
+
+    }
+
+
+    ?>
+
   </main>
 
   <!-- Pie de página -->
