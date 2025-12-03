@@ -1,86 +1,122 @@
+# MOVE.os | Grupo 5 - 2º DAW
 
-# GRUPO_5_2DAW_DWEC_T030405_A01
+> Plataforma web integral para la gestión, publicación y participación en actividades, talleres y eventos formativos, fomentando el dinamismo y la comunidad local.
 
-> Mini proyecto para la asignatura DWEC (Desarrollo Web en Entorno Cliente) que implementa la estructura de un proyecto siguiendo el patrón Modelo-Vista-Controlador (MVC).
+## 📖 Descripción del Proyecto
 
-## Descripción del Proyecto
+**MOVE.os** (del inglés *move*: mover, cambiar, actuar) es un proyecto desarrollado por el Grupo 5 del curso de **Desarrollo de Aplicaciones Web**. 
 
-Este repositorio contiene un proyecto desarrollado como parte de la asignatura DWEC. El objetivo principal es aplicar y comprender la arquitectura de software **Modelo-Vista-Controlador (MVC)** en un entorno de desarrollo web front-end, utilizando tecnologías web estándar. 
+El objetivo principal es centralizar la oferta y demanda de actividades de ocio y formación. La plataforma soluciona la dispersión existente en la gestión de eventos, permitiendo a los **organizadores** publicar sus propuestas y a los **participantes** inscribirse de forma sencilla. Todo ello bajo un entorno moderado por **administradores** para garantizar la seguridad y calidad del contenido.
 
 ## 🚀 Tecnologías Utilizadas
 
-Este proyecto está construido con tecnologías front-end:
+Este proyecto combina tecnologías de Front-end y Back-end para crear una aplicación dinámica completa:
 
-* **HTML:** Para la estructura y el contenido semántico de la aplicación.
-* **CSS:** Para el diseño, la presentación y los estilos visuales.
-* **JavaScript (ES6+):** Para la lógica de la aplicación, la manipulación del DOM y la implementación del patrón MVC.
-* Tambien en JavaScript implementaremos funcionalidades como, guardar los usuarios registrados en el LocalStorage y arrays para la persistencia de datos.
-* Con LocalStorage tambien almacenamos el modo de vista de la página (Claro u oscuro).
+### Frontend
+* **HTML5:** Estructuración semántica del contenido.
+* **CSS3:** Diseño responsivo, estilos visuales y maquetación.
+* **JavaScript (ES6+):** Interactividad del lado del cliente y manipulación del DOM.
 
-## 📂 Estructura del Proyecto
+### Backend & Persistencia
+* **PHP:** Lógica del servidor, procesamiento de formularios y gestión de sesiones.
+* **MySQL:** Base de datos relacional para gestionar usuarios, roles, actividades e inscripciones.
+* **Apache (XAMPP):** Servidor web para el despliegue local.
 
-El código fuente sigue una organización basada en el patrón Modelo-Vista-Controlador:
+### Herramientas de Desarrollo
+* **Figma:** Prototipado y diseño de interfaces (Mockups).
+* **Jira:** Gestión ágil de tareas y sprints.
+* **Git/GitHub:** Control de versiones.
 
-* **Modelo (Model):** Contiene la lógica de negocio y los datos de la aplicación. Se encarga de gestionar el estado.
-* **Vista (View):** Es la capa de presentación. Se encarga de renderizar la interfaz de usuario (UI) y mostrar los datos del modelo.
-* **Controlador (Controller):** Actúa como intermediario entre el Modelo y la Vista. Maneja las interacciones del usuario, actualiza el modelo y, a su vez, hace que la vista se actualice.
+## 📂 Estructura y Arquitectura
 
-La carpeta principal del código fuente es `project-root/`.
+El proyecto sigue una arquitectura organizada para separar la lógica de negocio de la interfaz:
 
-## 🔧 Instalación y Uso
+* **Assets/Public:** Archivos estáticos (imágenes, hojas de estilo CSS, scripts JS).
+* **Core/Includes:** Fragmentos de código PHP reutilizables (cabeceras, pies de página, conexiones a BBDD).
+* **Views:** Archivos que renderizan las diferentes pantallas para el usuario (Login, Dashboard, Catálogo).
+* **Database:** Scripts SQL para la creación y población inicial de la base de datos.
 
-Dado que es un proyecto basado en HTML, CSS y JavaScript puros, no requiere un proceso de instalación complejo ni dependencias de servidor.
+## 🔧 Instalación y Despliegue
 
-1.  **Clona el repositorio** en tu máquina local:
+A diferencia de un proyecto estático, MOVE.os requiere un entorno de servidor (Stack LAMP/WAMP/XAMPP).
+
+1.  **Requisitos previos:**
+    * Tener instalado [XAMPP](https://www.apachefriends.org/es/index.html) (o similar con Apache y MySQL).
+
+2.  **Clonar el repositorio:**
+    Navega a la carpeta `htdocs` de tu instalación de XAMPP y clona el proyecto allí:
     ```bash
-    git clone [https://github.com/VerdonTO05/GRUPO_5_2DAW_DWEC_T030405_A01.git](https://github.com/VerdonTO05/GRUPO_5_2DAW_DWEC_T030405_A01.git)
+    cd C:/xampp/htdocs
+    git clone [https://github.com/VerdonTO05/MOVE.os.git](https://github.com/VerdonTO05/MOVE.os.git)
     ```
 
-2.  **Navega a la carpeta** del proyecto:
-    ```bash
-    cd GRUPO_5_2DAW_DWEC_T030405_A01
-    ```
-    Aquí tienes una representación visual de un repositorio siendo clonado y la navegación en la terminal: 
-3.  **Abre el archivo `landing.html` directamente en tu navegador web preferido (como Chrome, Firefox o Edge).
+3.  **Configurar la Base de Datos:**
+    * Abre **XAMPP Control Panel** e inicia los módulos **Apache** y **MySQL**.
+    * Ve a `http://localhost/phpmyadmin`.
+    * Crea una nueva base de datos llamada `move_os_db`.
+    * Importa el archivo `database.sql` ubicado en la carpeta `/sql` del proyecto.
 
-## Utilización ✍️
-Nuestra plataforma web requiere registro e inicio de sesión para acceder a la página principal (Home). Este acceso protegido se verifica usando una variable en sessionStorage.
+4.  **Ejecución:**
+    * Abre tu navegador y accede a:
+        `http://localhost/MOVE.os`
 
-En el Home, las actividades se generan dinámicamente, ya que cada una es una instancia de una clase, permitiendo añadirlas en tiempo real, en un futuro se seguira implementando de esa manera.
+## 💻 Utilización y Roles
 
-La web también incluye una sección "Cómo funciona" (para roles de Organizador y Participante) y guarda la preferencia del tema (claro/oscuro) en localStorage para mantener la elección del usuario.
+La plataforma gestiona diferentes niveles de acceso mediante roles de usuario. Para probar la aplicación, puedes usar los flujos de registro o las credenciales de administrador predeterminadas.
+
+### 1. Visitante (Sin registro)
+* Visualización del "Landing Page".
+* Acceso a tutoriales en la sección "Cómo funciona".
+* Exploración limitada de actividades públicas.
+
+### 2. Participante
+* Inscripción a talleres y eventos.
+* Visualización de historial de inscripciones.
+* Creación de **peticiones** (propuestas de actividades) para que los organizadores las vean.
+* Gestión de perfil propio.
+
+### 3. Organizador
+* Publicación de nuevas actividades (requieren validación).
+* Gestión de asistentes.
+* Visualización de peticiones de la comunidad para crear eventos a medida.
+
+### 4. Administrador
+* **Credenciales de prueba:** `User: admin` | `Pass: admin123`
+* Panel de control para **validar o rechazar** actividades y peticiones.
+* Moderación de usuarios y contenido.
 
 ## 📋 Guía de Commits
 
-Para mantener un historial limpio y comprensible, utilizamos la siguiente convención para los mensajes de commit:
+Para mantener un historial limpio en el desarrollo colaborativo, utilizamos la siguiente convención:
 
 `tipo(alcance): descripción corta`
 
-### Tipos de Commit
-
 | Tipo | Descripción / Uso | Emoji (Opcional) |
 | :--- | :--- | :---: |
-| **`feat`** | **Nueva funcionalidad**. Una nueva característica para el usuario. | ✨ |
-| **`fix`** | **Corrección de errores**. Solución a un bug. | 🐛 |
-| **`docs`** | **Documentación**. Cambios en el README, comentarios, etc. | 📝 |
-| **`style`** | **Estilo**. Formato en general, CSS. | 💄 |
-| **`refactor`** | **Refactorización**. Cambios de código que no añaden features ni arreglan bugs. | ♻️ |
-| **`test`** | **Tests**. Añadir o corregir pruebas unitarias/integración. | ✅ |
-| **`chore`** | **Mantenimiento**. Actualización de tareas de build, paquetes, configs. | 🔧 |
-| **`del`** | **Eliminación**. Borrado de código o archivos obsoletos. | 🔥 |
+| **`feat`** | **Nueva funcionalidad**. Añadir una característica (ej. Login, Filtros). | ✨ |
+| **`fix`** | **Corrección de errores**. Solución a un bug encontrado. | 🐛 |
+| **`docs`** | **Documentación**. Cambios en el README, manuales, etc. | 📝 |
+| **`style`** | **Estilo**. CSS, formato de código, indentación (sin cambios de lógica). | 💄 |
+| **`refactor`** | **Refactorización**. Mejoras de código PHP/JS sin cambiar funcionalidad. | ♻️ |
+| **`db`** | **Base de Datos**. Cambios en el esquema SQL o migraciones. | 🗄️ |
+| **`chore`** | **Mantenimiento**. Configuración de entorno, actualizaciones. | 🔧 |
 
-### Ejemplos
+**Ejemplos:**
+* `feat(auth): implementar sistema de login con roles`
+* `db(schema): añadir tabla de inscripciones`
+* `style(nav): corregir espaciado en barra de navegación móvil`
 
-* `feat(auth): implementar login con Google`
-* `fix(api): corregir error 500 en endpoint de usuarios`
-* `del(assets): eliminar imágenes no utilizadas`
-    
-## Imagenes
-**https://imgur.com/gallery/imagenes-grupo-5-v1-3-92sLKTH**
+## 🎨 Prototipo y Diseño
 
+El diseño de la interfaz de usuario (UI) y la experiencia de usuario (UX) han sido elaborados previamente en Figma para garantizar la usabilidad antes de la codificación.
 
-## 👥 Propietarios
+* **Ver Prototipo en Figma:** [MOVE.os Platform Development](https://www.figma.com/make/4lG0w2wX0BJ293Qo0oCtUj/MOVE.os-Platform-Development?node-id=0-1&t=ylrb2UJsruqVfndY-1) *(Enlace al prototipo interactivo)*
 
-* **[VerdonTO05](https://github.com/VerdonTO05)** (Propietario)
-* **[ireneosuna](https://github.com/ireneosuna)** (Propietario)
-* **[AleejandroMontesinos](https://github.com/AleejandroMontesinos)** (Propietario)
+## 👥 Autores - Grupo 5
+
+* **Manuel Verdón** - [GitHub](https://github.com/VerdonTO05)
+* **Irene Osuna** - [GitHub](https://github.com/ireneosuna)
+* **Alejandro Montesinos** - [GitHub](https://github.com/AleejandroMontesinos)
+
+---
+IES Isidro de Arcenegui y Carmona | Curso 2025/2026
