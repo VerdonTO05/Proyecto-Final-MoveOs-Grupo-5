@@ -8,7 +8,7 @@ const headerHTML = `<header>
             </a>
         </div>
         <ul id="list">
-            <li><a href="landing.html">Inicio</a></li>
+            <li><a href="landing.php">Inicio</a></li>
             <li id="how"><a href="#">Cómo Funciona</a></li>
         </ul>
         <div class="icons">

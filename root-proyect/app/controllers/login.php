@@ -1,46 +1,44 @@
+<?php
 
+session_start();
 
-    <?php 
+if (isset($_POST['login'])) {
+    if (!empty($_POST['username']) and !empty($_POST['password'])) {
 
-    session_start();
+        $username = $_POST['username'];
+        $pass = $_POST['password'];
 
-    if(isset($_POST['login'])){
-        if(!empty($_POST['username']) and !empty($_POST['password'])){
-            
-            $username = $_POST['username'];
-            $pass = $_POST['password'];
-            
-            try{
-                
-                $bd = new PDO('mysql:host=localhost;dbname=moveos;charset=utf8', 'root', '');
-                $login = $bd->prepare('SELECT * FROM users WHERE username = ?');
-                $login->execute([$username]);
+        try {
 
-                $datos = $login->fetch();
-                $pass_bd = $datos['password_hash'];
-                $password_verify = password_verify($pass,$pass_bd);
-                $role_id =  $datos['role_id'];
+            $bd = new PDO('mysql:host=localhost;dbname=moveos;charset=utf8', 'root', '');
+            $login = $bd->prepare('SELECT * FROM users WHERE username = ?');
+            $login->execute([$username]);
 
-                $consulta_rol = $bd->prepare('SELECT name FROM roles WHERE id = ?');
-                $consulta_rol->execute([$role_id]);
+            $datos = $login->fetch();
+            $pass_bd = $datos['password_hash'];
+            $password_verify = password_verify($pass, $pass_bd);
+            $role_id = $datos['role_id'];
 
-                $datos_rol = $consulta_rol->fetch();
+            $consulta_rol = $bd->prepare('SELECT name FROM roles WHERE id = ?');
+            $consulta_rol->execute([$role_id]);
 
-                $name_rol = $datos_rol['name'];
+            $datos_rol = $consulta_rol->fetch();
 
-                if($login->rowCount() == 1 and $password_verify){
-                    $_SESSION['username'] = $username;
-                    $_SESSION['rol'] = $name_rol;
-                    header("Location: ../views/home.php");
-                }
-                
+            $name_rol = $datos_rol['name'];
 
-                
-            }catch(Exception $e){
-                die($e->getMessage());
+            if ($login->rowCount() == 1 and $password_verify) {
+                $_SESSION['username'] = $username;
+                $_SESSION['rol'] = $name_rol;
+                header("Location: ../views/home.php");
             }
+
+
+
+        } catch (Exception $e) {
+            die($e->getMessage());
         }
     }
+}
 
 
 
