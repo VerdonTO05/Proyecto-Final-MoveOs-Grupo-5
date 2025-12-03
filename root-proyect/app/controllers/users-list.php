@@ -1,3 +1,5 @@
+<div><script src='../models/header-footer.js'></script></div>
+<link rel="stylesheet" href="../../public/assets/css/users.css">
 <?php
 try {
     $bd = new PDO('mysql:host=localhost;dbname=moveos;charset=utf8', 'root', '');
@@ -9,7 +11,7 @@ try {
 
     $datos = $consulta->fetchAll(PDO::FETCH_ASSOC); // Usamos FETCH_ASSOC para asegurar indices por nombre
 
-    echo "<table border=1>";
+    echo "<table class=table-container>";
     echo "<tr>";
     echo "<th>ID</th>";
     echo "<th>Nombre completo</th>";

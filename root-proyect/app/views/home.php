@@ -51,7 +51,7 @@
       ?>
 
       <div>
-        <button id="btn_users">Mostrar Usuarios</button>
+        <button id="btn_users" onclick="window.location.href = '../controllers/users-list.php'">Mostrar Usuarios</button>
       </div>
       <?php
 
