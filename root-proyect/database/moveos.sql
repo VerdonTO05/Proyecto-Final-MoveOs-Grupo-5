@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 28-11-2025 a las 12:33:00
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Host: 127.0.0.1
+-- Generation Time: Dec 03, 2025 at 01:13 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,15 +18,16 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `moveos`
+-- Database: `moveos`
 --
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `activities`
+-- Table structure for table `activities`
 --
-
+DROP DATABASE moveos;
+CREATE DATABASE moveos;
 CREATE TABLE `activities` (
   `id` int(11) NOT NULL,
   `offertant_id` int(11) NOT NULL,
@@ -45,7 +46,7 @@ CREATE TABLE `activities` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Disparadores `activities`
+-- Triggers `activities`
 --
 DELIMITER $$
 CREATE TRIGGER `audit_activities_delete` BEFORE DELETE ON `activities` FOR EACH ROW BEGIN
@@ -76,7 +77,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `audit_logs`
+-- Table structure for table `audit_logs`
 --
 
 CREATE TABLE `audit_logs` (
@@ -90,10 +91,24 @@ CREATE TABLE `audit_logs` (
   `db_user` varchar(100) DEFAULT current_user()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `audit_logs`
+--
+
+INSERT INTO `audit_logs` (`id`, `table_name`, `action_type`, `record_id`, `old_values`, `new_values`, `changed_at`, `db_user`) VALUES
+(13, 'users', 'INSERT', 3, NULL, '{\"username\": \"Mvertor034a\", \"email\": \"ver@gmail.com\", \"role_id\": 2}', '2025-12-02 19:52:28', 'root@localhost'),
+(14, 'users', 'INSERT', 4, NULL, '{\"username\": \"VerVT2005\", \"email\": \"12345@gmail.com\", \"role_id\": 2}', '2025-12-02 19:52:53', 'root@localhost'),
+(15, 'users', 'DELETE', 3, '{\"username\": \"Mvertor034a\", \"email\": \"ver@gmail.com\"}', NULL, '2025-12-02 19:53:58', 'root@localhost'),
+(16, 'users', 'DELETE', 4, '{\"username\": \"VerVT2005\", \"email\": \"12345@gmail.com\"}', NULL, '2025-12-02 19:54:04', 'root@localhost'),
+(17, 'users', 'INSERT', 6, NULL, '{\"username\": \"ManuelVT2005\", \"email\": \"12345@gmail.com\", \"role_id\": 2}', '2025-12-02 19:54:24', 'root@localhost'),
+(18, 'users', 'UPDATE', 6, '{\"username\": \"ManuelVT2005\", \"email\": \"12345@gmail.com\", \"role_id\": 2}', '{\"username\": \"ManuelVT2005\", \"email\": \"12345@gmail.com\", \"role_id\": 3}', '2025-12-03 09:06:46', 'root@localhost'),
+(19, 'users', 'UPDATE', 6, '{\"username\": \"ManuelVT2005\", \"email\": \"12345@gmail.com\", \"role_id\": 3}', '{\"username\": \"ManuelVT2005\", \"email\": \"12345@gmail.com\", \"role_id\": 2}', '2025-12-03 10:44:23', 'root@localhost'),
+(20, 'users', 'UPDATE', 6, '{\"username\": \"ManuelVT2005\", \"email\": \"12345@gmail.com\", \"role_id\": 2}', '{\"username\": \"ManuelVT2005\", \"email\": \"12345@gmail.com\", \"role_id\": 3}', '2025-12-03 12:38:39', 'root@localhost');
+
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `registrations`
+-- Table structure for table `registrations`
 --
 
 CREATE TABLE `registrations` (
@@ -104,7 +119,7 @@ CREATE TABLE `registrations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Disparadores `registrations`
+-- Triggers `registrations`
 --
 DELIMITER $$
 CREATE TRIGGER `audit_registrations_delete` BEFORE DELETE ON `registrations` FOR EACH ROW BEGIN
@@ -126,7 +141,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `requests`
+-- Table structure for table `requests`
 --
 
 CREATE TABLE `requests` (
@@ -144,7 +159,7 @@ CREATE TABLE `requests` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Disparadores `requests`
+-- Triggers `requests`
 --
 DELIMITER $$
 CREATE TRIGGER `audit_requests_delete` BEFORE DELETE ON `requests` FOR EACH ROW BEGIN
@@ -175,7 +190,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `roles`
+-- Table structure for table `roles`
 --
 
 CREATE TABLE `roles` (
@@ -184,18 +199,18 @@ CREATE TABLE `roles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Volcado de datos para la tabla `roles`
+-- Dumping data for table `roles`
 --
 
 INSERT INTO `roles` (`id`, `name`) VALUES
 (3, 'administrador'),
-(2, 'ofertante'),
+(2, 'organizador'),
 (1, 'participante');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `users`
+-- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
@@ -209,7 +224,14 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Disparadores `users`
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `full_name`, `email`, `username`, `password_hash`, `role_id`, `created_at`) VALUES
+(6, 'Manuel Verdon Torres', '12345@gmail.com', 'ManuelVT2005', '$2y$10$xvGtUCYEW3MfXZldN0h60eZrrDw97b.xQ/CEPtHCYD.KcXcN81j.S', 3, '2025-12-02 19:54:24');
+
+--
+-- Triggers `users`
 --
 DELIMITER $$
 CREATE TRIGGER `audit_users_delete` BEFORE DELETE ON `users` FOR EACH ROW BEGIN
@@ -238,24 +260,24 @@ $$
 DELIMITER ;
 
 --
--- Índices para tablas volcadas
+-- Indexes for dumped tables
 --
 
 --
--- Indices de la tabla `activities`
+-- Indexes for table `activities`
 --
 ALTER TABLE `activities`
   ADD PRIMARY KEY (`id`),
   ADD KEY `offertant_id` (`offertant_id`);
 
 --
--- Indices de la tabla `audit_logs`
+-- Indexes for table `audit_logs`
 --
 ALTER TABLE `audit_logs`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `registrations`
+-- Indexes for table `registrations`
 --
 ALTER TABLE `registrations`
   ADD PRIMARY KEY (`id`),
@@ -263,7 +285,7 @@ ALTER TABLE `registrations`
   ADD KEY `participant_id` (`participant_id`);
 
 --
--- Indices de la tabla `requests`
+-- Indexes for table `requests`
 --
 ALTER TABLE `requests`
   ADD PRIMARY KEY (`id`),
@@ -271,14 +293,14 @@ ALTER TABLE `requests`
   ADD KEY `accepted_by` (`accepted_by`);
 
 --
--- Indices de la tabla `roles`
+-- Indexes for table `roles`
 --
 ALTER TABLE `roles`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`);
 
 --
--- Indices de la tabla `users`
+-- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
@@ -287,71 +309,71 @@ ALTER TABLE `users`
   ADD KEY `role_id` (`role_id`);
 
 --
--- AUTO_INCREMENT de las tablas volcadas
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT de la tabla `activities`
+-- AUTO_INCREMENT for table `activities`
 --
 ALTER TABLE `activities`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT de la tabla `audit_logs`
+-- AUTO_INCREMENT for table `audit_logs`
 --
 ALTER TABLE `audit_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
--- AUTO_INCREMENT de la tabla `registrations`
+-- AUTO_INCREMENT for table `registrations`
 --
 ALTER TABLE `registrations`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `requests`
+-- AUTO_INCREMENT for table `requests`
 --
 ALTER TABLE `requests`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `roles`
+-- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT de la tabla `users`
+-- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- Restricciones para tablas volcadas
+-- Constraints for dumped tables
 --
 
 --
--- Filtros para la tabla `activities`
+-- Constraints for table `activities`
 --
 ALTER TABLE `activities`
   ADD CONSTRAINT `activities_ibfk_1` FOREIGN KEY (`offertant_id`) REFERENCES `users` (`id`);
 
 --
--- Filtros para la tabla `registrations`
+-- Constraints for table `registrations`
 --
 ALTER TABLE `registrations`
   ADD CONSTRAINT `registrations_ibfk_1` FOREIGN KEY (`activity_id`) REFERENCES `activities` (`id`),
   ADD CONSTRAINT `registrations_ibfk_2` FOREIGN KEY (`participant_id`) REFERENCES `users` (`id`);
 
 --
--- Filtros para la tabla `requests`
+-- Constraints for table `requests`
 --
 ALTER TABLE `requests`
   ADD CONSTRAINT `requests_ibfk_1` FOREIGN KEY (`participant_id`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `requests_ibfk_2` FOREIGN KEY (`accepted_by`) REFERENCES `users` (`id`);
 
 --
--- Filtros para la tabla `users`
+-- Constraints for table `users`
 --
 ALTER TABLE `users`
   ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`);
