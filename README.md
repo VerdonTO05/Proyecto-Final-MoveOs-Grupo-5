@@ -4,7 +4,7 @@
 
 ## 📖 Descripción del Proyecto
 
-**MOVE.os** (del inglés *move*: mover, cambiar, actuar) es un proyecto desarrollado por el Grupo 5 del curso de **Desarrollo de Aplicaciones Web**. 
+**MOVE.os** es un proyecto desarrollado por el Grupo 5 del curso de **Desarrollo de Aplicaciones Web**. 
 
 El objetivo principal es centralizar la oferta y demanda de actividades de ocio y formación. La plataforma soluciona la dispersión existente en la gestión de eventos, permitiendo a los **organizadores** publicar sus propuestas y a los **participantes** inscribirse de forma sencilla. Todo ello bajo un entorno moderado por **administradores** para garantizar la seguridad y calidad del contenido.
 
