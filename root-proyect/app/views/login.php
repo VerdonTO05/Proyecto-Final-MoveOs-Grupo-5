@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-    
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,16 +8,16 @@
 
     <link rel="stylesheet" href="../../public/assets/css/forms.css">
     <link rel="stylesheet" href="../../public/assets/css/login.css">
-    
-    <link rel="icon" type="image/ico" href="root-proyect\public\assets\img\ico\icono.png" id="icon.ico">
+
+    <link rel="icon" type="image/ico" href="../../public/assets/img/ico/icono.png" id="icon.ico">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <script src="../../public/assets/js/theme-init.js"></script>
     <script src="../../public/assets/js/main.js"></script>
 
-    <!-- <script src="../controllers/login-controller.js"></script> -->
-    <?php include "../controllers/login.php"  ?>
+    
+    
 </head>
 
 <body>
@@ -44,8 +44,8 @@
         </div>
 
         <!-- Formulario -->
-        <form id="login-form" method="POST" class="login-form">
-
+        <form id="login-form" class="login-form" action="../controllers/login.php">
+        
             <label for="username">Nombre de Usuario</label>
             <div class="input-group">
                 <i class="fas fa-user icon"></i> <input type="text" id="username" name="username"
@@ -61,10 +61,11 @@
             <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
 
             <input type="submit" class="submit-btn" name="login" value="Iniciar Sesión">
-                
-            
+
+
 
         </form>
+        <script src="../../public/assets/js/controllers/login-controller.js"></script>
     </div>
 </body>
 
