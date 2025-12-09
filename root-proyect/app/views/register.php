@@ -38,7 +38,7 @@
         </header>
 
         <div class="tab-switch">
-            <a href="login-controller.php">
+            <a href="login.php">
                 <button class="tab-btn">Iniciar sesión</button>
             </a>
             <button class="tab-btn active">Registrarse</button>
