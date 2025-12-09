@@ -17,7 +17,7 @@
     <!-- <script src="../controllers/register-controller.js"></script> -->
     <!-- <script src="../models/validation.js"></script> -->
     <script src="../models/user-model.js"></script>
-    <?php include "../controllers/register.php" ?>
+    <?php include "../controllers/register-controller.php" ?>
 </head>
 
 <body>
@@ -38,7 +38,7 @@
         </header>
 
         <div class="tab-switch">
-            <a href="login.php">
+            <a href="login-controller.php">
                 <button class="tab-btn">Iniciar sesión</button>
             </a>
             <button class="tab-btn active">Registrarse</button>

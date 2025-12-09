@@ -38,13 +38,13 @@
 
         <div class="tab-switch">
             <button class="tab-btn active">Iniciar Sesión</button>
-            <a href="register.php">
+            <a href="register-controller.php">
                 <button class="tab-btn">Registrarse</button>
             </a>
         </div>
 
         <!-- Formulario -->
-        <form id="login-form" class="login-form" action="../controllers/login.php">
+        <form id="login-form" class="login-form" action="../controllers/login-controller.php">
         
             <label for="username">Nombre de Usuario</label>
             <div class="input-group">

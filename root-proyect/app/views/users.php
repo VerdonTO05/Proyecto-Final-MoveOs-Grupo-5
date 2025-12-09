@@ -32,7 +32,7 @@
             <p>Esta es la lista de usuarios guardados.</p>
         </header>
         <ul id="listaUsuarios" class="user-list"></ul>
-        <a href="register.php">
+        <a href="register-controller.php">
             <button class="submit-btn">
                 Volver al Registro
             </button>
