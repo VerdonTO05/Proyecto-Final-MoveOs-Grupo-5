@@ -1,6 +1,20 @@
 
 
+document.getElementById('register-form').addEventListener('submit', function(e){
+    e.preventDefault();
 
+    // 1º Reojemos los datos del formulario
+
+    const fullname = document.getElementById('fullname').value.trim();
+    const username = document.getElementById('username').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password');
+    const rol = document.getElementById('participante');
+
+    // Validacion de los campos
+    let isValid = true;
+    
+});
 
 
 // document.addEventListener("DOMContentLoaded", () => {

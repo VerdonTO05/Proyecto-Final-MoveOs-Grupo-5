@@ -1,6 +1,6 @@
 document.getElementById('login-form').addEventListener('submit', function(e){
     e.preventDefault();
-    alert('He entrado');
+    
     // 1º.  Obtenemos los valores del formulario
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value.trim();
@@ -8,7 +8,6 @@ document.getElementById('login-form').addEventListener('submit', function(e){
     // 2º Validaciones frontend
     let isValid = true;
 
-    // Validar email con formato regex
 
     if(username === ''){
         // Añado un consolelog para debuguear y añadir el mensaje de error luego
