@@ -17,7 +17,7 @@
     <!-- <script src="../controllers/register-controller.js"></script> -->
     <!-- <script src="../models/validation.js"></script> -->
     <script src="../models/user-model.js"></script>
-    <?php include "../controllers/register-controller.php" ?>
+    
 </head>
 
 <body>
@@ -44,7 +44,7 @@
             <button class="tab-btn active">Registrarse</button>
         </div>
         <!-- Formulario -->
-        <form id="register-form" method="POST" class="register-form">
+        <form id="register-form" action="../controllers/register-controller.php" class="register-form">
 
             <label for="fullname">Nombre Completo *</label>
             <div class="input-group">
@@ -92,6 +92,7 @@
             <input type="submit" class="submit-btn" name="registrarse" value="Registrarse">
 
         </form>
+        <?php include "../controllers/register-controller.php" ?>
     </div>
 </body>
 
