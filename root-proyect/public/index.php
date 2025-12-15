@@ -1,3 +1,50 @@
+<?php
+//Instanciar controladores
+$action = $_POST['accion'] ?? 'index';
+
+switch($action){
+  case 'index':
+    break;
+  case 'register':
+    break;
+  case 'login':
+    break;
+  case 'logout':
+    break;
+  case 'editUser':
+    break;
+  case 'createActivity':
+    break;
+  case 'editActivity':
+    break;
+  case 'deleteActivity':
+    break;
+  case 'createRequest':
+    break;
+  case 'editRequest':
+    break;
+  case 'deleteRequest':
+    break;
+  case 'registration':
+    break;
+  case 'unsubscribe':
+    break;  
+  case 'accept':
+    break;
+  case 'deny':
+    break;
+  case 'seeActivities':
+    break;
+  case 'seeRequest':
+    break;
+  case 'seeRegistrations':
+    break;
+  case 'seeRequestAccepted':
+    break;
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
