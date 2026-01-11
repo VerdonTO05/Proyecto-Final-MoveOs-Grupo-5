@@ -102,7 +102,8 @@ label {
 }
 
 .input-group:focus-within {
-    border-color: var(--brand-primary); /* Resaltar al enfocar */
+    border-color: var(--brand-primary);
+    /* Resaltar al enfocar */
 }
 
 .input-group input {
@@ -128,7 +129,7 @@ label {
 
 input[type="text"],
 input[type="password"],
-input[type="email"]{
+input[type="email"] {
     color: var(--text-secondary);
 }
 
@@ -166,9 +167,9 @@ input:-webkit-autofill:active {
 
 /* Interruptor de tema */
 .switch {
-  position: absolute;
-  top: 20px;
-  right: 20px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
 }
 
 /* Vista para usuarios existentes en LocalStorage*/
@@ -188,16 +189,16 @@ input:-webkit-autofill:active {
     transition: background-color 0.3s;
 }
 
+
 /* Responsive para pantallas pequeñas */
 @media (max-width: 480px) {
     .container {
         max-width: 90%;
         transform: scale(1);
-        padding: 25px 18px;  
+        padding: 25px 18px;
     }
 
     .user-type-group {
         flex-direction: column;
     }
 }
-

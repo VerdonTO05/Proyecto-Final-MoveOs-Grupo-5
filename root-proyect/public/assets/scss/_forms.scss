@@ -1,0 +1,328 @@
+.first {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    height: 100vh;
+}
+
+/* Contenedor del formulario */
+.container {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    padding: 50px 40px;
+    border-radius: 20px;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 500px;
+    position: relative;
+    box-sizing: border-box;
+
+    /* Botón cerrar */
+    .close-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: var(--text-secondary);
+    }
+}
+
+/* Encabezados */
+.header-form {
+    h1 {
+        font-size: 24px;
+        font-style: italic;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: var(--brand-dark);
+    }
+
+    p {
+        font-size: 17px;
+        color: var(--text-primary);
+        margin-bottom: 25px;
+    }
+
+    border-bottom: none;
+}
+
+/* Pestañas login / registro */
+.tab-switch {
+    display: flex;
+    background-color: var(--bg-main);
+    border-radius: 25px;
+    padding: 5px;
+    margin-bottom: 25px;
+
+    .tab-btn {
+        flex-grow: 1;
+        padding: 12px 18px;
+        border-radius: 20px;
+        background: none;
+        font-weight: bold;
+        font-size: 18px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: var(--text-secondary);
+
+        &.active {
+            background-color: var(--bg-surface);
+            color: var(--text-primary);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+    }
+}
+
+/* Formularios */
+label {
+    color: var(--text-primary);
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-main);
+    border-radius: 12px;
+    padding: 8px 4px;
+    font-size: 15px;
+    margin-bottom: 10px;
+    transition: border-color 0.3s;
+
+    &:focus-within {
+        border-color: var(--brand-primary);
+    }
+
+    input {
+        flex-grow: 1;
+        padding: 14px 10px;
+        border: none;
+        outline: none;
+        font-size: 17px;
+        background: none;
+    }
+
+    .icon,
+    .eye-icon {
+        color: var(--text-secondary);
+        font-size: 18px;
+        width: 20px;
+        text-align: center;
+    }
+
+    .eye-icon {
+        cursor: pointer;
+    }
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+    color: var(--text-secondary);
+}
+
+/* Autocompletado */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px var(--bg-main) inset !important;
+    box-shadow: 0 0 0 1000px var(--bg-main) inset !important;
+    -webkit-text-fill-color: var(--text-secondary) !important;
+    caret-color: var(--text-primary);
+}
+
+/* Placeholder */
+::placeholder {
+    color: var(--text-secondary);
+}
+
+/* Botón enviar */
+.submit-btn {
+    width: 100%;
+    padding: 17px;
+    background-color: var(--brand-primary);
+    color: var(--bg-surface);
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+/* Usuarios LocalStorage */
+.user-list {
+    padding: 0;
+    margin-bottom: 30px;
+
+    li {
+        background-color: var(--bg-main);
+        margin: 10px 0;
+        padding: 12px;
+        border-radius: 8px;
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+        transition: background-color 0.3s;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .first {
+        flex-direction: column; // Para que se apilen si hay varios hijos
+        height: auto;           // Ajusta altura según contenido
+        padding: 2rem 1rem;
+    }
+
+    .container {
+        max-width: 90%;
+        padding: 30px 20px;
+    }
+
+    .tab-switch {
+        flex-direction: column; // Las pestañas se apilan
+        gap: 0.5rem;
+    }
+
+    .input-group {
+        flex-direction: column; // Inputs apilados si hace falta
+        align-items: stretch;
+
+        input {
+            width: 100%;
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .first {
+        padding: 1rem;
+    }
+
+    .container {
+        padding: 20px 15px;
+    }
+
+    .tab-switch .tab-btn {
+        font-size: 16px;
+        padding: 10px 14px;
+    }
+
+    .input-group input {
+        font-size: 16px;
+        padding: 12px 8px;
+    }
+
+    .submit-btn {
+        font-size: 16px;
+        padding: 15px;
+    }
+}
+
+/* --- Media queries para el switch --- */
+@media (max-width: 1024px) {
+    .switch {
+        top: 15px;
+        right: 15px;
+        width: 45px;
+        height: 24px;
+
+        .slider::before {
+            height: 18px;
+            width: 18px;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .switch {
+        top: 10px;
+        right: 10px;
+        width: 40px;
+        height: 22px;
+
+        .slider::before {
+            height: 16px;
+            width: 16px;
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .switch {
+        top: 8px;
+        right: 8px;
+        width: 35px;
+        height: 20px;
+
+        .slider::before {
+            height: 14px;
+            width: 14px;
+        }
+    }
+}
+
+/* Alternativa: si quieres que siempre esté visible incluso al hacer scroll, usa position: fixed */
+.switch.fixed {
+    position: fixed;
+}
+
+/* --- Media queries para ajustar el padding y switch en dispositivos más pequeños --- */
+@media (max-width: 1024px) {
+    .first {
+        padding-top: 55px;
+        padding-right: 55px;
+    }
+    .switch {
+        top: 15px;
+        right: 15px;
+        width: 45px;
+        height: 24px;
+
+        .slider::before {
+            height: 18px;
+            width: 18px;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .first {
+        padding-top: 50px;
+        padding-right: 50px;
+    }
+    .switch {
+        top: 10px;
+        right: 10px;
+        width: 40px;
+        height: 22px;
+
+        .slider::before {
+            height: 16px;
+            width: 16px;
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .first {
+        padding-top: 45px;
+        padding-right: 45px;
+    }
+    .switch {
+        top: 8px;
+        right: 8px;
+        width: 35px;
+        height: 20px;
+
+        .slider::before {
+            height: 14px;
+            width: 14px;
+        }
+    }
+}

@@ -9,7 +9,7 @@
   <script src="../../public/assets/js/theme-init.js"></script>
   <script src="../../public/assets/js/main.js"></script>
 
-  <link rel="stylesheet" href="../../public/assets/css/home.css">
+  <link rel="stylesheet" href="../../public/assets/css/main.css">
 
   <link rel="icon" type="image/png" href="/assets/img/ico/icono.png" if="icon.ico">
 

@@ -1,0 +1,7 @@
+@use 'mixins';
+@use 'variables';
+
+@include mixins.theme-variables(variables.$light-theme);  // Light mode
+
+@include mixins.theme-variables-dark(variables.$dark-theme);  // Dark mode
+

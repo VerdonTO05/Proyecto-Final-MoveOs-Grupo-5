@@ -1,0 +1,135 @@
+/* Contenedor base */
+.how-it-works {
+    background-color: var(--bg-surface);
+    padding-bottom: 3rem;
+
+    /* Encabezado */
+    .hiw-header {
+        text-align: center;
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+
+        h1 {
+            font-size: 2.4rem;
+            color: var(--brand-primary);
+            font-weight: 700;
+        }
+
+        p {
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            font-size: 1.1rem;
+        }
+    }
+
+    /* Indicadores de paso */
+    .hiw-steps {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+
+        .step-number {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--bg-muted);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 700;
+            color: var(--text-secondary);
+
+            &.active {
+                background: var(--brand-primary);
+                color: var(--text-on-primary);
+            }
+        }
+    }
+
+    /* Tarjeta principal */
+    .hiw-card {
+        width: 60%;
+        margin: 0 auto;
+        padding: 0;
+        background: none;
+        border-radius: 0;
+        border: none !important;
+
+        &-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            background: var(--bg-surface);
+            border: 2px solid var(--brand-primary);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+
+            >div {
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+                flex-wrap: wrap;
+            }
+        }
+
+        h2 {
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+    }
+
+    /* Lista */
+    .hiw-list {
+        li {
+            display: flex;
+            align-items: start;
+            gap: 0.75rem;
+        }
+
+        div {
+            flex-shrink: 0;
+            width: 26px;
+            height: 26px;
+            background-color: var(--brand-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 0.25rem;
+        }
+    }
+
+    /* Botones participante / ofertante */
+    .tab-switch {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 1rem;
+
+        .tab-btn {
+            padding: 12px 18px;
+            min-width: 180px;
+            font-weight: bold;
+            font-size: 16px;
+            border-radius: 16px;
+            background-color: var(--bg-muted) !important;
+            border: 2px solid var(--brand-primary) !important;
+            color: var(--brand-primary) !important;
+            transition: 0.2s ease;
+
+            &.active {
+                background-color: var(--brand-primary) !important;
+                color: var(--bg-muted) !important;
+                border-color: var(--brand-primary) !important;
+            }
+        }
+    }
+}

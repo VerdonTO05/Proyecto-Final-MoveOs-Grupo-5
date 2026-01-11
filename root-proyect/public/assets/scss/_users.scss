@@ -1,0 +1,116 @@
+/* --- Tabla (Estilo Clean/Modern) --- */
+
+/* Contenedor */
+.table-container {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 2rem 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+
+    thead {
+      background-color: var(--bg-muted);
+      border-bottom: 1px solid var(--border-color);
+
+      th {
+        padding: 1rem 1.5rem;
+        font-weight: 600;
+        color: var(--brand-dark);
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+    }
+
+    tbody {
+      tr {
+        transition: background-color 0.2s;
+
+        &:hover {
+          background-color: var(--bg-muted);
+        }
+
+        &:last-child {
+          td {
+            border-bottom: none;
+          }
+        }
+
+        td {
+          padding: 1rem 1.5rem;
+          color: var(--text-primary);
+          border-bottom: 1px solid var(--border-color);
+          vertical-align: middle;
+
+          .status {
+            font-size: 0.85rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            background: var(--bg-muted);
+            color: var(--brand-primary);
+            font-weight: 500;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* --- Paginación --- */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  list-style: none;
+  padding: 0;
+
+  button,
+  a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    min-width: 40px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-family: inherit;
+
+    &:hover {
+      border-color: var(--brand-primary);
+      color: var(--brand-primary);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background-color: var(--bg-muted);
+      border-color: transparent;
+      color: var(--text-secondary);
+
+      &:hover {
+        color: var(--text-secondary);
+        border-color: transparent;
+      }
+    }
+  }
+
+  .active {
+    background-color: var(--brand-primary);
+    color: var(--text-on-primary);
+    border-color: var(--brand-primary);
+  }
+}

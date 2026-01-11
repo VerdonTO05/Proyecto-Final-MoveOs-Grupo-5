@@ -8,8 +8,8 @@
 
     <script src="../../public/assets/js/theme-init.js"></script>
     <script src="../../public/assets/js/main.js"></script>
-    <link rel="stylesheet" href="../../public/assets/css/forms.css">
-    <link rel="stylesheet" href="../../public/assets/css/register.css">
+    <link rel="stylesheet" href="../../public/assets/css/main.css">
+    
     <link rel="icon" type="image/ico" href="root-proyect\public\assets\img\ico\icono.png" id="icon.ico">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -23,7 +23,7 @@
 <body>
     <!-- Switch del tema -->
     <div class="icons">
-        <label class="switch">
+        <label class="switch top-right">
             <input type="checkbox" id="theme-toggle">
             <span class="slider"></span>
         </label>
@@ -32,7 +32,7 @@
     <div class="container">
         <button class="close-btn">&times;</button>
 
-        <header class="header">
+        <header class="header-form">
             <h1>BIENVENIDO a MOVEos</h1>
             <p>Crea una cuenta para comenzar tu aventura</p>
         </header>
