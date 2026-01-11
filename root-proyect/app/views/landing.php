@@ -14,8 +14,7 @@
     <script src="../../public/assets/js/theme-init.js"></script>
     <script src="../../public/assets/js/main.js"></script> 
 
-    <link rel="stylesheet" href="../../public/assets/css/landing.css">
-    <link rel="stylesheet" href="../../public/assets/css/how-it-works.css">
+    <link rel="stylesheet" href="../../public/assets/css/main.css">
     
     <link rel="icon" type="image/png" href="../../public/assets/img/ico/icono.png" >
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">

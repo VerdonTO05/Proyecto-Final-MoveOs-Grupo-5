@@ -1,0 +1,56 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* Reset base */
+html,
+body,
+h1,
+h2,
+h3,
+p,
+ul,
+li,
+figure,
+figcaption {
+    margin: 0;
+    padding: 0;
+}
+
+/* Listas */
+ul,
+ol {
+    list-style: none;
+}
+
+/* Enlaces */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Multimedia */
+img,
+picture,
+video,
+canvas,
+svg {
+    display: block;
+    max-width: 100%;
+}
+
+/* Formularios */
+input,
+button,
+textarea,
+select {
+    font: inherit;
+    margin: 0;
+}
+
+button {
+    background: none;
+    border: none;
+}

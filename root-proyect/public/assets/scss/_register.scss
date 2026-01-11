@@ -1,0 +1,63 @@
+/* Grupo tipo de usuario */
+.user-type-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    width: 100%;
+    margin: 10px 0 20px;
+
+    .option {
+        flex: 1;
+    }
+
+    input[type="radio"] {
+        display: none;
+
+        &:checked+.user-type-card {
+            background-color: var(--bg-surface);
+            border-color: var(--brand-primary);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
+
+            .icon {
+                color: var(--brand-primary);
+            }
+        }
+    }
+}
+
+/* Tarjeta tipo usuario */
+.user-type-card {
+    display: block;
+    width: 83%;
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 25px 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+
+    .icon {
+        font-size: 26px;
+        margin-bottom: 10px;
+        color: var(--text-secondary);
+    }
+
+    h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: bold;
+        color: var(--text-primary);
+    }
+
+    p {
+        font-size: 13px;
+        margin-top: 5px;
+        color: var(--text-secondary);
+    }
+
+    &:hover {
+        border-color: var(--brand-primary);
+    }
+}

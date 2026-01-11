@@ -1,0 +1,289 @@
+@use 'mixins';
+
+/* Base body */
+body {
+    display: flex;
+    flex-direction: column; /* Ahora apila secciones verticalmente */
+    justify-content: flex-start;
+    font-family: "Inter", Arial, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    line-height: 1.6;
+    transition: background-color 0.4s ease, color 0.4s ease;
+    margin: 0;
+}
+
+/* Header */
+header {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem; /* padding horizontal reducido a 1rem para no recortar */
+
+    nav {
+        width: 100%;             // Ocupa todo el ancho del header
+        display: flex;
+        flex-wrap: wrap;          // Permite que los elementos bajen de línea si no caben
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+
+        ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;     // Links se apilan si no caben
+            gap: 1.5rem;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--brand-dark);
+            font-weight: 500;
+
+            &:hover {
+                color: var(--brand-primary);
+            }
+        }
+
+        div {
+            display: flex;
+            flex-wrap: wrap;     // Botones se apilan si no caben
+            gap: 0.5rem;
+
+            button {
+                @include mixins.button-base;
+
+                &:last-child {
+                    background-color: var(--brand-primary);
+                    color: var(--text-on-primary);
+                }
+            }
+        }
+    }
+}
+
+
+/* Footer */
+footer {
+    display: flex;
+    flex-direction: column; /* Footer apilado */
+    background: var(--bg-surface);
+    padding: 3rem 2rem 1rem;
+    color: var(--text-primary);
+
+    section {
+        display: flex;
+        justify-content: center;
+        gap: 4rem;
+        flex-wrap: wrap;
+        max-width: 1100px;
+        margin: 0 auto 2rem;
+    }
+
+    h3 {
+        color: var(--brand-primary);
+    }
+
+    h4 {
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    li {
+        margin: 0.4rem 0;
+    }
+
+    a {
+        text-decoration: none;
+        color: var(--text-primary);
+
+        &:hover {
+            color: var(--brand-primary);
+        }
+    }
+
+    p {
+        text-align: center;
+        font-size: 0.9rem;
+        border-top: 1px solid var(--border-color);
+        padding-top: 1rem;
+    }
+}
+
+/* Icons */
+.icons {
+    display: flex;
+    align-items: center;
+    gap: 1.8em;
+
+    i {
+        font-size: 1rem;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
+        padding: 1em;
+        border-radius: 6px;
+
+        &:hover {
+            background-color: var(--bg-muted);
+            color: var(--text-secondary);
+        }
+    }
+}
+
+/* Logo */
+.logo-container {
+    a {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+    }
+
+    img {
+        height: 40px;
+        width: auto;
+        margin-right: 8px;
+    }
+
+    span {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--brand-primary);
+    }
+}
+
+/* Main */
+main {
+    display: flex;
+    flex-direction: column; /* Apilar secciones verticalmente */
+    background-color: var(--bg-surface);
+    width: 100%;
+}
+
+/* Primera sección */
+main section:first-of-type {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 4rem 2rem 3rem;
+
+    p:first-child {
+        color: var(--brand-primary);
+        margin-bottom: 1rem;
+        font-weight: 500;
+    }
+
+    h1 {
+        font-size: 2.8rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: var(--brand-dark);
+    }
+
+    p:nth-of-type(2) {
+        max-width: 600px;
+        margin: 0 auto 2rem;
+        font-size: 1.1rem;
+        color: var(--brand-primary);
+    }
+
+    div {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    button {
+        @include mixins.button-base;
+        border: 1px solid var(--brand-primary);
+        background: var(--bg-surface);
+        font-weight: 600;
+
+        &:first-child {
+            background: var(--brand-primary);
+            color: var(--text-on-primary);
+        }
+
+        &:hover {
+            opacity: 0.9;
+        }
+    }
+}
+
+/* Características y demás secciones */
+main section {
+    display: flex;
+    flex-direction: column; /* Cada sección apilada */
+    align-items: center;
+    gap: 2rem;
+    padding: 3rem 2rem;
+}
+
+/* Opcional: si quieres los cards en fila dentro de una sección */
+.features {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+}
+
+/* Estadísticas */
+.stats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.stats div {
+    text-align: center;
+}
+
+/* Tarjetas de actividades */
+.grid-activities {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+    justify-items: center;
+}
+
+.activity {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 550px;
+}
+
+/* Media query para pantallas pequeñas */
+@media (max-width: 768px) {
+    header nav {
+        flex-direction: column;
+        align-items: stretch;     // que los elementos ocupen todo el ancho
+    }
+
+    header nav ul {
+        flex-direction: column;
+        gap: 0.75rem;
+        width: 100%;
+    }
+
+    header nav div {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.5rem;
+    }
+
+    header nav div button {
+        width: 100%;             // cada botón ocupa toda la línea
+    }
+}
+
