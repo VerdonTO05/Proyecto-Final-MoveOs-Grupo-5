@@ -2,8 +2,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0;
     height: 100vh;
+}
+
+.register {
+    margin: 10rem;
 }
 
 /* Contenedor del formulario */
@@ -14,7 +17,7 @@
     border-radius: 20px;
     box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
     width: 100%;
-    max-width: 500px;
+    max-width: 600px;
     position: relative;
     box-sizing: border-box;
 
@@ -171,158 +174,4 @@ input:-webkit-autofill:active {
     }
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .first {
-        flex-direction: column; // Para que se apilen si hay varios hijos
-        height: auto;           // Ajusta altura según contenido
-        padding: 2rem 1rem;
-    }
 
-    .container {
-        max-width: 90%;
-        padding: 30px 20px;
-    }
-
-    .tab-switch {
-        flex-direction: column; // Las pestañas se apilan
-        gap: 0.5rem;
-    }
-
-    .input-group {
-        flex-direction: column; // Inputs apilados si hace falta
-        align-items: stretch;
-
-        input {
-            width: 100%;
-        }
-    }
-}
-
-@media (max-width: 480px) {
-    .first {
-        padding: 1rem;
-    }
-
-    .container {
-        padding: 20px 15px;
-    }
-
-    .tab-switch .tab-btn {
-        font-size: 16px;
-        padding: 10px 14px;
-    }
-
-    .input-group input {
-        font-size: 16px;
-        padding: 12px 8px;
-    }
-
-    .submit-btn {
-        font-size: 16px;
-        padding: 15px;
-    }
-}
-
-/* --- Media queries para el switch --- */
-@media (max-width: 1024px) {
-    .switch {
-        top: 15px;
-        right: 15px;
-        width: 45px;
-        height: 24px;
-
-        .slider::before {
-            height: 18px;
-            width: 18px;
-        }
-    }
-}
-
-@media (max-width: 768px) {
-    .switch {
-        top: 10px;
-        right: 10px;
-        width: 40px;
-        height: 22px;
-
-        .slider::before {
-            height: 16px;
-            width: 16px;
-        }
-    }
-}
-
-@media (max-width: 480px) {
-    .switch {
-        top: 8px;
-        right: 8px;
-        width: 35px;
-        height: 20px;
-
-        .slider::before {
-            height: 14px;
-            width: 14px;
-        }
-    }
-}
-
-/* Alternativa: si quieres que siempre esté visible incluso al hacer scroll, usa position: fixed */
-.switch.fixed {
-    position: fixed;
-}
-
-/* --- Media queries para ajustar el padding y switch en dispositivos más pequeños --- */
-@media (max-width: 1024px) {
-    .first {
-        padding-top: 55px;
-        padding-right: 55px;
-    }
-    .switch {
-        top: 15px;
-        right: 15px;
-        width: 45px;
-        height: 24px;
-
-        .slider::before {
-            height: 18px;
-            width: 18px;
-        }
-    }
-}
-
-@media (max-width: 768px) {
-    .first {
-        padding-top: 50px;
-        padding-right: 50px;
-    }
-    .switch {
-        top: 10px;
-        right: 10px;
-        width: 40px;
-        height: 22px;
-
-        .slider::before {
-            height: 16px;
-            width: 16px;
-        }
-    }
-}
-
-@media (max-width: 480px) {
-    .first {
-        padding-top: 45px;
-        padding-right: 45px;
-    }
-    .switch {
-        top: 8px;
-        right: 8px;
-        width: 35px;
-        height: 20px;
-
-        .slider::before {
-            height: 14px;
-            width: 14px;
-        }
-    }
-}

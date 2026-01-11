@@ -4,6 +4,7 @@
     flex-direction: row;
     flex-wrap: wrap;
     gap: 1rem;
+    width: 100%;
     align-items: stretch;
     margin-bottom: 2rem;
 
@@ -53,7 +54,6 @@
     background-color: var(--bg-surface);
     border: 1px solid var(--border-color);
     padding: 50px 40px;
-    border-radius: 20px;
     box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
     width: 100%;
     position: relative;
@@ -115,7 +115,6 @@
         padding: 1.2rem;
         display: flex;
         flex-direction: column;
-        flex: 1;
         background-color: var(--bg-main);
 
         h3 {
@@ -167,7 +166,7 @@
 
             .btn-signup {
                 background-color: var(--brand-primary);
-                color: var(--text-secondary);
+                color: var(--bg-surface);
             }
         }
     }
@@ -181,6 +180,68 @@
     padding: 0.5rem 1rem;
     cursor: pointer;
     font-weight: 600;
-    margin-left: 45.7%;
-    margin-bottom: 1rem;
+
+    display: block;
+    margin: 0 auto 1rem;
+}
+
+input[type="text"],
+select,
+.btn-filters {
+    min-width: 220px;
+}
+
+@media (max-width: 576px) {
+
+    /* Filtros */
+    .filters {
+        flex-direction: column;
+        gap: 0.75rem;
+
+        input[type="text"],
+        select,
+        .btn-filters {
+            width: 100%;
+            min-width: 100%;
+        }
+    }
+
+    /* Contenedor principal */
+    .container-home {
+        padding: 1.5rem 1rem;
+    }
+
+    /* Grid */
+    #gridActivities {
+        padding: 0.5rem;
+    }
+
+    /* Tarjetas */
+    .activity {
+        border-radius: 16px;
+    }
+
+    .activity-image {
+        height: 160px;
+    }
+
+    .activity-content {
+        padding: 1rem;
+
+        .actions {
+            flex-direction: column;
+        }
+    }
+
+    /* Botón usuarios */
+    #btn_users {
+        margin: 0 auto 1rem;
+    }
+
+    .btn-detail,
+    .btn-signup,
+    .btn-filters {
+        min-height: 44px;
+    }
+
 }

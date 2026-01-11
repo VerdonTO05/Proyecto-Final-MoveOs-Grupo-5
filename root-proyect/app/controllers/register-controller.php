@@ -1,64 +1,64 @@
 <?php
 
-session_start();
+// session_start();
 
-header('Content-Type: application/json; charset=utf-8');
+// header('Content-Type: application/json; charset=utf-8');
 
-//1º Recibir datos
-$input = file_get_contents('php://input');
-$data = json_decode($input,true);
+// //1º Recibir datos
+// $input = file_get_contents('php://input');
+// $data = json_decode($input,true);
 
-$fullname = $data['fullname'] ?? '';
-$username = $data['username'] ?? '';
-$email = $data['email'] ?? '';
-$rol = $data['rol'] ?? '';
-$password = $data['password'] ?? '';
+// $fullname = $data['fullname'] ?? '';
+// $username = $data['username'] ?? '';
+// $email = $data['email'] ?? '';
+// $rol = $data['rol'] ?? '';
+// $password = $data['password'] ?? '';
 
-if(empty($fullname) || empty($username) || empty($email) || empty($rol) || empty($password)){
-    echo json_encode(['success' => false,'message' => 'Faltan datos obligatorios']);
-    exit;
-}
+// if(empty($fullname) || empty($username) || empty($email) || empty($rol) || empty($password)){
+//     echo json_encode(['success' => false,'message' => 'Faltan datos obligatorios']);
+//     exit;
+// }
 
-try{
-    $bd = new PDO('mysql:host=localhost;dbname=moveos;charset=utf8', 'root', ''); // CONEXION BASE DE DATOS//
-    $consultaIdRol = $bd->prepare('SELECT id FROM roles WHERE name = ?');
-    $consultaIdRol->execute([$rol]);
-    $datosID = $consultaIdRol->fetch();
-    $id = $datosID['id'];
-
-
-    //PASSWORD HASH
-    $password_hash =password_hash($password, PASSWORD_DEFAULT);
-    //
-    $insert = $bd->prepare('INSERT INTO users (full_name,username,email,password_hash,role_id) VALUES (?,?,?,?,?) ');
-    $insert->execute([$fullname,$username,$email,$password_hash,$id]);
+// try{
+//     $bd = new PDO('mysql:host=localhost;dbname=moveos;charset=utf8', 'root', ''); // CONEXION BASE DE DATOS//
+//     $consultaIdRol = $bd->prepare('SELECT id FROM roles WHERE name = ?');
+//     $consultaIdRol->execute([$rol]);
+//     $datosID = $consultaIdRol->fetch();
+//     $id = $datosID['id'];
 
 
-    $consulta = $bd->prepare('SELECT id FROM users WHERE username = ?');
-    $consulta->execute([$username]);
-    $datosConsulta = $consulta->fetch();
-    $idUsuario = $datosConsulta['id'];
-    if($insert->rowCount() == 1){
-        $_SESSION['user_id'] = $idUsuario;
-        $_SESSION['username'] = $username;
-        $_SESSION['rol'] = $rol;
+//     //PASSWORD HASH
+//     $password_hash =password_hash($password, PASSWORD_DEFAULT);
+//     //
+//     $insert = $bd->prepare('INSERT INTO users (full_name,username,email,password_hash,role_id) VALUES (?,?,?,?,?) ');
+//     $insert->execute([$fullname,$username,$email,$password_hash,$id]);
 
-        echo json_encode([
-            'success' => true,
-            'message' => 'Login correcto'
-        ]);
-    }else{
-        echo json_encode([
-            'success' => false,
-            'message' => 'Error al insertar el usuario'
-        ]);
-    }
-}catch(Exception $e){
-    echo json_encode([
-        'success' => false,
-        'message' => 'Error del servidor' .$e->getMessage()
-    ]);
-}
+
+//     $consulta = $bd->prepare('SELECT id FROM users WHERE username = ?');
+//     $consulta->execute([$username]);
+//     $datosConsulta = $consulta->fetch();
+//     $idUsuario = $datosConsulta['id'];
+//     if($insert->rowCount() == 1){
+//         $_SESSION['user_id'] = $idUsuario;
+//         $_SESSION['username'] = $username;
+//         $_SESSION['rol'] = $rol;
+
+//         echo json_encode([
+//             'success' => true,
+//             'message' => 'Login correcto'
+//         ]);
+//     }else{
+//         echo json_encode([
+//             'success' => false,
+//             'message' => 'Error al insertar el usuario'
+//         ]);
+//     }
+// }catch(Exception $e){
+//     echo json_encode([
+//         'success' => false,
+//         'message' => 'Error del servidor' .$e->getMessage()
+//     ]);
+// }
 
 
 

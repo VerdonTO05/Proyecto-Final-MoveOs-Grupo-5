@@ -87,7 +87,8 @@ button {
 /* Base body */
 body {
   display: flex;
-  flex-direction: column; /* Ahora apila secciones verticalmente */
+  flex-direction: column;
+  /* Ahora apila secciones verticalmente */
   justify-content: flex-start;
   font-family: "Inter", Arial, sans-serif;
   background-color: var(--bg-main);
@@ -95,6 +96,7 @@ body {
   line-height: 1.6;
   transition: background-color 0.4s ease, color 0.4s ease;
   margin: 0;
+  overflow-x: hidden;
 }
 
 /* Header */
@@ -104,7 +106,8 @@ header {
   width: 100%;
   background: var(--bg-surface);
   border-bottom: 1px solid var(--border-color);
-  padding: 1rem; /* padding horizontal reducido a 1rem para no recortar */
+  padding: 1rem;
+  /* padding horizontal reducido a 1rem para no recortar */
 }
 header nav {
   width: 100%;
@@ -148,7 +151,8 @@ header nav div button:last-child {
 /* Footer */
 footer {
   display: flex;
-  flex-direction: column; /* Footer apilado */
+  flex-direction: column;
+  /* Footer apilado */
   background: var(--bg-surface);
   padding: 3rem 2rem 1rem;
   color: var(--text-primary);
@@ -202,6 +206,8 @@ footer p {
   transition: background-color 0.3s, color 0.3s;
   padding: 1em;
   border-radius: 6px;
+  min-width: 44px;
+  min-height: 44px;
 }
 .icons i:hover {
   background-color: var(--bg-muted);
@@ -228,7 +234,8 @@ footer p {
 /* Main */
 main {
   display: flex;
-  flex-direction: column; /* Apilar secciones verticalmente */
+  flex-direction: column;
+  /* Apilar secciones verticalmente */
   background-color: var(--bg-surface);
   width: 100%;
 }
@@ -284,7 +291,8 @@ main section:first-of-type button:hover {
 /* Características y demás secciones */
 main section {
   display: flex;
-  flex-direction: column; /* Cada sección apilada */
+  flex-direction: column;
+  /* Cada sección apilada */
   align-items: center;
   gap: 2rem;
   padding: 3rem 2rem;
@@ -310,48 +318,77 @@ main section {
   text-align: center;
 }
 
-/* Tarjetas de actividades */
-.grid-activities {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1rem;
-  padding: 1rem;
-  justify-items: center;
-}
-
 .activity {
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 550px;
+  min-height: 440px;
 }
 
-/* Media query para pantallas pequeñas */
-@media (max-width: 768px) {
+@media (max-width: 576px) {
+  /* Base */
+  html {
+    font-size: 14px;
+  }
+  /* Header */
   header nav {
     flex-direction: column;
-    align-items: stretch;
+    align-items: center;
+    text-align: center;
   }
   header nav ul {
-    flex-direction: column;
-    gap: 0.75rem;
-    width: 100%;
+    justify-content: center;
+    padding: 0;
   }
   header nav div {
+    justify-content: center;
+    width: 100%;
+  }
+  /* Logo */
+  .logo-container span {
+    font-size: 1.1rem;
+  }
+  /* Hero (primera sección) */
+  main section:first-of-type {
+    padding: 2.5rem 1rem;
+  }
+  main section:first-of-type h1 {
+    font-size: 2rem;
+  }
+  main section:first-of-type p:nth-of-type(2) {
+    font-size: 1rem;
+  }
+  main section:first-of-type div {
     flex-direction: column;
     width: 100%;
-    gap: 0.5rem;
   }
-  header nav div button {
+  main section:first-of-type button {
     width: 100%;
+  }
+  main section {
+    padding: 2rem 1rem;
+  }
+  /* Footer */
+  footer section {
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+    text-align: center;
+  }
+  /* Grid actividades */
+  .grid-activities {
+    padding: 0.5rem;
   }
 }
 .first {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0;
   height: 100vh;
+}
+
+.register {
+  margin: 10rem;
 }
 
 /* Contenedor del formulario */
@@ -362,7 +399,7 @@ main section {
   border-radius: 20px;
   box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
   width: 100%;
-  max-width: 500px;
+  max-width: 600px;
   position: relative;
   box-sizing: border-box;
   /* Botón cerrar */
@@ -509,140 +546,6 @@ input:-webkit-autofill:active {
   transition: background-color 0.3s;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .first {
-    flex-direction: column;
-    height: auto;
-    padding: 2rem 1rem;
-  }
-  .container {
-    max-width: 90%;
-    padding: 30px 20px;
-  }
-  .tab-switch {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  .input-group {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .input-group input {
-    width: 100%;
-  }
-}
-@media (max-width: 480px) {
-  .first {
-    padding: 1rem;
-  }
-  .container {
-    padding: 20px 15px;
-  }
-  .tab-switch .tab-btn {
-    font-size: 16px;
-    padding: 10px 14px;
-  }
-  .input-group input {
-    font-size: 16px;
-    padding: 12px 8px;
-  }
-  .submit-btn {
-    font-size: 16px;
-    padding: 15px;
-  }
-}
-/* --- Media queries para el switch --- */
-@media (max-width: 1024px) {
-  .switch {
-    top: 15px;
-    right: 15px;
-    width: 45px;
-    height: 24px;
-  }
-  .switch .slider::before {
-    height: 18px;
-    width: 18px;
-  }
-}
-@media (max-width: 768px) {
-  .switch {
-    top: 10px;
-    right: 10px;
-    width: 40px;
-    height: 22px;
-  }
-  .switch .slider::before {
-    height: 16px;
-    width: 16px;
-  }
-}
-@media (max-width: 480px) {
-  .switch {
-    top: 8px;
-    right: 8px;
-    width: 35px;
-    height: 20px;
-  }
-  .switch .slider::before {
-    height: 14px;
-    width: 14px;
-  }
-}
-/* Alternativa: si quieres que siempre esté visible incluso al hacer scroll, usa position: fixed */
-.switch.fixed {
-  position: fixed;
-}
-
-/* --- Media queries para ajustar el padding y switch en dispositivos más pequeños --- */
-@media (max-width: 1024px) {
-  .first {
-    padding-top: 55px;
-    padding-right: 55px;
-  }
-  .switch {
-    top: 15px;
-    right: 15px;
-    width: 45px;
-    height: 24px;
-  }
-  .switch .slider::before {
-    height: 18px;
-    width: 18px;
-  }
-}
-@media (max-width: 768px) {
-  .first {
-    padding-top: 50px;
-    padding-right: 50px;
-  }
-  .switch {
-    top: 10px;
-    right: 10px;
-    width: 40px;
-    height: 22px;
-  }
-  .switch .slider::before {
-    height: 16px;
-    width: 16px;
-  }
-}
-@media (max-width: 480px) {
-  .first {
-    padding-top: 45px;
-    padding-right: 45px;
-  }
-  .switch {
-    top: 8px;
-    right: 8px;
-    width: 35px;
-    height: 20px;
-  }
-  .switch .slider::before {
-    height: 14px;
-    width: 14px;
-  }
-}
 /* Enlace "¿Olvidaste tu contraseña?" */
 .forgot-password {
   display: block;
@@ -665,7 +568,7 @@ input:-webkit-autofill:active {
   justify-content: space-between;
   gap: 15px;
   width: 100%;
-  margin: 10px 0 20px;
+  margin: 1.5rem 1rem 0.5rem;
 }
 .user-type-group .option {
   flex: 1;
@@ -869,6 +772,7 @@ input:-webkit-autofill:active {
   flex-direction: row;
   flex-wrap: wrap;
   gap: 1rem;
+  width: 100%;
   align-items: stretch;
   margin-bottom: 2rem;
 }
@@ -915,7 +819,6 @@ input:-webkit-autofill:active {
   background-color: var(--bg-surface);
   border: 1px solid var(--border-color);
   padding: 50px 40px;
-  border-radius: 20px;
   box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
   width: 100%;
   position: relative;
@@ -975,7 +878,6 @@ input:-webkit-autofill:active {
   padding: 1.2rem;
   display: flex;
   flex-direction: column;
-  flex: 1;
   background-color: var(--bg-main);
 }
 .activity-content h3 {
@@ -1021,7 +923,7 @@ input:-webkit-autofill:active {
 }
 .activity-content .actions .btn-signup {
   background-color: var(--brand-primary);
-  color: var(--text-secondary);
+  color: var(--bg-surface);
 }
 
 /* Botón prueba ver usuarios */
@@ -1032,10 +934,59 @@ input:-webkit-autofill:active {
   padding: 0.5rem 1rem;
   cursor: pointer;
   font-weight: 600;
-  margin-left: 45.7%;
-  margin-bottom: 1rem;
+  display: block;
+  margin: 0 auto 1rem;
 }
 
+input[type=text],
+select,
+.btn-filters {
+  min-width: 220px;
+}
+
+@media (max-width: 576px) {
+  /* Filtros */
+  .filters {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .filters input[type=text],
+  .filters select,
+  .filters .btn-filters {
+    width: 100%;
+    min-width: 100%;
+  }
+  /* Contenedor principal */
+  .container-home {
+    padding: 1.5rem 1rem;
+  }
+  /* Grid */
+  #gridActivities {
+    padding: 0.5rem;
+  }
+  /* Tarjetas */
+  .activity {
+    border-radius: 16px;
+  }
+  .activity-image {
+    height: 160px;
+  }
+  .activity-content {
+    padding: 1rem;
+  }
+  .activity-content .actions {
+    flex-direction: column;
+  }
+  /* Botón usuarios */
+  #btn_users {
+    margin: 0 auto 1rem;
+  }
+  .btn-detail,
+  .btn-signup,
+  .btn-filters {
+    min-height: 44px;
+  }
+}
 /* Contenedor base */
 .how-it-works {
   background-color: var(--bg-surface);

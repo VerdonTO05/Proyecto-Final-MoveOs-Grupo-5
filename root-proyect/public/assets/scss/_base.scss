@@ -3,7 +3,8 @@
 /* Base body */
 body {
     display: flex;
-    flex-direction: column; /* Ahora apila secciones verticalmente */
+    flex-direction: column;
+    /* Ahora apila secciones verticalmente */
     justify-content: flex-start;
     font-family: "Inter", Arial, sans-serif;
     background-color: var(--bg-main);
@@ -11,6 +12,7 @@ body {
     line-height: 1.6;
     transition: background-color 0.4s ease, color 0.4s ease;
     margin: 0;
+    overflow-x: hidden; //Evita scroll
 }
 
 /* Header */
@@ -20,12 +22,13 @@ header {
     width: 100%;
     background: var(--bg-surface);
     border-bottom: 1px solid var(--border-color);
-    padding: 1rem; /* padding horizontal reducido a 1rem para no recortar */
+    padding: 1rem;
+    /* padding horizontal reducido a 1rem para no recortar */
 
     nav {
-        width: 100%;             // Ocupa todo el ancho del header
+        width: 100%; // Ocupa todo el ancho del header
         display: flex;
-        flex-wrap: wrap;          // Permite que los elementos bajen de línea si no caben
+        flex-wrap: wrap; // Permite que los elementos bajen de línea si no caben
         justify-content: space-between;
         align-items: center;
         gap: 1rem;
@@ -33,7 +36,7 @@ header {
         ul {
             list-style: none;
             display: flex;
-            flex-wrap: wrap;     // Links se apilan si no caben
+            flex-wrap: wrap; // Links se apilan si no caben
             gap: 1.5rem;
         }
 
@@ -49,7 +52,7 @@ header {
 
         div {
             display: flex;
-            flex-wrap: wrap;     // Botones se apilan si no caben
+            flex-wrap: wrap; // Botones se apilan si no caben
             gap: 0.5rem;
 
             button {
@@ -68,7 +71,8 @@ header {
 /* Footer */
 footer {
     display: flex;
-    flex-direction: column; /* Footer apilado */
+    flex-direction: column;
+    /* Footer apilado */
     background: var(--bg-surface);
     padding: 3rem 2rem 1rem;
     color: var(--text-primary);
@@ -130,6 +134,9 @@ footer {
         transition: background-color 0.3s, color 0.3s;
         padding: 1em;
         border-radius: 6px;
+        //área táctil
+        min-width: 44px;
+        min-height: 44px;
 
         &:hover {
             background-color: var(--bg-muted);
@@ -162,7 +169,8 @@ footer {
 /* Main */
 main {
     display: flex;
-    flex-direction: column; /* Apilar secciones verticalmente */
+    flex-direction: column;
+    /* Apilar secciones verticalmente */
     background-color: var(--bg-surface);
     width: 100%;
 }
@@ -221,7 +229,8 @@ main section:first-of-type {
 /* Características y demás secciones */
 main section {
     display: flex;
-    flex-direction: column; /* Cada sección apilada */
+    flex-direction: column;
+    /* Cada sección apilada */
     align-items: center;
     gap: 2rem;
     padding: 3rem 2rem;
@@ -247,43 +256,86 @@ main section {
     text-align: center;
 }
 
-/* Tarjetas de actividades */
-.grid-activities {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1rem;
-    padding: 1rem;
-    justify-items: center;
-}
-
 .activity {
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-width: 550px;
+    min-height: 440px;
 }
 
-/* Media query para pantallas pequeñas */
-@media (max-width: 768px) {
-    header nav {
-        flex-direction: column;
-        align-items: stretch;     // que los elementos ocupen todo el ancho
+@media (max-width: 576px) {
+
+    /* Base */
+    html {
+        font-size: 14px;
     }
 
-    header nav ul {
-        flex-direction: column;
-        gap: 0.75rem;
-        width: 100%;
+    /* Header */
+    header {
+        nav {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+
+            ul {
+                justify-content: center;
+                padding: 0;
+            }
+
+            div {
+                justify-content: center;
+                width: 100%;
+            }
+        }
     }
 
-    header nav div {
-        flex-direction: column;
-        width: 100%;
-        gap: 0.5rem;
+    /* Logo */
+    .logo-container {
+        span {
+            font-size: 1.1rem;
+        }
     }
 
-    header nav div button {
-        width: 100%;             // cada botón ocupa toda la línea
+    /* Hero (primera sección) */
+    main {
+        section:first-of-type {
+            padding: 2.5rem 1rem;
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            p:nth-of-type(2) {
+                font-size: 1rem;
+            }
+
+            div {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+
+        section {
+            padding: 2rem 1rem;
+        }
+    }
+
+    /* Footer */
+    footer {
+        section {
+            flex-direction: column;
+            gap: 2rem;
+            align-items: center;
+            text-align: center;
+        }
+    }
+
+    /* Grid actividades */
+    .grid-activities {
+        padding: 0.5rem;
     }
 }
-
