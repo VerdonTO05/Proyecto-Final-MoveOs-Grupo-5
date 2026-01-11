@@ -70,6 +70,7 @@ main {
         padding: 3rem 2rem;
         border-top: 1px solid var(--border-color);
         border-bottom: 1px solid var(--border-color);
+        flex-wrap: wrap;
 
         div {
             text-align: center;

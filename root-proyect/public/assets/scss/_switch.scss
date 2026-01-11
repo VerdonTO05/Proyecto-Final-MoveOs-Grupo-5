@@ -21,9 +21,10 @@
 }
 
 .switch.top-right {
-    position: absolute;
-    top: 20px;
-    right: 20px;
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1000;
 }
 
 /* Parte deslizante */
