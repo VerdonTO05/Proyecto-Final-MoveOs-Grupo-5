@@ -40,12 +40,24 @@
 }
 
 /* Grid de actividades */
-.grid-activities {
+#gridActivities {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1rem;
     padding: 1rem;
-    justify-items: center;
+    justify-items: stretch;
+    width: 100%;
+}
+
+.container-home {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    padding: 50px 40px;
+    border-radius: 20px;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    position: relative;
+    box-sizing: border-box;
 }
 
 /* Tarjeta actividad */
@@ -57,7 +69,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-width: 550px;
+    height: 100%;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 
     &:hover {
@@ -99,6 +111,7 @@
 
     /* Contenido */
     &-content {
+        flex: 1;
         padding: 1.2rem;
         display: flex;
         flex-direction: column;

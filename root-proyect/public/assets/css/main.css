@@ -902,12 +902,24 @@ input:-webkit-autofill:active {
 }
 
 /* Grid de actividades */
-.grid-activities {
+#gridActivities {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1rem;
   padding: 1rem;
-  justify-items: center;
+  justify-items: stretch;
+  width: 100%;
+}
+
+.container-home {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  padding: 50px 40px;
+  border-radius: 20px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  position: relative;
+  box-sizing: border-box;
 }
 
 /* Tarjeta actividad */
@@ -919,7 +931,7 @@ input:-webkit-autofill:active {
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 550px;
+  height: 100%;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .activity:hover {
@@ -959,6 +971,7 @@ input:-webkit-autofill:active {
   /* Contenido */
 }
 .activity-content {
+  flex: 1;
   padding: 1.2rem;
   display: flex;
   flex-direction: column;
@@ -1051,7 +1064,7 @@ input:-webkit-autofill:active {
   display: flex;
   justify-content: center;
   margin-bottom: 0 !important;
-  padding-bottom: 0 !important;
+  padding-bottom: 1rem !important;
 }
 .how-it-works .hiw-steps .step-number {
   width: 45px;
@@ -1072,7 +1085,7 @@ input:-webkit-autofill:active {
   /* Tarjeta principal */
 }
 .how-it-works .hiw-card {
-  width: 60%;
+  width: 70%;
   margin: 0 auto;
   padding: 0;
   background: none;
@@ -1185,6 +1198,7 @@ input:-webkit-autofill:active {
 /* Cards */
 main section:nth-of-type(2) {
   display: flex;
+  flex-direction: row;
   justify-content: center;
   gap: 2rem;
   flex-wrap: wrap;
@@ -1208,6 +1222,7 @@ main {
 }
 main section:nth-of-type(3) {
   display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   gap: 4rem;

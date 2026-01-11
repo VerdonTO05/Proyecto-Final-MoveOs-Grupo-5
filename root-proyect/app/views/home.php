@@ -27,7 +27,7 @@
   <div id="header"></div>
 
   <!-- Contenido principal -->
-  <main class="main-content container">
+  <main class="main-content container-home">
     <section class="explore">
       <h1>Explora Actividades</h1>
       <p>Descubre experiencias únicas cerca de ti</p>
