@@ -9,7 +9,7 @@
     <script src="../models/header-footer.js"></script>
     <script src="../models/steps.js"></script>
     <script src="../models/how-it-works.js"></script>
-    <script src="../controllers/landing-controller.js"></script>
+    <script src="../../public/assets/js/controllers/landing-controller.js"></script>
 
     <script src="../../public/assets/js/theme-init.js"></script>
     <script src="../../public/assets/js/main.js"></script> 
