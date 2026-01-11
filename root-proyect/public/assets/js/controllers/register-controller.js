@@ -3,7 +3,7 @@
 document.getElementById('register-form').addEventListener('submit', function(e){
     e.preventDefault();
 
-    // 1º Reojemos los datos del formulario
+    // 1º Recojemos los datos del formulario
 
     const fullname = document.getElementById('fullname').value.trim();
     const username = document.getElementById('username').value.trim();
