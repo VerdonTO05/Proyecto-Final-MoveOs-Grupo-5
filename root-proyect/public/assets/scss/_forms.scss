@@ -1,7 +1,4 @@
-/* =========================
-   CONTENEDOR PRINCIPAL
-========================= */
-
+/* Layout principal */
 .first {
     display: flex;
     justify-content: center;
@@ -9,20 +6,9 @@
     min-height: 100vh;
 }
 
-/* =========================
-   CONTENEDOR FORMULARIO
-========================= */
-
+/* Contenedor del formulario */
 .container {
-    background-color: var(--bg-surface);
-    border: 1px solid var(--border-color);
-    padding: clamp(1.5rem, 4vw, 3rem);
-    border-radius: 1.25rem;
-    box-shadow: 0 0.375rem 1.5rem rgba(0, 0, 0, 0.08);
-    max-width: 37.5rem;
-    width: 100%;
-    position: relative;
-    box-sizing: border-box;
+    @include card-base(); // usa tu mixin card-base existente
 
     .close-btn {
         position: absolute;
@@ -36,10 +22,7 @@
     }
 }
 
-/* =========================
-   ENCABEZADO
-========================= */
-
+/* Encabezado */
 .header-form {
     h1 {
         font-size: 1.5rem;
@@ -56,10 +39,7 @@
     }
 }
 
-/* =========================
-   SWITCH LOGIN / REGISTER
-========================= */
-
+/* Login / Register */
 .tab-switch {
     display: flex;
     background-color: var(--bg-main);
@@ -68,16 +48,11 @@
     margin-bottom: 1.5rem;
 
     .tab-btn {
+        @include btn-base(var(--bg-main), var(--text-secondary), clamp(0.6rem, 2vw, 0.9rem) clamp(1rem, 3vw, 1.3rem), 2rem);
         flex-grow: 1;
-        padding: clamp(0.6rem, 2vw, 0.9rem)
-                 clamp(1rem, 3vw, 1.3rem);
-        border-radius: 2rem;
-        background: none;
         font-weight: bold;
         font-size: 1.125rem;
-        cursor: pointer;
         transition: all 0.3s ease;
-        color: var(--text-secondary);
 
         &.active {
             background-color: var(--bg-surface);
@@ -87,21 +62,16 @@
     }
 }
 
-/* =========================
-   FORMULARIOS
-========================= */
-
+/* Formularios */
 label {
     color: var(--text-primary);
 }
 
+/* Input group */
 .input-group {
+    @include card-base(var(--bg-main), 1px solid var(--border-color), 0.75rem, 0, 0.4rem 0.6rem);
     display: flex;
     align-items: center;
-    border: 1px solid var(--border-color);
-    background-color: var(--bg-main);
-    border-radius: 0.75rem;
-    padding: 0.4rem 0.6rem;
     margin-bottom: 0.75rem;
     transition: border-color 0.3s;
 
@@ -116,6 +86,11 @@ label {
         outline: none;
         font-size: 1.0625rem;
         background: none;
+        color: var(--text-secondary);
+
+        &::placeholder {
+            color: var(--text-secondary);
+        }
     }
 
     .icon,
@@ -137,31 +112,14 @@ input[type="email"] {
     color: var(--text-secondary);
 }
 
-::placeholder {
-    color: var(--text-secondary);
-}
-
-/* =========================
-   BOTÓN ENVIAR
-========================= */
-
+/* Enviar */
 .submit-btn {
+    @include btn-base(); // usa tu mixin btn-base
     width: 100%;
-    padding: clamp(0.9rem, 3vw, 1.1rem);
-    background-color: var(--brand-primary);
-    color: var(--bg-surface);
-    border-radius: 0.75rem;
-    font-size: 1.125rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s;
     margin-top: 0.75rem;
 }
 
-/* =========================
-   LISTA USUARIOS (DEBUG)
-========================= */
-
+/* Lista usuarios */
 .user-list {
     padding: 0;
     margin-bottom: 2rem;
@@ -177,14 +135,12 @@ input[type="email"] {
     }
 }
 
-/* =========================
-   RESPONSIVE – MÓVIL Y PANTALLAS BAJAS
-========================= */
-
-@media (max-width: 576px), (max-height: 700px) {
+/* Responsive */
+@media (max-width: 576px),
+(max-height: 700px) {
     .first {
-        align-items: flex-start;   // deja respirar arriba
-        justify-content: center;   // sigue centrado horizontal
+        align-items: flex-start;
+        justify-content: center;
         padding-top: 3.5rem;
         padding-bottom: 3.5rem;
     }
@@ -206,29 +162,14 @@ input[type="email"] {
 
     .tab-switch {
         margin-bottom: 1.25rem;
-    }
 
-    .tab-switch .tab-btn {
-        font-size: 1rem;
-        padding: 0.6rem 0.8rem;
+        .tab-btn {
+            font-size: 1rem;
+            padding: 0.6rem 0.8rem;
+        }
     }
 
     .submit-btn {
         font-size: 1.05rem;
-    }
-}
-
-/* =========================
-   LANDSCAPE MUY BAJO
-========================= */
-
-@media (max-height: 480px) {
-    .first {
-        padding-top: 3rem;
-        padding-bottom: 3rem;
-    }
-
-    .container {
-        max-height: calc(100vh - 6rem);
     }
 }

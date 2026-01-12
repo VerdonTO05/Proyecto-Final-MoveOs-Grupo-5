@@ -3,7 +3,7 @@ const headerHTML = `<header>
     <nav>
         <div class="logo-container">
             <a href="#">
-                <img src="../../public/assets/img/ico/icono.png" alt="Logo MOVEos">
+                <img src="../../public/assets/img/ico/icono.svg" alt="Logo MOVEos">
                 <span>MOVEos</span>
             </a>
         </div>
@@ -25,7 +25,7 @@ const footerHTML = `<footer>
     <section>
         <div class="logo-container">
             <a href="#">
-                <img src="../../public/assets/img/ico/icono.png" alt="Logo MOVEos">
+                <img src="../../public/assets/img/ico/icono.svg" alt="Logo MOVEos">
                 <span>MOVEos</span>
             </a>
             <p>Dinamismo, cambio y participación activa en cada experiencia.</p>

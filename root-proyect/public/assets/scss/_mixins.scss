@@ -21,3 +21,30 @@
   font-weight: 500;
   border: none;
 }
+
+@mixin btn-base(
+  $bg: var(--bg-surface), 
+  $color: var(--text-primary), 
+  $padding: 0.75rem, 
+  $radius: 10px
+) {
+  background-color: $bg;
+  color: $color;
+  border-radius: $radius;
+  padding: $padding;
+  cursor: pointer;
+  font-weight: 600;
+  border: none;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: background-color 0.2s;
+}
+
+@mixin card-base($bg: var(--bg-surface), $border: 1px solid var(--border-color), $radius: 12px, $shadow: 0 2px 5px rgba(0, 0, 0, 0.05), $padding: 2rem) {
+  background-color: $bg;
+  border: $border;
+  border-radius: $radius;
+  box-shadow: $shadow;
+  padding: $padding;
+  box-sizing: border-box;
+}

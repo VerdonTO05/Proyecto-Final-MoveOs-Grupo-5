@@ -1,57 +1,5 @@
 /* =========================
-   Filtros
-========================= */
-.filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  width: 100%;
-  align-items: stretch;
-  margin-bottom: 2rem;
-
-  input[type="text"],
-  select,
-  .btn-filters {
-    flex: 1;
-    min-width: 250px;
-    padding: 0.75rem 1rem;
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    font-size: 1rem;
-    background-color: var(--bg-surface);
-    color: var(--text-primary);
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: left;
-  }
-
-  select {
-    appearance: none;
-  }
-
-  .btn-filters {
-    flex: 0 0 auto;
-    padding: 0.75rem 1.25rem;
-    font-weight: 500;
-    cursor: pointer;
-  }
-}
-
-/* =========================
-   Grid de actividades
-========================= */
-#gridActivities {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-  gap: 1rem;
-  padding: 1rem;
-  width: 100%;
-}
-
-/* =========================
-   Contenedor principal
+   Contenedores y Layout Global
 ========================= */
 .container-home {
   background-color: var(--bg-surface);
@@ -61,8 +9,48 @@
   box-sizing: border-box;
 }
 
+#gridActivities {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+  width: 100%;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  width: 100%;
+  align-items: stretch;
+  margin-bottom: 2rem;
+
+  input[type="text"],
+  select {
+    flex: 1;
+    min-width: 250px;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    font-size: 1rem;
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+    box-sizing: border-box;
+  }
+
+  select {
+    appearance: none;
+  }
+
+  .btn-filters {
+    @include btn-base(); // usa defaults
+    flex: 0 0 auto;
+    padding: 0.75rem 1.25rem; // se puede sobrescribir si quieres
+  }
+}
+
 /* =========================
-   Tarjeta actividad
+   Componentes: Tarjeta Actividad
 ========================= */
 .activity {
   background-color: var(--bg-surface);
@@ -77,105 +65,98 @@
     transform: translateY(-5px);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
   }
-}
 
-/* ---------- Imagen ---------- */
-.activity-image {
-  position: relative;
-  height: 200px;
-  overflow: hidden;
+  /* ---------- Imagen ---------- */
+  .activity-image {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
 
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .tag {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    padding: 0.3rem 0.8rem;
-    border-radius: 10px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--text-on-primary);
-
-    &.destacado {
-      background-color: var(--accent-green);
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
-    &.nuevo {
-      background-color: var(--accent-purple);
-    }
-  }
-}
-
-/* ---------- Contenido ---------- */
-.activity-content {
-  flex: 1;
-  padding: 1.2rem;
-  display: flex;
-  flex-direction: column;
-  background-color: var(--bg-main);
-
-  h3 {
-    font-size: 1.1rem;
-    margin-bottom: 0.1rem;
-    font-weight: 600;
-  }
-
-  p {
-    color: var(--text-primary);
-    font-size: 0.9rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .details {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 0.3rem;
-    font-size: 0.9rem;
-
-    li {
-      margin-bottom: 0.25rem;
-    }
-  }
-
-  .price {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--brand-dark);
-    margin-top: auto;
-    margin-bottom: 1rem;
-  }
-
-  .actions {
-    display: flex;
-    gap: 0.5rem;
-
-    .btn-detail,
-    .btn-signup {
-      flex: 1;
-      border: none;
+    .tag {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 0.3rem 0.8rem;
       border-radius: 10px;
-      padding: 0.75rem;
-      cursor: pointer;
+      font-size: 0.85rem;
       font-weight: 600;
-      transition: background-color 0.2s;
-    }
+      color: var(--text-on-primary);
 
-    .btn-signup {
-      background-color: var(--brand-primary);
-      color: var(--bg-surface);
+      &.destacado {
+        background-color: var(--accent-green);
+      }
+
+      &.nuevo {
+        background-color: var(--accent-purple);
+      }
     }
   }
-}
 
-/* ---------- Estado desactivado ---------- */
-.activity-content.desactivate {
-  background-color: var(--desactivate-color);
-  opacity: 0.55;
+  /* ---------- Contenido ---------- */
+  .activity-content {
+    flex: 1;
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-main);
+
+    h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.1rem;
+      font-weight: 600;
+    }
+
+    p {
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .details {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 0.3rem;
+      font-size: 0.9rem;
+
+      li {
+        margin-bottom: 0.25rem;
+      }
+    }
+
+    .price {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--brand-dark);
+      margin-top: auto;
+      margin-bottom: 1rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.5rem;
+
+      .btn-detail {
+        @include btn-base();
+        flex: 1;
+      }
+
+      .btn-signup {
+        @include btn-base(var(--brand-primary), var(--bg-surface));
+        flex: 1;
+      }
+    }
+
+    &.desactivate {
+      background-color: var(--desactivate-color);
+      opacity: 0.55;
+    }
+  }
 }
 
 /* =========================
@@ -204,17 +185,17 @@
 
   .activity {
     border-radius: 16px;
-  }
 
-  .activity-image {
-    height: 160px;
-  }
+    .activity-image {
+      height: 160px;
+    }
 
-  .activity-content {
-    padding: 1rem;
+    .activity-content {
+      padding: 1rem;
 
-    .actions {
-      flex-direction: column;
+      .actions {
+        flex-direction: column;
+      }
     }
   }
 
