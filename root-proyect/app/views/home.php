@@ -15,11 +15,11 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-
-  <script src="../models/activity.js"></script>
   <script src="../models/activities.js"></script>
+  <script src="../models/activity.js"></script>
 
-  <script src="../controllers/home-controller.js"></script>
+
+  <!-- <script src="../controllers/home-controller.js"></script> -->
 </head>
 
 <body>

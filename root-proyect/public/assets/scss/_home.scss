@@ -77,121 +77,105 @@
     transform: translateY(-5px);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
   }
+}
 
-  /* ---------- Estado desactivado ---------- */
-  &.desactivate {
-    background-color: var(--desactivate-color);
-    opacity: 0.75;
+/* ---------- Imagen ---------- */
+.activity-image {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
 
-    &:hover {
-      transform: none;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      cursor: not-allowed;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .tag {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 0.3rem 0.8rem;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-on-primary);
+
+    &.destacado {
+      background-color: var(--accent-green);
     }
 
-    .activity-content {
-      background-color: var(--desactivate-color);
+    &.nuevo {
+      background-color: var(--accent-purple);
+    }
+  }
+}
+
+/* ---------- Contenido ---------- */
+.activity-content {
+  flex: 1;
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-main);
+
+  h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.1rem;
+    font-weight: 600;
+  }
+
+  p {
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .details {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 0.3rem;
+    font-size: 0.9rem;
+
+    li {
+      margin-bottom: 0.25rem;
+    }
+  }
+
+  .price {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--brand-dark);
+    margin-top: auto;
+    margin-bottom: 1rem;
+  }
+
+  .actions {
+    display: flex;
+    gap: 0.5rem;
+
+    .btn-detail,
+    .btn-signup {
+      flex: 1;
+      border: none;
+      border-radius: 10px;
+      padding: 0.75rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.2s;
     }
 
     .btn-signup {
-      background-color: var(--border-color);
-      cursor: not-allowed;
-      pointer-events: none;
+      background-color: var(--brand-primary);
+      color: var(--bg-surface);
     }
   }
+}
 
-  /* ---------- Imagen ---------- */
-  &-image {
-    position: relative;
-    height: 200px;
-    overflow: hidden;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .tag {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      padding: 0.3rem 0.8rem;
-      border-radius: 10px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-on-primary);
-
-      &.destacado {
-        background-color: var(--accent-green);
-      }
-
-      &.nuevo {
-        background-color: var(--accent-purple);
-      }
-    }
-  }
-
-  /* ---------- Contenido ---------- */
-  &-content {
-    flex: 1;
-    padding: 1.2rem;
-    display: flex;
-    flex-direction: column;
-    background-color: var(--bg-main);
-
-    h3 {
-      font-size: 1.1rem;
-      margin-bottom: 0.1rem;
-      font-weight: 600;
-    }
-
-    p {
-      color: var(--text-primary);
-      font-size: 0.9rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .details {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 0.3rem;
-      font-size: 0.9rem;
-
-      li {
-        margin-bottom: 0.25rem;
-      }
-    }
-
-    .price {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--brand-dark);
-      margin-top: auto;
-      margin-bottom: 1rem;
-    }
-
-    .actions {
-      display: flex;
-      gap: 0.5rem;
-
-      .btn-detail,
-      .btn-signup {
-        flex: 1;
-        border: none;
-        border-radius: 10px;
-        padding: 0.75rem;
-        cursor: pointer;
-        font-weight: 600;
-        transition: background-color 0.2s;
-      }
-
-      .btn-signup {
-        background-color: var(--brand-primary);
-        color: var(--bg-surface);
-      }
-    }
-  }
+/* ---------- Estado desactivado ---------- */
+.activity-content.desactivate {
+  background-color: var(--desactivate-color);
+  opacity: 0.55;
 }
 
 /* =========================
@@ -220,17 +204,17 @@
 
   .activity {
     border-radius: 16px;
+  }
 
-    &-image {
-      height: 160px;
-    }
+  .activity-image {
+    height: 160px;
+  }
 
-    &-content {
-      padding: 1rem;
+  .activity-content {
+    padding: 1rem;
 
-      .actions {
-        flex-direction: column;
-      }
+    .actions {
+      flex-direction: column;
     }
   }
 

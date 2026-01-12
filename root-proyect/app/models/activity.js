@@ -20,29 +20,36 @@ class Activity {
     const article = document.createElement("article");
     article.classList.add("activity");
 
+    // usa la propiedad real de la actividad
+    const isActive = !!this.activate;
+    const contentClass = isActive ? "activity-content" : "activity-content desactivate";
+
     article.innerHTML = `
-      <div class="activity-image ${this.activate ? "" : "desactivate"}">
-        <img src="${this.image}" alt="${this.alt}">
-        ${this.label ? `<span class="tag ${this.labelClass}">${this.label}</span>` : ""}
+    <div class="activity-image">
+      <img src="${this.image}" alt="${this.alt}">
+      ${this.label ? `<span class="tag ${this.labelClass}">${this.label}</span>` : ""}
+    </div>
+
+    <div class="${contentClass}">
+      <h3>${this.title}</h3>
+      <p>${this.description}</p>
+
+      <ul class="details">
+        ${this.details.map(d => `<li>${d}</li>`).join("")}
+      </ul>
+
+      ${this.price ? `<div class="price">${this.price}</div>` : ""}
+
+      <div class="actions">
+        <button class="btn-detail">Ver Detalles</button>
+        <button class="btn-signup" ${!isActive ? "disabled" : ""}>Inscribirse</button>
       </div>
-
-      <div class="activity-content">
-        <h3>${this.title}</h3>
-        <p>${this.description}</p>
-
-        <ul class="details">
-          ${this.details.map(d => `<li>${d}</li>`).join("")}
-        </ul>
-
-        ${this.price ? `<div class="price">${this.price}</div>` : ""}
-
-        <div class="actions">
-          <button class="btn-detail">Ver Detalles</button>
-          <button class="btn-signup">Inscribirse</button>
-        </div>
-      </div>
-    `;
+    </div>
+  `;
 
     return article;
   }
+
+
+
 }

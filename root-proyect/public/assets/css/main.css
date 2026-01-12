@@ -68,7 +68,7 @@ button {
   --accent-green: #2ecc71;
   --accent-purple: #9b59b6;
   --border-color: #e0e0e0;
-  --desactivate-color: #8e8b8b;
+  --desactivate-color: #aaa6a6;
 }
 
 .dark-mode {
@@ -83,7 +83,7 @@ button {
   --accent-green: #27ae60;
   --accent-purple: #8e44ad;
   --border-color: #382527;
-  --desactivate-color: #464344;
+  --desactivate-color: #373435;
 }
 
 /* Base body */
@@ -884,29 +884,8 @@ input[type=email] {
   transform: translateY(-5px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
-.activity {
-  /* ---------- Estado desactivado ---------- */
-}
-.activity.desactivate {
-  background-color: var(--desactivate-color);
-  opacity: 0.75;
-}
-.activity.desactivate:hover {
-  transform: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  cursor: not-allowed;
-}
-.activity.desactivate .activity-content {
-  background-color: var(--desactivate-color);
-}
-.activity.desactivate .btn-signup {
-  background-color: var(--border-color);
-  cursor: not-allowed;
-  pointer-events: none;
-}
-.activity {
-  /* ---------- Imagen ---------- */
-}
+
+/* ---------- Imagen ---------- */
 .activity-image {
   position: relative;
   height: 200px;
@@ -933,9 +912,8 @@ input[type=email] {
 .activity-image .tag.nuevo {
   background-color: var(--accent-purple);
 }
-.activity {
-  /* ---------- Contenido ---------- */
-}
+
+/* ---------- Contenido ---------- */
 .activity-content {
   flex: 1;
   padding: 1.2rem;
@@ -986,6 +964,12 @@ input[type=email] {
 .activity-content .actions .btn-signup {
   background-color: var(--brand-primary);
   color: var(--bg-surface);
+}
+
+/* ---------- Estado desactivado ---------- */
+.activity-content.desactivate {
+  background-color: var(--desactivate-color);
+  opacity: 0.55;
 }
 
 /* =========================
