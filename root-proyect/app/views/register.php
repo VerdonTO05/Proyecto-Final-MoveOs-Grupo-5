@@ -14,7 +14,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-    <!-- <script src="../controllers/register-controller.js"></script> -->
+    <script src="../../public/assets/js/controllers/register-controller.js"></script>
     <!-- <script src="../models/validation.js"></script> -->
     <script src="../models/user-model.js"></script>
 
@@ -45,7 +45,7 @@
                 <button class="tab-btn active">Registrarse</button>
             </div>
             <!-- Formulario -->
-            <form id="register-form" action="../controllers/register-controller.php" class="register-form">
+            <form id="register-form" class="register-form">
 
                 <label for="fullname">Nombre Completo *</label>
                 <div class="input-group">
@@ -93,7 +93,7 @@
                 <input type="submit" class="submit-btn" name="registrarse" value="Registrarse">
 
             </form>
-            <?php include "../controllers/register-controller.php" ?>
+            
         </div>
     </div>
 </body>

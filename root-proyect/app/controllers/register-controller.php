@@ -28,7 +28,7 @@
 
 
 //     //PASSWORD HASH
-//     $password_hash =password_hash($password, PASSWORD_DEFAULT);
+//     $password_hash = password_hash($password, PASSWORD_DEFAULT);
 //     //
 //     $insert = $bd->prepare('INSERT INTO users (full_name,username,email,password_hash,role_id) VALUES (?,?,?,?,?) ');
 //     $insert->execute([$fullname,$username,$email,$password_hash,$id]);
