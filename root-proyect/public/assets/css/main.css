@@ -848,7 +848,7 @@ input[type=email] {
 /* Grid de actividades */
 #gridActivities {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
   gap: 1rem;
   padding: 1rem;
   justify-items: stretch;
@@ -857,8 +857,6 @@ input[type=email] {
 
 .container-home {
   background-color: var(--bg-surface);
-  border: 1px solid var(--border-color);
-  padding: 50px 40px;
   box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
   width: 100%;
   position: relative;
