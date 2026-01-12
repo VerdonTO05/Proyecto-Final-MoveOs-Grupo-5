@@ -23,10 +23,13 @@ class Activity {
     // usa la propiedad real de la actividad
     const isActive = !!this.activate;
     const contentClass = isActive ? "activity-content" : "activity-content desactivate";
+    const img = isActive
+      ? `<img src="../../public/assets/img/original/${this.image}" alt="${this.alt}">`
+      : `<img src="../../public/assets/img/editada/${this.image}" alt="${this.alt}">`;
 
     article.innerHTML = `
     <div class="activity-image">
-      <img src="${this.image}" alt="${this.alt}">
+      ${img}
       ${this.label ? `<span class="tag ${this.labelClass}">${this.label}</span>` : ""}
     </div>
 

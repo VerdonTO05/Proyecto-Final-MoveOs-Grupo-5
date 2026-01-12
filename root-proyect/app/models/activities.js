@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     {
       title: "Ruta de Senderismo en la Sierra de Guadarrama",
       description: "Descubre la naturaleza en esta impresionante ruta por la Sierra de Guadarrama.",
-      image: "../../public/assets/img/ruta.jpg",
+      image: "ruta.jpg",
       alt: "Ruta de Senderismo",
       label: "Recomendado",
       labelClass: "destacado",
@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
     {
       title: "Clase de Yoga",
       description: "Sesión de yoga para principiantes impartida por un instructor especializado.",
-      image: "../../public/assets/img/yoga.jpg",
+      image: "yoga.jpg",
       alt: "Clase de Yoga",
       label: "Nuevo",
       labelClass: "nuevo",
@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
     {
       title: "Taller de Fotografía Urbana",
       description: "Aprende a capturar la esencia de la ciudad con tu cámara o móvil en este taller práctico por las calles de Madrid.",
-      image: "../../public/assets/img/fotografia.jpg",
+      image: "fotografia.jpg",
       alt: "Taller de Fotografía Urbana",
       label: "Popular",
       labelClass: "destacado",
@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
     {
       title: "Cata de Vinos",
       description: "Disfruta de una experiencia sensorial con una selección de vinos locales y aprende sobre maridaje y cata profesional.",
-      image: "../../public/assets/img/vinos.jpg",
+      image: "vinos.jpg",
       alt: "Cata de Vinos",
       label: "Exclusivo",
       labelClass: "destacado",
@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
     {
       title: "Clase de Cocina Mediterránea",
       description: "Prepara platos típicos mediterráneos con un chef experto y descubre los secretos de esta cocina saludable y deliciosa.",
-      image: "../../public/assets/img/cocina.jpg",
+      image: "cocina.jpg",
       alt: "Clase de Cocina Mediterránea",
       label: "Recomendado",
       labelClass: "destacado",
@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
     {
       title: "Ruta en Bicicleta por la Costa",
       description: "Explora la costa con una ruta guiada en bicicleta, perfecta para disfrutar del mar y el aire libre con amigos.",
-      image: "../../public/assets/img/bicicleta.jpg",
+      image: "bicicleta.jpg",
       alt: "Ruta en Bicicleta por la Costa",
       label: "Aventura",
       labelClass: "nuevo",
