@@ -1,5 +1,71 @@
 <?php
 
+session_start();
+header('Content-Type: application/json; charset=utf-8');
+
+// 1. Recibir datos JSON
+$input = file_get_contents('php://input');
+$data = json_decode($input, true);
+
+$fullname = $data['fullname'] ?? '';
+$username = $data['username'] ?? '';
+$email = $data['email'] ?? '';
+$rol = $data['rol'] ?? '';
+$password = $data['password'] ?? '';
+
+// 2. Validar datos obligatorios
+if (empty($fullname) || empty($username) || empty($email) || empty($rol) || empty($password)) {
+    echo json_encode(['success' => false, 'message' => 'Faltan datos obligatorios']);
+    exit;
+}
+
+try {
+    // 3. Conectar a la base de datos
+    $bd = new PDO('mysql:host=localhost;dbname=moveos;charset=utf8', 'root', '');
+    $bd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    // 4. Obtener ID del rol
+    $consultaIdRol = $bd->prepare('SELECT id FROM roles WHERE name = ?');
+    $consultaIdRol->execute([$rol]);
+    $datosID = $consultaIdRol->fetch();
+
+    if (!$datosID) {
+        echo json_encode(['success' => false, 'message' => 'Rol no encontrado']);
+        exit;
+    }
+
+    $idRol = $datosID['id'];
+    $password_hash = password_hash($password, PASSWORD_DEFAULT);
+
+    // 5. Insertar usuario
+    $insert = $bd->prepare('INSERT INTO users (full_name,username,email,password_hash,role_id) VALUES (?,?,?,?,?)');
+    $insert->execute([$fullname, $username, $email, $password_hash, $idRol]);
+
+    if ($insert->rowCount() == 1) {
+        $idUsuario = $bd->lastInsertId();
+        $_SESSION['user_id'] = $idUsuario;
+        $_SESSION['username'] = $username;
+        $_SESSION['rol'] = $rol;
+
+        echo json_encode([
+            'success' => true,
+            'message' => 'Usuario registrado correctamente'
+        ]);
+    } else {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Error al insertar usuario'
+        ]);
+    }
+
+} catch (Exception $e) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Error del servidor: ' . $e->getMessage()
+    ]);
+}
+
+
 // session_start();
 
 // header('Content-Type: application/json; charset=utf-8');
@@ -79,7 +145,7 @@
 
 //             $datos = $consulta_id->fetch();
 //             $id_rol = $datos['id'];
-            
+
 //             $insertar = $bd->prepare('INSERT INTO users (full_name,email,username,password_hash,role_id) VALUES (?,?,?,?,?)');
 //             $insertar->execute([$fullname, $email, $username, $encrypted_pass, $id_rol]);
 
