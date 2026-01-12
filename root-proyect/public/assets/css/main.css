@@ -68,6 +68,7 @@ button {
   --accent-green: #2ecc71;
   --accent-purple: #9b59b6;
   --border-color: #e0e0e0;
+  --desactivate-color: #8e8b8b;
 }
 
 .dark-mode {
@@ -82,6 +83,7 @@ button {
   --accent-green: #27ae60;
   --accent-purple: #8e44ad;
   --border-color: #382527;
+  --desactivate-color: #464344;
 }
 
 /* Base body */
@@ -806,10 +808,11 @@ input[type=email] {
   border-radius: 50%;
 }
 
-/* Filtros */
+/* =========================
+   Filtros
+========================= */
 .filters {
   display: flex;
-  flex-direction: row;
   flex-wrap: wrap;
   gap: 1rem;
   width: 100%;
@@ -835,8 +838,6 @@ input[type=email] {
 }
 .filters select {
   appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
 }
 .filters .btn-filters {
   flex: 0 0 auto;
@@ -845,16 +846,20 @@ input[type=email] {
   cursor: pointer;
 }
 
-/* Grid de actividades */
+/* =========================
+   Grid de actividades
+========================= */
 #gridActivities {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
   gap: 1rem;
   padding: 1rem;
-  justify-items: stretch;
   width: 100%;
 }
 
+/* =========================
+   Contenedor principal
+========================= */
 .container-home {
   background-color: var(--bg-surface);
   box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
@@ -863,7 +868,9 @@ input[type=email] {
   box-sizing: border-box;
 }
 
-/* Tarjeta actividad */
+/* =========================
+   Tarjeta actividad
+========================= */
 .activity {
   background-color: var(--bg-surface);
   border-radius: 20px;
@@ -871,8 +878,6 @@ input[type=email] {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 100%;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .activity:hover {
@@ -880,7 +885,27 @@ input[type=email] {
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 .activity {
-  /* Imagen */
+  /* ---------- Estado desactivado ---------- */
+}
+.activity.desactivate {
+  background-color: var(--desactivate-color);
+  opacity: 0.75;
+}
+.activity.desactivate:hover {
+  transform: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  cursor: not-allowed;
+}
+.activity.desactivate .activity-content {
+  background-color: var(--desactivate-color);
+}
+.activity.desactivate .btn-signup {
+  background-color: var(--border-color);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.activity {
+  /* ---------- Imagen ---------- */
 }
 .activity-image {
   position: relative;
@@ -909,7 +934,7 @@ input[type=email] {
   background-color: var(--accent-purple);
 }
 .activity {
-  /* Contenido */
+  /* ---------- Contenido ---------- */
 }
 .activity-content {
   flex: 1;
@@ -932,7 +957,6 @@ input[type=email] {
   list-style: none;
   padding: 0;
   margin: 0 0 0.3rem;
-  color: var(--text-primary);
   font-size: 0.9rem;
 }
 .activity-content .details li {
@@ -964,26 +988,10 @@ input[type=email] {
   color: var(--bg-surface);
 }
 
-/* Botón prueba ver usuarios */
-#btn_users {
-  background-color: var(--brand-primary);
-  color: var(--text-on-primary);
-  border-radius: 8px;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  font-weight: 600;
-  display: block;
-  margin: 0 auto 1rem;
-}
-
-input[type=text],
-select,
-.btn-filters {
-  min-width: 220px;
-}
-
+/* =========================
+   Responsive
+========================= */
 @media (max-width: 576px) {
-  /* Filtros */
   .filters {
     flex-direction: column;
     gap: 0.75rem;
@@ -994,15 +1002,12 @@ select,
     width: 100%;
     min-width: 100%;
   }
-  /* Contenedor principal */
   .container-home {
     padding: 1.5rem 1rem;
   }
-  /* Grid */
   #gridActivities {
     padding: 0.5rem;
   }
-  /* Tarjetas */
   .activity {
     border-radius: 16px;
   }
@@ -1014,10 +1019,6 @@ select,
   }
   .activity-content .actions {
     flex-direction: column;
-  }
-  /* Botón usuarios */
-  #btn_users {
-    margin: 0 auto 1rem;
   }
   .btn-detail,
   .btn-signup,

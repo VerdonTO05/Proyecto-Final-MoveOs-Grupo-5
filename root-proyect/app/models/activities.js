@@ -11,9 +11,10 @@ document.addEventListener("DOMContentLoaded", () => {
       details: [
         '25 Nov 2025',
         'Madrid',
-        '8/10 participantes'
+        '10/10 participantes'
       ],
-      price: "35€"
+      price: "35€",
+      activate: false
     },
     {
       title: "Clase de Yoga",
@@ -27,7 +28,8 @@ document.addEventListener("DOMContentLoaded", () => {
         "25 Nov 2025",
         "5 horas"
       ],
-      price: "20€"
+      price: "20€",
+      activate: true
     },
     {
       title: "Taller de Fotografía Urbana",
@@ -41,7 +43,8 @@ document.addEventListener("DOMContentLoaded", () => {
         "25 Nov 2025",
         "3 horas"
       ],
-      price: "30€"
+      price: "30€",
+      activate: true
     },
     {
       title: "Cata de Vinos",
@@ -55,7 +58,8 @@ document.addEventListener("DOMContentLoaded", () => {
         "25 Nov 2025",
         "2 horas"
       ],
-      price: "45€"
+      price: "45€",
+      activate: true
     },
     {
       title: "Clase de Cocina Mediterránea",
@@ -69,7 +73,8 @@ document.addEventListener("DOMContentLoaded", () => {
         "25 Nov 2025",
         "4 horas"
       ],
-      price: "40€"
+      price: "40€",
+      activate: false
     },
     {
       title: "Ruta en Bicicleta por la Costa",
@@ -83,7 +88,8 @@ document.addEventListener("DOMContentLoaded", () => {
         "25 Nov 2025",
         "6 horas"
       ],
-      price: "25€"
+      price: "25€",
+      activate: true
     }
   ];
 
