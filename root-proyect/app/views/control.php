@@ -9,10 +9,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <script src="../../public/assets/js/theme-init.js"></script>
+    <script src="../../public/assets/js/alerts.js"></script>
     <link rel="stylesheet" href="../../public/assets/css/main.css">
 </head>
 
 <body>
+
 
     <div id="header"></div>
 
@@ -106,11 +108,30 @@
                     </button>
                 </div>
             </div>
+
         </section>
 
     </div>
-    <div id="footer"></div>
+    <!-- Contenedor de modal -->
+    <div id="modal-container"></div>
 
+    <!-- Botón de prueba -->
+    <button onclick="showConfirm({
+    title: '¿Aprobar actividad?',
+    message: 'Estás a punto de aprobar la actividad Excursión en Kayak por la Costa. Esta actividad será visible para todos los usuarios y podrán inscribirse.',
+    onConfirm: () => {
+        console.log('Actividad aprobada');
+        showAlert({
+            type: 'success',
+            title: 'Aprobada',
+            message: 'La actividad ha sido aprobada correctamente'
+        });
+    }
+})">
+        Aprobar actividad
+    </button>
+
+    <div id="footer"></div>
 </body>
 
 </html>

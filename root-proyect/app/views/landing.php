@@ -21,7 +21,7 @@
 </head>
 
 <body>
-
+    <div id="alert-container"></div>
     <!-- Encabezado -->
     <div id="header"></div>
 

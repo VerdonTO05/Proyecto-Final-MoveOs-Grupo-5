@@ -1527,4 +1527,76 @@ body {
   cursor: not-allowed;
 }
 
+#modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none; /* desactivar clicks hasta que haya modal */
+  z-index: 10000;
+}
+#modal-container.active {
+  pointer-events: auto; /* activar clicks */
+  background-color: rgba(0, 0, 0, 0.4); /* fondo oscuro solo visible con modal */
+}
+#modal-container .modal {
+  pointer-events: auto;
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  max-width: 450px;
+  width: 90%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.25s ease;
+}
+#modal-container .modal .modal-header {
+  font-weight: bold;
+  margin-bottom: 0.75rem;
+}
+#modal-container .modal .modal-body {
+  margin-bottom: 1.25rem;
+}
+#modal-container .modal .modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+#modal-container .modal .modal-actions button {
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+#modal-container .modal .modal-actions button.cancel {
+  background-color: var(--bg-muted);
+  color: var(--text-secondary);
+}
+#modal-container .modal .modal-actions button.confirm {
+  background-color: var(--accent-green);
+  color: var(--text-on-primary);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
 /*# sourceMappingURL=main.css.map */
