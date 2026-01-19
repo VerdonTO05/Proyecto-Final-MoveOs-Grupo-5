@@ -1,3 +1,5 @@
+@use "abstracts/mixins" as m;
+
 /* Layout principal */
 .first {
     display: flex;
@@ -8,7 +10,7 @@
 
 /* Contenedor del formulario */
 .container {
-    @include card-base(); // usa tu mixin card-base existente
+    @include m.card-base(); 
 
     .close-btn {
         position: absolute;
@@ -48,7 +50,7 @@
     margin-bottom: 1.5rem;
 
     .tab-btn {
-        @include btn-base(var(--bg-main), var(--text-secondary), clamp(0.6rem, 2vw, 0.9rem) clamp(1rem, 3vw, 1.3rem), 2rem);
+        @include m.btn-base(var(--bg-main), var(--text-secondary), clamp(0.6rem, 2vw, 0.9rem) clamp(1rem, 3vw, 1.3rem), 2rem);
         flex-grow: 1;
         font-weight: bold;
         font-size: 1.125rem;
@@ -69,7 +71,7 @@ label {
 
 /* Input group */
 .input-group {
-    @include card-base(var(--bg-main), 1px solid var(--border-color), 0.75rem, 0, 0.4rem 0.6rem);
+    @include m.card-base(var(--bg-main), 1px solid var(--border-color), 0.75rem, 0, 0.4rem 0.6rem);
     display: flex;
     align-items: center;
     margin-bottom: 0.75rem;
@@ -114,7 +116,7 @@ input[type="email"] {
 
 /* Enviar */
 .submit-btn {
-    @include btn-base(); // usa tu mixin btn-base
+    @include m.btn-base(); // usa tu mixin btn-base
     width: 100%;
     margin-top: 0.75rem;
 }

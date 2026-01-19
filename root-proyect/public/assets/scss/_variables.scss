@@ -1,4 +1,3 @@
-// Mapa de colores para Light y Dark Mode
 $light-theme: (
   bg-main: #ffffff,
   bg-surface: #fef8f8,
@@ -10,8 +9,11 @@ $light-theme: (
   brand-dark: #3f0f1a,
   accent-green: #2ecc71,
   accent-purple: #9b59b6,
+  accent-warning: #f5b041, // nuevo
+  accent-danger: #e74c3c,  // nuevo
+  accent-info: #3498db,    // nuevo
   border-color: #e0e0e0,
-  desactivate-color:#aaa6a6
+  desactivate-color: #aaa6a6
 );
 
 $dark-theme: (
@@ -25,6 +27,10 @@ $dark-theme: (
   brand-dark: #b77174,
   accent-green: #27ae60,
   accent-purple: #8e44ad,
+  accent-warning: #f39c12, // nuevo
+  accent-danger: #c0392b,  // nuevo
+  accent-info: #2980b9,    // nuevo
   border-color: #382527,
-  desactivate-color:#373435
+  desactivate-color: #373435
 );
+

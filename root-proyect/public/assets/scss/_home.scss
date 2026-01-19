@@ -1,3 +1,5 @@
+@use "abstracts/mixins" as m;
+
 /* =========================
    Contenedores y Layout Global
 ========================= */
@@ -43,7 +45,7 @@
   }
 
   .btn-filters {
-    @include btn-base(); // usa defaults
+    @include m.btn-base(); // usa defaults
     flex: 0 0 auto;
     padding: 0.75rem 1.25rem; // se puede sobrescribir si quieres
   }
@@ -142,12 +144,12 @@
       gap: 0.5rem;
 
       .btn-detail {
-        @include btn-base();
+        @include m.btn-base();
         flex: 1;
       }
 
       .btn-signup {
-        @include btn-base(var(--brand-primary), var(--bg-surface));
+        @include m.btn-base(var(--brand-primary), var(--bg-surface));
         flex: 1;
       }
     }

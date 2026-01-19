@@ -5,7 +5,7 @@
 @use 'reset';
 
 // Mixins
-@use 'mixins';
+@use "abstracts/mixins";
 
 // Temas
 @use 'themes';
@@ -24,3 +24,4 @@
 @use 'home';
 @use 'how-it-works';
 @use 'landing';
+@use 'control';

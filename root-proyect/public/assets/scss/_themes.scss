@@ -1,7 +1,7 @@
-@use 'mixins';
-@use 'variables';
+@use "abstracts/mixins" as m;
+@use 'variables' as v;
 
-@include mixins.theme-variables(variables.$light-theme);  // Light mode
+@include m.theme-variables(v.$light-theme);  // Light mode
 
-@include mixins.theme-variables-dark(variables.$dark-theme);  // Dark mode
+@include m.theme-variables-dark(v.$dark-theme);  // Dark mode
 

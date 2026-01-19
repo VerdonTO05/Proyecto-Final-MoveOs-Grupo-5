@@ -1,3 +1,4 @@
+@use 'abstracts/mixins' as m;
 /* =========================
    Slogan
 ========================= */
@@ -51,7 +52,7 @@ main {
     padding: 3rem 2rem;
 
     article {
-      @include card-base(var(--bg-surface), 1px solid var(--brand-primary), 12px, 0 2px 5px rgba(0, 0, 0, 0.05), 2rem);
+      @include m.card-base(var(--bg-surface), 1px solid var(--brand-primary), 12px, 0 2px 5px rgba(0, 0, 0, 0.05), 2rem);
       width: 25%;
       text-align: center;
 
@@ -116,7 +117,7 @@ main {
    Botones
 ========================= */
 .btn-post {
-  @include btn-base(var(--brand-primary), var(--text-on-primary), 0.5rem 1rem, 8px);
+  @include m.btn-base(var(--brand-primary), var(--text-on-primary), 0.5rem 1rem, 8px);
 }
 
 /* =========================
@@ -130,7 +131,7 @@ main {
   background-color: var(--bg-surface);
 
   .feature-card {
-    @include card-base(var(--bg-main), 1px solid var(--border-color), 12px, 0 2px 6px rgba(0, 0, 0, 0.03), 1.5rem);
+    @include m.card-base(var(--bg-main), 1px solid var(--border-color), 12px, 0 2px 6px rgba(0, 0, 0, 0.03), 1.5rem);
     width: 280px;
     text-align: center;
 

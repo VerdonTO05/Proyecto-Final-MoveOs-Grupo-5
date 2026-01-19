@@ -1,4 +1,4 @@
-@use 'mixins';
+@use 'abstracts/mixins' as m;
 
 /* Base body */
 body {
@@ -56,7 +56,7 @@ header {
             gap: 0.5rem;
 
             button {
-                @include mixins.button-base;
+                @include m.button-base;
 
                 &:last-child {
                     background-color: var(--brand-primary);
@@ -210,7 +210,7 @@ main section:first-of-type {
     }
 
     button {
-        @include mixins.button-base;
+        @include m.button-base;
         border: 1px solid var(--brand-primary);
         background: var(--bg-surface);
         font-weight: 600;
