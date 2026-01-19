@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <script src="../../public/assets/js/theme-init.js"></script>
+    <script src="../../public/assets/js/main.js"></script>
     <script src="../../public/assets/js/alerts.js"></script>
     <link rel="stylesheet" href="../../public/assets/css/main.css">
 </head>
@@ -65,55 +66,99 @@
 
         <!-- Tabs -->
         <section class="tab-switch">
-            <button class="tab-btn active">Aceptar Actividades <span>2</span></button>
-            <button class="tab-btn">Aceptar Peticiones <span>0</span></button>
+            <button class="tab-btn control active">Actividades <span>2</span></button>
+            <button class="tab-btn control">Peticiones <span>0</span></button>
         </section>
 
         <!-- Activity Card -->
-        <section class="activity">
-            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e" alt="Actividad">
+        <div class="activities">
+            <section class="activity">
+                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e" alt="Actividad">
 
-            <div class="activity-info">
-                <div class="tags">
-                    <span class="tag blue">
-                        <i class="fas fa-route"></i> Excursión
-                    </span>
-                    <span class="tag orange">
-                        <i class="fas fa-hourglass-half"></i> Pendiente
-                    </span>
+                <div class="activity-info">
+                    <div class="tags">
+                        <span class="tag blue">
+                            <i class="fas fa-route"></i> Excursión
+                        </span>
+                        <span class="tag orange">
+                            <i class="fas fa-hourglass-half"></i> Pendiente
+                        </span>
+                    </div>
+
+                    <h3>Excursión en Kayak por la Costa</h3>
+                    <p class="description">
+                        Aventura acuática explorando cuevas y calas secretas. Incluye todo el equipo necesario y guía
+                        experto.
+                        Apto para todos los niveles.
+                    </p>
+
+                    <p class="organizer">
+                        <i class="fas fa-user"></i>
+                        <strong>Organizador:</strong> Mar y Aventura
+                    </p>
+
+                    <div class="meta">
+                        <span><i class="fas fa-calendar-alt"></i> 5 Nov 2025</span>
+                        <span><i class="fas fa-map-marker-alt"></i> Alicante</span>
+                        <span><i class="fas fa-users"></i> 0/12</span>
+                        <span><i class="fas fa-euro-sign"></i> 55€</span>
+                    </div>
+
+                    <div class="actions">
+                        <button class="btn approve">
+                            <i class="fas fa-check"></i> Aprobar
+                        </button>
+                        <button class="btn reject">
+                            <i class="fas fa-times"></i> Rechazar
+                        </button>
+                    </div>
                 </div>
 
-                <h3>Excursión en Kayak por la Costa</h3>
-                <p class="description">
-                    Aventura acuática explorando cuevas y calas secretas. Incluye todo el equipo necesario y guía
-                    experto.
-                    Apto para todos los niveles.
-                </p>
+            </section>
+            <section class="activity">
+                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e" alt="Actividad">
 
-                <p class="organizer">
-                    <i class="fas fa-user"></i>
-                    <strong>Organizador:</strong> Mar y Aventura
-                </p>
+                <div class="activity-info">
+                    <div class="tags">
+                        <span class="tag blue">
+                            <i class="fas fa-route"></i> Excursión
+                        </span>
+                        <span class="tag orange">
+                            <i class="fas fa-hourglass-half"></i> Pendiente
+                        </span>
+                    </div>
 
-                <div class="meta">
-                    <span><i class="fas fa-calendar-alt"></i> 5 Nov 2025</span>
-                    <span><i class="fas fa-map-marker-alt"></i> Alicante</span>
-                    <span><i class="fas fa-users"></i> 0/12</span>
-                    <span><i class="fas fa-euro-sign"></i> 55€</span>
+                    <h3>Excursión en Kayak por la Costa</h3>
+                    <p class="description">
+                        Aventura acuática explorando cuevas y calas secretas. Incluye todo el equipo necesario y guía
+                        experto.
+                        Apto para todos los niveles.
+                    </p>
+
+                    <p class="organizer">
+                        <i class="fas fa-user"></i>
+                        <strong>Organizador:</strong> Mar y Aventura
+                    </p>
+
+                    <div class="meta">
+                        <span><i class="fas fa-calendar-alt"></i> 5 Nov 2025</span>
+                        <span><i class="fas fa-map-marker-alt"></i> Alicante</span>
+                        <span><i class="fas fa-users"></i> 0/12</span>
+                        <span><i class="fas fa-euro-sign"></i> 55€</span>
+                    </div>
+
+                    <div class="actions">
+                        <button class="btn approve">
+                            <i class="fas fa-check"></i> Aprobar
+                        </button>
+                        <button class="btn reject">
+                            <i class="fas fa-times"></i> Rechazar
+                        </button>
+                    </div>
                 </div>
 
-                <div class="actions">
-                    <button class="btn approve">
-                        <i class="fas fa-check"></i> Aprobar
-                    </button>
-                    <button class="btn reject">
-                        <i class="fas fa-times"></i> Rechazar
-                    </button>
-                </div>
-            </div>
-
-        </section>
-
+            </section>
+        </div>
     </div>
     <!-- Contenedor de modal -->
     <div id="modal-container"></div>

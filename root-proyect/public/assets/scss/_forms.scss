@@ -119,6 +119,8 @@ input[type="email"] {
     @include m.btn-base(); // usa tu mixin btn-base
     width: 100%;
     margin-top: 0.75rem;
+    background-color: var(--brand-dark);
+    color: var(--bg-main);
 }
 
 /* Lista usuarios */
