@@ -18,16 +18,19 @@
 
     <div id="header"></div>
 
-    <div class="container">
+    <div class="container-control">
 
         <!-- Header -->
         <header class="header">
-            <div class="header-icon"><i class="fas fa-shield-alt"></i></div>
-            <div>
+            <div class="header-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="header-content">
                 <h1>Panel de Administrador</h1>
                 <p>Gestiona y modera las actividades de la plataforma</p>
             </div>
         </header>
+
 
         <!-- Stats -->
         <section class="stats">
@@ -61,9 +64,9 @@
         </section>
 
         <!-- Tabs -->
-        <section class="tabs">
-            <button class="tab active">Aceptar Actividades <span>2</span></button>
-            <button class="tab">Aceptar Peticiones <span>0</span></button>
+        <section class="tab-switch">
+            <button class="tab-btn active">Aceptar Actividades <span>2</span></button>
+            <button class="tab-btn">Aceptar Peticiones <span>0</span></button>
         </section>
 
         <!-- Activity Card -->

@@ -9,11 +9,23 @@ $light-theme: (
   brand-dark: #3f0f1a,
   accent-green: #2ecc71,
   accent-purple: #9b59b6,
-  accent-warning: #f5b041, // nuevo
-  accent-danger: #e74c3c,  // nuevo
-  accent-info: #3498db,    // nuevo
+  accent-warning: #f5b041,
+  // nuevo
+  accent-danger: #e74c3c,
+  // nuevo
+  accent-info: #3498db,
+  // nuevo
   border-color: #e0e0e0,
-  desactivate-color: #aaa6a6
+  desactivate-color: #aaa6a6,
+
+  c-yellow:#d59217,
+  c-yellow-rgb:(213, 146, 23),
+  c-green:#44b363,
+  c-green-rgb:(68, 179, 99),
+  c-red:#ff3150,
+  c-red-rgb:(255, 49, 80),
+  c-purple:#6a1d41,
+  c-purple-rgb:(106, 29, 65)
 );
 
 $dark-theme: (
@@ -27,10 +39,21 @@ $dark-theme: (
   brand-dark: #b77174,
   accent-green: #27ae60,
   accent-purple: #8e44ad,
-  accent-warning: #f39c12, // nuevo
-  accent-danger: #c0392b,  // nuevo
-  accent-info: #2980b9,    // nuevo
+  accent-warning: #f39c12,
+  // nuevo
+  accent-danger: #c0392b,
+  // nuevo
+  accent-info: #2980b9,
+  // nuevo
   border-color: #382527,
-  desactivate-color: #373435
-);
+  desactivate-color: #373435,
 
+  c-yellow:#dcb403,
+  c-yellow-rgb:(220, 180, 3),
+  c-green:#06d970,
+  c-green-rgb:(6, 217, 112),
+  c-red:#d95659,
+  c-red-rgb:(217, 86, 89),
+  c-purple:#d08084,
+  c-purple-rgb:(208, 128, 132)
+);
