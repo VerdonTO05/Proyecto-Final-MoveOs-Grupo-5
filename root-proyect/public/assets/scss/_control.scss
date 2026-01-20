@@ -141,7 +141,7 @@ body {
 
 /* ================= ACTIVITY CARD ================= */
 
-.activity {
+.activity-control {
   display: flex;
   flex-direction: row;
   align-items: stretch;
@@ -151,7 +151,7 @@ body {
   border: 1px solid var(--border-color);
 }
 
-.activity img {
+.activity-control img {
   max-width: 30%;
   object-fit: cover;
   width: 100%;

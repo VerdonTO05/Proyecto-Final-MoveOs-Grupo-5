@@ -72,7 +72,7 @@
 
         <!-- Activity Card -->
         <div class="activities">
-            <section class="activity">
+            <section class="activity-control">
                 <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e" alt="Actividad">
 
                 <div class="activity-info">
@@ -115,7 +115,7 @@
                 </div>
 
             </section>
-            <section class="activity">
+            <section class="activity-control">
                 <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e" alt="Actividad">
 
                 <div class="activity-info">
