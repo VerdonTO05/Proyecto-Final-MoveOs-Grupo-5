@@ -1621,4 +1621,40 @@ body {
   }
 }
 
+#header .user-menu-container {
+    position: relative !important;
+    display: flex !important;
+    align-items: center;
+}
+
+#header .dropdown-content {
+    display: none; 
+    position: absolute !important;
+    right: 0 !important;
+    top: 100% !important; /* Aparece justo debajo del icono */
+    background-color: #ffffff !important;
+    min-width: 180px !important;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2) !important;
+    border-radius: 8px !important;
+    z-index: 9999 !important;
+    padding: 10px 0 !important;
+}
+
+/* Esta es la clase que el JS activa/desactiva */
+#header .dropdown-content.active {
+    display: block !important;
+}
+
+#header .dropdown-content a {
+    color: #333 !important;
+    padding: 10px 20px !important;
+    text-decoration: none !important;
+    display: block !important;
+    font-family: sans-serif;
+}
+
+#header .dropdown-content a:hover {
+    background-color: #f5f5f5 !important;
+}
+
 /*# sourceMappingURL=main.css.map */
