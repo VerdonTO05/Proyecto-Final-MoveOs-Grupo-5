@@ -63,8 +63,6 @@
 
   </main>
 
-  <!-- Pie de página -->
-  <div id="footer"></div>
 </body>
 
 </html>
