@@ -10,9 +10,10 @@
 
 /* Contenedor del formulario */
 .container {
+    position: relative;
     @include m.card-base(); 
 
-    .close-btn {
+    .close-btn { 
         position: absolute;
         top: 1rem;
         right: 1rem;
