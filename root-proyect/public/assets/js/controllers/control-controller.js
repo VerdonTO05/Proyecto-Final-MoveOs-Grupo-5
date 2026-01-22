@@ -52,6 +52,21 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
     });
+
+    // Cambiar de actividades a peticiones
+    const tabButtons = document.querySelectorAll(".tab-btn.control");
+
+    tabButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            tabButtons.forEach(b => b.classList.remove("active")); // Quitar active a todos
+            btn.classList.add("active"); // Activar solo el pulsado
+
+            //Al cambiar, se debe pedir al servidor las peticiones/actividades por aceptar si hay y 
+            //si no mostrar que no se encuentran peticiones/actividades por aceptar actualmente (vacío)
+
+        });
+    });
+
 });
 
 
