@@ -98,11 +98,16 @@
             width: 26px;
             height: 26px;
             background-color: var(--brand-primary);
+            color: var(--bg-muted);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-top: 0.25rem;
+
+            i {
+                font-size: small;
+            }
         }
     }
 

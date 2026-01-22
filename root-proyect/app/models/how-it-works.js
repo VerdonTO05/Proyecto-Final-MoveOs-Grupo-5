@@ -1,7 +1,5 @@
 /** Html del tutorial que se añadirá al pulsar 'Cómo Funciona' */
 const howHTML = `<main class="how-it-works">
-
-        <!-- ENCABEZADO -->
         <section class="hiw-header">
             <h1>¿Cómo Funciona MOVEos?</h1>
             <p>Una plataforma simple e intuitiva para participar o crear actividades increíbles</p>
@@ -12,7 +10,6 @@ const howHTML = `<main class="how-it-works">
             </div>
         </section>
 
-        <!-- PASOS -->
         <section class="hiw-steps">
             <button class="step-number active">1</button>
             <button class="step-number">2</button>
@@ -20,7 +17,6 @@ const howHTML = `<main class="how-it-works">
             <button class="step-number">4</button>
         </section>
 
-        <!-- TARJETA PRINCIPAL -->
         <section id="hiw-card" class="hiw-card"></section>
     </main>`;
 
@@ -54,7 +50,6 @@ function renderStep(card, step) {
 
         <div class="hiw-card-content">
             <div>
-                <!-- TEXTO -->
                 <div style="flex: 1;">
                     <h2>${step.title}</h2>
                     <p class="subtitle">${step.subtitle}</p>
@@ -63,7 +58,7 @@ function renderStep(card, step) {
                         ${step.list.map(item => `
                             <li>
                                 <div>
-                                    <i class="fas fa-check"></i>
+                                    <i class="fa-solid fa-star"></i>
                                 </div>
                                 <span>${item}</span>
                             </li>

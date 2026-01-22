@@ -1,6 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.querySelector(".login-form");
 
+  const closeBtn = document.querySelector('.close-btn');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      window.location.href = '../../app/views/landing.php';
+    });
+  }
+
   if (loginForm) {
     loginForm.addEventListener("submit", async (event) => {
       event.preventDefault();

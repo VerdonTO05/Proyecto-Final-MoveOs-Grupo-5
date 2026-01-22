@@ -11,7 +11,6 @@ body {
     color: var(--text-primary);
     line-height: 1.6;
     transition: background-color 0.4s ease, color 0.4s ease;
-    margin: 0;
     overflow-x: hidden; //Evita scroll
 }
 
@@ -23,7 +22,6 @@ header {
     background: var(--bg-surface);
     border-bottom: 1px solid var(--border-color);
     padding: 1rem;
-    /* padding horizontal reducido a 1rem para no recortar */
 
     nav {
         width: 100%; // Ocupa todo el ancho del header
@@ -59,7 +57,6 @@ header {
                 @include m.button-base;
 
                 &:last-child {
-                    background-color: var(--brand-primary);
                     color: var(--text-on-primary);
                 }
             }
@@ -263,79 +260,99 @@ main section {
     min-height: 440px;
 }
 
+.menu-toggle {
+  display: none;
+}
+
 @media (max-width: 576px) {
 
-    /* Base */
-    html {
-        font-size: 14px;
+  /* Base */
+  html {
+    font-size: 14px;
+  }
+
+  header {
+
+    nav {
+      position: relative;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      text-align: left;
     }
 
-    /* Header */
-    header {
-        nav {
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-
-            ul {
-                justify-content: center;
-                padding: 0;
-            }
-
-            div {
-                justify-content: center;
-                width: 100%;
-            }
-        }
+    /* Botón hamburguesa */
+    .menu-toggle {
+      display: block;
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      cursor: pointer;
     }
 
-    /* Logo */
-    .logo-container {
-        span {
-            font-size: 1.1rem;
-        }
+    /* Ocultar menú y acciones por defecto */
+    nav ul,
+    nav .icons {
+      display: none;
+      width: 100%;
     }
 
-    /* Hero (primera sección) */
-    main {
-        section:first-of-type {
-            padding: 2.5rem 1rem;
+    /* Menú abierto */
+    nav.open {
+      ul,
+      .icons {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+    }
+  }
 
-            h1 {
-                font-size: 2rem;
-            }
+  .logo-container {
+    span {
+      font-size: 1.1rem;
+    }
+  }
 
-            p:nth-of-type(2) {
-                font-size: 1rem;
-            }
+  main {
+    section:first-of-type {
+      padding: 2.5rem 1rem;
 
-            div {
-                flex-direction: column;
-                width: 100%;
-            }
+      h1 {
+        font-size: 2rem;
+      }
 
-            button {
-                width: 100%;
-            }
-        }
+      p:nth-of-type(2) {
+        font-size: 1rem;
+      }
 
-        section {
-            padding: 2rem 1rem;
-        }
+      div {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      button {
+        width: 100%;
+      }
     }
 
-    /* Footer */
-    footer {
-        section {
-            flex-direction: column;
-            gap: 2rem;
-            align-items: center;
-            text-align: center;
-        }
+    section {
+      padding: 2rem 1rem;
     }
+  }
 
-    /* Grid actividades */
-    .grid-activities {
-        padding: 0.5rem;
+  footer {
+    section {
+      flex-direction: column;
+      gap: 2rem;
+      align-items: center;
+      text-align: center;
     }
+  }
+
+  .grid-activities {
+    padding: 0.5rem;
+  }
 }

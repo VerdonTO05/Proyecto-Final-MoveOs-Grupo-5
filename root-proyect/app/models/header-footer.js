@@ -1,42 +1,45 @@
 {//HAY QUE CREAR LA PAGINA DE MI PERFIL PARA EL DESPLEGABLE DEL HEADER
-    // 1. Definición de la estructura del Header
+    // Estructura header
     const headerHTML = `
     <header>
-        <nav>
-            <div class="logo-container">
-                <a href="landing.php">
-                    <img src="../../public/assets/img/ico/icono.svg" alt="Logo MOVEos">
-                    <span>MOVEos</span>
-                </a>
-            </div>
-            <ul id="list">
-                <li><a href="landing.php">Inicio</a></li>
-                <li id="how"><a href="#">Cómo Funciona</a></li>
-            </ul>
-            <div class="icons">
-                <label class="switch">
-                    <input type="checkbox" id="theme-toggle">
-                    <span class="slider"></span>
-                </label>
-                
-                <div class="user-menu-container" style="position: relative; display: inline-block;">
-                    <button id="user-btn" style="background:none; border:none; cursor:pointer; color:inherit; font-size:1.2rem; padding: 5px;">
-                        <i class="fas fa-user"></i>
-                    </button>
-                    
-                    <div id="user-dropdown" style="display: none; position: absolute; right: 0; top: 100%; background: white; min-width: 180px; box-shadow: 0px 4px 12px rgba(0,0,0,0.15); border-radius: 8px; z-index: 9999; flex-direction: column; text-align: left; padding: 8px 0;">
-                        <div style="padding: 10px 15px; font-size: 0.85rem; color: #666; border-bottom: 1px solid #eee;">
-                            Hola, <strong id="display-username">Usuario</strong>
-                        </div>
-                        <a href="users.php" style="display: block; padding: 10px 15px; text-decoration: none; color: #333; font-size: 0.9rem;">Mi Perfil</a>
-                        <a href="control.php" style="display: block; padding: 10px 15px; text-decoration: none; color: #333; font-size: 0.9rem;">Panel de Control</a>
-                        <hr style="border: 0; border-top: 1px solid #eee; margin: 8px 0;">
-                        <a href="#" id="logout-link" style="display: block; padding: 10px 15px; text-decoration: none; color: #e74c3c; font-size: 0.9rem;">Cerrar Sesión</a>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    </header>`;
+  <nav>
+    <!-- Logo -->
+    <div class="logo-container">
+      <a href="landing.php">
+        <img src="../../public/assets/img/ico/icono.svg" alt="Logo MOVEos">
+        <span>MOVEos</span>
+      </a>
+    </div>
+
+    <!-- Botón hamburguesa (solo móvil) -->
+    <button class="menu-toggle" aria-label="Abrir menú">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <!-- Menú -->
+    <ul id="list">
+      <li><a href="landing.php">Inicio</a></li>
+      <li id="how"><a href="#">Cómo Funciona</a></li>
+    </ul>
+
+    <!-- Iconos / Usuario -->
+    <div class="icons">
+      <!-- Theme switch -->
+      <label class="switch">
+        <input type="checkbox" id="theme-toggle">
+        <span class="slider"></span>
+      </label>
+
+      <!-- Usuario -->
+      <div class="user-menu-container">
+        <button id="user-btn">
+          <i class="fas fa-user"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+</header>
+`;
 
     // 2. Definición de la estructura del Footer
     const footerHTML = `

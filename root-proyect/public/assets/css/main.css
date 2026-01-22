@@ -119,7 +119,6 @@ body {
   color: var(--text-primary);
   line-height: 1.6;
   transition: background-color 0.4s ease, color 0.4s ease;
-  margin: 0;
   overflow-x: hidden;
 }
 
@@ -131,7 +130,6 @@ header {
   background: var(--bg-surface);
   border-bottom: 1px solid var(--border-color);
   padding: 1rem;
-  /* padding horizontal reducido a 1rem para no recortar */
 }
 header nav {
   width: 100%;
@@ -168,7 +166,6 @@ header nav div button {
   border: none;
 }
 header nav div button:last-child {
-  background-color: var(--brand-primary);
   color: var(--text-on-primary);
 }
 
@@ -349,30 +346,54 @@ main section {
   min-height: 440px;
 }
 
+.menu-toggle {
+  display: none;
+}
+
 @media (max-width: 576px) {
   /* Base */
   html {
     font-size: 14px;
   }
-  /* Header */
   header nav {
-    flex-direction: column;
+    position: relative;
+    flex-direction: row;
     align-items: center;
-    text-align: center;
+    justify-content: space-between;
+    text-align: left;
   }
-  header nav ul {
-    justify-content: center;
-    padding: 0;
+  header {
+    /* Botón hamburguesa */
   }
-  header nav div {
-    justify-content: center;
+  header .menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 1.6rem;
+    cursor: pointer;
+  }
+  header {
+    /* Ocultar menú y acciones por defecto */
+  }
+  header nav ul,
+  header nav .icons {
+    display: none;
     width: 100%;
   }
-  /* Logo */
+  header {
+    /* Menú abierto */
+  }
+  header nav.open ul,
+  header nav.open .icons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
   .logo-container span {
     font-size: 1.1rem;
   }
-  /* Hero (primera sección) */
   main section:first-of-type {
     padding: 2.5rem 1rem;
   }
@@ -392,14 +413,12 @@ main section {
   main section {
     padding: 2rem 1rem;
   }
-  /* Footer */
   footer section {
     flex-direction: column;
     gap: 2rem;
     align-items: center;
     text-align: center;
   }
-  /* Grid actividades */
   .grid-activities {
     padding: 0.5rem;
   }
@@ -613,7 +632,7 @@ input[type=email] {
   justify-content: space-between;
   gap: 15px;
   width: 100%;
-  margin: 1.5rem 1rem 0.5rem;
+  margin: 1rem 0.75rem 0.3rem;
 }
 .user-type-group .option {
   flex: 1;
@@ -637,7 +656,7 @@ input[type=email] {
   background-color: var(--bg-main);
   border: 1px solid var(--border-color);
   border-radius: 14px;
-  padding: 25px 15px;
+  padding: 5% 3%;
   text-align: center;
   cursor: pointer;
   transition: all 0.25s ease;
@@ -1116,11 +1135,15 @@ input[type=email] {
   width: 26px;
   height: 26px;
   background-color: var(--brand-primary);
+  color: var(--bg-muted);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-top: 0.25rem;
+}
+.how-it-works .hiw-list div i {
+  font-size: small;
 }
 .how-it-works {
   /* Botones participante / ofertante */
@@ -1620,42 +1643,6 @@ body {
     opacity: 0;
     transform: translateY(-20px);
   }
-}
-
-#header .user-menu-container {
-    position: relative !important;
-    display: flex !important;
-    align-items: center;
-}
-
-#header .dropdown-content {
-    display: none; 
-    position: absolute !important;
-    right: 0 !important;
-    top: 100% !important; /* Aparece justo debajo del icono */
-    background-color: #ffffff !important;
-    min-width: 180px !important;
-    box-shadow: 0px 8px 16px rgba(0,0,0,0.2) !important;
-    border-radius: 8px !important;
-    z-index: 9999 !important;
-    padding: 10px 0 !important;
-}
-
-/* Esta es la clase que el JS activa/desactiva */
-#header .dropdown-content.active {
-    display: block !important;
-}
-
-#header .dropdown-content a {
-    color: #333 !important;
-    padding: 10px 20px !important;
-    text-decoration: none !important;
-    display: block !important;
-    font-family: sans-serif;
-}
-
-#header .dropdown-content a:hover {
-    background-color: #f5f5f5 !important;
 }
 
 /*# sourceMappingURL=main.css.map */

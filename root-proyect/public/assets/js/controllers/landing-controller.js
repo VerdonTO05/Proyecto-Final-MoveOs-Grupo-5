@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
         li.appendChild(a);
         ul.appendChild(li);
 
-        const aExplore = document.getElementById("a-explore");     
+        const aExplore = document.getElementById("a-explore");
         aExplore.href = '../../../../app/views/home.php';
     }
 
@@ -33,12 +33,12 @@ document.addEventListener("DOMContentLoaded", () => {
     buttonPost.addEventListener("click", () => {
 
         const popup = window.open(
-    "",
-    "popupActividad",
-    "width=520,height=300,top=150,left=350,resizable=yes"
-);
+            "",
+            "popupActividad",
+            "width=520,height=300,top=150,left=350,resizable=yes"
+        );
 
-popup.document.write(`
+        popup.document.write(`
     <html>
     <head>
         <title>Publicar Actividad</title>
@@ -117,6 +117,17 @@ popup.document.write(`
     </html>
 `);
 
+    });
+
+    //Boton hamburguesa
+    const toggle = document.querySelector(".menu-toggle");
+    const nav = document.querySelector("header nav");
+
+    toggle.addEventListener("click", () => {
+        nav.classList.toggle("open");
+        toggle.innerHTML = nav.classList.contains("open")
+            ? '<i class="fa-solid fa-xmark"></i>'
+            : '<i class="fa-solid fa-bars"></i>';
     });
 
 });
