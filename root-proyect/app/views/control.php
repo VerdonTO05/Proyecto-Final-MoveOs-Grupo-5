@@ -4,19 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Panel de Administrador</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="../../public/assets/img/ico/icono.svg" if="icon.ico">
+
     <script src="../models/header-footer.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <script src="../../public/assets/js/theme-init.js"></script>
     <script src="../../public/assets/js/main.js"></script>
     <script src="../../public/assets/js/alerts.js"></script>
+    <script src="../../public/assets/js/controllers/control-controller.js"></script>
     <link rel="stylesheet" href="../../public/assets/css/main.css">
 </head>
 
 <body>
-
-
     <div id="header"></div>
 
     <div class="container-control">
@@ -105,10 +105,10 @@
                     </div>
 
                     <div class="actions">
-                        <button class="btn approve">
+                        <button data-id="0" class="btn approve btn-approve">
                             <i class="fas fa-check"></i> Aprobar
                         </button>
-                        <button class="btn reject">
+                        <button data-id="0" class="btn reject btn-reject">
                             <i class="fas fa-times"></i> Rechazar
                         </button>
                     </div>
@@ -148,10 +148,10 @@
                     </div>
 
                     <div class="actions">
-                        <button class="btn approve">
+                        <button  data-id="1" class="btn approve btn-approve">
                             <i class="fas fa-check"></i> Aprobar
                         </button>
-                        <button class="btn reject">
+                        <button  data-id="1" class="btn reject btn-reject">
                             <i class="fas fa-times"></i> Rechazar
                         </button>
                     </div>
@@ -162,23 +162,6 @@
     </div>
     <!-- Contenedor de modal -->
     <div id="modal-container"></div>
-
-    <!-- Botón de prueba -->
-    <button onclick="showConfirm({
-    title: '¿Aprobar actividad?',
-    message: 'Estás a punto de aprobar la actividad Excursión en Kayak por la Costa. Esta actividad será visible para todos los usuarios y podrán inscribirse.',
-    onConfirm: () => {
-        console.log('Actividad aprobada');
-        showAlert({
-            type: 'success',
-            title: 'Aprobada',
-            message: 'La actividad ha sido aprobada correctamente'
-        });
-    }
-})">
-        Aprobar actividad
-    </button>
-
     <div id="footer"></div>
 </body>
 

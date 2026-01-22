@@ -15,3 +15,4 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('mode', isDark ? 'dark' : 'light');
   });
 });
+

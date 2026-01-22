@@ -144,11 +144,10 @@ body {
 .activity-control {
   display: flex;
   flex-direction: row;
-  align-items: stretch;
   background: var(--bg-surface);
   border-radius: 18px;
   overflow: hidden;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-color); 
 }
 
 .activity-control img {

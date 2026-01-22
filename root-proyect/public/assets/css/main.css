@@ -1474,7 +1474,6 @@ body {
 .activity-control {
   display: flex;
   flex-direction: row;
-  align-items: stretch;
   background: var(--bg-surface);
   border-radius: 18px;
   overflow: hidden;
