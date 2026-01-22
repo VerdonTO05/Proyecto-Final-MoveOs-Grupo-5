@@ -105,7 +105,7 @@
                     userDropdown.style.display = isVisible ? 'none' : 'flex';
                 } else {
                     // Si NO hay sesión: Redirigir a registro
-                    window.location.href = 'register.php';
+                    window.location.href = 'login.php';
                 }
             });
         }
