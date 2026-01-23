@@ -5,19 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - MOVEos</title>
-
     <link rel="stylesheet" href="../../public/assets/css/main.css">
-
-
     <link rel="icon" type="image/ico" href="../../public/assets/img/ico/icono.svg" id="icon.ico">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
     <script src="../../public/assets/js/theme-init.js"></script>
     <script src="../../public/assets/js/main.js"></script>
-
-
-
 </head>
 
 <body>

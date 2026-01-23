@@ -106,7 +106,6 @@ CREATE TABLE activities (
   language VARCHAR(50),
 
   min_age INT,
-  max_age INT,
   pets_allowed TINYINT(1) DEFAULT 0,
   dress_code VARCHAR(100),
 
