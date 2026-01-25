@@ -1,12 +1,11 @@
 <?php
-//Login actualizado
+//Modificar rutas **relativas mejor
+
 ob_start();
 session_start();
 header('Content-Type: application/json; charset=utf-8');
 
-// Obtenemos la ruta absoluta de la carpeta 'app'
 $appPath = dirname(__DIR__); 
-// Obtenemos la ruta absoluta de 'root-proyect'
 $rootPath = dirname($appPath);
 
 // Verificamos existencia antes de requerir (esto evitará el Fatal Error feo)

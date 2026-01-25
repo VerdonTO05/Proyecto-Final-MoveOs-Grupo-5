@@ -31,15 +31,15 @@ document.addEventListener("DOMContentLoaded", () => {
         body: JSON.stringify({ username, password }),
       });
 
-      // PASO 1: Obtener la respuesta como texto primero
+      //Obtener la respuesta como texto
       const responseText = await response.text();
 
-      // PASO 2: Verificar si la respuesta está vacía (esto evita el error que tenías)
+      //Verificar si la respuesta está vacía
       if (!responseText) {
         throw new Error("El servidor envió una respuesta vacía (Check PHP logs).");
       }
 
-      // PASO 3: Intentar parsear el JSON manualmente
+      // Intentar parsear el JSON
       let data;
       try {
         data = JSON.parse(responseText);
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error("La respuesta del servidor no tiene un formato JSON válido.");
       }
 
-      // PASO 4: Manejar la lógica de éxito o error de credenciales
+      //Manejar la lógica de éxito o error de credenciales
       if (response.ok && data.success) {
         // Guardar datos en sessionStorage
         sessionStorage.setItem("usuario", data.userData.username);
