@@ -1,5 +1,6 @@
 <?php
-class User {
+class User
+{
     private $conn;
     private $table_name = 'users';
     public $id;
@@ -13,7 +14,8 @@ class User {
      * Constructor: recibe la conexión a la base de datos
      * @param PDO $db
      */
-    public function __construct($db){
+    public function __construct($db)
+    {
         $this->conn = $db;
     }
 
@@ -21,7 +23,8 @@ class User {
      * Obtener todos los usuarios
      * @return array
      */
-    public function getUsers() {
+    public function getUsers()
+    {
         $sql = "SELECT u.id, u.full_name, u.email, u.username, r.name AS role, u.created_at
                 FROM {$this->table_name} u
                 JOIN roles r ON u.role_id = r.id
@@ -36,7 +39,8 @@ class User {
      * @param int $id
      * @return array|null
      */
-    public function getUserById($id) {
+    public function getUserById($id)
+    {
         $sql = "SELECT u.id, u.full_name, u.email, u.username, r.name AS role, u.created_at
                 FROM {$this->table_name} u
                 JOIN roles r ON u.role_id = r.id
@@ -47,32 +51,34 @@ class User {
         return $stmt->fetch();
     }
 
-    /**
-     * Login de usuario
-     * @param string $email
-     * @param string $password
-     * @return array|false
-     */
-    public function login($email, $password) {
-        $sql = "SELECT * FROM {$this->table_name} WHERE email = :email LIMIT 1";
+    public function loginByUsername($username, $password)
+    {
+        $sql = "SELECT u.id, u.username, u.password_hash, r.name AS role_name
+            FROM {$this->table_name} u
+            INNER JOIN roles r ON u.role_id = r.id
+            WHERE u.username = :username
+            LIMIT 1";
+
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute(['email' => $email]);
-        $user = $stmt->fetch();
+        $stmt->execute(['username' => $username]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && password_verify($password, $user['password_hash'])) {
-            // Login exitoso
             return $user;
         }
 
-        return false; // login fallido
+        return false;
     }
+
+
 
     /**
      * Registrar un nuevo usuario
      * @param array $data
      * @return int|false ID del usuario o false
      */
-    public function registerUser($data) {
+    public function registerUser($data)
+    {
         $sql = "INSERT INTO {$this->table_name} 
                 (full_name, email, username, password_hash, role_id)
                 VALUES (:full_name, :email, :username, :password_hash, :role_id)";
@@ -94,7 +100,8 @@ class User {
      * @param array $data
      * @return bool
      */
-    public function editUser($id, $data) {
+    public function editUser($id, $data)
+    {
         $sql = "UPDATE {$this->table_name} SET
                 full_name = :full_name,
                 email = :email,
@@ -110,7 +117,8 @@ class User {
     /**
      * Logout de usuario (simplemente destruye sesión)
      */
-    public function logoutUser() {
+    public function logoutUser()
+    {
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
