@@ -5,143 +5,127 @@
     <meta charset="UTF-8" />
     <title>Publicar Nueva Actividad</title>
     <link rel="stylesheet" href="../../public/assets/css/main.css">
-    <link rel="icon" type="image/ico" href="../../public/assets/img/ico/icono.svg" id="icon.ico">
+    <link rel="icon" type="image/ico" href="../../public/assets/img/ico/icono.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="../../public/assets/js/theme-init.js"></script>
-    <script src="../../public/assets/js/main.js"></script>
 </head>
 
 <body>
     <div class="container c">
-        <div class="icons">
-            <label class="switch top-right">
-                <input type="checkbox" id="theme-toggle">
-                <span class="slider"></span>
-            </label>
-        </div>
         <header class="header-form create">
             <h1>Publicar Nueva Actividad</h1>
-            <p>Comparte tu actividad con la comunidad. Será revisada antes de publicarse.
-            </p>
+            <p>Completa todos los detalles para que los participantes sepan qué esperar.</p>
         </header>
 
-        <div class="alert">
-            <strong>Revisión requerida:</strong>
-            Tu actividad será revisada por un administrador antes de ser publicada.
-            Te notificaremos cuando sea aprobada o si necesita modificaciones.
-        </div>
+        <form class="form-activity" id="form-create-activity" action="../controllers/activity-controller.php"
+            method="POST" enctype="multipart/form-data">
 
-        <form class="form-activity">
             <div class="full">
                 <label for="titulo">Título de la Actividad *</label>
-                <input type="text" id="titulo" placeholder="Ej: Ruta de Senderismo por la Sierra" />
+                <input type="text" id="titulo" name="title" placeholder="Ej: Yoga al aire libre" required />
             </div>
 
             <div class="full">
                 <label for="descripcion">Descripción *</label>
-                <textarea id="descripcion" placeholder="Describe tu actividad en detalle..."></textarea>
+                <textarea id="descripcion" name="description" placeholder="Describe los detalles..."
+                    required></textarea>
             </div>
 
             <div>
                 <label for="category">Categoría *</label>
-                <select id="category">
+                <select id="category" name="category_id" required>
                     <option value="">Selecciona...</option>
                     <option value="1">Taller</option>
                     <option value="2">Clase</option>
-                    <option value="3">Evento</option>
                     <option value="4">Excursión</option>
-                    <option value="5">Formación técnica</option>
-                    <option value="6">Conferencia</option>
-                    <option value="7">Reunión</option>
-                    <option value="8">Experiencia</option>
-                    <option value="9">Tour</option>
-                    <option value="10">Competición</option>
-                    <option value="11">Evento social</option>
                 </select>
             </div>
 
             <div>
                 <label for="ubicacion">Ubicación *</label>
-                <input type="text" id="ubicacion" placeholder="Madrid, Barcelona..." />
+                <input type="text" id="ubicacion" name="location" placeholder="Dirección o ciudad" required />
             </div>
 
             <div>
                 <label for="fecha">Fecha</label>
-                <input type="date" id="fecha" />
-            </div>
-
-            <div>
-                <label for="duracion">Duración</label>
-                <input type="text" id="duracion" placeholder="2 horas, 1 día..." />
-            </div>
-
-            <div>
-                <label for="max">Máximo de Participantes</label>
-                <input type="number" id="max" value="10" />
-            </div>
-
-            <div>
-                <label for="precio">Precio (€)</label>
-                <input type="number" id="precio" value="0" />
+                <input type="date" id="fecha" name="date" />
             </div>
 
             <div>
                 <label for="hora">Hora</label>
-                <input type="time" id="hora" />
+                <input type="time" id="hora" name="time" />
+            </div>
+
+            <div>
+                <label for="precio">Precio (€)</label>
+                <input type="number" id="precio" name="price" step="0.01" value="0" />
+            </div>
+
+            <div>
+                <label for="max">Máximo de Participantes</label>
+                <input type="number" id="max" name="max_people" value="10" />
             </div>
 
             <div>
                 <label for="idioma">Idioma</label>
-                <select id="idioma">
-                    <option>Español</option>
-                    <option>Inglés</option>
-                    <option>Francés</option>
+                <select id="idioma" name="language">
+                    <option value="Español">Español</option>
+                    <option value="Inglés">Inglés</option>
                 </select>
             </div>
 
             <div>
-                <label for="edad">Edad Recomendada</label>
-                <input type="number" id="edad" placeholder="Ej: 18" />
+                <label for="edad">Edad Mínima</label>
+                <input type="number" id="edad" name="min_age" value="0" />
             </div>
 
             <div>
                 <label for="vestimenta">Código de Vestimenta</label>
-                <input type="text" id="vestimenta" placeholder="Ej: Casual, Deportivo" />
+                <input type="text" id="vestimenta" name="dress_code" placeholder="Ej: Ropa cómoda" />
             </div>
 
-            <div class="checkbox-group">
+            <div class="checkbox-group full">
                 <label>
-                    <input type="checkbox" />
+                    <input type="checkbox" name="transport_included" id="transport_toggle" value="1" />
                     Transporte incluido
                 </label>
-
-                <!-- Si está marcado el input de transporte añadir input de ciudad de salida -->
-
+                <div id="departure_box" style="display:none; margin: 10px 0;">
+                    <input type="text" name="departure_city" placeholder="¿Desde dónde salen?">
+                </div>
                 <label>
-                    <input type="checkbox" />
+                    <input type="checkbox" name="pets_allowed" value="1" />
                     Mascotas permitidas
                 </label>
             </div>
-            <!-- Imagen -->
+
             <div class="full">
                 <label>Imagen de la Actividad</label>
                 <div class="upload-box">
-                    <input type="file" accept="image/png, image/jpeg" />
+                    <input type="file" name="image_file" id="image_file" accept="image/png, image/jpeg" required />
                     <div class="upload-content">
                         <i class="fas fa-upload"></i>
-                        <p><strong>Haz clic para subir una imagen</strong></p>
-                        <span>PNG, JPG hasta 5MB</span>
+                        <p id="file-name">Haz clic para subir una imagen (JPG/PNG)</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Botones -->
             <div class="actions">
                 <button type="submit" class="btn-submit">Publicar Actividad</button>
             </div>
         </form>
     </div>
 
+    <script>
+        // Mostrar ciudad de salida
+        document.getElementById('transport_toggle').addEventListener('change', function () {
+            document.getElementById('departure_box').style.display = this.checked ? 'block' : 'none';
+        });
+
+        // Mostrar nombre del archivo seleccionado
+        document.getElementById('image_file').addEventListener('change', function () {
+            const fileName = this.files[0] ? this.files[0].name : "Haz clic para subir una imagen";
+            document.getElementById('file-name').innerText = fileName;
+        });
+    </script>
 </body>
 
 </html>
