@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const currentUser = sessionStorage.getItem('currentUser');
+    const currentUser = sessionStorage.getItem('usuario');
+    const rol = sessionStorage.getItem('rol');
     const buttonExplore = document.getElementById("button-explore");
     const buttonPost = document.getElementById("button-post");
 
@@ -9,21 +10,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const li = document.createElement('li');
         const a = document.createElement('a');
-        a.href = '../../../../app/views/home.php';
-        a.textContent = 'Explorar Actividades';
-
+        a.href = 'home.php';
+        if(rol == 'participante'){
+            a.textContent = 'Explorar Actividades';
+        }else{
+            a.textContent = 'Explorar Peticiones';
+        }
+        
         li.appendChild(a);
         ul.appendChild(li);
 
         const aExplore = document.getElementById("a-explore");
-        aExplore.href = '../../../../app/views/home.php';
+        aExplore.href = 'home.php';
     }
 
     // Si pulsa el botón de Explorar actividades
     buttonExplore.addEventListener("click", () => {
         if (!currentUser) {
             alert("Debes iniciar sesión o registrarte para explorar actividades");
-            window.location.href = "../../../../app/views/login.php";
+            window.location.href = "login.php";
         }
     });
 

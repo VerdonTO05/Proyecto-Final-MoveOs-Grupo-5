@@ -3,14 +3,14 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "../../../../app/views/users.php";
   });
 
-  const currentUser = sessionStorage.getItem("currentUser");
+  const currentUser = sessionStorage.getItem("usuario");
 
   if (
     !currentUser &&
-    window.location.pathname !== "../../../../app/views/landing.php"
+    window.location.pathname !== "landing.php"
   ) {
     // Redirigir si el usuario no está logueado
-    window.location.href = "../../../../app/views/landing.php";
+    window.location.href = "landing.php";
     return;
   }
 
@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const li = document.createElement("li");
     const a = document.createElement("a");
-    a.href = "../../../../app/views/home.php";
+    a.href = "home.php";
     a.textContent = "Explorar Actividades";
 
     li.appendChild(a);
