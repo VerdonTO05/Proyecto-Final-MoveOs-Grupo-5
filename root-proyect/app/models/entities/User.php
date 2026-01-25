@@ -50,7 +50,11 @@ class User
         $stmt->execute(['id' => $id]);
         return $stmt->fetch();
     }
-
+    /**
+     * Login usuario
+     * @param mixed $username
+     * @param mixed $password
+     */
     public function loginByUsername($username, $password)
     {
         $sql = "SELECT u.id, u.username, u.password_hash, r.name AS role_name
