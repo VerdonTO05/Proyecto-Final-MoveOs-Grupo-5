@@ -1,40 +1,39 @@
 <?php
-// Es fundamental que session_start() esté al principio de todo
 session_start();
 header('Content-Type: application/json; charset=utf-8');
 
-// Recibir datos JSON
+require_once '../config/database.php'; // tu conexión PDO
+require_once '../entities/User.php';
+
+// Leer JSON del body
 $input = json_decode(file_get_contents("php://input"), true);
 $username = $input['username'] ?? '';
 $password = $input['password'] ?? '';
 
 if (!$username || !$password) {
-    echo json_encode(['success' => false, 'message' => 'Campos vacíos']);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Campos vacíos'
+    ]);
     exit;
 }
 
 try {
-    $pdo = new PDO('mysql:host=localhost;dbname=moveos;charset=utf8', 'root', '');
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    // Conexión
+    $database = new Database();
+    $db = $database->getConnection();
 
-    // Consulta con JOIN para traer el nombre del rol directamente
-    $sql = "SELECT u.id, u.username, u.password_hash, r.name as role_name 
-            FROM users u 
-            INNER JOIN roles r ON u.role_id = r.id 
-            WHERE u.username = :username";
+    // Entidad
+    $userEntity = new User($db);
 
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute(['username' => $username]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    // Login usando la entidad
+    $user = $userEntity->loginByUsername($username, $password);
 
-    // Verificamos si existe el usuario y si la contraseña coincide con el hash
-    if ($user && password_verify($password, $user['password_hash'])) {
-
+    if ($user) {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['username'] = $user['username'];
         $_SESSION['role'] = $user['role_name'];
 
-        // Enviamos los datos de vuelta al JS para que los guarde en sessionStorage
         echo json_encode([
             'success' => true,
             'userData' => [
@@ -49,6 +48,9 @@ try {
         ]);
     }
 
-} catch (PDOException $e) {
-    echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+} catch (Exception $e) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Error: ' . $e->getMessage()
+    ]);
 }

@@ -47,25 +47,24 @@ class User {
         return $stmt->fetch();
     }
 
-    /**
-     * Login de usuario
-     * @param string $email
-     * @param string $password
-     * @return array|false
-     */
-    public function login($email, $password) {
-        $sql = "SELECT * FROM {$this->table_name} WHERE email = :email LIMIT 1";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute(['email' => $email]);
-        $user = $stmt->fetch();
+    public function loginByUsername($username, $password) {
+    $sql = "SELECT u.id, u.username, u.password_hash, r.name AS role_name
+            FROM {$this->table_name} u
+            INNER JOIN roles r ON u.role_id = r.id
+            WHERE u.username = :username
+            LIMIT 1";
 
-        if ($user && password_verify($password, $user['password_hash'])) {
-            // Login exitoso
-            return $user;
-        }
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute(['username' => $username]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return false; // login fallido
+    if ($user && password_verify($password, $user['password_hash'])) {
+        return $user;
     }
+
+    return false;
+}
+
 
     /**
      * Registrar un nuevo usuario
