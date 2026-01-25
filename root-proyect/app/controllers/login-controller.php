@@ -1,40 +1,62 @@
 <?php
-// Es fundamental que session_start() esté al principio de todo
+//Modificar rutas **relativas mejor
+
+ob_start();
 session_start();
 header('Content-Type: application/json; charset=utf-8');
 
-// Recibir datos JSON
-$input = json_decode(file_get_contents("php://input"), true);
-$username = $input['username'] ?? '';
-$password = $input['password'] ?? '';
+$appPath = dirname(__DIR__); 
+$rootPath = dirname($appPath);
 
-if (!$username || !$password) {
-    echo json_encode(['success' => false, 'message' => 'Campos vacíos']);
+// Verificamos existencia antes de requerir (esto evitará el Fatal Error feo)
+$dbFile = $rootPath . '/config/database.php';
+$userFile = $appPath . '/models/entities/User.php';
+
+if (!file_exists($dbFile)) {
+    echo json_encode(['success' => false, 'message' => "No se encuentra database.php en: $dbFile"]);
     exit;
 }
 
+if (!file_exists($userFile)) {
+    echo json_encode(['success' => false, 'message' => "No se encuentra User.php en: $userFile"]);
+    exit;
+}
+
+require_once $dbFile;
+require_once $userFile;
+
 try {
-    $pdo = new PDO('mysql:host=localhost;dbname=moveos;charset=utf8', 'root', '');
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $jsonInput = file_get_contents("php://input");
+    $input = json_decode($jsonInput, true);
 
-    // Consulta con JOIN para traer el nombre del rol directamente
-    $sql = "SELECT u.id, u.username, u.password_hash, r.name as role_name 
-            FROM users u 
-            INNER JOIN roles r ON u.role_id = r.id 
-            WHERE u.username = :username";
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        throw new Exception('Formato JSON no válido');
+    }
 
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute(['username' => $username]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    $username = $input['username'] ?? '';
+    $password = $input['password'] ?? '';
 
-    // Verificamos si existe el usuario y si la contraseña coincide con el hash
-    if ($user && password_verify($password, $user['password_hash'])) {
+    if (empty($username) || empty($password)) {
+        echo json_encode(['success' => false, 'message' => 'Campos vacíos']);
+        exit;
+    }
 
+    $database = new Database();
+    $db = $database->getConnection();
+    
+    if (!$db) {
+        throw new Exception('Error de conexión a BD');
+    }
+
+    $userEntity = new User($db);
+    $user = $userEntity->loginByUsername($username, $password);
+
+    ob_clean(); // Limpiamos cualquier salida accidental
+    if ($user) {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['username'] = $user['username'];
         $_SESSION['role'] = $user['role_name'];
 
-        // Enviamos los datos de vuelta al JS para que los guarde en sessionStorage
         echo json_encode([
             'success' => true,
             'userData' => [
@@ -43,12 +65,12 @@ try {
             ]
         ]);
     } else {
-        echo json_encode([
-            'success' => false,
-            'message' => 'Usuario o contraseña incorrectos'
-        ]);
+        echo json_encode(['success' => false, 'message' => 'Credenciales inválidas']);
     }
 
-} catch (PDOException $e) {
-    echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+} catch (Exception $e) {
+    ob_clean();
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
 }
+ob_end_flush();

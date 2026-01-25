@@ -5,18 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MOVEos - Descubre y comparte experiencias únicas</title>
-    
+
     <script src="../models/header-footer.js"></script>
     <script src="../models/steps.js"></script>
     <script src="../models/how-it-works.js"></script>
     <script src="../../public/assets/js/controllers/landing-controller.js"></script>
 
     <script src="../../public/assets/js/theme-init.js"></script>
-    <script src="../../public/assets/js/main.js"></script> 
+    <script src="../../public/assets/js/main.js"></script>
 
     <link rel="stylesheet" href="../../public/assets/css/main.css">
-    
-    <link rel="icon" type="image/png" href="../../public/assets/img/ico/icono.svg" >
+
+    <link rel="icon" type="image/png" href="../../public/assets/img/ico/icono.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
@@ -43,10 +43,16 @@
             </p>
 
             <div class="options">
-                <a id="a-explore" href="#">
-                    <button id="button-explore">Explorar Actividades</button>
-                </a>
-                <button id="button-post">Publicar Actividad</button>
+                <?php
+                if (isset($_SESSION['rol']) && $_SESSION['rol'] == 'ofertante') {
+                    echo '<a id="a-explore" href="home.php">';
+                    echo '<button id="button-explore">Explorar Peticiones</button></a>';
+                    echo '<button id="button-post">Publicar Actividad</button>';
+                } else {
+                    echo '<a id="a-explore" href="home.php">';
+                    echo '<button id="button-explore">Explorar Actividades</button></a>';
+                    echo '<button id="button-post">Publicar Petición</button>';
+                } ?>
             </div>
         </section>
 
@@ -105,4 +111,5 @@
     <div id="footer"></div>
 
 </body>
+
 </html>
