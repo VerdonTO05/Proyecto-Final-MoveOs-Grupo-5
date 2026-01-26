@@ -46,8 +46,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     // --- AUTO-LOGIN ---
                     // Guardamos los datos tal cual lo haces en login.js
-                    sessionStorage.setItem("usuario", result.userData.username);
-                    sessionStorage.setItem("rol", result.userData.role);
+                    sessionStorage.setItem("username", result.userData.username);
+                    sessionStorage.setItem("role", result.userData.role);
 
                     // Redirección directa al home
                     window.location.href = '../../app/views/home.php';

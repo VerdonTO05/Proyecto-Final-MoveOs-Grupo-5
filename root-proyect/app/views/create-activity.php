@@ -1,3 +1,14 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['role'])) {
+    header('Location: login.php');
+    exit;
+}
+$rol = $_SESSION['role'];
+$participante = ($rol === 'participante');
+
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -7,20 +18,27 @@
     <link rel="stylesheet" href="../../public/assets/css/main.css">
     <link rel="icon" type="image/ico" href="../../public/assets/img/ico/icono.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="../../public/assets/js/controllers/activity-validation.js"></script>
+    <script src="../../public/assets/js/main.js"></script>
 </head>
 
 <body>
     <div class="container c">
         <header class="header-form create">
-            <h1>Publicar Nueva Actividad</h1>
-            <p>Completa todos los detalles para que los participantes sepan qué esperar.</p>
+            <?php if ($participante): ?>
+                <h1>Publicar Nueva Petición</h1>
+                <p>Completa todos los detalles para que los ofertantes sepan qué quieres.</p>
+            <?php else: ?>
+                <h1>Publicar Nueva Actividad</h1>
+                <p>Completa todos los detalles para que los participantes sepan qué esperar.</p>
+            <?php endif; ?>
         </header>
 
         <form class="form-activity" id="form-create-activity" action="../controllers/activity-controller.php"
             method="POST" enctype="multipart/form-data">
 
             <div class="full">
-                <label for="titulo">Título de la Actividad *</label>
+                <label for="titulo">Título de la <?= $participante ? "Petición" : "Actividad" ?> *</label>
                 <input type="text" id="titulo" name="title" placeholder="Ej: Yoga al aire libre" required />
             </div>
 
@@ -36,7 +54,15 @@
                     <option value="">Selecciona...</option>
                     <option value="1">Taller</option>
                     <option value="2">Clase</option>
+                    <option value="3">Evento</option>
                     <option value="4">Excursión</option>
+                    <option value="5">Formación técnica</option>
+                    <option value="6">Conferencia</option>
+                    <option value="7">Reunión</option>
+                    <option value="8">Experiencia</option>
+                    <option value="9">Tour</option>
+                    <option value="10">Competición</option>
+                    <option value="11">Evento social</option>
                 </select>
             </div>
 
@@ -61,7 +87,7 @@
             </div>
 
             <div>
-                <label for="max">Máximo de Participantes</label>
+                <label for="max">Cantidad de usuarios</label>
                 <input type="number" id="max" name="max_people" value="10" />
             </div>
 
@@ -98,7 +124,8 @@
             </div>
 
             <div class="full">
-                <label>Imagen de la Actividad</label>
+                <label>Imagen de la <?= $participante ? "Petición" : "Actividad" ?> *</label>
+
                 <div class="upload-box">
                     <input type="file" name="image_file" id="image_file" accept="image/png, image/jpeg" required />
                     <div class="upload-content">
@@ -108,24 +135,21 @@
                 </div>
             </div>
 
+            <?php if ($participante): ?>
+                <input type="hidden" name="type" value="request">
+            <?php else: ?>
+                <input type="hidden" name="type" value="activity">
+            <?php endif; ?>
+
             <div class="actions">
-                <button type="submit" class="btn-submit">Publicar Actividad</button>
+                <?php if ($participante): ?>
+                    <button type="submit" class="btn-submit">Publicar Petición</button>
+                <?php else: ?>
+                    <button type="submit" class="btn-submit">Publicar Actividad</button>
+                <?php endif; ?>
             </div>
         </form>
     </div>
-
-    <script>
-        // Mostrar ciudad de salida
-        document.getElementById('transport_toggle').addEventListener('change', function () {
-            document.getElementById('departure_box').style.display = this.checked ? 'block' : 'none';
-        });
-
-        // Mostrar nombre del archivo seleccionado
-        document.getElementById('image_file').addEventListener('change', function () {
-            const fileName = this.files[0] ? this.files[0].name : "Haz clic para subir una imagen";
-            document.getElementById('file-name').innerText = fileName;
-        });
-    </script>
 </body>
 
 </html>

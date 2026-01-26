@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const password = document.getElementById("password").value.trim();
 
     if (!username || !password) {
-      alert("⚠️ Completa todos los campos");
+      alert("Completa todos los campos");
       return;
     }
 
@@ -51,14 +51,14 @@ document.addEventListener("DOMContentLoaded", () => {
       //Manejar la lógica de éxito o error de credenciales
       if (response.ok && data.success) {
         // Guardar datos en sessionStorage
-        sessionStorage.setItem("usuario", data.userData.username);
-        sessionStorage.setItem("rol", data.userData.role);
+        sessionStorage.setItem("username", data.userData.username);
+        sessionStorage.setItem("role", data.userData.role);
 
-        alert("Login correcto ✅");
+        alert("Login correcto");
         window.location.href = "../../app/views/home.php";
       } else {
         // Mostrar el mensaje que viene del PHP o uno por defecto
-        alert(data.message || "❌ Credenciales incorrectas");
+        alert(data.message || " Credenciales incorrectas");
       }
 
     } catch (error) {

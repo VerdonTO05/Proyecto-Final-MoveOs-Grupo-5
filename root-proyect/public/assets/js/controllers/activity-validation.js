@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     form.addEventListener('submit', (e) => {
         let errors = [];
-        
+
         // Captura de valores
         const titulo = document.getElementById('titulo').value.trim();
         const descripcion = document.getElementById('descripcion').value.trim();
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (descripcion.length < 15) errors.push("La descripción es demasiado breve.");
         if (!categoria) errors.push("Debes seleccionar una categoría.");
         if (!ubicacion) errors.push("La ubicación es obligatoria.");
-        
+
         if (fecha) {
             const hoy = new Date().toISOString().split('T')[0];
             if (fecha < hoy) errors.push("La fecha no puede ser anterior a hoy.");
@@ -29,5 +29,17 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault(); // Detiene el envío
             alert("Errores en el formulario:\n- " + errors.join("\n- "));
         }
+    });
+
+
+    // Mostrar ciudad de salida
+    document.getElementById('transport_toggle').addEventListener('change', function () {
+        document.getElementById('departure_box').style.display = this.checked ? 'block' : 'none';
+    });
+
+    // Mostrar nombre del archivo seleccionado
+    document.getElementById('image_file').addEventListener('change', function () {
+        const fileName = this.files[0] ? this.files[0].name : "Haz clic para subir una imagen";
+        document.getElementById('file-name').innerText = fileName;
     });
 });

@@ -44,7 +44,8 @@
 
             <div class="options">
                 <?php
-                if (isset($_SESSION['rol']) && $_SESSION['rol'] == 'ofertante') {
+                session_start();
+                if (isset($_SESSION['role']) && $_SESSION['role'] == 'organizador') {
                     echo '<a id="a-explore" href="home.php">';
                     echo '<button id="button-explore">Explorar Peticiones</button></a>';
                     echo '<button id="button-post">Publicar Actividad</button>';

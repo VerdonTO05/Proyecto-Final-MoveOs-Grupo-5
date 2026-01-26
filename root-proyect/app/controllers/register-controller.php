@@ -46,7 +46,7 @@ try {
         // --- PROCESO DE LOGUEO AUTOMÁTICO EN EL SERVIDOR ---
         $_SESSION['user_id'] = $idUsuario;
         $_SESSION['username'] = $username;
-        $_SESSION['rol'] = $rol;
+        $_SESSION['role'] = $rol;
 
         // --- RESPUESTA CON DATOS PARA EL JAVASCRIPT ---
         echo json_encode([

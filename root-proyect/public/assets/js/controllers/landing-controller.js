@@ -1,12 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const currentUser = sessionStorage.getItem('usuario');
-    const rol = sessionStorage.getItem('rol');
+    const currentUser = sessionStorage.getItem('username');
+    const rol = sessionStorage.getItem('role');
     const buttonExplore = document.getElementById("button-explore");
     const buttonPost = document.getElementById("button-post");
 
     // Si pulsa el botón de Explorar actividades
     buttonExplore.addEventListener("click", () => {
-        if (!currentUser) {
+        if (!rol) {
             alert("Debes iniciar sesión o registrarte para explorar actividades");
             window.location.href = "login.php";
         }
@@ -16,9 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // POPUP BOM PARA PUBLICAR ACTIVIDAD
     // ============================
     buttonPost.addEventListener("click", () => {
-
-        window.location.href = '../../app/views/create-activity.php';
-
+        window.location.href = 'create-activity.php';
     });
 
     //Boton hamburguesa

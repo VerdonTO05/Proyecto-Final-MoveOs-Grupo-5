@@ -1,24 +1,40 @@
-/** main.js que controla el tema de la página (claro u oscuro), ya que en todas las ventanas se podrá realizar*/
 document.addEventListener('DOMContentLoaded', () => {
-  const toggleSwitch = document.getElementById('theme-toggle');
   const html = document.documentElement;
+
+  // === Tema claro / oscuro ===
+  const toggleSwitch = document.getElementById('theme-toggle');
   const darkModeEnabled = localStorage.getItem('mode') === 'dark';
 
   html.classList.toggle('dark-mode', darkModeEnabled);
   html.classList.toggle('light-mode', !darkModeEnabled);
-  toggleSwitch.checked = darkModeEnabled;
 
-  toggleSwitch.addEventListener('change', () => {
-    const isDark = toggleSwitch.checked;
-    html.classList.toggle('dark-mode', isDark);
-    html.classList.toggle('light-mode', !isDark);
-    localStorage.setItem('mode', isDark ? 'dark' : 'light');
-  });
+  if (toggleSwitch) {
+    toggleSwitch.checked = darkModeEnabled;
 
+    toggleSwitch.addEventListener('change', () => {
+      const isDark = toggleSwitch.checked;
+      html.classList.toggle('dark-mode', isDark);
+      html.classList.toggle('light-mode', !isDark);
+      localStorage.setItem('mode', isDark ? 'dark' : 'light');
+    });
+  }
 
-  //Añadir dependiendo del rol elementos al encabezado
-  const rol = sessionStorage.getItem("rol");
+  //Pintar header según rol al cargar cada vista
+  renderHeaderByRole();
+});
+
+//Detectar cambio de rol desde otra pestaña
+window.addEventListener("storage", (event) => {
+  if (event.key === "role") {
+    renderHeaderByRole();
+  }
+});
+
+function renderHeaderByRole() {
+  const rol = sessionStorage.getItem("role");
   const header = document.getElementById("list");
+
+  if (!header || !rol) return;
 
   const linksRol = {
     administrador: [
@@ -26,32 +42,26 @@ document.addEventListener('DOMContentLoaded', () => {
     ],
     participante: [
       { texto: "Explorar Actividades", href: "home.php" },
-      { texto: "Mis peticiones", href: "mis_peticiones.php" }, //cambiar link
+      { texto: "Mis peticiones", href: "mis_peticiones.php" },
       { texto: "Actividades pendientes", href: "inscripciones.php" }
-      
     ],
-    ofertante: [
+    organizador: [
       { texto: "Explorar Peticiones", href: "home.php" },
-      { texto: "Mis actividades", href: "mis_actividades.php" }, //cambiar link
+      { texto: "Mis actividades", href: "mis_actividades.php" },
       { texto: "Peticiones pendientes", href: "inscripciones.php" }
     ]
   };
 
-  if (linksRol[rol]) {
-    linksRol[rol].forEach(enlace => {
-      const li = document.createElement("li");
-      const a = document.createElement("a");
+  if (!linksRol[rol]) return;
 
-      a.textContent = enlace.texto;
-      a.href = enlace.href;
+  linksRol[rol].forEach(enlace => {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
 
-      li.appendChild(a);
-      header.appendChild(li);
-    });
-  }
+    a.textContent = enlace.texto;
+    a.href = enlace.href;
 
-
-
-
-});
-
+    li.appendChild(a);
+    header.appendChild(li);
+  });
+}
