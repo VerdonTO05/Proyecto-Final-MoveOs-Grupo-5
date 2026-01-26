@@ -171,6 +171,223 @@ CREATE TABLE requests (
   CONSTRAINT requests_ibfk_3 FOREIGN KEY (category_id) REFERENCES categories(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+INSERT INTO `users` (`id`, `full_name`, `email`, `username`, `password_hash`, `role_id`, `created_at`) VALUES
+(1, 'Irene Osuna', 'irene@gmail.com', 'ireneosuna', '$2y$10$b5ViZkLR4zFSXlVaawLEMOXAh7HyCMdMN39ANbItbDJlLqoC1CNve', 2, '2026-01-26 17:29:15'),
+(2, 'Manuel Verdon', 'manuel@gmail.com', 'manuelverdon', '$2y$10$MNF.N94OmKc9D0YQ4rK2XewgRBVjNXGoaRSym8R53XdLtk9lZM6ki', 2, '2026-01-26 17:29:51'),
+(3, 'Alejandro Montesinos', 'alejandro@gmail.com', 'alejandrom', '$2y$10$TfJ05ZNAR6VcI5OF/ZdmsOJ3KH4xua03MtJvn9fFiY6nYQOkwCfeu', 1, '2026-01-26 17:30:28'),
+(4, 'Admin 1', 'admin@gmail.com', 'admin', '$2y$10$khd15J.3JvRGtkKn4A3z7O1u4SmzyJVT37ZEWGzLFnjRR45ZkUeau', 3, '2026-01-26 17:32:00');
+
+INSERT INTO activities (
+  offertant_id,
+  category_id,
+  title,
+  description,
+  date,
+  time,
+  price,
+  max_people,
+  location,
+  language,
+  image_url,
+  state
+) VALUES
+
+-- =========================
+-- ACTIVIDADES DE IRENE (id 1)
+-- =========================
+
+(
+  1,
+  (SELECT id FROM categories WHERE code = 'excursion'),
+  'Ruta de Senderismo en la Sierra de Guadarrama',
+  'Descubre la naturaleza en esta impresionante ruta por la Sierra de Guadarrama.',
+  '2026-11-25',
+  '10:00:00',
+  35.00,
+  10,
+  'Madrid',
+  'Español',
+  'ruta.jpg',
+  'aprobada'
+),
+
+(
+  1,
+  (SELECT id FROM categories WHERE code = 'class'),
+  'Clase de Yoga',
+  'Sesión de yoga para principiantes impartida por un instructor especializado.',
+  '2026-11-25',
+  '10:00:00',
+  20.00,
+  15,
+  'Barcelona',
+  'Español',
+  'yoga.jpg',
+  'aprobada'
+),
+
+(
+  1,
+  (SELECT id FROM categories WHERE code = 'workshop'),
+  'Taller de Fotografía Urbana',
+  'Aprende a capturar la esencia de la ciudad con tu cámara o móvil en este taller práctico por las calles de Madrid.',
+  '2026-11-25',
+  '10:00:00',
+  30.00,
+  12,
+  'Madrid',
+  'Español',
+  'fotografia.jpg',
+  'pendiente'
+),
+
+-- =========================
+-- ACTIVIDADES DE MANUEL (id 2)
+-- =========================
+
+(
+  2,
+  (SELECT id FROM categories WHERE code = 'experience'),
+  'Cata de Vinos',
+  'Disfruta de una experiencia sensorial con una selección de vinos locales y aprende sobre maridaje y cata profesional.',
+  '2026-11-25',
+  '10:00:00',
+  45.00,
+  8,
+  'La Rioja',
+  'Español',
+  'vinos.jpg',
+  'pendiente'
+),
+
+(
+  2,
+  (SELECT id FROM categories WHERE code = 'class'),
+  'Clase de Cocina Mediterránea',
+  'Prepara platos típicos mediterráneos con un chef experto y descubre los secretos de esta cocina saludable y deliciosa.',
+  '2026-11-25',
+  '10:00:00',
+  40.00,
+  10,
+  'Valencia',
+  'Español',
+  'cocina.jpg',
+  'aprobada'
+),
+
+(
+  2,
+  (SELECT id FROM categories WHERE code = 'excursion'),
+  'Ruta en Bicicleta por la Costa',
+  'Explora la costa con una ruta guiada en bicicleta, perfecta para disfrutar del mar y el aire libre con amigos.',
+  '2026-11-25',
+  '10:00:00',
+  25.00,
+  20,
+  'Málaga',
+  'Español',
+  'bicicleta.jpg',
+  'aprobada'
+);
+
+INSERT INTO requests (
+  participant_id,
+  category_id,
+  title,
+  description,
+  date,
+  time,
+  location,
+  language,
+  min_age,
+  max_age,
+  pets_allowed,
+  dress_code,
+  state
+) VALUES
+
+(
+  3,
+  (SELECT id FROM categories WHERE code = 'conference'),
+  'Charla sobre vida saludable y bienestar',
+  'Me gustaría asistir a una charla divulgativa sobre hábitos saludables, gestión del estrés y bienestar físico y mental.',
+  '2025-12-02',
+  '17:30:00',
+  'Madrid',
+  'Español',
+  18,
+  70,
+  0,
+  'Casual',
+  'pendiente'
+),
+
+(
+  3,
+  (SELECT id FROM categories WHERE code = 'training'),
+  'Curso básico de primeros auxilios',
+  'Petición de formación práctica en primeros auxilios y actuación en emergencias cotidianas.',
+  '2025-12-05',
+  '16:00:00',
+  'Valencia',
+  'Español',
+  18,
+  65,
+  0,
+  'Ropa cómoda',
+  'pendiente'
+),
+
+(
+  3,
+  (SELECT id FROM categories WHERE code = 'social'),
+  'Encuentro social para conocer gente nueva',
+  'Busco un evento social distendido para conocer personas con intereses culturales y actividades al aire libre.',
+  '2025-12-08',
+  '19:00:00',
+  'Sevilla',
+  'Español',
+  21,
+  55,
+  0,
+  'Casual',
+  'pendiente'
+),
+
+(
+  3,
+  (SELECT id FROM categories WHERE code = 'tour'),
+  'Tour histórico por el casco antiguo',
+  'Me interesa un recorrido guiado por el centro histórico con explicaciones culturales y anécdotas locales.',
+  '2025-12-10',
+  '11:00:00',
+  'Toledo',
+  'Español',
+  16,
+  75,
+  0,
+  'Calzado cómodo',
+  'aceptada'
+),
+
+(
+  3,
+  (SELECT id FROM categories WHERE code = 'meeting'),
+  'Grupo de planificación de actividades al aire libre',
+  'Reunión para organizar futuras excursiones y actividades en grupo durante los próximos meses.',
+  '2025-12-12',
+  '18:30:00',
+  'Online',
+  'Español',
+  18,
+  60,
+  0,
+  'Libre',
+  'pendiente'
+);
+
+
+
 -- --------------------------------------------------------
 -- TRIGGERS: sync current_registrations
 -- --------------------------------------------------------
