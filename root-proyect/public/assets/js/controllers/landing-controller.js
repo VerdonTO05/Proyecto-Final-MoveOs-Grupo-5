@@ -4,26 +4,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const buttonExplore = document.getElementById("button-explore");
     const buttonPost = document.getElementById("button-post");
 
-    /* Si el usuario está logeado */
-    if (currentUser) {
-        const ul = document.getElementById("list");
-
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.href = 'home.php';
-        if(rol == 'participante'){
-            a.textContent = 'Explorar Actividades';
-        }else{
-            a.textContent = 'Explorar Peticiones';
-        }
-        
-        li.appendChild(a);
-        ul.appendChild(li);
-
-        const aExplore = document.getElementById("a-explore");
-        aExplore.href = 'home.php';
-    }
-
     // Si pulsa el botón de Explorar actividades
     buttonExplore.addEventListener("click", () => {
         if (!currentUser) {

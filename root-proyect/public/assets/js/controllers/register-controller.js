@@ -20,12 +20,15 @@ document.addEventListener("DOMContentLoaded", () => {
             const username = document.getElementById("username").value.trim();
             const email = document.getElementById("email").value.trim();
             const password = document.getElementById("password").value;
-            const rol = "participante"; 
+            const rolInput = document.querySelector('input[name="type"]:checked');
 
             if (!validateFullName(fullname)) return alert("Por favor, introduce nombre y apellido.");
             if (!username) return alert("El nombre de usuario es obligatorio.");
             if (!validateEmail(email)) return alert("El formato del correo electrónico no es válido.");
             if (!validatePassword(password)) return alert("La contraseña debe tener al menos 8 caracteres.");
+            if (!rolInput) { return alert("Debes seleccionar un rol.") }
+
+            const rol = rolInput.value;
 
             const userData = { fullname, username, email, password, rol };
 
@@ -40,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (result.success) {
                     alert(`¡Registro exitoso! Bienvenido, ${username}.`);
-                    
+
                     // --- AUTO-LOGIN ---
                     // Guardamos los datos tal cual lo haces en login.js
                     sessionStorage.setItem("usuario", result.userData.username);

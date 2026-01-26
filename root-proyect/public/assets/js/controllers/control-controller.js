@@ -1,8 +1,6 @@
 
 document.addEventListener("DOMContentLoaded", () => {
-
     const activitiesContainer = document.querySelector(".activities");
-
     if (!activitiesContainer) return;
 
     activitiesContainer.addEventListener("click", (e) => {
