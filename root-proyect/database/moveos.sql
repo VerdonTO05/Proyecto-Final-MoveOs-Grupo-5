@@ -386,6 +386,12 @@ INSERT INTO requests (
   'pendiente'
 );
 
+UPDATE activities 
+SET image_url = NULL 
+WHERE image_url IN ('ruta.jpg', 'yoga.jpg', 'fotografia.jpg', 'vinos.jpg', 'cocina.jpg', 'bicicleta.jpg');
+
+-- Verificar los resultados
+SELECT id, title, image_url, state FROM activities;
 
 
 -- --------------------------------------------------------
