@@ -43,12 +43,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (result.success) {
                     alert(`¡Registro exitoso! Bienvenido, ${username}.`);
-
-                    // --- AUTO-LOGIN ---
-                    // Guardamos los datos tal cual lo haces en login.js
-                    sessionStorage.setItem("username", result.userData.username);
-                    sessionStorage.setItem("role", result.userData.role);
-
                     // Redirección directa al home
                     window.location.href = '../../app/views/home.php';
                 } else {

@@ -1,5 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
+  <?php
+  session_start();
+
+  if(isset($_SESSION['role'])){
+    echo "hola";
+  }
+  ?>
 
 <head>
   <meta charset="UTF-8">
@@ -19,7 +26,7 @@
   <script src="../models/activity.js"></script>
 
 
-  <!-- <script src="../controllers/home-controller.js"></script> -->
+  <script src="../../public/assets/js/controllers/landing-controller.js"></script>
 </head>
 
 <body>
@@ -47,7 +54,7 @@
     </section>
     <?php
     session_start();
-    if (isset($_SESSION['rol']) and $_SESSION['rol'] === 'administrador') {
+    if (isset($_SESSION['role']) and $_SESSION['role'] === 'administrador') {
 
       ?>
 

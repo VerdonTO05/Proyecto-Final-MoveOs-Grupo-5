@@ -57,7 +57,7 @@ class User
      */
     public function loginByUsername($username, $password)
     {
-        $sql = "SELECT u.id, u.username, u.password_hash, r.name AS role_name
+        $sql = "SELECT u.*, r.name AS role_name
             FROM {$this->table_name} u
             INNER JOIN roles r ON u.role_id = r.id
             WHERE u.username = :username

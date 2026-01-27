@@ -59,10 +59,7 @@ try {
 
         echo json_encode([
             'success' => true,
-            'userData' => [
-                'username' => $user['username'],
-                'role' => $user['role_name']
-            ]
+            'userData' => $user
         ]);
     } else {
         echo json_encode(['success' => false, 'message' => 'Credenciales inválidas']);

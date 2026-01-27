@@ -1,3 +1,5 @@
+import User from "./User.js"
+
 document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.querySelector(".login-form");
   const closeBtn = document.querySelector(".close-btn");
@@ -50,10 +52,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       //Manejar la lógica de éxito o error de credenciales
       if (response.ok && data.success) {
-        // Guardar datos en sessionStorage
-        sessionStorage.setItem("username", data.userData.username);
-        sessionStorage.setItem("role", data.userData.role);
-
+        const usuario = new User(data.userData.id, data.userData.full_name, data.userData.email, data.userData.username, data.userData.role);
+        console.log(usuario);
         alert("Login correcto");
         window.location.href = "../../app/views/home.php";
       } else {

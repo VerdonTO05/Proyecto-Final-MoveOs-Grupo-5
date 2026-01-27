@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "../../../../app/views/users.php";
   });
 
-  const currentUser = sessionStorage.getItem("usuario");
 
   if (
     !currentUser &&

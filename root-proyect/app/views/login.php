@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="../../public/assets/js/theme-init.js"></script>
     <script src="../../public/assets/js/main.js"></script>
+    <script type="module" src="../../public/assets/js/controllers/login-controller.js"></script>
+
 </head>
 
 <body>
@@ -58,7 +60,6 @@
 
 
             </form>
-            <script src="../../public/assets/js/controllers/login-controller.js"></script>
         </div>
     </div>
 </body>
