@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
-  <?php
+<?php
+// Iniciar sesión si no está activa
+if (session_status() === PHP_SESSION_NONE) {
   session_start();
-
-  if(isset($_SESSION['role'])){
-    echo "hola";
-  }
-  ?>
+}
+?>
 
 <head>
   <meta charset="UTF-8">
@@ -53,9 +52,7 @@
       </div>
     </section>
     <?php
-    session_start();
     if (isset($_SESSION['role']) and $_SESSION['role'] === 'administrador') {
-
       ?>
 
       <div>

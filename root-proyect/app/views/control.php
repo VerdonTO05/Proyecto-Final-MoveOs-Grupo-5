@@ -17,6 +17,11 @@
 </head>
 
 <body>
+    <?php
+    // Proteger la página - solo administradores
+    require_once __DIR__ . '/../middleware/auth.php';
+    requireRole('administrador');
+    ?>
     <div id="header"></div>
 
     <div class="container-control">
@@ -33,32 +38,32 @@
         </header>
 
 
-        <!-- Stats -->
+        <!-- Stats - Se llenarán dinámicamente -->
         <section class="stats">
             <div class="card pending">
                 <i class="fas fa-clock icon"></i>
-                <h2>2</h2>
+                <h2>...</h2>
                 <p>Pendientes</p>
                 <small>Requieren revisión</small>
             </div>
 
             <div class="card approved">
                 <i class="fas fa-check-circle icon"></i>
-                <h2>8</h2>
+                <h2>...</h2>
                 <p>Aprobadas</p>
                 <small>Activas en la plataforma</small>
             </div>
 
             <div class="card rejected">
                 <i class="fas fa-times-circle icon"></i>
-                <h2>0</h2>
+                <h2>...</h2>
                 <p>Rechazadas</p>
                 <small>No cumplen requisitos</small>
             </div>
 
             <div class="card total">
                 <i class="fas fa-circle-info icon"></i>
-                <h2>10</h2>
+                <h2>...</h2>
                 <p>Total</p>
                 <small>Todas las actividades</small>
             </div>
@@ -66,98 +71,15 @@
 
         <!-- Tabs -->
         <section class="tab-switch">
-            <button class="tab-btn control active">Actividades <span>2</span></button>
-            <button class="tab-btn control">Peticiones <span>0</span></button>
+            <button class="tab-btn control active">Actividades <span>...</span></button>
+            <button class="tab-btn control">Peticiones <span>...</span></button>
         </section>
 
-        <!-- Activity Card -->
+        <!-- Activity Cards - Se llenarán dinámicamente -->
         <div class="activities">
-            <section class="activity-control">
-                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e" alt="Actividad">
-
-                <div class="activity-info">
-                    <div class="tags">
-                        <span class="tag blue">
-                            <i class="fas fa-route"></i> Excursión
-                        </span>
-                        <span class="tag orange">
-                            <i class="fas fa-hourglass-half"></i> Pendiente
-                        </span>
-                    </div>
-
-                    <h3>Excursión en Kayak por la Costa</h3>
-                    <p class="description">
-                        Aventura acuática explorando cuevas y calas secretas. Incluye todo el equipo necesario y guía
-                        experto.
-                        Apto para todos los niveles.
-                    </p>
-
-                    <p class="organizer">
-                        <i class="fas fa-user"></i>
-                        <strong>Organizador:</strong> Mar y Aventura
-                    </p>
-
-                    <div class="meta">
-                        <span><i class="fas fa-calendar-alt"></i> 5 Nov 2025</span>
-                        <span><i class="fas fa-map-marker-alt"></i> Alicante</span>
-                        <span><i class="fas fa-users"></i> 0/12</span>
-                        <span><i class="fas fa-euro-sign"></i> 55€</span>
-                    </div>
-
-                    <div class="actions">
-                        <button data-id="0" class="btn approve btn-approve">
-                            <i class="fas fa-check"></i> Aprobar
-                        </button>
-                        <button data-id="0" class="btn reject btn-reject">
-                            <i class="fas fa-times"></i> Rechazar
-                        </button>
-                    </div>
-                </div>
-
-            </section>
-            <section class="activity-control">
-                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e" alt="Actividad">
-
-                <div class="activity-info">
-                    <div class="tags">
-                        <span class="tag blue">
-                            <i class="fas fa-route"></i> Excursión
-                        </span>
-                        <span class="tag orange">
-                            <i class="fas fa-hourglass-half"></i> Pendiente
-                        </span>
-                    </div>
-
-                    <h3>Excursión en Kayak por la Costa</h3>
-                    <p class="description">
-                        Aventura acuática explorando cuevas y calas secretas. Incluye todo el equipo necesario y guía
-                        experto.
-                        Apto para todos los niveles.
-                    </p>
-
-                    <p class="organizer">
-                        <i class="fas fa-user"></i>
-                        <strong>Organizador:</strong> Mar y Aventura
-                    </p>
-
-                    <div class="meta">
-                        <span><i class="fas fa-calendar-alt"></i> 5 Nov 2025</span>
-                        <span><i class="fas fa-map-marker-alt"></i> Alicante</span>
-                        <span><i class="fas fa-users"></i> 0/12</span>
-                        <span><i class="fas fa-euro-sign"></i> 55€</span>
-                    </div>
-
-                    <div class="actions">
-                        <button  data-id="1" class="btn approve btn-approve">
-                            <i class="fas fa-check"></i> Aprobar
-                        </button>
-                        <button  data-id="1" class="btn reject btn-reject">
-                            <i class="fas fa-times"></i> Rechazar
-                        </button>
-                    </div>
-                </div>
-
-            </section>
+            <p style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                <i class="fas fa-spinner fa-spin"></i> Cargando actividades pendientes...
+            </p>
         </div>
     </div>
     <!-- Contenedor de modal -->

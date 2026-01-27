@@ -14,11 +14,16 @@
 
     <link rel="stylesheet" href="../../public/assets/css/main.css">
     <link rel="icon" type="image/ico" href="../../public/assets/img/ico/icono.svg" id="icon.ico">
-    
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body>
+    <?php
+    // Proteger la página - solo administradores
+    require_once __DIR__ . '/../middleware/auth.php';
+    requireRole('administrador');
+    ?>
     <div class="icons">
         <label class="switch">
             <input type="checkbox" id="theme-toggle">

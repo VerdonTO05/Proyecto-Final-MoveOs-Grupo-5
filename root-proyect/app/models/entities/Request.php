@@ -1,5 +1,6 @@
 <?php
-class Request {
+class Request
+{
     private $conn;
     private $table_name = 'requests';
     public $id;
@@ -24,12 +25,14 @@ class Request {
     public $created_at;
     public $state;
 
-    public function __construct($db){
+    public function __construct($db)
+    {
         $this->conn = $db;
     }
 
     // Obtener todas las peticiones
-    public function getRequests(){
+    public function getRequests()
+    {
         $sql = "SELECT r.*, u.full_name AS participant_name, ru.full_name AS accepted_by_name, c.name AS category_name
                 FROM {$this->table_name} r
                 JOIN users u ON r.participant_id = u.id
@@ -41,7 +44,8 @@ class Request {
     }
 
     // Obtener peticion por ID
-    public function getRequestById($id){
+    public function getRequestById($id)
+    {
         $sql = "SELECT r.*, u.full_name AS participant_name, ru.full_name AS accepted_by_name, c.name AS category_name
                 FROM {$this->table_name} r
                 JOIN users u ON r.participant_id = u.id
@@ -55,7 +59,8 @@ class Request {
     }
 
     // Crear una peticion
-    public function createRequest($data){
+    public function createRequest($data)
+    {
         $sql = "INSERT INTO {$this->table_name} 
                 (participant_id, category_id, title, description, date, time, location, current_registrations, organizer_email,
                  transport_included, departure_city, language, min_age, max_age, pets_allowed, dress_code, state)
@@ -64,14 +69,15 @@ class Request {
                  :transport_included, :departure_city, :language, :min_age, :max_age, :pets_allowed, :dress_code, :state)";
 
         $stmt = $this->conn->prepare($sql);
-        if($stmt->execute($data)){
+        if ($stmt->execute($data)) {
             return $this->conn->lastInsertId();
         }
         return false;
     }
 
     // Editar una peticion
-    public function editRequest($id, $data){
+    public function editRequest($id, $data)
+    {
         $sql = "UPDATE {$this->table_name} SET
                     category_id = :category_id,
                     title = :title,
@@ -99,10 +105,33 @@ class Request {
     }
 
     // Eliminar una peticion
-    public function deleteRequest($id){
+    public function deleteRequest($id)
+    {
         $sql = "DELETE FROM {$this->table_name} WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute(['id' => $id]);
+    }
+
+    // Obtener peticiones por estado
+    public function getRequestsByState($state)
+    {
+        $sql = "SELECT r.*, u.full_name AS participant_name, c.name AS category_name
+                FROM {$this->table_name} r
+                JOIN users u ON r.participant_id = u.id
+                JOIN categories c ON r.category_id = c.id
+                WHERE r.state = :state
+                ORDER BY r.date ASC";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(['state' => $state]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Actualizar estado de petición
+    public function updateState($id, $newState)
+    {
+        $sql = "UPDATE {$this->table_name} SET state = :state WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute(['id' => $id, 'state' => $newState]);
     }
 }
 ?>

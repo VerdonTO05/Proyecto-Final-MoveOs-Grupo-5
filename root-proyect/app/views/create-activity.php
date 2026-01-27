@@ -1,13 +1,10 @@
 <?php
-session_start();
+// Proteger la página - solo oferentes y participantes pueden crear actividades
+require_once __DIR__ . '/../middleware/auth.php';
+requireAnyRole(['oferente', 'participante']);
 
-if (!isset($_SESSION['role'])) {
-    header('Location: login.php');
-    exit;
-}
 $rol = $_SESSION['role'];
 $participante = ($rol === 'participante');
-
 ?>
 <!DOCTYPE html>
 <html lang="es">
