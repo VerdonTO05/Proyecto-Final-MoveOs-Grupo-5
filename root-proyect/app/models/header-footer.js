@@ -1,7 +1,5 @@
-{//HAY QUE CREAR LA PAGINA DE MI PERFIL PARA EL DESPLEGABLE DEL HEADER
-    // Estructura header
-    const headerHTML = `
-    <header>
+const headerHTML = `
+<header>
   <nav>
     <!-- Logo -->
     <div class="logo-container">
@@ -35,120 +33,128 @@
         <button id="user-btn">
           <i class="fas fa-user"></i>
         </button>
+
+        <div id="user-dropdown" style="display:none;">
+          <span id="display-username"></span>
+          <a href="#" id="logout-link">Cerrar sesión</a>
+        </div>
       </div>
     </div>
   </nav>
 </header>
 `;
 
-    // 2. Definición de la estructura del Footer
-    const footerHTML = `
-    <footer>
-        <section>
-            <div class="logo-container">
-                <a href="#">
-                    <img src="../../public/assets/img/ico/icono.svg" alt="Logo MOVEos">
-                    <span>MOVEos</span>
-                </a>
-                <p>Dinamismo, cambio y participación activa en cada experiencia.</p>
-            </div>
-            <div>
-                <h4>Plataforma</h4>
-                <ul>
-                    <li><a href="home.php">Explorar</a></li>
-                    <li><a href="#">Cómo Funciona</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4>Soporte</h4>
-                <ul>
-                    <li><a href="#">Contacto</a></li>
-                    <li><a href="#">Privacidad</a></li>
-                </ul>
-            </div>
-        </section>
-        <p>© 2025 MOVEos. Todos los derechos reservados.</p>
-    </footer>`;
+// Estructura footer
+const footerHTML = `
+<footer>
+    <section>
+        <div class="logo-container">
+            <a href="#">
+                <img src="../../public/assets/img/ico/icono.svg" alt="Logo MOVEos">
+                <span>MOVEos</span>
+            </a>
+            <p>Dinamismo, cambio y participación activa en cada experiencia.</p>
+        </div>
+        <div>
+            <h4>Plataforma</h4>
+            <ul>
+                <li><a href="home.php">Explorar</a></li>
+                <li><a href="#">Cómo Funciona</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4>Soporte</h4>
+            <ul>
+                <li><a href="#">Contacto</a></li>
+                <li><a href="#">Privacidad</a></li>
+            </ul>
+        </div>
+    </section>
+    <p>© 2025 MOVEos. Todos los derechos reservados.</p>
+</footer>
+`;
 
-    // 3. Ejecución principal al cargar el DOM
-    document.addEventListener("DOMContentLoaded", () => {
-        const headerEl = document.getElementById('header');
-        const footerEl = document.getElementById('footer');
+// Ejecución principal al cargar el DOM
+document.addEventListener("DOMContentLoaded", () => {
+    const headerEl = document.getElementById('header');
+    const footerEl = document.getElementById('footer');
 
-        // Inyectar HTML en los contenedores
-        if (headerEl) headerEl.innerHTML = headerHTML;
-        if (footerEl) footerEl.innerHTML = footerHTML;
+    if (headerEl) headerEl.innerHTML = headerHTML;
+    if (footerEl) footerEl.innerHTML = footerHTML;
 
-        // Inicializar lógicas
-        initUserLogic();
-        initThemeLogic();
-    });
+    // Inicializar lógicas
+    initThemeLogic();
+    initUserLogic();
+});
 
-    /**
-     * Gestiona el clic en el icono de usuario y el logout
-     */
-    function initUserLogic() {
-        const userBtn = document.getElementById('user-btn');
-        const userDropdown = document.getElementById('user-dropdown');
-        const logoutLink = document.getElementById('logout-link');
-        const displayUsername = document.getElementById('display-username');
+/**
+ * Gestiona el clic en el icono de usuario y el logout
+ */
+function initUserLogic() {
+    const userBtn = document.getElementById('user-btn');
+    const userDropdown = document.getElementById('user-dropdown');
+    const logoutLink = document.getElementById('logout-link');
+    const displayUsername = document.getElementById('display-username');
 
-        const usuarioLogueado = sessionStorage.getItem('usuario');
+    const user = window.CURRENT_USER || null;
 
-        if (userBtn) {
-            userBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (usuarioLogueado) {
-                    // Si hay sesión: Alternar visibilidad del menú
-                    if (displayUsername) displayUsername.innerText = usuarioLogueado;
-                    const isVisible = userDropdown.style.display === 'flex';
-                    userDropdown.style.display = isVisible ? 'none' : 'flex';
-                } else {
-                    // Si NO hay sesión: Redirigir a registro
-                    window.location.href = 'login.php';
-                }
-            });
-        }
+    if (userBtn) {
+        console.log("hola");
 
-        // Cerrar menú al hacer clic fuera de él
-        window.addEventListener('click', () => {
-            if (userDropdown) userDropdown.style.display = 'none';
+        userBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+
+            if (!user) {
+                window.location.href = 'login.php';
+                return;
+            }
+
+            if (displayUsername) displayUsername.innerText = user.name || user.username || "Usuario";
+
+            if (userDropdown) {
+                
+                const isVisible = getComputedStyle(userDropdown).display === 'flex'; // metodo nativo de js que permite saber los estilos que tiene un elemento
+                userDropdown.style.display = isVisible ? 'none' : 'flex';
+            }
         });
-
-        // Evento Cerrar Sesión
-        if (logoutLink) {
-            logoutLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                sessionStorage.clear();
-                window.location.href = '../controllers/logout.php';
-            });
-        }
     }
 
-    /**
-     * Gestiona el modo claro / oscuro
-     */
-    function initThemeLogic() {
-        const themeToggle = document.getElementById('theme-toggle');
-        const currentTheme = localStorage.getItem('theme');
-
-        // Aplicar tema guardado al cargar
-        if (currentTheme === 'dark') {
-            document.body.classList.add('dark-mode');
-            if (themeToggle) themeToggle.checked = true;
+    window.addEventListener('click', () => {
+        if (userDropdown && userDropdown.style.display === 'flex') {
+            userDropdown.style.display = 'none';
         }
+    });
 
-        // Escuchar el cambio en el switch
-        if (themeToggle) {
-            themeToggle.addEventListener('change', () => {
-                if (themeToggle.checked) {
-                    document.body.classList.add('dark-mode');
-                    localStorage.setItem('theme', 'dark');
-                } else {
-                    document.body.classList.remove('dark-mode');
-                    localStorage.setItem('theme', 'light');
-                }
-            });
-        }
+    // Logout seguro
+    if (logoutLink) {
+        logoutLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = '../controllers/logout.php';
+        });
+    }
+}
+
+/**
+ * Gestiona el modo claro / oscuro
+ */
+function initThemeLogic() {
+    const themeToggle = document.getElementById('theme-toggle');
+    const currentTheme = localStorage.getItem('mode');
+
+    if (currentTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        if (themeToggle) themeToggle.checked = true;
+    }
+
+    if (themeToggle) {
+        themeToggle.addEventListener('change', () => {
+            if (themeToggle.checked) {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('mode', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('mode', 'light');
+            }
+        });
     }
 }
