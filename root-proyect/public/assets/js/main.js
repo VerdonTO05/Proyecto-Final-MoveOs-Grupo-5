@@ -1,7 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const html = document.documentElement;
+  initThemeLogic();
+  renderHeaderByRole();
+});
 
-  // === Tema claro / oscuro ===
+/**
+ * Inicializar tema claro/oscuro
+ */
+function initThemeLogic() {
+  const html = document.documentElement;
   const toggleSwitch = document.getElementById('theme-toggle');
   const darkModeEnabled = localStorage.getItem('mode') === 'dark';
 
@@ -18,23 +24,19 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem('mode', isDark ? 'dark' : 'light');
     });
   }
+}
 
-  //Pintar header según rol al cargar cada vista
-  renderHeaderByRole();
-});
-
-//Detectar cambio de rol desde otra pestaña
-window.addEventListener("storage", (event) => {
-  if (event.key === "role") {
-    renderHeaderByRole();
-  }
-});
-
+/**
+ * Renderiza el header dinámicamente según rol
+ */
 function renderHeaderByRole() {
-  const rol = sessionStorage.getItem("role");
-  const header = document.getElementById("list");
+  const header = document.getElementById('list');
+  if (!header) return;
 
-  if (!header || !rol) return;
+  const user = window.CURRENT_USER;
+  if (!user || !user.role) return;
+
+  const rol = user.role;
 
   const linksRol = {
     administrador: [
@@ -54,14 +56,50 @@ function renderHeaderByRole() {
 
   if (!linksRol[rol]) return;
 
-  linksRol[rol].forEach(enlace => {
-    const li = document.createElement("li");
-    const a = document.createElement("a");
-
-    a.textContent = enlace.texto;
-    a.href = enlace.href;
-
+  // Agregar links dinámicos
+  linksRol[rol].forEach(link => {
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.textContent = link.texto;
+    a.href = link.href;
     li.appendChild(a);
     header.appendChild(li);
   });
+
+  // Inicializar dropdown y logout
+  initUserDropdown(user);
+}
+
+/**
+ * Lógica del dropdown de usuario
+ */
+function initUserDropdown(user) {
+  const userBtn = document.getElementById('user-btn');
+  const userDropdown = document.getElementById('user-dropdown');
+  const displayUsername = document.getElementById('display-username');
+  const logoutLink = document.getElementById('logout-link');
+
+  if (!userBtn || !userDropdown) return;
+
+  userBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (user) {
+      if (displayUsername) displayUsername.innerText = user.username || user.name || "Usuario";
+      const isVisible = userDropdown.style.display === 'flex';
+      userDropdown.style.display = isVisible ? 'none' : 'flex';
+    } else {
+      window.location.href = 'login.php';
+    }
+  });
+
+  window.addEventListener('click', () => {
+    if (userDropdown) userDropdown.style.display = 'none';
+  });
+
+  if (logoutLink) {
+    logoutLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.location.href = '../controllers/logout.php';
+    });
+  }
 }

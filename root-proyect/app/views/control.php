@@ -1,5 +1,20 @@
 <!DOCTYPE html>
 <html lang="es">
+<?php
+// Iniciar sesión si no está activa
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+
+// Proteger la página - solo administradores
+require_once __DIR__ . '/../middleware/auth.php';
+requireRole('administrador');
+
+$user = getCurrentUser();
+?>
+<script>
+  window.CURRENT_USER = <?= json_encode($user ?: null); ?>;
+</script>
 
 <head>
     <meta charset="UTF-8">
@@ -17,11 +32,6 @@
 </head>
 
 <body>
-    <?php
-    // Proteger la página - solo administradores
-    require_once __DIR__ . '/../middleware/auth.php';
-    requireRole('administrador');
-    ?>
     <div id="header"></div>
 
     <div class="container-control">

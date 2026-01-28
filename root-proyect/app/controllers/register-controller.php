@@ -2,59 +2,58 @@
 session_start();
 header('Content-Type: application/json; charset=utf-8');
 
-//Recibir datos JSON
 $input = file_get_contents('php://input');
-$data = json_decode($input, true);
+$data  = json_decode($input, true);
 
-$fullname = $data['fullname'] ?? '';
-$username = $data['username'] ?? '';
-$email    = $data['email'] ?? '';
+$fullname = trim($data['fullname'] ?? '');
+$username = trim($data['username'] ?? '');
+$email    = trim($data['email'] ?? '');
 $rol      = $data['rol'] ?? 'participante'; // Valor por defecto
 $password = $data['password'] ?? '';
 
-//Validar datos obligatorios
 if (empty($fullname) || empty($username) || empty($email) || empty($password)) {
     echo json_encode(['success' => false, 'message' => 'Todos los campos son obligatorios']);
     exit;
 }
 
 try {
-    //Conexión
+    // Conexión PDO
     $bd = new PDO('mysql:host=localhost;dbname=moveos;charset=utf8', 'root', '');
     $bd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    //Obtener ID del rol
-    $consultaIdRol = $bd->prepare('SELECT id FROM roles WHERE name = ?');
-    $consultaIdRol->execute([$rol]);
-    $datosID = $consultaIdRol->fetch(PDO::FETCH_ASSOC);
+    // Obtener ID y nombre del rol
+    $consultaRol = $bd->prepare('SELECT id, name FROM roles WHERE name = ?');
+    $consultaRol->execute([$rol]);
+    $rolData = $consultaRol->fetch(PDO::FETCH_ASSOC);
 
-    if (!$datosID) {
-        echo json_encode(['success' => false, 'message' => 'El rol asignado no existe en el sistema']);
+    if (!$rolData) {
+        echo json_encode(['success' => false, 'message' => 'El rol asignado no existe']);
         exit;
     }
 
-    $idRol = $datosID['id'];
+    $idRol = $rolData['id'];
+    $rolName = $rolData['name'];
     $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
-    //Insertar usuario
+    // Insertar usuario
     $insert = $bd->prepare('INSERT INTO users (full_name, email, username, password_hash, role_id) VALUES (?, ?, ?, ?, ?)');
     $insert->execute([$fullname, $email, $username, $password_hash, $idRol]);
 
     if ($insert->rowCount() == 1) {
-        $idUsuario = $bd->lastInsertId();
-        
-        // --- PROCESO DE LOGUEO AUTOMÁTICO EN EL SERVIDOR ---
-        $_SESSION['user_id'] = $idUsuario;
-        $_SESSION['username'] = $username;
-        $_SESSION['role'] = $rol;
+        $userId = $bd->lastInsertId();
 
-        // --- RESPUESTA CON DATOS PARA EL JAVASCRIPT ---
+        // Logueo automático
+        $_SESSION['user_id']  = $userId;
+        $_SESSION['username'] = $username;
+        $_SESSION['role']     = $rolName;
+
         echo json_encode([
-            'success' => true,
-            'message' => 'Usuario registrado con éxito',
+            'success'  => true,
+            'message'  => 'Usuario registrado con éxito',
             'userData' => [
+                'user_id'  => $userId,
                 'username' => $username,
-                'role' => $rol
+                'role'     => $rolName
             ]
         ]);
     }

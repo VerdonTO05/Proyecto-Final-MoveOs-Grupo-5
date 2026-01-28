@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html lang="es">
+<?php
+// Iniciar sesión si no está activa
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
 
+require_once __DIR__ . '/../middleware/auth.php';
+
+$role = $_SESSION['role'] ?? null;
+$user = getCurrentUser();
+?>
+<script>
+  window.CURRENT_USER = <?= json_encode($user ?: null); ?>;
+</script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -44,8 +57,7 @@
 
             <div class="options">
                 <?php
-                session_start();
-                if (isset($_SESSION['role']) && $_SESSION['role'] == 'organizador') {
+                if ($role == 'organizador') {
                     echo '<a id="a-explore" href="home.php">';
                     echo '<button id="button-explore">Explorar Peticiones</button></a>';
                     echo '<button id="button-post">Publicar Actividad</button>';

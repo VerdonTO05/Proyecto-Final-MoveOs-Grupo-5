@@ -10,9 +10,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // Si pulsa el botón de Explorar actividades
     if (buttonExplore) {
         buttonExplore.addEventListener("click", () => {
-            if (!rol) {
-                alert("Debes iniciar sesión o registrarte para explorar actividades");
+            if (!currentUser) {
+                alert("Debes iniciar sesión o registrarte para explorar.");
                 window.location.href = "login.php";
+            }else{
+                window.location.href = "home.php";
             }
         });
     }
@@ -20,7 +22,13 @@ document.addEventListener("DOMContentLoaded", () => {
     // Publicar actividad
     if (buttonPost) {
         buttonPost.addEventListener("click", () => {
-            window.location.href = 'create-activity.php';
+            if (!currentUser) {
+                alert("Debes iniciar sesión o registrarte para crear.");
+                window.location.href = "login.php";
+            } else {
+                window.location.href = 'create-activity.php';
+            }
+
         });
     }
 
