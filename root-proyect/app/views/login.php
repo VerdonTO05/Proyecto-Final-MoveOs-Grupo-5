@@ -5,12 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - MOVEos</title>
-    <link rel="stylesheet" href="../../public/assets/css/main.css">
-    <link rel="icon" type="image/ico" href="../../public/assets/img/ico/icono.svg" id="icon.ico">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="icon" type="image/ico" href="assets/img/ico/icono.svg" id="icon.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="../../public/assets/js/theme-init.js"></script>
-    <script src="../../public/assets/js/main.js"></script>
-    <script type="module" src="../../public/assets/js/controllers/login-controller.js"></script>
+    <script src="assets/js/theme-init.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/controllers/login-controller.js"></script>
 
 </head>
 
@@ -33,13 +33,14 @@
 
             <div class="tab-switch">
                 <button class="tab-btn active">Iniciar Sesión</button>
-                <a href="register.php">
+                <a href="index.php?accion=register">
                     <button class="tab-btn">Registrarse</button>
                 </a>
             </div>
 
             <!-- Formulario -->
-            <form id="login-form" class="login-form" action="../controllers/login-controller.php">
+            <form id="login-form" class="login-form" action="index.php">
+                <input type="hidden" name="accion" value="login">
 
                 <label for="username">Nombre de Usuario</label>
                 <div class="input-group">
@@ -56,9 +57,6 @@
                 <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
 
                 <input type="submit" class="submit-btn" name="login" value="Iniciar Sesión">
-
-
-
             </form>
         </div>
     </div>

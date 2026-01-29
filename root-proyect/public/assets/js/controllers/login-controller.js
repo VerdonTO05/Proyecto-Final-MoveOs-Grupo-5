@@ -2,10 +2,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.querySelector(".login-form");
   const closeBtn = document.querySelector(".close-btn");
 
-  // Botón cerrar
   if (closeBtn) {
     closeBtn.addEventListener("click", () => {
-      window.location.href = "../../app/views/landing.php";
+      window.location.href = "/Proyecto_MOVEos/public/index.php";
     });
   }
 
@@ -23,43 +22,35 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      const response = await fetch("../../app/controllers/login-controller.php", {
+      const response = await fetch("/Proyecto_MOVEos/public/index.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({
+          accion: "login",
+          username,
+          password,
+        }),
       });
 
-      const responseText = await response.text();
+      const text = await response.text();
 
-      if (!responseText) {
-        throw new Error("El servidor envió una respuesta vacía (revisa logs de PHP).");
+      if (!text) {
+        throw new Error("Respuesta vacía del servidor");
       }
 
-      let data;
-      try {
-        data = JSON.parse(responseText);
-      } catch (parseError) {
-        console.error("Respuesta no válida del servidor:", responseText);
-        throw new Error("La respuesta del servidor no tiene formato JSON válido.");
-      }
+      const data = JSON.parse(text);
 
       if (response.ok && data.success) {
-        // Login correcto
-        alert("Login correcto");
-
-        // Redirigir al home
-        window.location.href = "../../app/views/home.php";
-
+        window.location.href =
+          "/Proyecto_MOVEos/public/" + data.redirect;
       } else {
-        // Mostrar error de credenciales
         alert(data.message || "Credenciales incorrectas");
       }
-
     } catch (error) {
-      console.error("Error capturado:", error);
-      alert("Ocurrió un error al intentar iniciar sesión: " + error.message);
+      console.error("Error:", error);
+      alert("Error al iniciar sesión");
     }
   });
 });
