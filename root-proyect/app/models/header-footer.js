@@ -4,7 +4,7 @@ const headerHTML = `
     <!-- Logo -->
     <div class="logo-container">
       <a href="landing.php">
-        <img src="../../public/assets/img/ico/icono.svg" alt="Logo MOVEos">
+        <img src="assets/img/ico/icono.svg" alt="Logo MOVEos">
         <span>MOVEos</span>
       </a>
     </div>
@@ -16,7 +16,7 @@ const headerHTML = `
 
     <!-- Menú -->
     <ul id="list">
-      <li><a href="landing.php">Inicio</a></li>
+      <li><a href="index.php">Inicio</a></li>
       <li id="how"><a href="#">Cómo Funciona</a></li>
     </ul>
 
@@ -50,7 +50,7 @@ const footerHTML = `
     <section>
         <div class="logo-container">
             <a href="#">
-                <img src="../../public/assets/img/ico/icono.svg" alt="Logo MOVEos">
+                <img src="assets/img/ico/icono.svg" alt="Logo MOVEos">
                 <span>MOVEos</span>
             </a>
             <p>Dinamismo, cambio y participación activa en cada experiencia.</p>
@@ -58,7 +58,7 @@ const footerHTML = `
         <div>
             <h4>Plataforma</h4>
             <ul>
-                <li><a href="home.php">Explorar</a></li>
+                <li><a href="index.php?accion=seeActivities">Explorar</a></li>
                 <li><a href="#">Cómo Funciona</a></li>
             </ul>
         </div>
@@ -103,7 +103,7 @@ function initUserLogic() {
             e.stopPropagation();
 
             if (!user) {
-                window.location.href = 'login.php';
+                window.location.href = 'index.php?accion=login';
                 return;
             }
 

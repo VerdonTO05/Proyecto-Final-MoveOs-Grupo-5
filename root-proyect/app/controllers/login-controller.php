@@ -1,86 +1,54 @@
 <?php
-// login.php
-
-ob_start();
 session_start();
 header('Content-Type: application/json; charset=utf-8');
 
-// Rutas relativas
-$appPath  = dirname(__DIR__); // app/
-$rootPath = dirname($appPath); // root-proyect/
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../models/entities/User.php';
 
-// Archivos necesarios
-$dbFile   = $rootPath . '/config/database.php';
-$userFile = $appPath . '/models/entities/User.php';
+// Leer JSON
+$input = json_decode(file_get_contents('php://input'), true);
 
-if (!file_exists($dbFile)) {
-    echo json_encode(['success' => false, 'message' => "No se encuentra database.php en: $dbFile"]);
+$username = trim($input['username'] ?? '');
+$password = trim($input['password'] ?? '');
+
+if ($username === '' || $password === '') {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Campos obligatorios'
+    ]);
     exit;
 }
-
-if (!file_exists($userFile)) {
-    echo json_encode(['success' => false, 'message' => "No se encuentra User.php en: $userFile"]);
-    exit;
-}
-
-require_once $dbFile;
-require_once $userFile;
 
 try {
-    // Recibir JSON del frontend
-    $jsonInput = file_get_contents("php://input");
-    $input     = json_decode($jsonInput, true);
+    $database = new Database();
+    $db = $database->getConnection();
 
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        throw new Exception('Formato JSON no válido');
-    }
+    $userModel = new User($db);
+    $user = $userModel->loginByUsername($username, $password);
 
-    $username = trim($input['username'] ?? '');
-    $password = trim($input['password'] ?? '');
-
-    if (empty($username) || empty($password)) {
-        echo json_encode(['success' => false, 'message' => 'Campos vacíos']);
+    if (!$user) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Credenciales inválidas'
+        ]);
         exit;
     }
 
-    // Conexión a la base de datos
-    $database = new Database();
-    $db       = $database->getConnection();
+    // Guardar sesión
+    session_regenerate_id(true);
+    $_SESSION['user_id'] = $user['id'];
+    $_SESSION['username'] = $user['username'];
+    $_SESSION['role'] = $user['role_name'];
 
-    if (!$db) {
-        throw new Exception('Error de conexión a BD');
-    }
-
-    $userEntity = new User($db);
-    $user       = $userEntity->loginByUsername($username, $password);
-
-    ob_clean(); // Limpiar salida accidental
-
-    if ($user) {
-        // Guardar solo lo esencial en la sesión
-        $_SESSION['user_id']  = $user['id'];
-        $_SESSION['username'] = $user['username'];
-        $_SESSION['role']     = $user['role_name'];
-
-        // Regenerar ID de sesión para seguridad
-        session_regenerate_id(true);
-
-        echo json_encode([
-            'success'  => true,
-            'userData' => [
-                'id'       => $user['id'],
-                'username' => $user['username'],
-                'role'     => $user['role_name']
-            ]
-        ]);
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Credenciales inválidas']);
-    }
+    echo json_encode([
+        'success' => true,
+        'redirect' => 'index.php?accion=seeActivities'
+    ]);
 
 } catch (Exception $e) {
-    ob_clean();
     http_response_code(500);
-    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Error del servidor'
+    ]);
 }
-
-ob_end_flush();

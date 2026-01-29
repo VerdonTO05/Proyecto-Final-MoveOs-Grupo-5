@@ -1,19 +1,41 @@
 <?php
-//Instanciar controladores
-$action = $_POST['accion'] ?? 'index';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-switch($action){
+
+// Leer JSON si viene por fetch
+$input = [];
+if (
+  isset($_SERVER['CONTENT_TYPE']) &&
+  str_contains($_SERVER['CONTENT_TYPE'], 'application/json')
+) {
+  $input = json_decode(file_get_contents('php://input'), true) ?? [];
+}
+
+// Acción por JSON, POST o GET
+$action = $input['accion'] ?? $_POST['accion'] ?? $_GET['accion'] ?? 'index';
+
+
+switch ($action) {
   case 'index':
+    require __DIR__ . '/../app/views/landing.php';
     break;
   case 'register':
+    require __DIR__ . '/../app/views/register.php';
+    break;
+  case 'loginView':
+    require __DIR__ . '/../app/views/login.php';
     break;
   case 'login':
+    require __DIR__ . '/../app/controllers/login-controller.php';
     break;
   case 'logout':
     break;
   case 'editUser':
     break;
   case 'createActivity':
+    require __DIR__ . '/../app/views/create-activity.php';
     break;
   case 'editActivity':
     break;
@@ -28,14 +50,16 @@ switch($action){
   case 'registration':
     break;
   case 'unsubscribe':
-    break;  
+    break;
   case 'accept':
     break;
   case 'deny':
     break;
   case 'seeActivities':
+    require __DIR__ . '/../app/views/home.php';
     break;
   case 'seeRequest':
+    require __DIR__ . '/../app/views/home.php';
     break;
   case 'seeRegistrations':
     break;
@@ -44,54 +68,3 @@ switch($action){
 }
 
 ?>
-
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MOVEos - Explora Actividades</title>
-  <!-- Archivos necesarios -->
-  <script src="../../models/header-footer.js"></script>
-  <script src="../js/theme-init.js"></script>
-  <script src="../js/main.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="../css/home.css">
-  <link rel="icon" type="image/ico" href="../ico/icono.png" id="icon.ico">
-  <script src="../../models/activity.js"></script>
-  <script src="../../models/activities.js"></script>
-  <script src="../../controllers/home-controller.js"></script>
-</head>
-
-<body>
-  <!-- Encabezado -->
-  <div id="header"></div>
-
-  <!-- Contenido principal -->
-  <main class="main-content container">
-    <section class="explore">
-      <h1>Explora Actividades</h1>
-      <p>Descubre experiencias únicas cerca de ti</p>
-
-      <!-- Filtros -->
-      <div class="filters">
-        <input type="text" placeholder="Buscar actividades..." />
-        <select>
-          <option>Todas las ubicaciones</option>
-        </select>
-        <button class="btn-filters">Más Filtros</button>
-      </div>
-      <!-- Actividades -->
-      <section class="grid-activities" id="gridActivities"></section>
-      </div>
-    </section>
-    <div>
-      <button id="btn_users">Mostrar Usuarios</button>
-    </div>
-  </main>
-
-  <!-- Pie de página -->
-  <div id="footer"></div>
-</body>
-
-</html>

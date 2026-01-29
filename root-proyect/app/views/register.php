@@ -6,17 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrarse - MOVEos</title>
 
-    <script src="../../public/assets/js/theme-init.js"></script>
-    <script src="../../public/assets/js/main.js"></script>
-    <link rel="stylesheet" href="../../public/assets/css/main.css">
+    <script src="assets/js/theme-init.js"></script>
+    <script src="assets/js/main.js"></script>
+    <link rel="stylesheet" href="assets/css/main.css">
 
-    <link rel="icon" type="image/ico" href="../../public/assets/img/ico/icono.svg" id="icon.ico">
+    <link rel="icon" type="image/ico" href="assets/img/ico/icono.svg" id="icon.ico">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-    <script src="../../public/assets/js/controllers/register-controller.js"></script>
+    <script src="assets/js/controllers/register-controller.js"></script>
     <!-- <script src="../models/validation.js"></script> -->
-    <script src="../models/user-model.js"></script>
+    <script src="../app/models/user-model.js"></script>
 
 </head>
 
@@ -39,7 +39,7 @@
             </header>
 
             <div class="tab-switch">
-                <a href="login.php">
+                <a href="index.php?accion=login">
                     <button class="tab-btn">Iniciar sesión</button>
                 </a>
                 <button class="tab-btn active">Registrarse</button>

@@ -88,7 +88,7 @@ function initUserDropdown(user) {
       const isVisible = userDropdown.style.display === 'flex';
       userDropdown.style.display = isVisible ? 'none' : 'flex';
     } else {
-      window.location.href = 'login.php';
+      window.location.href = 'index.php?accion=login';
     }
   });
 
