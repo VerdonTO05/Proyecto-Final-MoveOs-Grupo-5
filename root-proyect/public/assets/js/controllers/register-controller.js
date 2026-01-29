@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Botón cerrar
   if (closeBtn) {
     closeBtn.addEventListener('click', () => {
-      window.location.href = '../../app/views/landing.php';
+      window.location.href = "index.php";
     });
   }
 
