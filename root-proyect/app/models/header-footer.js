@@ -3,7 +3,7 @@ const headerHTML = `
   <nav>
     <!-- Logo -->
     <div class="logo-container">
-      <a href="landing.php">
+      <a href="index.php">
         <img src="assets/img/ico/icono.svg" alt="Logo MOVEos">
         <span>MOVEos</span>
       </a>

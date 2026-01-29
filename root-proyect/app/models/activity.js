@@ -25,8 +25,8 @@ class Activity {
     const isActive = !!this.activate;
     const contentClass = isActive ? "activity-content" : "activity-content desactivate";
     const img = isActive
-      ? `<img src="../../public/assets/img/original/${this.image}" alt="${this.alt}">`
-      : `<img src="../../public/assets/img/editada/${this.image}" alt="${this.alt}">`;
+      ? `<img src="assets/img/original/${this.image}" alt="${this.alt}">`
+      : `<img src="assets/img/editada/${this.image}" alt="${this.alt}">`;
 
     article.innerHTML = `
     <div class="activity-image">

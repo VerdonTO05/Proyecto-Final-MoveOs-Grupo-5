@@ -20,21 +20,21 @@ $user = getCurrentUser();
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MOVEos - Explora Actividades</title>
-  <script src="../models/header-footer.js"></script>
-  <script src="../../public/assets/js/theme-init.js"></script>
-  <script src="../../public/assets/js/main.js"></script>
+  <script src="../app/models/header-footer.js"></script>
+  <script src="assets/js/theme-init.js"></script>
+  <script src="assets/js/main.js"></script>
 
-  <link rel="stylesheet" href="../../public/assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/main.css">
 
-  <link rel="icon" type="image/png" href="../../public/assets/img/ico/icono.svg" if="icon.ico">
+  <link rel="icon" type="image/png" href="assets/img/ico/icono.svg" if="icon.ico">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-  <script src="../models/activities.js"></script>
-  <script src="../models/activity.js"></script>
+  <script src="../app/models/activities.js"></script>
+  <script src="../app/models/activity.js"></script>
 
 
-  <script src="../../public/assets/js/controllers/landing-controller.js"></script>
+  <script src="assets/js/controllers/landing-controller.js"></script>
 </head>
 
 <body>

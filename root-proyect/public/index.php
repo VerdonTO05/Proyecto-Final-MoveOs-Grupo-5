@@ -1,15 +1,12 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+  session_start();
 }
 
 
 // Leer JSON si viene por fetch
 $input = [];
-if (
-  isset($_SERVER['CONTENT_TYPE']) &&
-  str_contains($_SERVER['CONTENT_TYPE'], 'application/json')
-) {
+if (isset($_SERVER['CONTENT_TYPE']) && str_contains($_SERVER['CONTENT_TYPE'], 'application/json')) {
   $input = json_decode(file_get_contents('php://input'), true) ?? [];
 }
 
@@ -57,6 +54,9 @@ switch ($action) {
     break;
   case 'seeActivities':
     require __DIR__ . '/../app/views/home.php';
+    break;
+  case 'getActivities':
+    require __DIR__ . '/../app/controllers/get-activities.php';
     break;
   case 'seeRequest':
     require __DIR__ . '/../app/views/home.php';

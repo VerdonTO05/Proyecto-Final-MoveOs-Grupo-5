@@ -39,7 +39,7 @@
             </div>
 
             <!-- Formulario -->
-            <form id="login-form" class="login-form" action="index.php">
+            <form id="login-form" class="login-form">
                 <input type="hidden" name="accion" value="login">
 
                 <label for="username">Nombre de Usuario</label>

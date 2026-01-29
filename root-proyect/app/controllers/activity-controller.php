@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . '/../../config/database.php';
-require_once __DIR__ . '/../models/entities/Activity.php';
-require_once __DIR__ . '/../models/entities/Request.php';
+require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../app/models/entities/Activity.php';
+require_once __DIR__ . '/../app/models/entities/Request.php';
 
 session_start();
 
@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Validar tamaño (máximo 5MB)
                 if ($file['size'] <= 5 * 1024 * 1024) {
                     // Crear directorio si no existe
-                    $uploadDir = __DIR__ . '/../../public/uploads/activities/';
+                    $uploadDir = __DIR__ . 'uploads/activities/';
                     if (!file_exists($uploadDir)) {
                         mkdir($uploadDir, 0755, true);
                     }
@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
 
         if ($activity->createActivity($data)) {
-            header("Location: ../views/control.php?status=activity_created");
+            header("Location: ../views/control.php?status=activity_created"); //cambiar
             exit;
         } else {
             echo "Error al crear la actividad";

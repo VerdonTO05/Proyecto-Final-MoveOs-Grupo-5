@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (closeBtn) {
     closeBtn.addEventListener("click", () => {
-      window.location.href = "/Proyecto_MOVEos/public/index.php";
+      window.location.href = "index.php";
     });
   }
 
@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      const response = await fetch("/Proyecto_MOVEos/public/index.php", {
+      const response = await fetch("index.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -43,8 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = JSON.parse(text);
 
       if (response.ok && data.success) {
-        window.location.href =
-          "/Proyecto_MOVEos/public/" + data.redirect;
+        window.location.href = data.redirect;
       } else {
         alert(data.message || "Credenciales incorrectas");
       }
