@@ -103,7 +103,7 @@ function initUserLogic() {
             e.stopPropagation();
 
             if (!user) {
-                window.location.href = 'index.php?accion=login';
+                window.location.href = 'index.php?accion=loginView';
                 return;
             }
 

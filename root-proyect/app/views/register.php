@@ -39,7 +39,7 @@
             </header>
 
             <div class="tab-switch">
-                <a href="index.php?accion=login">
+                <a href="index.php?accion=loginView">
                     <button class="tab-btn">Iniciar sesión</button>
                 </a>
                 <button class="tab-btn active">Registrarse</button>
