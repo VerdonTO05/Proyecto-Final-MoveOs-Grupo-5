@@ -34,7 +34,7 @@ const headerHTML = `
           <i class="fas fa-user"></i>
         </button>
 
-        <div id="user-dropdown" style="display:none;">
+        <div id="user-dropdown" class="invisible">
           <span id="display-username"></span>
           <a href="#" id="logout-link">Cerrar sesión</a>
         </div>
@@ -99,8 +99,6 @@ function initUserLogic() {
     const user = window.CURRENT_USER || null;
 
     if (userBtn) {
-        console.log("hola");
-
         userBtn.addEventListener('click', (e) => {
             e.stopPropagation();
 
@@ -109,21 +107,23 @@ function initUserLogic() {
                 return;
             }
 
-            if (displayUsername) displayUsername.innerText = user.name || user.username || "Usuario";
+            if (displayUsername) displayUsername.innerText = user || "Usuario";
 
-            if (userDropdown) {
-                
-                const isVisible = getComputedStyle(userDropdown).display === 'flex'; // metodo nativo de js que permite saber los estilos que tiene un elemento
-                userDropdown.style.display = isVisible ? 'none' : 'flex';
+            if (userDropdown.classList.contains("invisible")) {
+                userDropdown.remove.classList('invisible');
+                userDropdown.add.classList('visible');
+            }else{
+                userDropdown.remove.classList('visible');
+                userDropdown.add.classList('invisible');
             }
         });
     }
 
-    window.addEventListener('click', () => {
-        if (userDropdown && userDropdown.style.display === 'flex') {
-            userDropdown.style.display = 'none';
-        }
-    });
+    // window.addEventListener('click', () => {
+    //     if (userDropdown && userDropdown.style.display === 'flex') {
+    //         userDropdown.style.display = 'none';
+    //     }
+    // });
 
     // Logout seguro
     if (logoutLink) {

@@ -264,6 +264,14 @@ main section {
     display: none;
 }
 
+.invisible{
+    display: none;
+}
+
+.visible{
+    display: flex;
+}
+
 @media (max-width: 576px) {
 
     /* Base */
