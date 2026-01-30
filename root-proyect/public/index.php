@@ -13,11 +13,12 @@ if (isset($_SERVER['CONTENT_TYPE']) && str_contains($_SERVER['CONTENT_TYPE'], 'a
 // Acción por JSON, POST o GET
 $action = $input['accion'] ?? $_POST['accion'] ?? $_GET['accion'] ?? 'index';
 
+if (isset($_GET['accion']) && $_GET['accion'] === 'logout') {
+  die('ENTRA EN LOGOUT');
+}
+
 
 switch ($action) {
-  case 'index':
-    require __DIR__ . '/../app/views/landing.php';
-    break;
   case 'register':
     require __DIR__ . '/../app/views/register.php';
     break;
@@ -28,7 +29,9 @@ switch ($action) {
     require __DIR__ . '/../app/controllers/login-controller.php';
     break;
   case 'logout':
-    break;
+    require __DIR__ . '/../app/controllers/logout.php';
+    header('Location: index.php?accion=index');
+    exit;
   case 'editUser':
     break;
   case 'createActivity':
@@ -64,6 +67,9 @@ switch ($action) {
   case 'seeRegistrations':
     break;
   case 'seeRequestAccepted':
+    break;
+  default:
+    require __DIR__ . '/../app/views/landing.php';
     break;
 }
 

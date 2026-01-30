@@ -1,7 +1,6 @@
 const headerHTML = `
 <header>
   <nav>
-    <!-- Logo -->
     <div class="logo-container">
       <a href="index.php">
         <img src="assets/img/ico/icono.svg" alt="Logo MOVEos">
@@ -9,18 +8,15 @@ const headerHTML = `
       </a>
     </div>
 
-    <!-- Botón hamburguesa (solo móvil) -->
     <button class="menu-toggle" aria-label="Abrir menú">
       <i class="fa-solid fa-bars"></i>
     </button>
 
-    <!-- Menú -->
     <ul id="list">
       <li><a href="index.php">Inicio</a></li>
       <li id="how"><a href="#">Cómo Funciona</a></li>
     </ul>
 
-    <!-- Iconos / Usuario -->
     <div class="icons">
       <!-- Theme switch -->
       <label class="switch">
@@ -28,7 +24,6 @@ const headerHTML = `
         <span class="slider"></span>
       </label>
 
-      <!-- Usuario -->
       <div class="user-menu-container">
         <button id="user-btn">
           <i class="fas fa-user"></i>
@@ -36,7 +31,7 @@ const headerHTML = `
 
         <div id="user-dropdown" class="invisible">
           <span id="display-username"></span>
-          <a href="#" id="logout-link">Cerrar sesión</a>
+          <a href="index.php?accion=logout" id="logout-link">Cerrar sesión</a>
         </div>
       </div>
     </div>
@@ -110,28 +105,15 @@ function initUserLogic() {
             if (displayUsername) displayUsername.innerText = user || "Usuario";
 
             if (userDropdown.classList.contains("invisible")) {
-                userDropdown.remove.classList('invisible');
-                userDropdown.add.classList('visible');
+                userDropdown.classList.remove('invisible');
+                userDropdown.classList.add('visible');
             }else{
-                userDropdown.remove.classList('visible');
-                userDropdown.add.classList('invisible');
+                userDropdown.classList.remove('visible');
+                userDropdown.classList.add('invisible');
             }
         });
     }
 
-    // window.addEventListener('click', () => {
-    //     if (userDropdown && userDropdown.style.display === 'flex') {
-    //         userDropdown.style.display = 'none';
-    //     }
-    // });
-
-    // Logout seguro
-    if (logoutLink) {
-        logoutLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            window.location.href = '../controllers/logout.php';
-        });
-    }
 }
 
 /**

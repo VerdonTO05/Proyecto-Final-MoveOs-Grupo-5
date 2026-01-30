@@ -11,9 +11,9 @@ document.addEventListener("DOMContentLoaded", () => {
         buttonExplore.addEventListener("click", () => {
             if (!currentUser) {
                 alert("Debes iniciar sesión o registrarte para explorar.");
-                window.location.href = "login.php";
+                window.location.href = "index.php?accion=loginView";
             }else{
-                window.location.href = "home.php";
+                window.location.href = "index.php?accion=seeActivities";
             }
         });
     }
@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
         buttonPost.addEventListener("click", () => {
             if (!currentUser) {
                 alert("Debes iniciar sesión o registrarte para crear.");
-                window.location.href = "login.php";
+                window.location.href = "index.php?accion=loginView";
             } else {
                 window.location.href = 'create-activity.php';
             }

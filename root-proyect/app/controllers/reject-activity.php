@@ -3,7 +3,10 @@ header('Content-Type: application/json');
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../models/entities/Activity.php';
 
-session_start();
+// Iniciar sesión si no está activa
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
 
 // Verificar que sea administrador
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'administrador') {

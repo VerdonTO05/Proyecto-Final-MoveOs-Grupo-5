@@ -4,7 +4,10 @@ require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../models/entities/Activity.php';
 require_once __DIR__ . '/../models/entities/Request.php';
 
-session_start();
+// Iniciar sesión si no está activa
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
 
 // Logging para debug
 error_log("User session role: " . ($_SESSION['role'] ?? 'not set'));

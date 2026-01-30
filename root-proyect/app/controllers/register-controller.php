@@ -1,5 +1,8 @@
 <?php
-session_start();
+// Iniciar sesión si no está activa
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
 header('Content-Type: application/json; charset=utf-8');
 
 $input = file_get_contents('php://input');

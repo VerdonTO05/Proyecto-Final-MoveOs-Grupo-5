@@ -1,6 +1,9 @@
 <?php
 header('Content-Type: application/json');
-session_start();
+// Iniciar sesión si no está activa
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
 
 require_once '../models/Inscription.php';
 
@@ -25,7 +28,7 @@ if (empty($data['activity_id'])) {
 $userId = $_SESSION['user_id'];
 $activityId = (int)$data['activity_id'];
 
-$model = new Inscription();
+// $model = new Inscription();
 
 try {
   $result = $model->createInscription($userId, $activityId);

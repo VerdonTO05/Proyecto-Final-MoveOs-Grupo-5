@@ -3,7 +3,10 @@ require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../app/models/entities/Activity.php';
 require_once __DIR__ . '/../app/models/entities/Request.php';
 
-session_start();
+// Iniciar sesión si no está activa
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 

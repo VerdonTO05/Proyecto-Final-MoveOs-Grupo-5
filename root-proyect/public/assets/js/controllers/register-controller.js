@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
           alert(`¡Registro exitoso! Bienvenido, ${username}.`);
 
           // Redirección al home
-          window.location.href = '../../app/views/home.php';
+          window.location.href = 'index.php?accion=seeActivities';
 
         } else {
           alert("Error en el registro: " + result.message);
