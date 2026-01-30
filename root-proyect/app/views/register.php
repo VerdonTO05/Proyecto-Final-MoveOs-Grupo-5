@@ -16,7 +16,6 @@
 
     <script src="assets/js/controllers/register-controller.js"></script>
     <!-- <script src="../models/validation.js"></script> -->
-    <script src="../app/models/user-model.js"></script>
 
 </head>
 

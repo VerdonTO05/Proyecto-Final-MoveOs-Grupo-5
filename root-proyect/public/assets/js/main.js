@@ -66,40 +66,5 @@ function renderHeaderByRole() {
     header.appendChild(li);
   });
 
-  // Inicializar dropdown y logout
-  initUserDropdown(user);
 }
 
-/**
- * Lógica del dropdown de usuario
- */
-function initUserDropdown(user) {
-  const userBtn = document.getElementById('user-btn');
-  const userDropdown = document.getElementById('user-dropdown');
-  const displayUsername = document.getElementById('display-username');
-  const logoutLink = document.getElementById('logout-link');
-
-  if (!userBtn || !userDropdown) return;
-
-  userBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (user) {
-      if (displayUsername) displayUsername.innerText = user.username || user.name || "Usuario";
-      const isVisible = userDropdown.style.display === 'flex';
-      userDropdown.style.display = isVisible ? 'none' : 'flex';
-    } else {
-      window.location.href = 'index.php?accion=login';
-    }
-  });
-
-  window.addEventListener('click', () => {
-    if (userDropdown) userDropdown.style.display = 'none';
-  });
-
-  if (logoutLink) {
-    logoutLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      window.location.href = '../controllers/logout.php';
-    });
-  }
-}

@@ -1,9 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("btn_users").addEventListener("click", function () {
-    window.location.href = "../../../../app/views/users.php";
-  });
-
-
   if (
     !currentUser &&
     window.location.pathname !== "landing.php"
@@ -12,10 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "landing.php";
     return;
   }
-
-  document.getElementById("btn_users").addEventListener("click", function () {
-    window.location.href = "../../../../app/views/users.php"; // Cambia esto por la URL que desees
-  });
 
   //Boton hamburguesa
   const toggle = document.querySelector(".menu-toggle");

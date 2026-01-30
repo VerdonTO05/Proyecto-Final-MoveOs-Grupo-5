@@ -31,7 +31,7 @@ const headerHTML = `
 
         <div id="user-dropdown" class="invisible">
           <span id="display-username"></span>
-          <a href="index.php?accion=logout" id="logout-link">Cerrar sesión</a>
+          <a href="#" id="logout-link">Cerrar sesión</a>
         </div>
       </div>
     </div>
@@ -54,7 +54,7 @@ const footerHTML = `
             <h4>Plataforma</h4>
             <ul>
                 <li><a href="index.php?accion=seeActivities">Explorar</a></li>
-                <li><a href="#">Cómo Funciona</a></li>
+                <li><a href="index.php">Cómo Funciona</a></li>
             </ul>
         </div>
         <div>
@@ -93,6 +93,7 @@ function initUserLogic() {
 
     const user = window.CURRENT_USER || null;
 
+    // Dropdown toggle
     if (userBtn) {
         userBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -104,17 +105,27 @@ function initUserLogic() {
 
             if (displayUsername) displayUsername.innerText = user || "Usuario";
 
-            if (userDropdown.classList.contains("invisible")) {
-                userDropdown.classList.remove('invisible');
-                userDropdown.classList.add('visible');
-            }else{
-                userDropdown.classList.remove('visible');
-                userDropdown.classList.add('invisible');
-            }
+            userDropdown.classList.toggle('invisible');
+            userDropdown.classList.toggle('visible');
         });
     }
 
+    // 🔹 Logout
+    if (logoutLink) {
+        logoutLink.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            // Cerrar dropdown
+            if (userDropdown) {
+                userDropdown.classList.remove('visible');
+                userDropdown.classList.add('invisible');
+            }
+            // Redirigir al logout
+            window.location.href = 'index.php?accion=logout';
+        });
+    }
 }
+
 
 /**
  * Gestiona el modo claro / oscuro
