@@ -66,6 +66,18 @@ switch ($action) {
     break;
   case 'seeRequestAccepted':
     break;
+  case 'approveActivity':
+    require __DIR__ . '/../app/controllers/approve-activity.php';
+    break;
+  case 'rejectActivity':
+    require __DIR__ . '/../app/controllers/reject-activity.php';
+    break;
+  case 'getPendingActivities':
+    require __DIR__ . '/../app/controllers/get-pending-activities.php';
+    break;
+  case 'controlPanel':
+    require __DIR__ . '/../app/views/control.php';
+    break;
   default:
     require __DIR__ . '/../app/views/landing.php';
     break;

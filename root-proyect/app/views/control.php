@@ -3,7 +3,7 @@
 <?php
 // Iniciar sesión si no está activa
 if (session_status() === PHP_SESSION_NONE) {
-  session_start();
+    session_start();
 }
 
 // Proteger la página - solo administradores
@@ -13,22 +13,21 @@ requireRole('administrador');
 $user = getCurrentUser();
 ?>
 <script>
-  window.CURRENT_USER = <?= json_encode($user ?: null); ?>;
+    window.CURRENT_USER = <?= json_encode($user ?: null); ?>;
 </script>
 
 <head>
     <meta charset="UTF-8">
     <title>Panel de Administrador</title>
-    <link rel="icon" type="image/png" href="../../public/assets/img/ico/icono.svg" if="icon.ico">
+    <link rel="icon" type="image/png" href="assets/img/ico/icono.svg">
 
-    <script src="../models/header-footer.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-    <script src="../../public/assets/js/theme-init.js"></script>
-    <script src="../../public/assets/js/main.js"></script>
-    <script src="../../public/assets/js/alerts.js"></script>
-    <script src="../../public/assets/js/controllers/control-controller.js"></script>
-    <link rel="stylesheet" href="../../public/assets/css/main.css">
+    <script src="assets/js/theme-init.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/alerts.js"></script>
+    <script src="assets/js/controllers/control-controller.js"></script>
+    <link rel="stylesheet" href="assets/css/main.css">
 </head>
 
 <body>

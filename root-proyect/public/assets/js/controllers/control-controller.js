@@ -20,10 +20,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 message: 'Estás a punto de aprobar esta actividad.',
                 onConfirm: async () => {
                     try {
-                        const response = await fetch('../../app/controllers/approve-activity.php', {
+                        const response = await fetch('index.php', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ id: id })
+                            body: JSON.stringify({ accion: 'approveActivity', id: id })
                         });
 
                         const result = await response.json();
@@ -73,10 +73,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 message: 'Esta acción no se puede deshacer.',
                 onConfirm: async () => {
                     try {
-                        const response = await fetch('../../app/controllers/reject-activity.php', {
+                        const response = await fetch('index.php', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ id: id })
+                            body: JSON.stringify({ accion: 'rejectActivity', id: id })
                         });
 
                         const result = await response.json();
@@ -138,7 +138,7 @@ async function loadControlPanel() {
     console.log('🔄 Iniciando carga del panel de control...');
 
     try {
-        const response = await fetch('../../app/controllers/get-pending-activities.php');
+        const response = await fetch('index.php?accion=getPendingActivities');
         console.log('📡 Respuesta recibida:', response.status, response.statusText);
 
         if (!response.ok) {

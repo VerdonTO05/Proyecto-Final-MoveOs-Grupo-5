@@ -40,17 +40,17 @@ function renderHeaderByRole() {
 
   const linksRol = {
     administrador: [
-      { texto: "Panel de control", href: "control.php" }
+      { texto: "Panel de control", href: "index.php?accion=controlPanel" }
     ],
     participante: [
-      { texto: "Explorar Actividades", href: "home.php" },
-      { texto: "Mis peticiones", href: "mis_peticiones.php" },
-      { texto: "Actividades pendientes", href: "inscripciones.php" }
+      { texto: "Explorar Actividades", href: "index.php?accion=seeActivities" },
+      { texto: "Mis peticiones", href: "index.php?accion=misPeticiones" },
+      { texto: "Actividades pendientes", href: "index.php?accion=inscripciones" }
     ],
     organizador: [
-      { texto: "Explorar Peticiones", href: "home.php" },
-      { texto: "Mis actividades", href: "mis_actividades.php" },
-      { texto: "Peticiones pendientes", href: "inscripciones.php" }
+      { texto: "Explorar Peticiones", href: "index.php?accion=seeRequest" },
+      { texto: "Mis actividades", href: "index.php?accion=misActividades" },
+      { texto: "Peticiones pendientes", href: "index.php?accion=inscripciones" }
     ]
   };
 

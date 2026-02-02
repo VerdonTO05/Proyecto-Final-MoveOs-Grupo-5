@@ -6,7 +6,7 @@ require_once __DIR__ . '/../models/entities/Request.php';
 
 // Iniciar sesión si no está activa
 if (session_status() === PHP_SESSION_NONE) {
-  session_start();
+    session_start();
 }
 
 // Logging para debug
@@ -47,13 +47,14 @@ foreach ($pendingActivities as &$act) {
 
         // Verificar si el archivo existe
         if (file_exists($fullPath)) {
-            $act['image_url'] = '../../public/' . $act['image_url'];
+            // La imagen ya tiene la ruta correcta relativa a /public/
+            $act['image_url'] = $act['image_url'];
         } else {
             // Si no existe, usar placeholder
-            $act['image_url'] = '../../public/assets/img/default-activity.jpg';
+            $act['image_url'] = 'assets/img/default-activity.jpg';
         }
     } else {
-        $act['image_url'] = '../../public/assets/img/default-activity.jpg';
+        $act['image_url'] = 'assets/img/default-activity.jpg';
     }
 }
 
