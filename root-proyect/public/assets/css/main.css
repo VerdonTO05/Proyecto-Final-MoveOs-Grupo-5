@@ -153,19 +153,19 @@ header nav a {
 header nav a:hover {
   color: var(--brand-primary);
 }
-header nav div {
+header nav nav > div {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
 }
-header nav div button {
+header nav nav > div button {
   padding: 0.5rem 1rem;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 500;
   border: none;
 }
-header nav div button:last-child {
+header nav nav > div button:last-child {
   color: var(--text-on-primary);
 }
 
@@ -233,6 +233,86 @@ footer p {
 .icons i:hover {
   background-color: var(--bg-muted);
   color: var(--text-secondary);
+}
+
+.user-menu-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+#user-dropdown {
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  right: 0;
+  display: none;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  min-width: 180px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  z-index: 1000;
+}
+
+#user-dropdown a,
+#display-username {
+  padding: 0.7rem 1rem;
+  text-align: center;
+  text-decoration: none;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+#user-dropdown a:hover,
+#display-username:hover {
+  background-color: var(--bg-muted);
+  color: var(--brand-primary);
+  cursor: pointer;
+}
+
+#user-dropdown.visible {
+  display: flex;
+}
+
+/* Sidebar de usuario */
+.sidebar {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  top: 0;
+  right: 0;
+  background-color: var(--brand-primary);
+  overflow-x: hidden;
+  transition: 0.3s;
+  padding-top: 5rem;
+  z-index: 9999;
+}
+
+.sidebar a {
+  padding: 1.3rem 2rem;
+  font-size: 16px;
+  color: var(--bg-main);
+  display: block;
+  transition: 0.2s;
+}
+
+.sidebar a:hover {
+  color: var(--bg-main);
+  background-color: var(--brand-dark);
+}
+
+.sidebar .closebtn {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  font-size: 36px;
+  color: var(--bg-main);
+  cursor: pointer;
 }
 
 /* Logo */

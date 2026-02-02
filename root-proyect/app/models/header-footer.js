@@ -35,6 +35,13 @@ const headerHTML = `
         </div>
       </div>
     </div>
+
+    <div id="userSidebar" class="sidebar">
+      <span class="closebtn">&times;</span>
+      <a href="#">Ver datos usuario</a>
+      <a href="#">Editar datos</a>
+      <a href="#">Dar de baja</a>
+    </div>
   </nav>
 </header>
 `;
@@ -80,6 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Inicializar lógicas
     initThemeLogic();
     initUserLogic();
+    initSidebarLogic();
 });
 
 /**
@@ -151,4 +159,33 @@ function initThemeLogic() {
             }
         });
     }
+}
+
+// Inicializar lógica del sidebar
+function initSidebarLogic() {
+    const displayUsername = document.getElementById('display-username');
+    const userDropdown = document.getElementById('user-dropdown');
+    const sidebar = document.getElementById('userSidebar');
+    const closeBtn = sidebar.querySelector('.closebtn');
+
+    // Abrir sidebar al pulsar el nombre
+    displayUsername?.addEventListener('click', () => {
+        sidebar.style.width = '250px';
+    });
+
+    // Cerrar sidebar
+    closeBtn?.addEventListener('click', () => {
+        sidebar.style.width = '0';
+    });
+
+    // Cerrar si se hace clic fuera
+    window.addEventListener('click', (e) => {
+        if (sidebar && !sidebar.contains(e.target) && e.target !== displayUsername) {
+            sidebar.style.width = '0';
+        }
+        if (userDropdown) {
+            userDropdown.classList.remove('visible');
+            userDropdown.classList.add('invisible');
+        }
+    });
 }
