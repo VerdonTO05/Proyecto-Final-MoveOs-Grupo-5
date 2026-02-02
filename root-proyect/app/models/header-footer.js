@@ -92,6 +92,7 @@ function initUserLogic() {
     const displayUsername = document.getElementById('display-username');
 
     const user = window.CURRENT_USER || null;
+    console.log(window.CURRENT_USER);
 
     // Dropdown toggle
     if (userBtn) {
@@ -103,7 +104,7 @@ function initUserLogic() {
                 return;
             }
 
-            if (displayUsername) displayUsername.innerText = user || "Usuario";
+            if (displayUsername) displayUsername.innerText = user.name || "Usuario";
 
             userDropdown.classList.toggle('invisible');
             userDropdown.classList.toggle('visible');
