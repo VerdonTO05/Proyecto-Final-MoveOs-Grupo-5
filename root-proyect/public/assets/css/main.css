@@ -112,7 +112,6 @@ button {
 body {
   display: flex;
   flex-direction: column;
-  /* Ahora apila secciones verticalmente */
   justify-content: flex-start;
   font-family: "Inter", Arial, sans-serif;
   background-color: var(--bg-main);
@@ -153,19 +152,19 @@ header nav a {
 header nav a:hover {
   color: var(--brand-primary);
 }
-header nav nav > div {
+header nav > div {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
 }
-header nav nav > div button {
+header nav > div button {
   padding: 0.5rem 1rem;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 500;
   border: none;
 }
-header nav nav > div button:last-child {
+header nav > div button:last-child {
   color: var(--text-on-primary);
 }
 
@@ -173,7 +172,6 @@ header nav nav > div button:last-child {
 footer {
   display: flex;
   flex-direction: column;
-  /* Footer apilado */
   background: var(--bg-surface);
   padding: 3rem 2rem 1rem;
   color: var(--text-primary);

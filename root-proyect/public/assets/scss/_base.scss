@@ -4,14 +4,13 @@
 body {
     display: flex;
     flex-direction: column;
-    /* Ahora apila secciones verticalmente */
     justify-content: flex-start;
     font-family: "Inter", Arial, sans-serif;
     background-color: var(--bg-main);
     color: var(--text-primary);
     line-height: 1.6;
     transition: background-color 0.4s ease, color 0.4s ease;
-    overflow-x: hidden; //Evita scroll
+    overflow-x: hidden;
 }
 
 /* Header */
@@ -24,9 +23,9 @@ header {
     padding: 1rem;
 
     nav {
-        width: 100%; // Ocupa todo el ancho del header
+        width: 100%;
         display: flex;
-        flex-wrap: wrap; // Permite que los elementos bajen de línea si no caben
+        flex-wrap: wrap;
         justify-content: space-between;
         align-items: center;
         gap: 1rem;
@@ -34,7 +33,7 @@ header {
         ul {
             list-style: none;
             display: flex;
-            flex-wrap: wrap; // Links se apilan si no caben
+            flex-wrap: wrap;
             gap: 1.5rem;
         }
 
@@ -48,9 +47,9 @@ header {
             }
         }
 
-        nav > div {
+        > div {
             display: flex;
-            flex-wrap: wrap; // Botones se apilan si no caben
+            flex-wrap: wrap;
             gap: 0.5rem;
 
             button {
@@ -70,7 +69,6 @@ header {
 footer {
     display: flex;
     flex-direction: column;
-    /* Footer apilado */
     background: var(--bg-surface);
     padding: 3rem 2rem 1rem;
     color: var(--text-primary);
@@ -132,7 +130,6 @@ footer {
         transition: background-color 0.3s, color 0.3s;
         padding: 1em;
         border-radius: 6px;
-        //área táctil
         min-width: 44px;
         min-height: 44px;
 
@@ -189,44 +186,44 @@ footer {
     cursor: pointer;
 }
 
-#user-dropdown.visible{
+#user-dropdown.visible {
     display: flex;
 }
 
 /* Sidebar de usuario */
 .sidebar {
-  height: 100%;
-  width: 0;
-  position: fixed;
-  top: 0;
-  right: 0;
-  background-color:var(--brand-primary);
-  overflow-x: hidden;
-  transition: 0.3s;
-  padding-top: 5rem;
-  z-index: 9999;
+    height: 100%;
+    width: 0;
+    position: fixed;
+    top: 0;
+    right: 0;
+    background-color: var(--brand-primary);
+    overflow-x: hidden;
+    transition: 0.3s;
+    padding-top: 5rem;
+    z-index: 9999;
 }
 
 .sidebar a {
-  padding: 1.3rem 2rem;
-  font-size: 16px;
-  color: var(--bg-main);
-  display: block;
-  transition: 0.2s;
+    padding: 1.3rem 2rem;
+    font-size: 16px;
+    color: var(--bg-main);
+    display: block;
+    transition: 0.2s;
 }
 
 .sidebar a:hover {
-  color: var(--bg-main);
-  background-color:  var(--brand-dark);
+    color: var(--bg-main);
+    background-color: var(--brand-dark);
 }
 
 .sidebar .closebtn {
-  position: absolute;
-  top: 20px;
-  right: 25px;
-  font-size: 36px;
-  color: var(--bg-main);
-  cursor: pointer;
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    font-size: 36px;
+    color: var(--bg-main);
+    cursor: pointer;
 }
 
 
