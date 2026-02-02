@@ -24,6 +24,9 @@ switch ($action) {
   case 'login':
     require __DIR__ . '/../app/controllers/login-controller.php';
     break;
+  case 'registerUser':
+    require __DIR__ . '/../app/controllers/register-controller.php';
+    break;
   case 'logout':
     require __DIR__ . '/../app/controllers/logout.php';
     break;
