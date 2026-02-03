@@ -1,11 +1,11 @@
 <?php
-require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../app/models/entities/Activity.php';
-require_once __DIR__ . '/../app/models/entities/Request.php';
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../models/entities/Activity.php';
+require_once __DIR__ . '/../models/entities/Request.php';
 
 // Iniciar sesión si no está activa
 if (session_status() === PHP_SESSION_NONE) {
-  session_start();
+    session_start();
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -60,8 +60,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (in_array($fileType, $allowedTypes)) {
                 // Validar tamaño (máximo 5MB)
                 if ($file['size'] <= 5 * 1024 * 1024) {
-                    // Crear directorio si no existe
-                    $uploadDir = __DIR__ . 'uploads/activities/';
+                    // Crear directorio si no existe - en public para accesibilidad web
+                    $uploadDir = __DIR__ . '/../../public/uploads/activities/';
                     if (!file_exists($uploadDir)) {
                         mkdir($uploadDir, 0755, true);
                     }
@@ -101,11 +101,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'state' => 'pendiente'
         ];
 
-        if ($activity->createActivity($data)) {
-            header("Location: ../views/control.php?status=activity_created"); //cambiar
+        // Log para debug
+        error_log("Intentando crear actividad: " . json_encode($data));
+
+        $result = $activity->createActivity($data);
+
+        if ($result) {
+            error_log("Actividad creada exitosamente con ID: " . $result);
+            header("Location: ../../public/index.php?status=activity_created");
             exit;
         } else {
-            echo "Error al crear la actividad";
+            error_log("Error al crear la actividad - createActivity retornó false");
+            echo "Error al crear la actividad. Por favor, revisa los logs del servidor.";
         }
     }
 }

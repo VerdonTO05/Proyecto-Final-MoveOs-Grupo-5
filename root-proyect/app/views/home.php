@@ -40,21 +40,12 @@ $user = getCurrentUser();
   <!-- Contenido principal -->
   <main class="main-content container-home">
     <section class="explore">
-      <?php if ($role == 'participante') { ?>
-        <h1>Explora Actividades</h1>
-        <p>Descubre experiencias únicas cerca de ti</p>
-      <?php } else { ?>
-        <h1>Explora Peticiones</h1>
-        <p>Cumple el sueño de otras personas</p>
-      <?php } ?>
+      <h1>Explora Actividades</h1>
+      <p>Descubre experiencias únicas cerca de ti</p>
 
       <!-- Filtros -->
       <div class="filters">
-        <?php if ($role == 'participante') { ?>
-          <input type="text" placeholder="Buscar actividades..." />
-        <?php } else { ?>
-          <input type="text" placeholder="Buscar peticiones..." />
-        <?php } ?>
+        <input type="text" placeholder="Buscar actividades..." />
         <select>
           <option>Todas las ubicaciones</option>
         </select>

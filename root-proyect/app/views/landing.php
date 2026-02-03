@@ -3,7 +3,7 @@
 <?php
 // Iniciar sesión si no está activa
 if (session_status() === PHP_SESSION_NONE) {
-  session_start();
+    session_start();
 }
 
 require_once __DIR__ . '/../middleware/auth.php';
@@ -12,8 +12,20 @@ $role = $_SESSION['role'] ?? null;
 $user = getCurrentUser();
 ?>
 <script>
-  window.CURRENT_USER = <?= json_encode($user ?: null); ?>;
+    window.CURRENT_USER = <?= json_encode($user ?: null); ?>;
 </script>
+<script>
+    // Verificar si se creó una actividad exitosamente
+    document.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('status') === 'activity_created') {
+            alert('¡Actividad creada con éxito! Tu actividad ha sido enviada y está esperando la aprobación del administrador.');
+            // Limpiar el parámetro de la URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    });
+</script>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -59,12 +71,12 @@ $user = getCurrentUser();
                 <?php
                 if ($role == 'organizador') {
                     echo '<a id="a-explore" href="index.php?accion=seeActivities">';
-                    echo '<button id="button-explore">Explorar Peticiones</button></a>';
+                    echo '<button id="button-explore">Explorar Actividades</button></a>';
                     echo '<button id="button-post">Publicar Actividad</button>';
                 } else {
-                    echo '<a id="a-explore" href="index.php?accion=seeRequest">';
+                    // Participantes solo exploran actividades
+                    echo '<a id="a-explore" href="index.php?accion=seeActivities">';
                     echo '<button id="button-explore">Explorar Actividades</button></a>';
-                    echo '<button id="button-post">Publicar Petición</button>';
                 } ?>
             </div>
         </section>

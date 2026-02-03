@@ -4,7 +4,7 @@ require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../models/entities/Activity.php';
 
 if (session_status() === PHP_SESSION_NONE) {
-  session_start();
+    session_start();
 }
 
 $database = new Database();
@@ -17,15 +17,15 @@ $activities = $activity->getActivitiesByState('aprobada');
 // Agregar URL completa para las imágenes
 foreach ($activities as &$act) {
     if ($act['image_url']) {
-        // Construir ruta completa del archivo
-        $fullPath = __DIR__ . $act['image_url'];
+        // Construir ruta completa del archivo desde controllers hacia public
+        $fullPath = __DIR__ . '/../../public/' . $act['image_url'];
 
         // Verificar si el archivo existe
-        if (file_exists($fullPath)) {
-        } else {
+        if (!file_exists($fullPath)) {
             // Si no existe, usar placeholder
             $act['image_url'] = 'assets/img/default-activity.jpg';
         }
+        // Si existe, mantener la ruta original que ya es correcta
     } else {
         $act['image_url'] = 'assets/img/default-activity.jpg';
     }

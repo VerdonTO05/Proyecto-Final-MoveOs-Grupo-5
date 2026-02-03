@@ -1,10 +1,9 @@
 <?php
-// Proteger la página - solo oferentes y participantes pueden crear actividades
+// Proteger la página - solo organizadores pueden crear actividades
 require_once __DIR__ . '/../middleware/auth.php';
-requireAnyRole(['oferente', 'participante']);
+requireRole('organizador');
 
 $rol = $_SESSION['role'];
-$participante = ($rol === 'participante');
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -12,30 +11,26 @@ $participante = ($rol === 'participante');
 <head>
     <meta charset="UTF-8" />
     <title>Publicar Nueva Actividad</title>
-    <link rel="stylesheet" href="../../public/assets/css/main.css">
-    <link rel="icon" type="image/ico" href="../../public/assets/img/ico/icono.svg">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="icon" type="image/ico" href="assets/img/ico/icono.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="../../public/assets/js/controllers/activity-validation.js"></script>
-    <script src="../../public/assets/js/main.js"></script>
+    <script src="assets/js/controllers/activity-validation.js"></script>
+    <script src="assets/js/main.js"></script>
 </head>
 
 <body>
     <div class="container c">
         <header class="header-form create">
-            <?php if ($participante): ?>
-                <h1>Publicar Nueva Petición</h1>
-                <p>Completa todos los detalles para que los ofertantes sepan qué quieres.</p>
-            <?php else: ?>
-                <h1>Publicar Nueva Actividad</h1>
-                <p>Completa todos los detalles para que los participantes sepan qué esperar.</p>
-            <?php endif; ?>
+            <h1>Publicar Nueva Actividad</h1>
+            <p>Completa todos los detalles para que los participantes sepan qué esperar.</p>
         </header>
 
-        <form class="form-activity" id="form-create-activity" action="../controllers/activity-controller.php"
+        <form class="form-activity" id="form-create-activity"
+            action="/Proyecto_MOVEos/Proyecto-Final-MoveOs-Grupo-5/root-proyect/app/controllers/activity-controller.php"
             method="POST" enctype="multipart/form-data">
 
             <div class="full">
-                <label for="titulo">Título de la <?= $participante ? "Petición" : "Actividad" ?> *</label>
+                <label for="titulo">Título de la Actividad *</label>
                 <input type="text" id="titulo" name="title" placeholder="Ej: Yoga al aire libre" required />
             </div>
 
@@ -121,7 +116,7 @@ $participante = ($rol === 'participante');
             </div>
 
             <div class="full">
-                <label>Imagen de la <?= $participante ? "Petición" : "Actividad" ?> *</label>
+                <label>Imagen de la Actividad *</label>
 
                 <div class="upload-box">
                     <input type="file" name="image_file" id="image_file" accept="image/png, image/jpeg" required />
@@ -132,18 +127,10 @@ $participante = ($rol === 'participante');
                 </div>
             </div>
 
-            <?php if ($participante): ?>
-                <input type="hidden" name="type" value="request">
-            <?php else: ?>
-                <input type="hidden" name="type" value="activity">
-            <?php endif; ?>
+            <input type="hidden" name="type" value="activity">
 
             <div class="actions">
-                <?php if ($participante): ?>
-                    <button type="submit" class="btn-submit">Publicar Petición</button>
-                <?php else: ?>
-                    <button type="submit" class="btn-submit">Publicar Actividad</button>
-                <?php endif; ?>
+                <button type="submit" class="btn-submit">Publicar Actividad</button>
             </div>
         </form>
     </div>
