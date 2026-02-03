@@ -47,8 +47,7 @@ foreach ($pendingActivities as &$act) {
 
         // Verificar si el archivo existe
         if (file_exists($fullPath)) {
-            // La imagen ya tiene la ruta correcta relativa a /public/
-            $act['image_url'] = $act['image_url'];
+
         } else {
             // Si no existe, usar placeholder
             $act['image_url'] = 'assets/img/default-activity.jpg';
