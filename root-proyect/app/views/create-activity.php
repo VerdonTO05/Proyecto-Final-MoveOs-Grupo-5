@@ -25,8 +25,7 @@ $rol = $_SESSION['role'];
             <p>Completa todos los detalles para que los participantes sepan qué esperar.</p>
         </header>
 
-        <form class="form-activity" id="form-create-activity"
-            action="/Proyecto_MOVEos/Proyecto-Final-MoveOs-Grupo-5/root-proyect/app/controllers/activity-controller.php"
+        <form class="form-activity" id="form-create-activity" action="../app/controllers/activity-controller.php"
             method="POST" enctype="multipart/form-data">
 
             <div class="full">

@@ -11,20 +11,6 @@ require_once __DIR__ . '/../middleware/auth.php';
 $role = $_SESSION['role'] ?? null;
 $user = getCurrentUser();
 ?>
-<script>
-    window.CURRENT_USER = <?= json_encode($user ?: null); ?>;
-</script>
-<script>
-    // Verificar si se creó una actividad exitosamente
-    document.addEventListener('DOMContentLoaded', () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('status') === 'activity_created') {
-            alert('¡Actividad creada con éxito! Tu actividad ha sido enviada y está esperando la aprobación del administrador.');
-            // Limpiar el parámetro de la URL
-            window.history.replaceState({}, document.title, window.location.pathname);
-        }
-    });
-</script>
 
 <head>
     <meta charset="UTF-8">
@@ -34,12 +20,30 @@ $user = getCurrentUser();
     <script src="../app/models/header-footer.js"></script>
     <script src="../app/models/steps.js"></script>
     <script src="../app/models/how-it-works.js"></script>
-    <script src="assets/js/controllers/landing-controller.js"></script>
 
     <script src="assets/js/theme-init.js"></script>
     <script src="assets/js/main.js"></script>
 
     <link rel="stylesheet" href="assets/css/main.css">
+
+    <script>
+        // Definir usuario ANTES de cargar landing-controller.js
+        window.CURRENT_USER = <?= json_encode($user ?: null); ?>;
+    </script>
+    <script>
+        // Verificar si se creó una actividad exitosamente
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('status') === 'activity_created') {
+                alert('¡Actividad creada con éxito! Tu actividad ha sido enviada y está esperando la aprobación del administrador.');
+                // Limpiar el parámetro de la URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        });
+    </script>
+
+    <!-- Cargar landing-controller.js DESPUÉS de definir CURRENT_USER -->
+    <script src="assets/js/controllers/landing-controller.js"></script>
 
     <link rel="icon" type="image/png" href="assets/img/ico/icono.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
