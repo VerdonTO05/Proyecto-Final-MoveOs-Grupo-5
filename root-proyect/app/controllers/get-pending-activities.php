@@ -45,11 +45,8 @@ foreach ($pendingActivities as &$act) {
         // Construir ruta completa del archivo
         $fullPath = __DIR__ . '/../../public/' . $act['image_url'];
 
-        // Verificar si el archivo existe
-        if (file_exists($fullPath)) {
-
-        } else {
-            // Si no existe, usar placeholder
+        // Verificar si el archivo no existe
+        if (!file_exists($fullPath)) {
             $act['image_url'] = 'assets/img/default-activity.jpg';
         }
     } else {
