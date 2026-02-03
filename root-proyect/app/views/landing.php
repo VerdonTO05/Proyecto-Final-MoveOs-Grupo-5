@@ -69,15 +69,16 @@ $user = getCurrentUser();
 
             <div class="options">
                 <?php
-                if ($role == 'organizador') {
-                    echo '<a id="a-explore" href="index.php?accion=seeActivities">';
-                    echo '<button id="button-explore">Explorar Actividades</button></a>';
-                    echo '<button id="button-post">Publicar Actividad</button>';
-                } else {
-                    // Participantes solo exploran actividades
-                    echo '<a id="a-explore" href="index.php?accion=seeActivities">';
-                    echo '<button id="button-explore">Explorar Actividades</button></a>';
-                } ?>
+                $textoExplorar = ($role === 'organizador') ? 'Explorar Peticiones' : 'Explorar Actividades';
+                $textoBoton = ($role === 'organizador') ? 'Publicar Actividad' : 'Publicar Petición';
+
+                echo '<a id="a-explore" href="index.php?accion=seeActivities">
+                <button id="button-explore">' . $textoExplorar . '</button></a>';
+
+                if ($role) {
+                    echo '<button id="button-post">'.$textoBoton.'</button>';
+                } 
+                ?>
             </div>
         </section>
 
