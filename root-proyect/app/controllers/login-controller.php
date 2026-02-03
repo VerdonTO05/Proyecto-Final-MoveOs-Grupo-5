@@ -42,6 +42,7 @@ try {
     $_SESSION['user_id'] = $user['id'];
     $_SESSION['username'] = $user['username'];
     $_SESSION['role'] = $user['role_name'];
+    $_SESSION['email'] = $user['email'];
 
     echo json_encode([
         'success' => true,
