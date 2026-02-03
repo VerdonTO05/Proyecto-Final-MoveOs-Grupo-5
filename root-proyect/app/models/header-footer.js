@@ -38,10 +38,12 @@ const headerHTML = `
 
     <div id="userSidebar" class="sidebar">
       <span class="closebtn">&times;</span>
-      <a href="#">Ver datos usuario</a>
+      <a id="viewData" href="#">Ver datos usuario</a>
       <a href="#">Editar datos</a>
       <a href="#">Dar de baja</a>
     </div>
+
+</div>
   </nav>
 </header>
 `;
@@ -74,6 +76,13 @@ const footerHTML = `
     </section>
     <p>© 2025 MOVEos. Todos los derechos reservados.</p>
 </footer>
+`;
+
+const viewDataHTML = `
+<p>Nombre: </p>
+<p>Usuario: </p>
+<p>Email: </p>
+<p>Rol: </p>
 `;
 
 // Ejecución principal al cargar el DOM
@@ -167,6 +176,7 @@ function initSidebarLogic() {
     const userDropdown = document.getElementById('user-dropdown');
     const sidebar = document.getElementById('userSidebar');
     const closeBtn = sidebar.querySelector('.closebtn');
+    const viewData = document.getElementById('viewData');
 
     // Abrir sidebar al pulsar el nombre
     displayUsername?.addEventListener('click', () => {
@@ -188,4 +198,15 @@ function initSidebarLogic() {
             userDropdown.classList.add('invisible');
         }
     });
+
+    if (viewData) {
+        viewData.addEventListener('click', () => {
+            if (localStorage.getItem('alert_view_data_shown') == 'true') { return; }
+            // Mostrar alerta
+            showAlert('Ver datos', viewDataHTML);
+            localStorage.setItem('alert_view_data_shown', 'true');
+        });
+    }
+
+    
 }

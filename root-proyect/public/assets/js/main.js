@@ -68,3 +68,24 @@ function renderHeaderByRole() {
 
 }
 
+function showAlert(title, message, type = 'info') {
+  const container = document.getElementById('alert-container');
+
+  const alert = document.createElement('div');
+  alert.className = `custom-alert ${type}`;
+  alert.innerHTML = `
+    <h2>${title}</h2>
+    <div>${message}</div>
+    <button>&times;</button>
+  `;
+
+  // Cerrar manualmente
+  alert.querySelector('button').addEventListener('click', () => {
+    alert.remove();
+    localStorage.setItem('alert_view_data_shown', 'false');
+  });
+
+  container.appendChild(alert);
+}
+
+
