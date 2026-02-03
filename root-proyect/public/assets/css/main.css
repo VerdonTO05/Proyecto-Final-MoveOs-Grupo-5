@@ -279,6 +279,8 @@ footer p {
 
 /* Sidebar de usuario */
 .sidebar {
+  display: flex;
+  flex-direction: column;
   height: 100%;
   width: 0;
   position: fixed;
@@ -292,11 +294,12 @@ footer p {
 }
 
 .sidebar a {
-  padding: 1.3rem 2rem;
+  padding: 1.3rem;
   font-size: 16px;
   color: var(--bg-main);
   display: block;
   transition: 0.2s;
+  height: 3rem;
 }
 
 .sidebar a:hover {
