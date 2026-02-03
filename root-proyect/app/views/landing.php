@@ -118,6 +118,7 @@ $user = getCurrentUser();
 
         <div id="tutorial-container"></div>
 
+        <!-- Añadir video tutorial -->
     </main>
 
     <!-- Pie de página -->
