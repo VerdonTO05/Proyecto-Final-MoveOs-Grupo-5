@@ -3,7 +3,6 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
-
 // Leer JSON si viene por fetch
 $input = [];
 if (isset($_SERVER['CONTENT_TYPE']) && str_contains($_SERVER['CONTENT_TYPE'], 'application/json')) {
@@ -12,7 +11,6 @@ if (isset($_SERVER['CONTENT_TYPE']) && str_contains($_SERVER['CONTENT_TYPE'], 'a
 
 // Acción por JSON, POST o GET
 $action = $input['accion'] ?? $_POST['accion'] ?? $_GET['accion'] ?? 'index';
-
 
 switch ($action) {
   case 'register':
