@@ -1,4 +1,5 @@
 @use 'abstracts/mixins' as m;
+
 /* =========================
    Slogan
 ========================= */
@@ -163,4 +164,146 @@ main {
       line-height: 1.4;
     }
   }
+}
+/* =========================
+   Video Modal / Tutorial
+========================= */
+
+#tutorial-container {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 2rem;
+    background-color: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(4px);
+
+    /* Usa tus clases base */
+    &.invisible {
+        display: none;
+    }
+
+    &.visible {
+        display: flex;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .video-wrapper {
+        background-color: var(--bg-surface);
+        border-radius: 14px;
+        padding: 1.4rem;
+        width: 100%;
+        max-width: 820px;
+
+        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.25);
+        animation: scaleIn 0.25s ease;
+
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+
+        video {
+            width: 100%;
+            max-height: 460px;
+            border-radius: 10px;
+            background-color: #000;
+            display: block;
+        }
+    }
+
+    .controles-personalizados {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+
+        background-color: var(--bg-main);
+        border-radius: 10px;
+        padding: 0.6rem 0.8rem;
+
+        span {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            min-width: 42px;
+            text-align: center;
+        }
+
+        input[type="range"] {
+            appearance: none;
+            height: 4px;
+            background-color: var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+
+            &:focus {
+                outline: none;
+            }
+
+            &::-webkit-slider-thumb {
+                appearance: none;
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                background-color: var(--brand-primary);
+                cursor: pointer;
+            }
+        }
+
+        #barraProgreso {
+            flex: 1;
+        }
+
+        #barraVolumen {
+            width: 90px;
+        }
+
+        .control-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 0.4rem;
+            border-radius: 6px;
+            min-width: 36px;
+            min-height: 36px;
+
+            transition: background-color 0.2s ease, color 0.2s ease;
+
+            i {
+                font-size: 1rem;
+            }
+
+            &:hover {
+                background-color: var(--bg-muted);
+                color: var(--brand-primary);
+            }
+        }
+    }
+}
+
+/* =========================
+   Animaciones
+========================= */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0.96);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
 }

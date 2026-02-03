@@ -1,38 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-
-  // --- 1. LÓGICA DEL VIDEO PERSONALIZADO ---
-  const video = document.getElementById('miVideo');
-  const btnPlayPause = document.getElementById('btnPlayPause');
-  const barra = document.getElementById('barraProgreso');
-
-  if (video && btnPlayPause && barra) {
-    // Control de Reproducción / Pausa
-    btnPlayPause.addEventListener('click', () => {
-      if (video.paused) {
-        video.play();
-        btnPlayPause.innerHTML = '<i class="fas fa-pause"></i> Pausar';
-      } else {
-        video.pause();
-        btnPlayPause.innerHTML = '<i class="fas fa-play"></i> Reproducir';
-      }
-    });
-
-    // Actualizar barra según avance el video
-    video.addEventListener('timeupdate', () => {
-      if (!isNaN(video.duration)) {
-        const porcentaje = (video.currentTime / video.duration) * 100;
-        barra.value = porcentaje;
-      }
-    });
-
-    // Buscar posición en el video al mover la barra
-    barra.addEventListener('input', () => {
-      const tiempo = (barra.value * video.duration) / 100;
-      video.currentTime = tiempo;
-    });
-  }
-
-  // --- 2. GESTIÓN DE ACTIVIDADES Y NAVEGACIÓN ---
+  initVideoPlayer();
   loadActivities();
 
   const currentUser = sessionStorage.getItem('username');
@@ -75,7 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// --- 3. FUNCIONES DE CARGA (FETCH) ---
 async function loadActivities() {
   const gridContainer = document.getElementById('gridActivities');
   if (!gridContainer) return;
@@ -98,7 +64,6 @@ async function loadActivities() {
   }
 }
 
-// --- 4. CREADOR DE COMPONENTES ---
 function createActivityCard(activity) {
   const card = document.createElement("article");
   card.className = "activity activity-card";

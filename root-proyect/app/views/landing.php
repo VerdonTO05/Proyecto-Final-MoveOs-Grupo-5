@@ -117,22 +117,7 @@ $user = getCurrentUser();
             </div>
         </section>
 
-        <div id="tutorial-container">
-
-            <video id="miVideo" width="640">
-                <source src="video.mp4" type="video/mp4">
-                Tu navegador no soporta video.
-            </video>
-
-            <!-- Controles editados-->
-
-            <div class="controles-personalizados">
-                <button id="btnPlayPause">Reproducir</button>
-                <input type="range" id="barraProgreso" value="0" max="100">
-            </div>
-        </div>
-
-
+        <div id="tutorial-container"></div>
     </main>
 
     <!-- Pie de página -->
