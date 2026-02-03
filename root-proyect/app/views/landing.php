@@ -3,7 +3,7 @@
 <?php
 // Iniciar sesión si no está activa
 if (session_status() === PHP_SESSION_NONE) {
-  session_start();
+    session_start();
 }
 
 require_once __DIR__ . '/../middleware/auth.php';
@@ -12,8 +12,9 @@ $role = $_SESSION['role'] ?? null;
 $user = getCurrentUser();
 ?>
 <script>
-  window.CURRENT_USER = <?= json_encode($user ?: null); ?>;
+    window.CURRENT_USER = <?= json_encode($user ?: null); ?>;
 </script>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -116,9 +117,22 @@ $user = getCurrentUser();
             </div>
         </section>
 
-        <div id="tutorial-container"></div>
+        <div id="tutorial-container">
 
-        <!-- Añadir video tutorial -->
+            <video id="miVideo" width="640">
+                <source src="video.mp4" type="video/mp4">
+                Tu navegador no soporta video.
+            </video>
+
+            <!-- Controles editados-->
+
+            <div class="controles-personalizados">
+                <button id="btnPlayPause">Reproducir</button>
+                <input type="range" id="barraProgreso" value="0" max="100">
+            </div>
+        </div>
+
+
     </main>
 
     <!-- Pie de página -->
