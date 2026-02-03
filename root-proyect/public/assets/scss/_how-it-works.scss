@@ -137,4 +137,98 @@
             }
         }
     }
+
+    .hiw-video-wrapper {
+        position: relative;
+        width: 90%;
+        max-width: 480px;
+        margin: 2rem auto;
+        border-radius: 16px;
+        overflow: hidden;
+        background-color: var(--bg-muted);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+
+        video {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 16px;
+            background-color: var(--bg-surface);
+        }
+
+        .close-video {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+            background-color: var(--brand-primary);
+            color: var(--bg-surface);
+            border: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+
+            &:hover {
+                background-color: var(--brand-primary);
+            }
+        }
+
+        .video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.7);
+
+            button.play {
+                background-color: var(--brand-primary);
+                border: none;
+                color: var(--bg-surface);
+                font-size: 1.2rem;
+                border-radius: 6px;
+                padding: 4px 10px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+
+                &:hover {
+                    background-color: var(--brand-primary);
+                }
+            }
+
+            input[type="range"] {
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                flex: 1;
+                height: 6px;
+                border-radius: 3px;
+                background: var(--bg-surface);
+                cursor: pointer;
+                background: linear-gradient(to right, var(--brand-primary) 0%, var(--brand-primary) 0%);
+                border: none;
+                outline: none;
+            }
+
+            .time {
+                color: var(--bg-muted);
+                font-size: 0.85rem;
+                min-width: 40px;
+                text-align: center;
+            }
+
+            .volume {
+                max-width: 80px;
+            }
+        }
+    }
+
+
+
 }

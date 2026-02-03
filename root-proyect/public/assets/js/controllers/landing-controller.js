@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-  initVideoPlayer();
   loadActivities();
 
   const currentUser = sessionStorage.getItem('username');
