@@ -78,6 +78,9 @@ switch ($action) {
   case 'controlPanel':
     require __DIR__ . '/../app/views/control.php';
     break;
+  case 'seeBoth':
+    require __DIR__ . '/../app/views/all-posts.php';
+    break;
   default:
     require __DIR__ . '/../app/views/landing.php';
     break;

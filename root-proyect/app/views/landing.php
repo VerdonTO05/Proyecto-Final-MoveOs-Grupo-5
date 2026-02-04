@@ -62,10 +62,13 @@ $user = getCurrentUser();
                     echo '<a id="a-explore" href="index.php?accion=seeActivities">';
                     echo '<button id="button-explore">Explorar Peticiones</button></a>';
                     echo '<button id="button-post">Publicar Actividad</button>';
-                } else {
+                } elseif ($role == 'participante') {
                     echo '<a id="a-explore" href="index.php?accion=seeRequest">';
                     echo '<button id="button-explore">Explorar Actividades</button></a>';
                     echo '<button id="button-post">Publicar Petición</button>';
+                } else {
+                    echo '<a id="a-explore" href="index.php?accion=seeBoth">';
+                    echo '<button id="button-explore">Explorar Publicaciones</button></a>';
                 } ?>
             </div>
         </section>

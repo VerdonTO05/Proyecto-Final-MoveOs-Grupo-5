@@ -12,11 +12,11 @@ $participante = ($rol === 'participante');
 <head>
     <meta charset="UTF-8" />
     <title>Publicar Nueva Actividad</title>
-    <link rel="stylesheet" href="../../public/assets/css/main.css">
-    <link rel="icon" type="image/ico" href="../../public/assets/img/ico/icono.svg">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="icon" type="image/ico" href="assets/img/ico/icono.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="../../public/assets/js/controllers/activity-validation.js"></script>
-    <script src="../../public/assets/js/main.js"></script>
+    <script src="assets/js/controllers/activity-validation.js"></script>
+    <script src="assets/js/main.js"></script>
 </head>
 
 <body>
@@ -31,7 +31,7 @@ $participante = ($rol === 'participante');
             <?php endif; ?>
         </header>
 
-        <form class="form-activity" id="form-create-activity" action="../controllers/activity-controller.php"
+        <form class="form-activity" id="form-create-activity" action="../app/controllers/activity-controller.php"
             method="POST" enctype="multipart/form-data">
 
             <div class="full">
