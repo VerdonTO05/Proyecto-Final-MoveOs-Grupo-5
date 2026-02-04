@@ -3,6 +3,14 @@
     background-color: var(--bg-surface);
     padding-bottom: 3rem;
 
+    a {
+        text-align: center;
+    }
+
+    a:hover {
+        color: var(--brand-dark);
+    }
+
     /* Encabezado */
     .hiw-header {
         text-align: center;
@@ -39,6 +47,12 @@
             align-items: center;
             font-weight: 700;
             color: var(--text-secondary);
+            cursor: pointer;
+
+            &:hover {
+                background: var(--brand-dark);
+                color: var(--text-on-primary);
+            }
 
             &.active {
                 background: var(--brand-primary);
@@ -118,6 +132,7 @@
         align-items: center;
         gap: 1rem;
         margin-top: 1rem;
+        background-color: var(--bg-surface);
 
         .tab-btn {
             padding: 12px 18px;
@@ -139,94 +154,120 @@
     }
 
     .hiw-video-wrapper {
-        position: relative;
-        width: 90%;
-        max-width: 480px;
-        margin: 2rem auto;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        max-width: 50vw;
+        z-index: 1001;
         border-radius: 16px;
         overflow: hidden;
         background-color: var(--bg-muted);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
 
-        video {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 16px;
-            background-color: var(--bg-surface);
-        }
+    /* ============================= */
+    /* OVERLAY OSCURO */
+    /* ============================= */
 
-        .close-video {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 10;
-            background-color: var(--brand-primary);
-            color: var(--bg-surface);
-            border: none;
-            font-size: 1.2rem;
-            font-weight: bold;
-            padding: 4px 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
+    .hiw-video-wrapper::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.65);
+        z-index: -1;
+    }
 
-            &:hover {
-                background-color: var(--brand-primary);
-            }
-        }
+    /* ============================= */
+    /* VIDEO */
+    /* ============================= */
 
-        .video-controls {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 10px 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(0, 0, 0, 0.7);
+    .hiw-video-wrapper video {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 16px;
+        background-color: var(--bg-surface);
+    }
 
-            button.play {
-                background-color: var(--brand-primary);
-                border: none;
-                color: var(--bg-surface);
-                font-size: 1.2rem;
-                border-radius: 6px;
-                padding: 4px 10px;
-                cursor: pointer;
-                transition: all 0.2s ease;
+    /* ============================= */
+    /* BOTÓN CERRAR */
+    /* ============================= */
 
-                &:hover {
-                    background-color: var(--brand-primary);
-                }
-            }
+    .hiw-video-wrapper .close-video {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 2;
+        background-color: var(--brand-primary);
+        color: var(--bg-surface);
+        border: none;
+        font-size: 1.2rem;
+        font-weight: bold;
+        padding: 4px 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
 
-            input[type="range"] {
-                -webkit-appearance: none;
-                -moz-appearance: none;
-                appearance: none;
-                flex: 1;
-                height: 6px;
-                border-radius: 3px;
-                background: var(--bg-surface);
-                cursor: pointer;
-                background: linear-gradient(to right, var(--brand-primary) 0%, var(--brand-primary) 0%);
-                border: none;
-                outline: none;
-            }
+    .hiw-video-wrapper .close-video:hover {
+        background-color: var(--brand-primary);
+    }
 
-            .time {
-                color: var(--bg-muted);
-                font-size: 0.85rem;
-                min-width: 40px;
-                text-align: center;
-            }
+    /* ============================= */
+    /* CONTROLES */
+    /* ============================= */
 
-            .volume {
-                max-width: 80px;
-            }
-        }
+    .hiw-video-wrapper .video-controls {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 10px 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(0, 0, 0, 0.7);
+    }
+
+    .hiw-video-wrapper .video-controls button.play {
+        background-color: var(--brand-primary);
+        border: none;
+        color: var(--bg-surface);
+        font-size: 1.2rem;
+        border-radius: 6px;
+        padding: 4px 10px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .hiw-video-wrapper .video-controls button.play:hover {
+        background-color: var(--brand-primary);
+    }
+
+    .hiw-video-wrapper .video-controls input[type="range"] {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        flex: 1;
+        height: 6px;
+        border-radius: 3px;
+        background: var(--bg-surface);
+        cursor: pointer;
+        border: none;
+        outline: none;
+    }
+
+    .hiw-video-wrapper .video-controls .time {
+        color: var(--bg-muted);
+        font-size: 0.85rem;
+        min-width: 40px;
+        text-align: center;
+    }
+
+    .hiw-video-wrapper .video-controls .volume {
+        max-width: 80px;
     }
 
 

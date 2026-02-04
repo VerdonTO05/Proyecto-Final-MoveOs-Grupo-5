@@ -19,7 +19,7 @@ const howHTML = `
     </section>
 
     <section id="hiw-card" class="hiw-card"></section>
-    <a href="#" id="openVideo">Ver cómo funciona</a>
+    <a href="#" id="openVideo">Ver vídeo tutorial</a>
 </main>
 `;
 
@@ -125,10 +125,9 @@ function openVideo() {
     // Inicializar barra de volumen
     updateRangeFill(volume);
 
-    // ❌ CERRAR VIDEO
     closeBtn.addEventListener("click", () => {
         video.pause();
-        container.innerHTML = howHTML;  // vuelve al tutorial de texto
+        container.innerHTML = howHTML; 
         activateHowItWorks();
     });
 }

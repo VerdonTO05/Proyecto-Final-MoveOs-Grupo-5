@@ -90,7 +90,7 @@ button {
   --text-secondary: #b8a5a8;
   --text-on-primary: #f0f0f0;
   --brand-primary: #c87b7f;
-  --brand-dark: #b77174;
+  --brand-dark: #99595c;
   --accent-green: #27ae60;
   --accent-purple: #8e44ad;
   --alert: #b28946;
@@ -1144,6 +1144,14 @@ select {
 .how-it-works {
   background-color: var(--bg-surface);
   padding-bottom: 3rem;
+}
+.how-it-works a {
+  text-align: center;
+}
+.how-it-works a:hover {
+  color: var(--brand-dark);
+}
+.how-it-works {
   /* Encabezado */
 }
 .how-it-works .hiw-header {
@@ -1180,6 +1188,11 @@ select {
   align-items: center;
   font-weight: 700;
   color: var(--text-secondary);
+  cursor: pointer;
+}
+.how-it-works .hiw-steps .step-number:hover {
+  background: var(--brand-dark);
+  color: var(--text-on-primary);
 }
 .how-it-works .hiw-steps .step-number.active {
   background: var(--brand-primary);
@@ -1252,6 +1265,7 @@ select {
   align-items: center;
   gap: 1rem;
   margin-top: 1rem;
+  background-color: var(--bg-surface);
 }
 .how-it-works .tab-switch .tab-btn {
   padding: 12px 18px;
@@ -1270,14 +1284,34 @@ select {
   border-color: var(--brand-primary) !important;
 }
 .how-it-works .hiw-video-wrapper {
-  position: relative;
-  width: 90%;
-  max-width: 480px;
-  margin: 2rem auto;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 50vw;
+  z-index: 1001;
   border-radius: 16px;
   overflow: hidden;
   background-color: var(--bg-muted);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+.how-it-works {
+  /* ============================= */
+  /* OVERLAY OSCURO */
+  /* ============================= */
+}
+.how-it-works .hiw-video-wrapper::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: -1;
+}
+.how-it-works {
+  /* ============================= */
+  /* VIDEO */
+  /* ============================= */
 }
 .how-it-works .hiw-video-wrapper video {
   width: 100%;
@@ -1286,11 +1320,16 @@ select {
   border-radius: 16px;
   background-color: var(--bg-surface);
 }
+.how-it-works {
+  /* ============================= */
+  /* BOTÓN CERRAR */
+  /* ============================= */
+}
 .how-it-works .hiw-video-wrapper .close-video {
   position: absolute;
   top: 10px;
   right: 10px;
-  z-index: 10;
+  z-index: 2;
   background-color: var(--brand-primary);
   color: var(--bg-surface);
   border: none;
@@ -1303,6 +1342,11 @@ select {
 }
 .how-it-works .hiw-video-wrapper .close-video:hover {
   background-color: var(--brand-primary);
+}
+.how-it-works {
+  /* ============================= */
+  /* CONTROLES */
+  /* ============================= */
 }
 .how-it-works .hiw-video-wrapper .video-controls {
   position: absolute;
@@ -1337,7 +1381,6 @@ select {
   border-radius: 3px;
   background: var(--bg-surface);
   cursor: pointer;
-  background: linear-gradient(to right, var(--brand-primary) 0%, var(--brand-primary) 0%);
   border: none;
   outline: none;
 }
