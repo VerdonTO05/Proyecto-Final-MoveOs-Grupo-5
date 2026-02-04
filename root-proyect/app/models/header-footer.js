@@ -1,3 +1,7 @@
+/**
+ * HTML del header principal de la aplicación
+ * @type {string}
+ */
 const headerHTML = `
 <header>
   <nav>
@@ -46,145 +50,173 @@ const headerHTML = `
 </header>
 `;
 
-// Estructura footer
+/**
+ * HTML del footer principal de la aplicación
+ * @type {string}
+ */
 const footerHTML = `
 <footer>
-    <section>
-        <div class="logo-container">
-            <a href="#">
-                <img src="assets/img/ico/icono.svg" alt="Logo MOVEos">
-                <span>MOVEos</span>
-            </a>
-            <p>Dinamismo, cambio y participación activa en cada experiencia.</p>
-        </div>
-        <div>
-            <h4>Plataforma</h4>
-            <ul>
-                <li><a href="index.php?accion=seeActivities">Explorar</a></li>
-                <li><a href="index.php">Cómo Funciona</a></li>
-            </ul>
-        </div>
-        <div>
-            <h4>Soporte</h4>
-            <ul>
-                <li><a href="#">Contacto</a></li>
-                <li><a href="#">Privacidad</a></li>
-            </ul>
-        </div>
-    </section>
-    <p>© 2025 MOVEos. Todos los derechos reservados.</p>
+  <section>
+    <div class="logo-container">
+      <a href="#">
+        <img src="assets/img/ico/icono.svg" alt="Logo MOVEos">
+        <span>MOVEos</span>
+      </a>
+      <p>Dinamismo, cambio y participación activa en cada experiencia.</p>
+    </div>
+    <div>
+      <h4>Plataforma</h4>
+      <ul>
+        <li><a href="index.php?accion=seeActivities">Explorar</a></li>
+        <li><a href="index.php">Cómo Funciona</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Soporte</h4>
+      <ul>
+        <li><a href="#">Contacto</a></li>
+        <li><a href="#">Privacidad</a></li>
+      </ul>
+    </div>
+  </section>
+  <p>© 2025 MOVEos. Todos los derechos reservados.</p>
 </footer>
 `;
 
-// Ejecución principal al cargar el DOM
+/**
+ * Punto de entrada principal de la aplicación.
+ * Inserta header y footer e inicializa las lógicas principales.
+ */
 document.addEventListener("DOMContentLoaded", () => {
-    const headerEl = document.getElementById('header');
-    const footerEl = document.getElementById('footer');
-
-    if (headerEl) headerEl.innerHTML = headerHTML;
-    if (footerEl) footerEl.innerHTML = footerHTML;
-
-    // Inicializar lógicas
-    initThemeLogic();
-    initUserLogic();
-    initSidebarLogic();
+  injectLayout();
+  initThemeLogic();
+  initUserLogic();
+  initSidebarLogic();
 });
 
 /**
- * Gestiona el clic en el icono de usuario y el logout
+ * Inserta dinámicamente el header y el footer en el DOM
  */
-function initUserLogic() {
-    const userBtn = document.getElementById('user-btn');
-    const userDropdown = document.getElementById('user-dropdown');
-    const logoutLink = document.getElementById('logout-link');
-    const displayUsername = document.getElementById('display-username');
+function injectLayout() {
+  const headerEl = document.getElementById('header');
+  const footerEl = document.getElementById('footer');
 
-    const user = window.CURRENT_USER || null;
-
-    // Dropdown toggle
-    if (userBtn) {
-        userBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-
-            if (!user) {
-                window.location.href = 'index.php?accion=loginView';
-                return;
-            }
-
-            if (displayUsername) displayUsername.innerText = user.name || "Usuario";
-
-            userDropdown.classList.toggle('invisible');
-            userDropdown.classList.toggle('visible');
-        });
-    }
-
-    // 🔹 Logout
-    if (logoutLink) {
-        logoutLink.addEventListener('click', (e) => {
-            e.preventDefault();
-
-            // Cerrar dropdown
-            if (userDropdown) {
-                userDropdown.classList.remove('visible');
-                userDropdown.classList.add('invisible');
-            }
-            // Redirigir al logout
-            window.location.href = 'index.php?accion=logout';
-        });
-    }
+  if (headerEl) headerEl.innerHTML = headerHTML;
+  if (footerEl) footerEl.innerHTML = footerHTML;
 }
-
 
 /**
- * Gestiona el modo claro / oscuro
+ * Gestiona la lógica del usuario:
+ * - Mostrar dropdown
+ * - Redirección a login si no hay sesión
+ * - Logout
  */
-function initThemeLogic() {
-    const themeToggle = document.getElementById('theme-toggle');
-    const currentTheme = localStorage.getItem('mode');
+function initUserLogic() {
+  const userBtn = document.getElementById('user-btn');
+  const userDropdown = document.getElementById('user-dropdown');
+  const logoutLink = document.getElementById('logout-link');
+  const displayUsername = document.getElementById('display-username');
 
-    if (currentTheme === 'dark') {
-        document.body.classList.add('dark-mode');
-        if (themeToggle) themeToggle.checked = true;
+  /** @type {{ name?: string } | null} */
+  const user = window.CURRENT_USER || null;
+
+  if (!userBtn || !userDropdown) return;
+
+  // Toggle del dropdown de usuario
+  userBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+
+    if (!user) {
+      window.location.href = 'index.php?accion=loginView';
+      return;
     }
 
-    if (themeToggle) {
-        themeToggle.addEventListener('change', () => {
-            if (themeToggle.checked) {
-                document.body.classList.add('dark-mode');
-                localStorage.setItem('mode', 'dark');
-            } else {
-                document.body.classList.remove('dark-mode');
-                localStorage.setItem('mode', 'light');
-            }
-        });
+    if (displayUsername) {
+      displayUsername.innerText = user.name || 'Usuario';
     }
+
+    toggleVisibility(userDropdown);
+  });
+
+  // Logout
+  logoutLink?.addEventListener('click', (e) => {
+    e.preventDefault();
+    hideElement(userDropdown);
+    window.location.href = 'index.php?accion=logout';
+  });
 }
 
-// Inicializar lógica del sidebar
+/**
+ * Gestiona el modo claro / oscuro de la aplicación.
+ * El estado se guarda en localStorage.
+ */
+function initThemeLogic() {
+  const themeToggle = document.getElementById('theme-toggle');
+  if (!themeToggle) return;
+
+  const savedTheme = localStorage.getItem('mode');
+
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    themeToggle.checked = true;
+  }
+
+  themeToggle.addEventListener('change', () => {
+    const isDark = themeToggle.checked;
+    document.body.classList.toggle('dark-mode', isDark);
+    localStorage.setItem('mode', isDark ? 'dark' : 'light');
+  });
+}
+
+/**
+ * Gestiona la apertura y cierre del sidebar de usuario
+ */
 function initSidebarLogic() {
-    const displayUsername = document.getElementById('display-username');
-    const userDropdown = document.getElementById('user-dropdown');
-    const sidebar = document.getElementById('userSidebar');
-    const closeBtn = sidebar.querySelector('.closebtn');
+  const displayUsername = document.getElementById('display-username');
+  const userDropdown = document.getElementById('user-dropdown');
+  const sidebar = document.getElementById('userSidebar');
+  const closeBtn = sidebar?.querySelector('.closebtn');
 
-    // Abrir sidebar al pulsar el nombre
-    displayUsername?.addEventListener('click', () => {
-        sidebar.style.width = '250px';
-    });
+  if (!sidebar) return;
 
-    // Cerrar sidebar
-    closeBtn?.addEventListener('click', () => {
-        sidebar.style.width = '0';
-    });
+  // Abrir sidebar
+  displayUsername?.addEventListener('click', () => {
+    sidebar.style.width = '250px';
+  });
 
-    // Cerrar si se hace clic fuera
-    window.addEventListener('click', (e) => {
-        if (sidebar && !sidebar.contains(e.target) && e.target !== displayUsername) {
-            sidebar.style.width = '0';
-        }
-        if (userDropdown) {
-            userDropdown.classList.remove('visible');
-            userDropdown.classList.add('invisible');
-        }
-    });
+  // Cerrar sidebar
+  closeBtn?.addEventListener('click', () => {
+    sidebar.style.width = '0';
+  });
+
+  // Cerrar sidebar y dropdown al hacer clic fuera
+  window.addEventListener('click', (e) => {
+    if (!sidebar.contains(e.target) && e.target !== displayUsername) {
+      sidebar.style.width = '0';
+    }
+    hideElement(userDropdown);
+  });
+}
+
+/* =========================
+   Helpers reutilizables
+   ========================= */
+
+/**
+ * Alterna las clases visible / invisible de un elemento
+ * @param {HTMLElement} element
+ */
+function toggleVisibility(element) {
+  element.classList.toggle('visible');
+  element.classList.toggle('invisible');
+}
+
+/**
+ * Oculta un elemento aplicando la clase invisible
+ * @param {HTMLElement | null} element
+ */
+function hideElement(element) {
+  if (!element) return;
+  element.classList.remove('visible');
+  element.classList.add('invisible');
 }
