@@ -1,9 +1,8 @@
 <?php
-// ======= RUTAS CORRECTAS =======
-// Usa la constante BASE_PATH que definimos en public/index.php
-require_once __DIR__ . '/config/database.php';
-require_once __DIR__ . '/app/models/entities/Activity.php';
-require_once __DIR__ . '/app/models/entities/Request.php';
+
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../models/entities/Activity.php';
+require_once __DIR__ . '/../models/entities/Request.php';
 
 // ======= INICIAR SESIÓN =======
 if (session_status() === PHP_SESSION_NONE) {
@@ -17,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $db = $database->getConnection();
 
     // ======= CREAR PETICIÓN =======
-    if (($_POST['type'] ?? '') === 'request' && ($_SESSION['rol'] ?? '') === 'participante') {
+    if (($_POST['type'] ?? '') === 'request' && ($_SESSION['role'] ?? '') === 'participante') {
 
         $request = new Request($db);
 
@@ -42,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
 
         if ($request->createRequest($data)) {
-            header("Location: ../views/control.php?status=request_created");
+            header("Location: ../../public/index.php?accion=seeMyActivities");
             exit;
         } else {
             echo "Error al crear la petición";
@@ -62,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (in_array($fileType, $allowedTypes) && $file['size'] <= 5 * 1024 * 1024) {
                 
                 // Crear directorio si no existe
-                $uploadDir = BASE_PATH . '/public/uploads/activities/';
+                $uploadDir = __DIR__ .'/../../uploads/activities/';
                 if (!file_exists($uploadDir)) {
                     mkdir($uploadDir, 0755, true);
                 }
@@ -102,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
 
         if ($activity->createActivity($data)) {
-            header("Location: ../views/control.php?status=activity_created");
+            header("Location: ../../public/index.php?accion=seeMyActivities");
             exit;
         } else {
             echo "Error al crear la actividad";
