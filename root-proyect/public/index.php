@@ -35,6 +35,9 @@ switch ($action) {
   case 'createActivity':
     require __DIR__ . '/../app/views/create-activity.php';
     break;
+    case 'create':
+      require __DIR__ . '/../app/controllers/activity-controller.php';
+      break;
   case 'editActivity':
     break;
   case 'deleteActivity':

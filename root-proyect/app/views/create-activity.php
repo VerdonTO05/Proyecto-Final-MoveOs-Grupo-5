@@ -31,7 +31,7 @@ $participante = ($rol === 'participante');
             <?php endif; ?>
         </header>
 
-        <form class="form-activity" id="form-create-activity" action="../app/controllers/activity-controller.php"
+        <form class="form-activity" id="form-create-activity" action="index.php?accion=create"
             method="POST" enctype="multipart/form-data">
 
             <div class="full">
