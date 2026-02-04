@@ -20,9 +20,8 @@ $user = getCurrentUser();
     <meta charset="UTF-8">
     <title>Panel de Administrador</title>
     <link rel="icon" type="image/png" href="assets/img/ico/icono.svg">
-
+    <script src="../app/models/header-footer.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
     <script src="assets/js/theme-init.js"></script>
     <script src="assets/js/main.js"></script>
     <script src="assets/js/alerts.js"></script>
@@ -93,7 +92,6 @@ $user = getCurrentUser();
     </div>
     <!-- Contenedor de modal -->
     <div id="modal-container"></div>
-    <div id="footer"></div>
 </body>
 
 </html>

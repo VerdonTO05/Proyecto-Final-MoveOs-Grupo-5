@@ -44,9 +44,15 @@ try {
     $_SESSION['role'] = $user['role_name'];
     $_SESSION['email'] = $user['email'];
 
+    $redirect = 'index.php?accion=seeActivities';
+
+    if($user['role_name']=='administrador'){
+        $redirect = 'index.php?accion=seeBoth';
+    }
+
     echo json_encode([
         'success' => true,
-        'redirect' => 'index.php?accion=seeActivities'
+        'redirect' => $redirect
     ]);
 
 } catch (Exception $e) {
