@@ -45,14 +45,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const howWork = document.getElementById("how");
     const tutorial = document.getElementById("tutorial-container");
 
-    howWork.addEventListener("click", () => {
-        tutorial.innerHTML = howHTML;
-
-        requestAnimationFrame(() => {
-            tutorial.scrollIntoView({ behavior: "smooth", block: "end" });
-            activateHowItWorks();
+    if (howWork) {
+        howWork.addEventListener("click", (e) => {
+            e.preventDefault();
+            showHow();
         });
-    });
+    }
 
     document.addEventListener("click", (e) => {
         if (e.target.id === "openVideo") {
@@ -61,6 +59,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
+function showHow() {
+    tutorial.innerHTML = howHTML;
+
+    requestAnimationFrame(() => {
+        tutorial.scrollIntoView({ behavior: "smooth", block: "end" });
+        activateHowItWorks();
+    });
+}
 
 /* ========================= */
 /* FUNCIONES VIDEO */
@@ -127,7 +134,7 @@ function openVideo() {
 
     closeBtn.addEventListener("click", () => {
         video.pause();
-        container.innerHTML = howHTML; 
+        container.innerHTML = howHTML;
         activateHowItWorks();
     });
 }

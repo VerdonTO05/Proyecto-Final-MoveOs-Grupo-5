@@ -45,12 +45,12 @@ function renderHeaderByRole() {
     ],
     participante: [
       { texto: "Explorar Actividades", href: "index.php?accion=seeActivities" },
-      { texto: "Mis peticiones", href: "index.php?accion=misPeticiones" },
+      { texto: "Mis peticiones", href: "index.php?accion=seeMyActivities" },
       { texto: "Actividades pendientes", href: "index.php?accion=inscripciones" }
     ],
     organizador: [
       { texto: "Explorar Peticiones", href: "index.php?accion=seeRequest" },
-      { texto: "Mis actividades", href: "index.php?accion=misActividades" },
+      { texto: "Mis actividades", href: "index.php?accion=seeMyActivities" },
       { texto: "Peticiones pendientes", href: "index.php?accion=inscripciones" }
     ]
   };

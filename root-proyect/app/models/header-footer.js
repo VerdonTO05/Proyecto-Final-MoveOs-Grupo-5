@@ -100,7 +100,6 @@ function initUserLogic() {
     const displayUsername = document.getElementById('display-username');
 
     const user = window.CURRENT_USER || null;
-    console.log(window.CURRENT_USER);
 
     // Dropdown toggle
     if (userBtn) {
