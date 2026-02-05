@@ -1,8 +1,25 @@
 <?php
+/**
+ * Clase Request
+ * Gestiona las peticiones de actividades creadas por los participantes.
+ */
 class Request
 {
+    /**
+     * Conexión a la base de datos (PDO)
+     * @var PDO
+     */
     private $conn;
+
+    /**
+     * Nombre de la tabla en la base de datos
+     * @var string
+     */
     private $table_name = 'requests';
+
+    /**
+     * Propiedades de la petición
+     */
     public $id;
     public $participant_id;
     public $category_id;
@@ -25,12 +42,23 @@ class Request
     public $created_at;
     public $state;
 
+    /**
+     * Constructor
+     * @param PDO $db Conexión a la base de datos
+     */
     public function __construct($db)
     {
         $this->conn = $db;
     }
 
-    // Obtener todas las peticiones
+    /* =========================
+       FUNCIONES PÚBLICAS
+       ========================= */
+
+    /**
+     * Obtener todas las peticiones
+     * @return array Lista de peticiones con información del participante, quien aceptó y categoría
+     */
     public function getRequests()
     {
         $sql = "SELECT r.*, u.full_name AS participant_name, ru.full_name AS accepted_by_name, c.name AS category_name
@@ -43,7 +71,11 @@ class Request
         return $stmt->fetchAll();
     }
 
-    // Obtener peticion por ID
+    /**
+     * Obtener una petición por su ID
+     * @param int $id ID de la petición
+     * @return array|false Datos de la petición o false si no existe
+     */
     public function getRequestById($id)
     {
         $sql = "SELECT r.*, u.full_name AS participant_name, ru.full_name AS accepted_by_name, c.name AS category_name
@@ -58,28 +90,30 @@ class Request
         return $stmt->fetch();
     }
 
+    /**
+     * Obtener todas las peticiones de un participante específico
+     * @param int $participantId ID del participante
+     * @return array Lista de peticiones
+     */
     public function getRequestsByParticipantId($participantId)
     {
-        $sql = "SELECT
-                r.*,
-                u.full_name AS participant_name,
-                c.name AS category_name
-            FROM {$this->table_name} r
-            JOIN users u ON r.participant_id = u.id
-            JOIN categories c ON r.category_id = c.id
-            WHERE r.participant_id = :participant_id
-            ORDER BY r.created_at DESC";
+        $sql = "SELECT r.*, u.full_name AS participant_name, c.name AS category_name
+                FROM {$this->table_name} r
+                JOIN users u ON r.participant_id = u.id
+                JOIN categories c ON r.category_id = c.id
+                WHERE r.participant_id = :participant_id
+                ORDER BY r.created_at DESC";
 
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute([
-            'participant_id' => $participantId
-        ]);
-
+        $stmt->execute(['participant_id' => $participantId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-
-    // Crear una peticion
+    /**
+     * Crear una nueva petición
+     * @param array $data Datos de la petición (debe coincidir con los placeholders del SQL)
+     * @return mixed ID de la petición creada o false si falla
+     */
     public function createRequest($data)
     {
         $sql = "INSERT INTO {$this->table_name} 
@@ -96,7 +130,12 @@ class Request
         return false;
     }
 
-    // Editar una peticion
+    /**
+     * Editar una petición existente
+     * @param int $id ID de la petición
+     * @param array $data Datos a actualizar (debe incluir todas las columnas que se actualizan)
+     * @return bool True si se actualizó correctamente, false si falla
+     */
     public function editRequest($id, $data)
     {
         $sql = "UPDATE {$this->table_name} SET
@@ -125,7 +164,11 @@ class Request
         return $stmt->execute($data);
     }
 
-    // Eliminar una peticion
+    /**
+     * Eliminar una petición
+     * @param int $id ID de la petición a eliminar
+     * @return bool True si se elimina correctamente, false si falla
+     */
     public function deleteRequest($id)
     {
         $sql = "DELETE FROM {$this->table_name} WHERE id = :id";
@@ -133,7 +176,11 @@ class Request
         return $stmt->execute(['id' => $id]);
     }
 
-    // Obtener peticiones por estado
+    /**
+     * Obtener peticiones por estado
+     * @param string $state Estado de las peticiones (ej: 'pendiente', 'aceptada')
+     * @return array Lista de peticiones
+     */
     public function getRequestsByState($state)
     {
         $sql = "SELECT r.*, u.full_name AS participant_name, c.name AS category_name
@@ -147,7 +194,12 @@ class Request
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Actualizar estado de petición
+    /**
+     * Actualizar el estado de una petición
+     * @param int $id ID de la petición
+     * @param string $newState Nuevo estado (ej: 'aceptada', 'rechazada')
+     * @return bool True si se actualizó correctamente, false si falla
+     */
     public function updateState($id, $newState)
     {
         $sql = "UPDATE {$this->table_name} SET state = :state WHERE id = :id";
