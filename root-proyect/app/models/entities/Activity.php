@@ -172,9 +172,9 @@ class Activity
     {
         $sql = "SELECT 
                     COUNT(*) as total,
-                    SUM(CASE WHEN state = 'pendiente' THEN 1 ELSE 0 END) as pendiente,
-                    SUM(CASE WHEN state = 'aprobada' THEN 1 ELSE 0 END) as aprobada,
-                    SUM(CASE WHEN state = 'rechazada' THEN 1 ELSE 0 END) as rechazada
+                    COALESCE(SUM(CASE WHEN state = 'pendiente' THEN 1 ELSE 0 END),0) as pendiente,
+                    COALESCE(SUM(CASE WHEN state = 'aprobada' THEN 1 ELSE 0 END),0) as aprobada,
+                    COALESCE(SUM(CASE WHEN state = 'rechazada' THEN 1 ELSE 0 END),0) as rechazada
                 FROM {$this->table_name}";
         $stmt = $this->conn->query($sql);
         return $stmt->fetch(PDO::FETCH_ASSOC);

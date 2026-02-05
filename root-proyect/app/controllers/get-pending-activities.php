@@ -31,7 +31,13 @@ $activity = new Activity($db);
 $request = new Request($db);
 
 // Obtener estadísticas
-$stats = $activity->getStats();
+$statsActivities = $activity->getStats();
+$statsRequests = $request->getStats();
+
+$stats = [
+    'activities' => $statsActivities,
+    'requests' => $statsRequests
+];
 
 // Obtener actividades pendientes
 $pendingActivities = $activity->getActivitiesByState('pendiente');

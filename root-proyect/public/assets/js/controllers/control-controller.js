@@ -135,27 +135,21 @@ let controlPanelData = null;
 
 // Cargar datos del panel de control
 async function loadControlPanel() {
-    console.log('🔄 Iniciando carga del panel de control...');
-
     try {
         const response = await fetch('index.php?accion=getPendingActivities');
-        console.log('📡 Respuesta recibida:', response.status, response.statusText);
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const result = await response.json();
-        console.log('📦 Datos recibidos:', result);
 
         if (result.success) {
             controlPanelData = result;
             updateStats(result.stats);
             updateTabCounts(result.activities.length, result.requests.length);
-            renderItems('activities'); // Por defecto mostrar actividades
-            console.log('✅ Panel cargado correctamente');
+            renderItems('activities');
         } else {
-            console.error('❌ Error en resultado:', result.message || 'Sin mensaje de error');
             const activitiesContainer = document.querySelector('.activities');
             if (activitiesContainer) {
                 activitiesContainer.innerHTML = `
@@ -166,7 +160,6 @@ async function loadControlPanel() {
             }
         }
     } catch (error) {
-        console.error('💥 Error crítico al cargar panel:', error);
         const activitiesContainer = document.querySelector('.activities');
         if (activitiesContainer) {
             activitiesContainer.innerHTML = `
@@ -180,31 +173,34 @@ async function loadControlPanel() {
 
 // Actualizar estadísticas
 function updateStats(stats) {
+    const activities = stats.activities;
+    const requests = stats.requests;
+
     const statsContainer = document.querySelector('.stats');
     if (!statsContainer) return;
 
     statsContainer.innerHTML = `
         <div class="card pending">
             <i class="fas fa-clock icon"></i>
-            <h2>${stats.pendiente || 0}</h2>
+            <h2>${Number(activities.pendiente) + Number(requests.pendiente)}</h2>
             <p>Pendientes</p>
             <small>Requieren revisión</small>
         </div>
         <div class="card approved">
             <i class="fas fa-check-circle icon"></i>
-            <h2>${stats.aprobada || 0}</h2>
+            <h2>${Number(activities.aprobada) + Number(requests.aprobada)}</h2>
             <p>Aprobadas</p>
             <small>Activas en la plataforma</small>
         </div>
         <div class="card rejected">
             <i class="fas fa-times-circle icon"></i>
-            <h2>${stats.rechazada || 0}</h2>
+            <h2>${Number(activities.rechazada) + Number(requests.rechazada) }</h2>
             <p>Rechazadas</p>
             <small>No cumplen requisitos</small>
         </div>
         <div class="card total">
             <i class="fas fa-circle-info icon"></i>
-            <h2>${stats.total || 0}</h2>
+            <h2>${Number(activities.total) + Number(requests.total)}</h2>
             <p>Total</p>
             <small>Todas las actividades</small>
         </div>
