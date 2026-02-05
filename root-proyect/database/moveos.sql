@@ -198,6 +198,13 @@ CREATE TABLE requests (
     REFERENCES categories(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+INSERT INTO `users` (`id`, `full_name`, `email`, `username`, `password_hash`, `role_id`, `created_at`) VALUES
+(1, 'Irene Osuna', 'irene@gmail.com', 'ireneosuna', '$2y$10$b5ViZkLR4zFSXlVaawLEMOXAh7HyCMdMN39ANbItbDJlLqoC1CNve', 2, '2026-01-26 17:29:15'),
+(2, 'Manuel Verdon', 'manuel@gmail.com', 'manuelverdon', '$2y$10$MNF.N94OmKc9D0YQ4rK2XewgRBVjNXGoaRSym8R53XdLtk9lZM6ki', 2, '2026-01-26 17:29:51'),
+(3, 'Alejandro Montesinos', 'alejandro@gmail.com', 'alejandrom', '$2y$10$TfJ05ZNAR6VcI5OF/ZdmsOJ3KH4xua03MtJvn9fFiY6nYQOkwCfeu', 1, '2026-01-26 17:30:28'),
+(4, 'Admin 1', 'admin@gmail.com', 'admin', '$2y$10$khd15J.3JvRGtkKn4A3z7O1u4SmzyJVT37ZEWGzLFnjRR45ZkUeau', 3, '2026-01-26 17:32:00');
+
+
 -- --------------------------------------------------------
 -- TRIGGERS
 -- --------------------------------------------------------

@@ -19,7 +19,6 @@ $user = getCurrentUser();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MOVEos - Descubre y comparte experiencias únicas</title>
-
     <script src="../app/models/header-footer.js"></script>
     <script src="../app/models/steps.js"></script>
     <script src="../app/models/how-it-works.js"></script>
@@ -27,6 +26,7 @@ $user = getCurrentUser();
 
     <script src="assets/js/theme-init.js"></script>
     <script src="assets/js/main.js"></script>
+
 
     <link rel="stylesheet" href="assets/css/main.css">
 
@@ -125,6 +125,7 @@ $user = getCurrentUser();
 
     <!-- Pie de página -->
     <div id="footer"></div>
+    <div id="modal-container"></div>
 
 </body>
 

@@ -15,51 +15,42 @@ document.addEventListener("DOMContentLoaded", () => {
             const type = approveBtn.dataset.type || 'activity';
             const activityCard = approveBtn.closest('.activity-control');
 
-            showConfirm({
+            // Usamos showConfirm de alerts.js
+            const confirmed = await showConfirm({
                 title: '¿Aprobar actividad?',
-                message: 'Estás a punto de aprobar esta actividad.',
-                onConfirm: async () => {
-                    try {
-                        const response = await fetch('index.php', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ accion: 'approveActivity', id: id })
-                        });
+                message: 'Estás a punto de aprobar esta actividad.'
+        });
+            if (!confirmed) return;
 
-                        const result = await response.json();
+            try {
+                const response = await fetch('index.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ accion: 'approveActivity', id })
+                });
 
-                        if (result.success) {
-                            showAlert({
-                                title: 'Aprobada',
-                                message: 'La actividad se aprobó correctamente'
-                            });
+                const result = await response.json();
 
-                            // Eliminar la tarjeta con animación
-                            if (activityCard) {
-                                activityCard.style.transition = 'opacity 0.3s, transform 0.3s';
-                                activityCard.style.opacity = '0';
-                                activityCard.style.transform = 'scale(0.9)';
+                if (result.success) {
+                    showAlert('Aprobada', 'La actividad se aprobó correctamente');
 
-                                setTimeout(() => {
-                                    activityCard.remove();
-                                    updateAfterAction(type);
-                                }, 300);
-                            }
-                        } else {
-                            showAlert({
-                                title: 'Error',
-                                message: 'No se pudo aprobar la actividad'
-                            });
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                        showAlert({
-                            title: 'Error',
-                            message: 'Ocurrió un error al aprobar la actividad'
-                        });
+                    if (activityCard) {
+                        activityCard.style.transition = 'opacity 0.3s, transform 0.3s';
+                        activityCard.style.opacity = '0';
+                        activityCard.style.transform = 'scale(0.9)';
+
+                        setTimeout(() => {
+                            activityCard.remove();
+                            updateAfterAction(type);
+                        }, 300);
                     }
+                } else {
+                    showAlert('Error', 'No se pudo aprobar la actividad');
                 }
-            });
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('Error', 'Ocurrió un error al aprobar la actividad');
+            }
         }
 
         // Botón rechazar
@@ -68,51 +59,41 @@ document.addEventListener("DOMContentLoaded", () => {
             const type = rejectBtn.dataset.type || 'activity';
             const activityCard = rejectBtn.closest('.activity-control');
 
-            showConfirm({
+            const confirmed = await showConfirm({
                 title: '¿Rechazar actividad?',
-                message: 'Esta acción no se puede deshacer.',
-                onConfirm: async () => {
-                    try {
-                        const response = await fetch('index.php', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ accion: 'rejectActivity', id: id })
-                        });
-
-                        const result = await response.json();
-
-                        if (result.success) {
-                            showAlert({
-                                title: 'Rechazada',
-                                message: 'La actividad fue rechazada'
-                            });
-
-                            // Eliminar la tarjeta con animación
-                            if (activityCard) {
-                                activityCard.style.transition = 'opacity 0.3s, transform 0.3s';
-                                activityCard.style.opacity = '0';
-                                activityCard.style.transform = 'scale(0.9)';
-
-                                setTimeout(() => {
-                                    activityCard.remove();
-                                    updateAfterAction(type);
-                                }, 300);
-                            }
-                        } else {
-                            showAlert({
-                                title: 'Error',
-                                message: 'No se pudo rechazar la actividad'
-                            });
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                        showAlert({
-                            title: 'Error',
-                            message: 'Ocurrió un error al rechazar la actividad'
-                        });
-                    }
-                }
+                message: 'Esta acción no se puede deshacer.'
             });
+            if (!confirmed) return;
+
+            try {
+                const response = await fetch('index.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ accion: 'rejectActivity', id })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showAlert('Rechazada', 'La actividad fue rechazada');
+
+                    if (activityCard) {
+                        activityCard.style.transition = 'opacity 0.3s, transform 0.3s';
+                        activityCard.style.opacity = '0';
+                        activityCard.style.transform = 'scale(0.9)';
+
+                        setTimeout(() => {
+                            activityCard.remove();
+                            updateAfterAction(type);
+                        }, 300);
+                    }
+                } else {
+                    showAlert('Error', 'No se pudo rechazar la actividad');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('Error', 'Ocurrió un error al rechazar la actividad');
+            }
         }
     });
 
@@ -129,6 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 });
+
 
 // Variable global para almacenar los datos
 let controlPanelData = null;
@@ -194,7 +176,7 @@ function updateStats(stats) {
         </div>
         <div class="card rejected">
             <i class="fas fa-times-circle icon"></i>
-            <h2>${Number(activities.rechazada) + Number(requests.rechazada) }</h2>
+            <h2>${Number(activities.rechazada) + Number(requests.rechazada)}</h2>
             <p>Rechazadas</p>
             <small>No cumplen requisitos</small>
         </div>
@@ -344,32 +326,48 @@ function updateAfterAction(type) {
 }
 
 // Función para mostrar confirmación
-function showConfirm({ title, message, onConfirm, onCancel }) {
-    const overlay = document.createElement('div');
-    overlay.classList.add('custom-confirm-overlay');
+function showConfirm({ title, message }) {
+    return new Promise((resolve) => {
+        // Crear overlay con id modal-container
+        const overlay = document.createElement('div');
+        overlay.id = 'modal-container';
+        overlay.classList.add('active');
 
-    const modal = document.createElement('div');
-    modal.classList.add('custom-confirm-modal');
+        // Crear modal interno
+        const modal = document.createElement('div');
+        modal.classList.add('modal');
 
-    modal.innerHTML = `
-        <h2 class="custom-confirm-title">${title}</h2>
-        <p class="custom-confirm-message">${message}</p>
-        <div class="custom-confirm-buttons">
-            <button class="custom-confirm-btn confirm">Aceptar</button>
-            <button class="custom-confirm-btn cancel">Cancelar</button>
-        </div>
-    `;
+        modal.innerHTML = `
+            <div class="modal-header">${title}</div>
+            <div class="modal-body">${message}</div>
+            <div class="modal-actions">
+                <button class="confirm">Aceptar</button>
+                <button class="cancel">Cancelar</button>
+            </div>
+        `;
 
-    overlay.appendChild(modal);
-    document.body.appendChild(overlay);
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
 
-    modal.querySelector('.confirm').addEventListener('click', () => {
-        if (onConfirm) onConfirm();
-        document.body.removeChild(overlay);
-    });
+        // Función de limpieza
+        const closeModal = () => {
+            modal.style.animation = 'fadeOut 0.25s forwards';
+            overlay.classList.remove('active');
+            setTimeout(() => {
+                document.body.removeChild(overlay);
+            }, 250);
+        };
 
-    modal.querySelector('.cancel').addEventListener('click', () => {
-        if (onCancel) onCancel?.();
-        document.body.removeChild(overlay);
+        // Botón confirmar
+        modal.querySelector('.confirm').addEventListener('click', () => {
+            resolve(true);
+            closeModal();
+        });
+
+        // Botón cancelar
+        modal.querySelector('.cancel').addEventListener('click', () => {
+            resolve(false);
+            closeModal();
+        });
     });
 }

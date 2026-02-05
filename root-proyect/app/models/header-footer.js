@@ -172,12 +172,12 @@ function initUnsubscribeLogic() {
   unsubscribeLink.addEventListener("click", async (e) => {
     e.preventDefault();
 
-    const confirmDelete = await showConfirm(
-      "Dar de baja su cuenta",
-      "Esta acción es irreversible.\nSe eliminará tu cuenta y todos tus datos.\n¿Deseas continuar?"
-    );
+    const confirmDelete = await showConfirm({
+      title: "Dar de baja su cuenta",
+      message: "Esta acción es irreversible.\nSe eliminará tu cuenta y todos tus datos.\n¿Deseas continuar?"
+    });
 
-    if (!confirmDelete) return; // Usuario canceló
+    if (!confirmDelete) return;
 
     try {
       const res = await fetch("index.php", {
@@ -187,15 +187,28 @@ function initUnsubscribeLogic() {
       });
 
       const data = await res.json();
+
       if (data.success) {
-        alert("Cuenta eliminada correctamente.");
-        window.location.href = "index.php";
+        showAlert({
+          title: "Cuenta eliminada",
+          message: "Tu cuenta se eliminó correctamente"
+        });
+
+        setTimeout(() => {
+          window.location.href = "index.php";
+        }, 1200);
       } else {
-        alert(data.message || "No se pudo eliminar la cuenta.");
+        showAlert({
+          title: "Error",
+          message: data.message || "No se pudo eliminar la cuenta"
+        });
       }
     } catch (err) {
-      console.error("Error al eliminar la cuenta:", err);
-      alert("Error al eliminar la cuenta.");
+      console.error(err);
+      showAlert({
+        title: "Error",
+        message: "Error al eliminar la cuenta"
+      });
     }
   });
 }
@@ -215,33 +228,81 @@ function hideElement(el) {
 }
 
 /* =========================
-   MODAL DE CONFIRMACIÓN PERSONALIZADO
+   MODALES DINÁMICOS (CONFIRM y ALERT)
    ========================= */
-function showConfirm(title, message) {
-  return new Promise((resolve) => {
-    const overlay = document.createElement('div');
-    overlay.classList.add('custom-confirm-overlay');
+window.showConfirm = function(optionsOrTitle, message = "") {
+  const options = typeof optionsOrTitle === "string"
+    ? { title: optionsOrTitle, message }
+    : optionsOrTitle;
 
-    const modal = document.createElement('div');
-    modal.classList.add('custom-confirm-modal');
+  const { title = "Confirmar", message: msg = "", confirmText = "Aceptar", cancelText = "Cancelar" } = options;
+
+  // Crear modalContainer si no existe
+  let modalContainer = document.getElementById("modal-container");
+  if (!modalContainer) {
+    modalContainer = document.createElement("div");
+    modalContainer.id = "modal-container";
+    document.body.appendChild(modalContainer);
+  }
+
+  return new Promise((resolve) => {
+    const modal = document.createElement("div");
+    modal.className = "modal";
+
     modal.innerHTML = `
-      <h2 class="custom-confirm-title">${title}</h2>
-      <p class="custom-confirm-message">${message}</p>
-      <div class="custom-confirm-buttons">
-        <button class="custom-confirm-btn cancel">Cancelar</button>
-        <button class="custom-confirm-btn confirm">Confirmar</button>
+      <div class="modal-header">${title}</div>
+      <div class="modal-body">${msg}</div>
+      <div class="modal-actions">
+        <button class="cancel">${cancelText}</button>
+        <button class="confirm">${confirmText}</button>
       </div>
     `;
 
-    overlay.appendChild(modal);
-    document.body.appendChild(overlay);
+    modalContainer.appendChild(modal);
+    modalContainer.classList.add("active");
 
-    const confirmBtn = modal.querySelector('.confirm');
-    const cancelBtn = modal.querySelector('.cancel');
+    const close = () => {
+      modal.style.animation = "fadeOut 0.25s forwards";
+      setTimeout(() => {
+        modal.remove();
+        modalContainer.classList.remove("active");
+      }, 250);
+    };
 
-    const cleanUp = () => document.body.removeChild(overlay);
-
-    confirmBtn.addEventListener('click', () => { cleanUp(); resolve(true); });
-    cancelBtn.addEventListener('click', () => { cleanUp(); resolve(false); });
+    modal.querySelector(".cancel").addEventListener("click", () => { close(); resolve(false); });
+    modal.querySelector(".confirm").addEventListener("click", () => { close(); resolve(true); });
   });
-}
+};
+
+window.showAlert = function({ title = "Aviso", message = "", buttonText = "Aceptar" }) {
+  let modalContainer = document.getElementById("modal-container");
+  if (!modalContainer) {
+    modalContainer = document.createElement("div");
+    modalContainer.id = "modal-container";
+    document.body.appendChild(modalContainer);
+  }
+
+  const modal = document.createElement("div");
+  modal.className = "modal";
+
+  modal.innerHTML = `
+    <div class="modal-header">${title}</div>
+    <div class="modal-body">${message}</div>
+    <div class="modal-actions">
+      <button class="confirm">${buttonText}</button>
+    </div>
+  `;
+
+  modalContainer.appendChild(modal);
+  modalContainer.classList.add("active");
+
+  const close = () => {
+    modal.style.animation = "fadeOut 0.25s forwards";
+    setTimeout(() => {
+      modal.remove();
+      modalContainer.classList.remove("active");
+    }, 250);
+  };
+
+  modal.querySelector(".confirm").addEventListener("click", close);
+};

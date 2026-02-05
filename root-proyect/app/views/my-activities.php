@@ -23,6 +23,7 @@ $user = getCurrentUser();
     <script src="../app/models/header-footer.js"></script>
     <script src="assets/js/theme-init.js"></script>
     <script src="assets/js/main.js"></script>
+    
 
     <link rel="stylesheet" href="assets/css/main.css">
 
@@ -59,6 +60,7 @@ $user = getCurrentUser();
         </section>
     </main>
     <div id="footer"></div>
+    <div id="modal-container"></div>
 </body>
 
 </html>

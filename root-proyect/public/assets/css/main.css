@@ -1843,7 +1843,7 @@ body {
   color: var(--text-secondary);
 }
 #modal-container .modal .modal-actions button.confirm {
-  background-color: var(--accent-green);
+  background-color: var(--brand-dark);
   color: var(--text-on-primary);
 }
 
@@ -1861,80 +1861,6 @@ body {
   to {
     opacity: 0;
     transform: translateY(-20px);
-  }
-}
-/* ================= CUSTOM CONFIRM DAR DE BAJA ================= */
-.custom-confirm-overlay {
-  position: fixed;
-  inset: 0; /* top:0; right:0; bottom:0; left:0 */
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-
-.custom-confirm-modal {
-  background: var(--bg-surface);
-  color: var(--text-primary);
-  padding: 2rem;
-  border-radius: 14px;
-  max-width: 400px;
-  width: 90%;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-  text-align: center;
-  animation: fadeIn 0.2s ease-out;
-}
-
-.custom-confirm-title {
-  font-size: 1.4rem;
-  margin-bottom: 1rem;
-}
-
-.custom-confirm-message {
-  font-size: 1rem;
-  color: var(--text-secondary);
-  margin-bottom: 2rem;
-  white-space: pre-line; /* respeta saltos de línea */
-}
-
-.custom-confirm-buttons {
-  display: flex;
-  justify-content: space-around;
-  gap: 1rem;
-}
-
-.custom-confirm-btn {
-  padding: 0.5rem 1.2rem;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.custom-confirm-btn.confirm {
-  background: var(--accent-danger);
-  color: var(--text-on-primary);
-}
-
-.custom-confirm-btn.cancel {
-  background: var(--border-color);
-  color: var(--text-primary);
-}
-
-.custom-confirm-btn:hover {
-  opacity: 0.9;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
   }
 }
 .c {
