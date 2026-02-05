@@ -50,7 +50,7 @@ function hasAnyRole($roles)
 function requireAuth($redirectUrl = null)
 {
     if (!isAuthenticated()) {
-        header('Location: /Proyecto-Final/root-proyect/app/views/login.php'); //Revisar rutas
+        header('Location: index.php?accion=loginView'); //Revisar rutas
         exit;
     }
 }
@@ -60,7 +60,7 @@ function requireAuth($redirectUrl = null)
  * @param string $requiredRole - Rol requerido
  * @param string $redirectUrl - URL a la que redirigir si no tiene permisos
  */
-function requireRole($requiredRole, $redirectUrl = '../views/landing.php')
+function requireRole($requiredRole, $redirectUrl = 'index.php')
 {
     requireAuth(); // Primero verificar que esté autenticado
 
@@ -76,7 +76,7 @@ function requireRole($requiredRole, $redirectUrl = '../views/landing.php')
  * @param array $allowedRoles - Array de roles permitidos
  * @param string $redirectUrl - URL a la que redirigir si no tiene permisos
  */
-function requireAnyRole($allowedRoles, $redirectUrl = '../views/home.php')
+function requireAnyRole($allowedRoles, $redirectUrl = 'index.php')
 {
     requireAuth(); // Primero verificar que esté autenticado
 

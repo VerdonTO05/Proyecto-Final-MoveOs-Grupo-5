@@ -46,13 +46,33 @@ class Activity
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getActivitiesByOffertantId($offertantId)
+    {
+        $sql = "SELECT 
+                a.*,
+                u.full_name AS offertant_name,
+                c.name AS category_name
+            FROM {$this->table_name} a
+            JOIN users u ON a.offertant_id = u.id
+            JOIN categories c ON a.category_id = c.id
+            WHERE a.offertant_id = :offertant_id
+            ORDER BY a.created_at DESC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            'offertant_id' => $offertantId
+        ]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getActivityById($id)
     {
         $sql = "SELECT a.*, u.full_name AS offertant_name, c.name AS category_name
                 FROM {$this->table_name} a
                 JOIN users u ON a.offertant_id = u.id
                 JOIN categories c ON a.category_id = c.id
-                WHERE a.id = :id LIMIT 1";
+                WHERE a.offertant_id = :id LIMIT 1";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(['id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);

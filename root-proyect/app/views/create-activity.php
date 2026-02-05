@@ -119,18 +119,19 @@ $participante = ($rol === 'participante');
                     Mascotas permitidas
                 </label>
             </div>
+            <?php if (!$participante): ?>
+                <div class="full">
+                    <label>Imagen de la <?= $participante ? "Petición" : "Actividad" ?> *</label>
 
-            <div class="full">
-                <label>Imagen de la <?= $participante ? "Petición" : "Actividad" ?> *</label>
-
-                <div class="upload-box">
-                    <input type="file" name="image_file" id="image_file" accept="image/png, image/jpeg" required />
-                    <div class="upload-content">
-                        <i class="fas fa-upload"></i>
-                        <p id="file-name">Haz clic para subir una imagen (JPG/PNG)</p>
+                    <div class="upload-box">
+                        <input type="file" name="image_file" id="image_file" accept="image/png, image/jpeg" required />
+                        <div class="upload-content">
+                            <i class="fas fa-upload"></i>
+                            <p id="file-name">Haz clic para subir una imagen (JPG/PNG)</p>
+                        </div>
                     </div>
                 </div>
-            </div>
+            <?php endif; ?>
 
             <?php if ($participante): ?>
                 <input type="hidden" name="type" value="request">

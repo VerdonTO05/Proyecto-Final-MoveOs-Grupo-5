@@ -32,7 +32,7 @@ async function loadPublications(role) {
     if (result.success && result.data.length > 0) {
       gridContainer.innerHTML = '';
       result.data.forEach(activity => {
-        gridContainer.appendChild(createCard(activity));
+        gridContainer.appendChild(createCard(activity,role));
       });
     } else {
       $message = role == 'organizador' ? '<p class="no-activities">No hay peticiones disponibles en este momento.</p>' : '<p class="no-activities">No hay actividades disponibles en este momento.</p>';
@@ -44,7 +44,7 @@ async function loadPublications(role) {
   }
 }
 
-function createCard(publication) {
+function createCard(publication,role) {
   const card = document.createElement("article");
   card.className = "activity activity-card";
 
@@ -53,7 +53,7 @@ function createCard(publication) {
 
   let formattedDate = "";
   if (publication.date) {
-    const date = new Date(activity.date);
+    const date = new Date(publication.date);
     formattedDate = date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
   }
 
@@ -88,7 +88,7 @@ function createCard(publication) {
             ${detailsHTML}${metaHTML}${footerHTML}
             <div class="actions">
                 <button class="btn-detail" data-id="${publication.id}">Ver Detalles</button>
-                <button class="btn-signup" data-id="${publication.id}" ${!isActive ? "disabled" : ""}>Inscribirse</button>
+                <button class="btn-signup" data-id="${publication.id}" ${!isActive ? "disabled" : ""}>${role == 'organizador' ? 'Aceptar' : 'Inscribirse' }</button>
             </div>
         </div>
     `;

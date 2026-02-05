@@ -49,7 +49,7 @@ switch ($action) {
   case 'deleteRequest':
     break;
   case 'seeMyActivities':
-    //
+    require __DIR__ . '/../app/views/my-activities.php';
     break;
   case 'registration':
     break;
@@ -64,6 +64,9 @@ switch ($action) {
     break;
   case 'getActivities':
     require __DIR__ . '/../app/controllers/get-activities.php';
+    break;
+  case 'getMyActivities':
+    require __DIR__ . '/../app/controllers/get-my-activities.php';
     break;
   case 'seeRequest':
     require __DIR__ . '/../app/views/home.php';
