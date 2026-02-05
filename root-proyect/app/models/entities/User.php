@@ -148,5 +148,18 @@ class User
         $data['id'] = $id;
         return $stmt->execute($data);
     }
+
+    /**
+     * Eliminar un usuario por ID (hard delete)
+     * @param int $id ID del usuario
+     * @return bool true si se elimina, false si falla
+     */
+    public function deleteById($id)
+    {
+        $sql = "DELETE FROM {$this->table_name} WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute(['id' => $id]);
+    }
+
 }
 ?>

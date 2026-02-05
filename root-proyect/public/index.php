@@ -32,6 +32,9 @@ switch ($action) {
     break;
   case 'editUser':
     break;
+  case 'unsubscribe':
+    require __DIR__ . '/../app/controllers/unsubscribe-controller.php';
+    break;
   case 'createActivity':
     require __DIR__ . '/../app/views/create-activity.php';
     break;
@@ -52,8 +55,6 @@ switch ($action) {
     require __DIR__ . '/../app/views/my-activities.php';
     break;
   case 'registration':
-    break;
-  case 'unsubscribe':
     break;
   case 'accept':
     break;

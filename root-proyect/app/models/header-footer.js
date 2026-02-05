@@ -1,7 +1,6 @@
-/**
- * HTML del header principal de la aplicación
- * @type {string}
- */
+/* =========================
+   HEADER Y FOOTER HTML
+   ========================= */
 const headerHTML = `
 <header>
   <nav>
@@ -29,10 +28,7 @@ const headerHTML = `
       </label>
 
       <div class="user-menu-container">
-        <button id="user-btn">
-          <i class="fas fa-user"></i>
-        </button>
-
+        <button id="user-btn"><i class="fas fa-user"></i></button>
         <div id="user-dropdown" class="invisible">
           <span id="display-username"></span>
           <a href="#" id="logout-link">Cerrar sesión</a>
@@ -44,16 +40,12 @@ const headerHTML = `
       <span class="closebtn">&times;</span>
       <a href="#">Ver datos usuario</a>
       <a href="#">Editar datos</a>
-      <a href="#">Dar de baja</a>
+      <a href="index.php?accion=unsubscribe">Dar de baja</a>
     </div>
   </nav>
 </header>
 `;
 
-/**
- * HTML del footer principal de la aplicación
- * @type {string}
- */
 const footerHTML = `
 <footer>
   <section>
@@ -83,58 +75,42 @@ const footerHTML = `
 </footer>
 `;
 
-/**
- * Punto de entrada principal de la aplicación.
- * Inserta header y footer e inicializa las lógicas principales.
- */
+/* =========================
+   INICIALIZADOR PRINCIPAL
+   ========================= */
 document.addEventListener("DOMContentLoaded", () => {
   injectLayout();
   initThemeLogic();
   initUserLogic();
   initSidebarLogic();
+  initUnsubscribeLogic();
 });
 
-/**
- * Inserta dinámicamente el header y el footer en el DOM
- */
+/* =========================
+   LAYOUT
+   ========================= */
 function injectLayout() {
-  const headerEl = document.getElementById('header');
-  const footerEl = document.getElementById('footer');
-
-  if (headerEl) headerEl.innerHTML = headerHTML;
-  if (footerEl) footerEl.innerHTML = footerHTML;
+  document.getElementById('header')?.insertAdjacentHTML('afterbegin', headerHTML);
+  document.getElementById('footer')?.insertAdjacentHTML('afterbegin', footerHTML);
 }
 
-/**
- * Gestiona la lógica del usuario:
- * - Mostrar dropdown
- * - Redirección a login si no hay sesión
- * - Logout
- */
+/* =========================
+   USUARIO: DROPDOWN Y LOGOUT
+   ========================= */
 function initUserLogic() {
   const userBtn = document.getElementById('user-btn');
   const userDropdown = document.getElementById('user-dropdown');
   const logoutLink = document.getElementById('logout-link');
   const displayUsername = document.getElementById('display-username');
 
-  /** @type {{ name?: string } | null} */
   const user = window.CURRENT_USER || null;
-
   if (!userBtn || !userDropdown) return;
 
-  // Toggle del dropdown de usuario
+  // Mostrar/ocultar dropdown
   userBtn.addEventListener('click', (e) => {
     e.stopPropagation();
-
-    if (!user) {
-      window.location.href = 'index.php?accion=loginView';
-      return;
-    }
-
-    if (displayUsername) {
-      displayUsername.innerText = user.name || 'Usuario';
-    }
-
+    if (!user) return window.location.href = 'index.php?accion=loginView';
+    displayUsername && (displayUsername.innerText = user.name || 'Usuario');
     toggleVisibility(userDropdown);
   });
 
@@ -146,20 +122,15 @@ function initUserLogic() {
   });
 }
 
-/**
- * Gestiona el modo claro / oscuro de la aplicación.
- * El estado se guarda en localStorage.
- */
+/* =========================
+   TEMA CLARO / OSCURO
+   ========================= */
 function initThemeLogic() {
   const themeToggle = document.getElementById('theme-toggle');
   if (!themeToggle) return;
 
-  const savedTheme = localStorage.getItem('mode');
-
-  if (savedTheme === 'dark') {
-    document.body.classList.add('dark-mode');
-    themeToggle.checked = true;
-  }
+  document.body.classList.toggle('dark-mode', localStorage.getItem('mode') === 'dark');
+  themeToggle.checked = document.body.classList.contains('dark-mode');
 
   themeToggle.addEventListener('change', () => {
     const isDark = themeToggle.checked;
@@ -168,55 +139,109 @@ function initThemeLogic() {
   });
 }
 
-/**
- * Gestiona la apertura y cierre del sidebar de usuario
- */
+/* =========================
+   SIDEBAR USUARIO
+   ========================= */
 function initSidebarLogic() {
   const displayUsername = document.getElementById('display-username');
   const userDropdown = document.getElementById('user-dropdown');
   const sidebar = document.getElementById('userSidebar');
   const closeBtn = sidebar?.querySelector('.closebtn');
-
   if (!sidebar) return;
 
   // Abrir sidebar
-  displayUsername?.addEventListener('click', () => {
-    sidebar.style.width = '250px';
-  });
+  displayUsername?.addEventListener('click', () => sidebar.style.width = '250px');
 
   // Cerrar sidebar
-  closeBtn?.addEventListener('click', () => {
-    sidebar.style.width = '0';
-  });
+  closeBtn?.addEventListener('click', () => sidebar.style.width = '0');
 
-  // Cerrar sidebar y dropdown al hacer clic fuera
+  // Cerrar al hacer click fuera
   window.addEventListener('click', (e) => {
-    if (!sidebar.contains(e.target) && e.target !== displayUsername) {
-      sidebar.style.width = '0';
-    }
+    if (!sidebar.contains(e.target) && e.target !== displayUsername) sidebar.style.width = '0';
     hideElement(userDropdown);
   });
 }
 
 /* =========================
-   Helpers reutilizables
+   DAR DE BAJA (UNSUBSCRIBE)
    ========================= */
+function initUnsubscribeLogic() {
+  const unsubscribeLink = document.querySelector('a[href="index.php?accion=unsubscribe"]');
+  if (!unsubscribeLink) return;
 
-/**
- * Alterna las clases visible / invisible de un elemento
- * @param {HTMLElement} element
- */
-function toggleVisibility(element) {
-  element.classList.toggle('visible');
-  element.classList.toggle('invisible');
+  unsubscribeLink.addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    const confirmDelete = await showConfirm(
+      "Dar de baja su cuenta",
+      "Esta acción es irreversible.\nSe eliminará tu cuenta y todos tus datos.\n¿Deseas continuar?"
+    );
+
+    if (!confirmDelete) return; // Usuario canceló
+
+    try {
+      const res = await fetch("index.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ accion: "unsubscribe" })
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        alert("Cuenta eliminada correctamente.");
+        window.location.href = "index.php";
+      } else {
+        alert(data.message || "No se pudo eliminar la cuenta.");
+      }
+    } catch (err) {
+      console.error("Error al eliminar la cuenta:", err);
+      alert("Error al eliminar la cuenta.");
+    }
+  });
 }
 
-/**
- * Oculta un elemento aplicando la clase invisible
- * @param {HTMLElement | null} element
- */
-function hideElement(element) {
-  if (!element) return;
-  element.classList.remove('visible');
-  element.classList.add('invisible');
+/* =========================
+   HELPERS
+   ========================= */
+function toggleVisibility(el) {
+  el.classList.toggle('visible');
+  el.classList.toggle('invisible');
+}
+
+function hideElement(el) {
+  if (!el) return;
+  el.classList.remove('visible');
+  el.classList.add('invisible');
+}
+
+/* =========================
+   MODAL DE CONFIRMACIÓN PERSONALIZADO
+   ========================= */
+function showConfirm(title, message) {
+  return new Promise((resolve) => {
+    const overlay = document.createElement('div');
+    overlay.classList.add('custom-confirm-overlay');
+
+    const modal = document.createElement('div');
+    modal.classList.add('custom-confirm-modal');
+    modal.innerHTML = `
+      <h2 class="custom-confirm-title">${title}</h2>
+      <p class="custom-confirm-message">${message}</p>
+      <div class="custom-confirm-buttons">
+        <button class="custom-confirm-btn cancel">Cancelar</button>
+        <button class="custom-confirm-btn confirm">Confirmar</button>
+      </div>
+    `;
+
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+
+    const confirmBtn = modal.querySelector('.confirm');
+    const cancelBtn = modal.querySelector('.cancel');
+
+    const cleanUp = () => document.body.removeChild(overlay);
+
+    confirmBtn.addEventListener('click', () => { cleanUp(); resolve(true); });
+    cancelBtn.addEventListener('click', () => { cleanUp(); resolve(false); });
+  });
 }
