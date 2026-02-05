@@ -37,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'max_age' => null,
             'pets_allowed' => isset($_POST['pets_allowed']) ? 1 : 0,
             'dress_code' => $_POST['dress_code'] ?? '',
+            'image_url' => $imagePath,
             'state' => 'pendiente'
         ];
 

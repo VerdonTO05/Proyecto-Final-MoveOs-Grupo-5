@@ -118,10 +118,10 @@ class Request
     {
         $sql = "INSERT INTO {$this->table_name} 
                 (participant_id, category_id, title, description, date, time, location, current_registrations, organizer_email,
-                 transport_included, departure_city, language, min_age, max_age, pets_allowed, dress_code, state)
+                 transport_included, departure_city, language, min_age, max_age, pets_allowed, dress_code, image_url, state)
                 VALUES 
                 (:participant_id, :category_id, :title, :description, :date, :time, :location, :current_registrations, :organizer_email,
-                 :transport_included, :departure_city, :language, :min_age, :max_age, :pets_allowed, :dress_code, :state)";
+                 :transport_included, :departure_city, :language, :min_age, :max_age, :pets_allowed, :dress_code, :image_url, :state)";
 
         $stmt = $this->conn->prepare($sql);
         if ($stmt->execute($data)) {

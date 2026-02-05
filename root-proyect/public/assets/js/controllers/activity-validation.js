@@ -38,12 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Mostrar nombre del archivo seleccionado
-    //TODO: solucionar que cuando es una peticion y no tenga foto no falle
-    if (role == 'organizador') {
-        document.getElementById('image_file').addEventListener('change', function () {
-            const fileName = this.files[0] ? this.files[0].name : "Haz clic para subir una imagen";
-            document.getElementById('file-name').innerText = fileName;
-        });
-    }
+    document.getElementById('image_file').addEventListener('change', function () {
+        const fileName = this.files[0] ? this.files[0].name : "Haz clic para subir una imagen";
+        document.getElementById('file-name').innerText = fileName;
+    });
+
 
 });
