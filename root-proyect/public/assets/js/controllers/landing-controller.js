@@ -31,17 +31,5 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Menú hamburguesa
-  const toggle = document.querySelector(".menu-toggle");
-  const nav = document.querySelector("header nav");
-
-  if (toggle && nav) {
-    toggle.addEventListener("click", () => {
-      nav.classList.toggle("open");
-      toggle.innerHTML = nav.classList.contains("open")
-        ? '<i class="fa-solid fa-xmark"></i>'
-        : '<i class="fa-solid fa-bars"></i>';
-    });
-  }
 });
 

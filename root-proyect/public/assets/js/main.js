@@ -3,6 +3,19 @@ document.addEventListener('DOMContentLoaded', () => {
   renderHeaderByRole();
 });
 
+document.addEventListener("click", (e) => {
+    const toggle = e.target.closest(".menu-toggle");
+    if (!toggle) return;
+
+    const nav = document.querySelector("header nav");
+    if (!nav) return;
+
+    nav.classList.toggle("open");
+    toggle.innerHTML = nav.classList.contains("open")
+      ? '<i class="fa-solid fa-xmark"></i>'
+      : '<i class="fa-solid fa-bars"></i>';
+  });
+
 /**
  * Inicializar tema claro/oscuro
  */
