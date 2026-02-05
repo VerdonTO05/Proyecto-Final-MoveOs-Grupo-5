@@ -428,6 +428,7 @@ main section {
 }
 
 .menu-toggle {
+  color: var(--brand-dark);
   display: none;
 }
 
@@ -468,16 +469,20 @@ main section {
   header {
     /* Menú abierto */
   }
-  header nav.open ul,
-  header nav.open .icons {
+  header nav.open ul {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1rem;
     margin-top: 1rem;
   }
+  header nav.open .icons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
   .logo-container span {
-    font-size: 1.1rem;
+    font-size: 1.4rem;
   }
   main section:first-of-type {
     padding: 2.5rem 1rem;
@@ -487,13 +492,6 @@ main section {
   }
   main section:first-of-type p:nth-of-type(2) {
     font-size: 1rem;
-  }
-  main section:first-of-type div {
-    flex-direction: column;
-    width: 100%;
-  }
-  main section:first-of-type button {
-    width: 100%;
   }
   main section {
     padding: 2rem 1rem;
@@ -518,7 +516,10 @@ main section {
 
 /* Contenedor del formulario */
 .container {
-  position: relative;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background-color: var(--bg-surface);
   border: 1px solid var(--border-color);
   border-radius: 12px;
@@ -747,7 +748,7 @@ select {
   background-color: var(--bg-main);
   border: 1px solid var(--border-color);
   border-radius: 14px;
-  padding: 5% 3%;
+  padding: 5% 4%;
   text-align: center;
   cursor: pointer;
   transition: all 0.25s ease;

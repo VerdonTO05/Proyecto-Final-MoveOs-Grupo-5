@@ -10,10 +10,13 @@
 
 /* Contenedor del formulario */
 .container {
-    position: relative;
-    @include m.card-base(); 
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    @include m.card-base();
 
-    .close-btn { 
+    .close-btn {
         position: absolute;
         top: 1rem;
         right: 1rem;
@@ -115,7 +118,7 @@ input[type="email"],
 input[type="date"],
 input[type="time"],
 input[type="number"],
-select{
+select {
     color: var(--text-secondary);
 }
 
