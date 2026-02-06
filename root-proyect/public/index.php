@@ -30,14 +30,11 @@ switch ($action) {
   case 'logout':
     require __DIR__ . '/../app/controllers/logout.php';
     break;
-  case 'editUserView':
-    require __DIR__ . '/../app/controllers/edit-info-controller.php';
-    break;
   case 'editUser':
     require __DIR__ . '/../app/controllers/edit-info-controller.php';
     break;
   case 'viewInfo':
-    //
+    require __DIR__ . '/../app/controllers/see-info-controller.php';
     break;
   case 'unsubscribe':
     require __DIR__ . '/../app/controllers/unsubscribe-controller.php';

@@ -119,6 +119,16 @@ label {
         }
     }
 
+    p {
+        flex-grow: 1;
+        padding: 0.8rem 0.6rem;
+        border: none;
+        outline: none;
+        font-size: 1.0625rem;
+        background: none;
+        color: var(--text-secondary);
+    }
+
     .icon,
     .eye-icon {
         color: var(--text-secondary);
@@ -142,6 +152,18 @@ select {
     color: var(--text-secondary);
 }
 
+.links {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 1rem;
+
+    a:hover{
+        color: var(--brand-primary);
+    }
+}
+
 /* Enviar */
 .submit-btn {
     @include m.btn-base(); // usa tu mixin btn-base
@@ -149,6 +171,7 @@ select {
     margin-top: 0.75rem;
     background-color: var(--brand-dark);
     color: var(--bg-main);
+    text-align: center;
 }
 
 /* Lista usuarios */

@@ -11,9 +11,6 @@ require_once __DIR__ . '/../middleware/auth.php';
 requireAuth();
 
 ?>
-<!-- <script>
-  window.CURRENT_USER = <?= json_encode($user ?: null); ?>;
-</script> -->
 
 <head>
     <meta charset="UTF-8">
@@ -61,7 +58,7 @@ requireAuth();
                     <input type="text" id="username" name="username" required aria-required="true" value="<?= htmlspecialchars($user['username']) ?? "" ?>">
                 </div>
 
-                <label for="email">Correo Electrónico *</label>
+                <label for="email">Correo Electrónico</label>
                 <div class="input-group">
                     <i class="fas fa-envelope icon" aria-hidden="true"></i>
                     <input type="email" id="email" name="email" required aria-required="true" value="<?= htmlspecialchars($user['email']) ?? "" ?>">
@@ -84,6 +81,11 @@ requireAuth();
                 </div>
 
                 <input type="submit" class="submit-btn" name="edit" value="Editar" aria-label="Editar">
+
+                <div class="links">
+                    <i class="fas fa-link" aria-hidden="true"></i> 
+                    <a href="index.php?accion=viewInfo" aria-label="Ver datos">Ver datos</a>
+                </div>
             </form>
 
         </div>

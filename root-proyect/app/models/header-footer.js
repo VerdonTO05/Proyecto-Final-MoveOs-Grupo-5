@@ -38,8 +38,8 @@ const headerHTML = `
 
     <div id="userSidebar" class="sidebar">
       <span class="closebtn">&times;</span>
-      <a href="#">Ver datos usuario</a>
-      <a href="index.php?accion=editUserView">Editar datos</a>
+      <a href="index.php?accion=viewInfo">Ver datos usuario</a>
+      <a href="index.php?accion=editUser">Editar datos</a>
       <a href="index.php?accion=unsubscribe">Dar de baja</a>
     </div>
   </nav>
