@@ -4,18 +4,16 @@
 <?php
 // Iniciar sesión si no está activa
 if (session_status() === PHP_SESSION_NONE) {
-  session_start();
+    session_start();
 }
 
 require_once __DIR__ . '/../middleware/auth.php';
 requireAuth();
 
-$role = $_SESSION['role'] ?? null;
-$user = getCurrentUser();
 ?>
-<script>
+<!-- <script>
   window.CURRENT_USER = <?= json_encode($user ?: null); ?>;
-</script>
+</script> -->
 
 <head>
     <meta charset="UTF-8">
@@ -26,14 +24,15 @@ $user = getCurrentUser();
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="icon" type="image/ico" href="assets/img/ico/icono.svg" id="icon.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="assets/js/controllers/register-controller.js"></script>
+    <script src="assets/js/controllers/edit-info-controller.js"></script>
 </head>
 
 <body>
     <!-- Switch del tema -->
     <div class="icons">
         <label class="switch top-right">
-            <input type="checkbox" id="theme-toggle" role="swicth" aria-checked="false" aria-label="Cambiar tema claro/oscuro">
+            <input type="checkbox" id="theme-toggle" role="swicth" aria-checked="false"
+                aria-label="Cambiar tema claro/oscuro">
             <span class="slider"></span>
         </label>
     </div>
@@ -48,53 +47,43 @@ $user = getCurrentUser();
             </header>
 
             <!-- Formulario -->
-            <form id="register-form" class="register-form">
+            <form id="edit-form" class="register-form" action="index.php?accion=editUser" method="post">
 
                 <label for="fullname">Nombre Completo</label>
                 <div class="input-group">
                     <i class="fas fa-user icon" aria-hidden="true"></i>
-                    <input type="text" id="fullname" name="fullname" required aria-required="true" value="">
+                    <input type="text" id="fullname" name="fullname" required aria-required="true" value="<?= htmlspecialchars($user['full_name']) ?? "" ?>">
                 </div>
 
-                <label for="username">Nombre de Usuario *</label>
+                <label for="username">Nombre de Usuario</label>
                 <div class="input-group">
                     <i class="fas fa-user icon" aria-hidden="true"></i>
-                    <input type="text" id="username" name="username" placeholder="juanperez" required aria-required="true">
+                    <input type="text" id="username" name="username" required aria-required="true" value="<?= htmlspecialchars($user['username']) ?? "" ?>">
                 </div>
 
                 <label for="email">Correo Electrónico *</label>
                 <div class="input-group">
                     <i class="fas fa-envelope icon" aria-hidden="true"></i>
-                    <input type="email" id="email" name="email" placeholder="juan@email.com" required aria-required="true">
+                    <input type="email" id="email" name="email" required aria-required="true" value="<?= htmlspecialchars($user['email']) ?? "" ?>">
                 </div>
 
-                <label for="password">Contraseña *</label>
-                <div class="input-group">
-                    <input type="password" id="password" name="password" placeholder="••••••••" required aria-required="true" >
+                <label>
+                    <input type="checkbox" id="changePassword">
+                    Cambiar contraseña
+                </label>
+
+                <div id="passwordFields">
+                    <label for="current_password">Contraseña actual</label>
+                    <div class="input-group">
+                        <input type="password" id="current_password" name="current_password" placeholder="••••••••">
+                    </div>
+                    <label for="new_password">Nueva contraseña</label>
+                    <div class="input-group">
+                        <input type="password" id="new_password" name="new_password" placeholder="••••••••">
+                    </div>
                 </div>
 
-                <fieldset class="user-type-group" role="radiogroup" aria-labelledby="user-type-label">
-                    <div class="option">
-                        <input type="radio" id="participante" name="type" value="participante" required aria-required="true" role="radio">
-                        <label for="participante" class="user-type-card">
-                            <i class="fas fa-users icon" aria-hidden="true"></i>
-                            <h3>Participante</h3>
-                            <p>Buscar e inscribirse en actividades</p>
-                        </label>
-                    </div>
-
-                    <div class="option">
-                        <input type="radio" id="organizador" name="type" value="organizador" role="radio">
-                        <label for="organizador" class="user-type-card">
-                            <i class="fas fa-user-cog icon" aria-hidden="true"></i>
-                            <h3>Organizador</h3>
-                            <p>Publicar y gestionar actividades</p>
-                        </label>
-                    </div>
-                </fieldset>
-
-                <input type="submit" class="submit-btn" name="registrarse" value="Registrarse" aria-label="Registrarse">
-
+                <input type="submit" class="submit-btn" name="edit" value="Editar" aria-label="Editar">
             </form>
 
         </div>

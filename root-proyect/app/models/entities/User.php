@@ -130,24 +130,28 @@ class User
     }
 
     /**
-     * Editar un usuario existente
-     * @param int $id ID del usuario
-     * @param array $data Datos a actualizar ('full_name', 'email', 'username', 'role_id')
-     * @return bool true si se actualiza correctamente, false si falla
+     * Actualiza los datos de un usuario existente.
+     *
+     * @param int $id ID del usuario a actualizar.
+     * @param string $fullname Nombre completo del usuario.
+     * @param string $username Nombre de usuario.
+     * @param string $email Correo electrónico del usuario.
+     * @param string|null $passwordHash Hash de la nueva contraseña (opcional). Si se pasa null, la contraseña no se modifica.
+     * @return bool true si la actualización se realiza correctamente, false si falla.
      */
-    public function editUser($id, $data)
+    public function updateUser($id, $fullname, $username, $email, $passwordHash = null)
     {
-        $sql = "UPDATE {$this->table_name} SET
-                full_name = :full_name,
-                email = :email,
-                username = :username,
-                role_id = :role_id
-                WHERE id = :id";
-
-        $stmt = $this->conn->prepare($sql);
-        $data['id'] = $id;
-        return $stmt->execute($data);
+        if ($passwordHash) {
+            $sql = "UPDATE users SET full_name=?, username=?, email=?, password_hash=? WHERE id=?";
+            $stmt = $this->conn->prepare($sql);
+            return $stmt->execute([$fullname, $username, $email, $passwordHash, $id]);
+        } else {
+            $sql = "UPDATE users SET full_name=?, username=?, email=? WHERE id=?";
+            $stmt = $this->conn->prepare($sql);
+            return $stmt->execute([$fullname, $username, $email, $id]);
+        }
     }
+
 
     /**
      * Eliminar un usuario por ID (hard delete)
