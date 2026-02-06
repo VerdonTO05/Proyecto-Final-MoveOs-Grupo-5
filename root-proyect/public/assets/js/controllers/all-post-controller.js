@@ -1,6 +1,27 @@
 document.addEventListener("DOMContentLoaded", () => {
+    initTabSwitch();
     loadActivities();
 });
+
+function initTabSwitch() {
+    const buttons = document.querySelectorAll('.tab-btn.control');
+
+    buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            buttons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const type = btn.dataset.type;
+
+            if (type === 'activities') {
+                loadActivities();
+            } else if (type === 'requests') {
+                loadRequests();
+            }
+        });
+    });
+}
+
 
 async function loadActivities() {
     const gridContainer = document.getElementById('gridActivities');
@@ -23,6 +44,30 @@ async function loadActivities() {
         gridContainer.innerHTML = '<p class="error">Error al cargar las actividades.</p>';
     }
 }
+
+async function loadRequests() {
+    const gridContainer = document.getElementById('gridActivities');
+    if (!gridContainer) return;
+
+    try {
+        const response = await fetch('index.php?accion=getRequests');
+        const text = await response.text();
+        const result = JSON.parse(text);
+
+        if (result.success && result.data.length > 0) {
+            gridContainer.innerHTML = '';
+            result.data.forEach(request => {
+                gridContainer.appendChild(createActivityCard(request));
+            });
+        } else {
+            gridContainer.innerHTML = '<p class="no-activities">No hay peticiones disponibles en este momento.</p>';
+        }
+    } catch (error) {
+        console.error('Error al cargar peticiones:', error);
+        gridContainer.innerHTML = '<p class="error">Error al cargar las peticiones.</p>';
+    }
+}
+
 
 function createActivityCard(activity) {
     const card = document.createElement("article");

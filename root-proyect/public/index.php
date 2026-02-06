@@ -63,8 +63,14 @@ switch ($action) {
   case 'seeActivities':
     require __DIR__ . '/../app/views/home.php';
     break;
+  case 'getAprove':
+    require __DIR__ . '/../app/controllers/get-aprove.php';
+    break;
   case 'getActivities':
     require __DIR__ . '/../app/controllers/get-activities.php';
+    break;
+  case 'getRequests':
+    require __DIR__ . '/../app/controllers/get-requests.php';
     break;
   case 'getMyActivities':
     require __DIR__ . '/../app/controllers/get-my-activities.php';

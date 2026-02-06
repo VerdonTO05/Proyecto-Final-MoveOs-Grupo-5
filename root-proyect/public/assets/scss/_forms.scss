@@ -68,6 +68,26 @@
     }
 }
 
+.tab-switch-home {
+    display: flex;
+    background-color: var(--bg-surface);
+    padding: 0.3rem;
+
+    .tab-btn {
+        @include m.btn-base(var(--bg-main), var(--text-secondary), clamp(0.6rem, 2vw, 0.9rem) clamp(1rem, 3vw, 1.3rem), 2rem);
+        font-weight: bold;
+        transition: all 0.3s ease;
+        border: 1px solid;
+        border-color: var(--border-color);
+
+        &.active {
+            background-color: var(--bg-surface);
+            color: var(--text-primary);
+            box-shadow: 0 0.125rem 0.3rem rgba(0, 0, 0, 0.1);
+        }
+    }
+}
+
 /* Formularios */
 label {
     color: var(--text-primary);

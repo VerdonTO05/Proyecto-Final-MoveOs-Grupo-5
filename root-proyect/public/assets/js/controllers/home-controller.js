@@ -13,7 +13,7 @@ async function loadPublications(role) {
   const gridContainer = document.getElementById('gridActivities');
   if (!gridContainer) return;
   try {
-    const response = await fetch('index.php?accion=getActivities');
+    const response = await fetch('index.php?accion=getAprove');
     const text = await response.text();
     const result = JSON.parse(text);
 

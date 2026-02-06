@@ -37,7 +37,7 @@ $user = getCurrentUser();
     <!-- Encabezado -->
     <div id="header"></div>
 
-    <section class="tab-switch">
+    <section class="tab-switch-home">
         <button class="tab-btn control active" data-type="activities">
             Actividades
         </button>

@@ -583,6 +583,34 @@ main section {
   box-shadow: 0 0.125rem 0.3rem rgba(0, 0, 0, 0.1);
 }
 
+.tab-switch-home {
+  display: flex;
+  background-color: var(--bg-surface);
+  padding: 0.3rem;
+}
+.tab-switch-home .tab-btn {
+  background-color: var(--bg-main);
+  color: var(--text-secondary);
+  border-radius: 2rem;
+  padding: clamp(0.6rem, 2vw, 0.9rem) clamp(1rem, 3vw, 1.3rem);
+  border-color: var(--border-color);
+  cursor: pointer;
+  font-weight: 600;
+  border: none;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: background-color 0.2s;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  border: 1px solid;
+  border-color: var(--border-color);
+}
+.tab-switch-home .tab-btn.active {
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  box-shadow: 0 0.125rem 0.3rem rgba(0, 0, 0, 0.1);
+}
+
 /* Formularios */
 label {
   color: var(--text-primary);
