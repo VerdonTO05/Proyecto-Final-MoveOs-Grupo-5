@@ -14,27 +14,59 @@ Este proyecto combina tecnologías de Front-end y Back-end para crear una aplica
 
 ### Frontend
 * **HTML5:** Estructuración semántica del contenido.
-* **CSS3:** Diseño responsivo, estilos visuales y maquetación.
-* **JavaScript (ES6+):** Interactividad del lado del cliente y manipulación del DOM.
+* **CSS3 / SCSS:** Diseño responsivo con preprocesadores, estilos visuales y maquetación modular.
+* **JavaScript (ES6+):** Interactividad del lado del cliente, manipulación del DOM y validación en tiempo real.
 
 ### Backend & Persistencia
-* **PHP:** Lógica del servidor, procesamiento de formularios y gestión de sesiones.
-* **MySQL:** Base de datos relacional para gestionar usuarios, roles, actividades e inscripciones.
+* **PHP (Arquitectura MVC):** Lógica del servidor con patrón Modelo-Vista-Controlador.
+* **MySQL:** Base de datos relacional con triggers y auditoría automática.
+* **Sessions PHP:** Gestión de autenticación y control de acceso basado en roles.
 * **Apache (XAMPP):** Servidor web para el despliegue local.
 
 ### Herramientas de Desarrollo
 * **Figma:** Prototipado y diseño de interfaces (Mockups).
 * **Jira:** Gestión ágil de tareas y sprints.
 * **Git/GitHub:** Control de versiones.
+* **NPM/SASS:** Compilación de preprocesadores CSS.
 
 ## 📂 Estructura y Arquitectura
 
-El proyecto sigue una arquitectura organizada para separar la lógica de negocio de la interfaz:
+El proyecto sigue una **arquitectura MVC (Modelo-Vista-Controlador)** para separar la lógica de negocio, la presentación y el acceso a datos:
 
-* **Assets/Public:** Archivos estáticos (imágenes, hojas de estilo CSS, scripts JS).
-* **Core/Includes:** Fragmentos de código PHP reutilizables (cabeceras, pies de página, conexiones a BBDD).
-* **Views:** Archivos que renderizan las diferentes pantallas para el usuario (Login, Dashboard, Catálogo).
-* **Database:** Scripts SQL para la creación y población inicial de la base de datos.
+```
+root-proyect/
+├── app/
+│   ├── controllers/      # Controladores (lógica de negocio)
+│   │   ├── activity-controller.php
+│   │   ├── login-controller.php
+│   │   ├── register-controller.php
+│   │   ├── inscription-controller.php
+│   │   ├── approve-activity.php
+│   │   └── ...
+│   ├── models/           # Modelos (acceso a datos)
+│   ├── views/            # Vistas (interfaz de usuario)
+│   │   ├── home.php
+│   │   ├── login.php
+│   │   ├── register.php
+│   │   ├── create-activity.php
+│   │   ├── control.php (Panel Admin)
+│   │   └── ...
+│   └── middleware/       # Control de acceso y autenticación
+├── config/               # Configuración de base de datos
+├── database/             # Scripts SQL
+│   └── moveos.sql
+└── public/               # Archivos públicos
+    ├── assets/           # CSS, JS, imágenes
+    ├── uploads/          # Imágenes subidas por usuarios
+    └── index.php         # Punto de entrada
+```
+
+### Características de la arquitectura:
+* **Controladores RESTful:** Endpoints API para operaciones CRUD
+* **Separación de responsabilidades:** Lógica, presentación y datos independientes
+* **Sistema de rutas:** Enrutamiento centralizado en `index.php`
+* **Middleware de autenticación:** Control de acceso basado en roles
+* **Upload de archivos:** Sistema de gestión de imágenes en `public/uploads/`
 
 ## 🔧 Instalación y Despliegue
 
@@ -42,50 +74,313 @@ A diferencia de un proyecto estático, MOVE.os requiere un entorno de servidor (
 
 1.  **Requisitos previos:**
     * Tener instalado [XAMPP](https://www.apachefriends.org/es/index.html) (o similar con Apache y MySQL).
+    * PHP 7.4 o superior
+    * MySQL 5.7 o superior
 
 2.  **Clonar el repositorio:**
     Navega a la carpeta `htdocs` de tu instalación de XAMPP y clona el proyecto allí:
     ```bash
     cd C:/xampp/htdocs
-    git clone [https://github.com/VerdonTO05/MOVE.os.git](https://github.com/VerdonTO05/MOVE.os.git)
+    git clone https://github.com/VerdonTO05/Proyecto-Final-MoveOs-Grupo-5.git
+    cd Proyecto-Final-MoveOs-Grupo-5/root-proyect
     ```
 
 3.  **Configurar la Base de Datos:**
     * Abre **XAMPP Control Panel** e inicia los módulos **Apache** y **MySQL**.
     * Ve a `http://localhost/phpmyadmin`.
-    * Crea una nueva base de datos llamada `move_os_db`.
-    * Importa el archivo `database.sql` ubicado en la carpeta `/sql` del proyecto.
+    * Importa el archivo `moveos.sql` ubicado en la carpeta `/database` del proyecto.
+    * El script creará automáticamente la base de datos `moveos` con todas las tablas, triggers y datos de ejemplo.
 
-4.  **Ejecución:**
+4.  **Configurar la conexión:**
+    * Verifica que el archivo `config/database.php` tenga la configuración correcta:
+    ```php
+    $host = 'localhost';
+    $dbname = 'moveos';
+    $username = 'root';
+    $password = '';  // Deja vacío si usas XAMPP por defecto
+    ```
+
+5.  **Ejecución:**
     * Abre tu navegador y accede a:
-        `http://localhost/MOVE.os`
+        `http://localhost/Proyecto-Final-MoveOs-Grupo-5/root-proyect/public/`
 
 ## 💻 Utilización y Roles
 
-La plataforma gestiona diferentes niveles de acceso mediante roles de usuario. Para probar la aplicación, puedes usar los flujos de registro o las credenciales de administrador predeterminadas.
+La plataforma gestiona diferentes niveles de acceso mediante roles de usuario. Para probar la aplicación, puedes usar los flujos de registro o las credenciales predefinidas.
 
 ### 1. Visitante (Sin registro)
 * Visualización del "Landing Page".
 * Acceso a tutoriales en la sección "Cómo funciona".
 * Exploración limitada de actividades públicas.
+* Registro de nueva cuenta con validación en tiempo real.
 
 ### 2. Participante
-* Inscripción a talleres y eventos.
-* Visualización de historial de inscripciones.
-* Creación de **peticiones** (propuestas de actividades) para que los organizadores las vean.
-* Gestión de perfil propio.
+* **Inscripción y gestión:**
+  * Inscripción a talleres y eventos aprobados.
+  * Visualización de historial de inscripciones.
+  * Cancelación de inscripciones (dar de baja).
+* **Peticiones (Requests):**
+  * Creación de **peticiones** (propuestas de actividades) para que los organizadores las vean.
+  * Upload de imágenes para las peticiones.
+  * Seguimiento del estado de las peticiones (pendiente/aprobada/rechazada).
+* **Perfil:**
+  * Gestión de información personal.
 
 ### 3. Organizador
-* Publicación de nuevas actividades (requieren validación).
-* Gestión de asistentes.
-* Visualización de peticiones de la comunidad para crear eventos a medida.
+* **Publicación de actividades:**
+  * Creación de nuevas actividades con formulario completo.
+  * Upload de imágenes para cada actividad.
+  * Las actividades quedan en estado "pendiente" hasta validación del administrador.
+* **Gestión:**
+  * Visualización de mis actividades publicadas.
+  * Visualización de asistentes a cada actividad.
+  * Consulta de peticiones de la comunidad para crear eventos a medida.
+* **Dashboard:**
+  * Panel con todas las actividades propias.
+  * Estadísticas de inscripciones en tiempo real.
 
 ### 4. Administrador
-* **Credenciales de prueba:** `User: admin` | `Pass: admin123`
-* Panel de control para **validar o rechazar** actividades y peticiones.
-* Moderación de usuarios y contenido.
+* **Credenciales de prueba:** 
+  * `Usuario: admin` | `Contraseña: admin123`
+* **Panel de control (`control.php`):**
+  * **Validación de actividades:** Aprobar o rechazar actividades pendientes.
+  * **Moderación de peticiones:** Gestión de requests de participantes.
+  * **Actualización en tiempo real:** Las acciones de aprobar/rechazar actualizan la UI sin recargar página.
+  * **Vista de auditoría:** Registro de todas las acciones realizadas.
+* **Gestión de usuarios:**
+  * Visualización de todos los usuarios registrados.
+  * Moderación de contenido reportado.
 
-## 📋 Guía de Commits
+## ✨ Funcionalidades Principales Implementadas
+
+### 🔐 Sistema de Autenticación y Autorización
+* **Registro de usuarios:**
+  * Validación en tiempo real con expresiones regulares (email, contraseña segura).
+  * Hash de contraseñas con `password_hash()` (bcrypt).
+  * Asignación automática de roles.
+* **Login seguro:**
+  * Verificación con `password_verify()`.
+  * Gestión de sesiones PHP.
+  * Recordar sesión entre navegaciones.
+* **Middleware de protección:**
+  * Control de acceso basado en roles (RBAC).
+  * Redirección automática según privilegios.
+  * Protección de rutas sensibles.
+
+### 📝 Sistema de Actividades
+* **Creación y publicación:**
+  * Formulario completo con múltiples campos (título, descripción, fecha, hora, precio, ubicación, etc.).
+  * Upload de imágenes con validación de tipo y tamaño.
+  * Estado inicial "pendiente" para moderación.
+  * Almacenamiento de imágenes en filesystem (`public/uploads/`).
+* **Sistema de aprobación:**
+  * Panel de administración para aprobar/rechazar actividades.
+  * Cambio de estado de "pendiente" a "aprobada".
+  * Notificaciones visuales de estado.
+* **Visualización:**
+  * Listado dinámico de actividades aprobadas en `home.php`.
+  * Renderizado dinámico con JavaScript (fetch API).
+  * Filtrado por categorías (Taller, Clase, Evento, Excursión, etc.).
+  * Vista detallada de cada actividad.
+
+### 📢 Sistema de Peticiones (Requests)
+* **Creación de peticiones:**
+  * Los participantes pueden proponer actividades que desean.
+  * Formulario similar al de actividades.
+  * Upload de imágenes ilustrativas.
+* **Gestión:**
+  * Los organizadores pueden ver las peticiones.
+  * Los administradores pueden aprobar/rechazar peticiones.
+  * Sistema de estados (pendiente/aprobada/rechazada).
+
+### 👥 Sistema de Inscripciones
+* **Inscripción a actividades:**
+  * Los participantes pueden inscribirse a actividades aprobadas.
+  * Control de plazas disponibles.
+  * Contador de inscripciones en tiempo real.
+* **Triggers de MySQL:**
+  * Actualización automática del contador `current_registrations`.
+  * Incremento al inscribirse, decremento al darse de baja.
+* **Gestión de inscripciones:**
+  * Vista de "Mis actividades" para participantes.
+  * Opción de dar de baja (unsubscribe).
+  * Prevención de inscripciones duplicadas (constraint UNIQUE).
+
+### 🗄️ Base de Datos
+* **Triggers automáticos:**
+  * Auditoría de cambios en actividades y peticiones.
+  * Actualización automática de contadores de inscripciones.
+* **Tabla de auditoría (`audit_logs`):**
+  * Registro de todas las operaciones INSERT/UPDATE/DELETE.
+  * Almacenamiento en formato JSON de valores antiguos y nuevos.
+  * Timestamp y usuario de base de datos.
+* **Relaciones:**
+  * Foreign keys con `ON DELETE CASCADE`.
+  * Integridad referencial completa.
+
+### 🎨 Interfaz de Usuario Moderna
+* **Diseño responsive:**
+  * CSS Grid + Flexbox para layouts adaptativos.
+  * Media queries para móviles (576px breakpoint).
+  * Optimizado para desktop, tablet y móvil.
+* **Preprocesadores SCSS:**
+  * Variables para colores y estilos centralizados.
+  * Mixins reutilizables.
+  * Modularización con partials.
+* **Interactividad JavaScript:**
+  * Manipulación del DOM dinámicamente.
+  * Fetch API para comunicación con backend.
+  * Validación de formularios en tiempo real.
+  * Modales personalizados sin `alert()`.
+  * Persistencia con localStorage/sessionStorage.
+
+### 🖼️ Gestión de Multimedia
+* **Upload de imágenes:**
+  * Sistema de subida para actividades y peticiones.
+  * Validación de formatos permitidos (JPG, PNG, SVG).
+  * Almacenamiento en `public/uploads/`.
+  * Prevención de sobrescritura con nombres únicos.
+* **Optimización:**
+  * Uso de formatos SVG para iconos (escalable y ligero).
+  * Imágenes editadas manualmente para reducir peso.
+  * Adaptación responsive de imágenes.
+
+
+### Tablas principales:
+* **`users`**: Usuarios registrados con sus credenciales y rol asignado
+* **`roles`**: Roles del sistema (participante, organizador, administrador)
+* **`activities`**: Actividades publicadas por organizadores
+* **`requests`**: Peticiones de actividades creadas por participantes
+* **`registrations`**: Inscripciones de participantes a actividades
+* **`categories`**: Categorías de actividades (Taller, Clase, Evento, etc.)
+* **`audit_logs`**: Registro de auditoría de todas las operaciones
+
+### Funcionalidades de base de datos:
+* **Triggers automáticos** para auditoría y actualización de contadores
+* **Foreign Keys** con `ON DELETE CASCADE` para mantener integridad
+* **Constraints UNIQUE** para evitar duplicados
+* **Índices** en campos frecuentemente consultados
+
+## 🔒 Seguridad Implementada
+
+### Autenticación y Autorización
+* **Hash de contraseñas:** Uso de `password_hash()` con bcrypt (coste 10)
+* **Sesiones seguras:** Configuración de sesiones PHP con regeneración de ID
+* **Control de acceso basado en roles (RBAC):** Middleware que verifica permisos antes de acceder a rutas
+* **Protección CSRF:** Tokens de validación en formularios críticos
+
+### Validación de Datos
+* **Validación cliente-lado:** JavaScript con expresiones regulares para feedback inmediato
+* **Validación servidor-lado:** PHP valida todos los datos antes de procesarlos
+* **Sanitización de inputs:** Uso de `htmlspecialchars()` y prepared statements
+* **Prepared Statements:** PDO con parámetros preparados para prevenir SQL Injection
+
+### Upload de Archivos
+* **Validación de tipo MIME:** Solo se aceptan formatos permitidos (JPG, PNG, SVG)
+* **Validación de tamaño:** Límite de tamaño de archivo configurable
+* **Nombres únicos:** Generación de nombres únicos para prevenir sobrescritura
+* **Directorio protegido:** Los uploads se almacenan fuera de la raíz web cuando es posible
+
+## 📊 Gestión del Proyecto
+
+
+### Control de Versiones
+* **Git Flow:** Uso de ramas feature, develop y main
+* **Commits semánticos:** Siguiendo la convención detallada más abajo
+* **Pull Requests:** Revisión de código antes de merge
+* **GitHub:** Repositorio centralizado con protección de rama main
+
+## 🌐 APIs REST Implementadas
+
+El backend expone varios endpoints API para operaciones CRUD:
+
+### Actividades
+* **`GET /controllers/get-activities.php`** - Obtener todas las actividades aprobadas
+* **`GET /controllers/get-pending-activities.php`** - Obtener actividades pendientes (admin)
+* **`GET /controllers/get-my-activities.php`** - Obtener mis actividades (organizador)
+* **`POST /controllers/activity-controller.php`** - Crear nueva actividad
+* **`POST /controllers/approve-activity.php`** - Aprobar actividad (admin)
+* **`POST /controllers/reject-activity.php`** - Rechazar actividad (admin)
+
+### Peticiones (Requests)
+* **`GET /controllers/get-requests.php`** - Obtener todas las peticiones
+* **`POST /controllers/request-controller.php`** - Crear nueva petición
+* **`POST /controllers/approve-request.php`** - Aprobar petición (admin)
+* **`POST /controllers/reject-request.php`** - Rechazar petición (admin)
+
+### Inscripciones
+* **`POST /controllers/inscription-controller.php`** - Inscribirse a una actividad
+* **`POST /controllers/unsubscribe-controller.php`** - Darse de baja de una actividad
+
+### Autenticación
+* **`POST /controllers/login-controller.php`** - Iniciar sesión
+* **`POST /controllers/register-controller.php`** - Registrar nuevo usuario
+* **`POST /controllers/logout.php`** - Cerrar sesión
+
+Todas las APIs retornan respuestas en formato JSON y utilizan códigos de estado HTTP apropiados.
+
+## 🚧 Mejoras Futuras
+
+### Funcionalidades Planificadas
+* **Sistema de notificaciones:**
+  * Notificaciones en tiempo real para nuevas actividades
+  * Emails automáticos al aprobar/rechazar actividades
+  * Recordatorios de actividades próximas
+* **Sistema de valoraciones:**
+  * Calificación de actividades completadas
+  * Reseñas y comentarios de participantes
+  * Reputación de organizadores
+* **Chat en tiempo real:**
+  * Mensajería entre participantes y organizadores
+  * WebSockets o Socket.io para comunicación instantánea
+* **Panel de estadísticas:**
+  * Gráficas de actividades más populares
+  * Métricas de participación
+  * Dashboard analítico para administradores
+* **Sistema de pagos:**
+  * Integración con pasarelas de pago (Stripe, PayPal)
+  * Gestión de reembolsos
+  * Facturación automática
+* **Búsqueda avanzada:**
+  * Filtros múltiples (fecha, precio, ubicación, categoría)
+  * Búsqueda por texto con coincidencias parciales
+  * Ordenamiento por relevancia, fecha, precio
+* **Mapa interactivo:**
+  * Visualización de actividades en mapa (Google Maps/Leaflet)
+  * Filtrado por distancia
+  * Geolocalización del usuario
+
+### Mejoras Técnicas
+* **Testing:**
+  * Unit tests con PHPUnit
+  * Tests de integración
+  * Tests E2E con Selenium
+* **CI/CD:**
+  * Pipeline de integración continua (GitHub Actions)
+  * Despliegue automático a staging/producción
+  * Tests automáticos en cada PR
+* **Optimización de rendimiento:**
+  * Caché de consultas frecuentes (Redis)
+  * CDN para assets estáticos
+  * Lazy loading de imágenes
+  * Paginación de resultados
+* **Accesibilidad:**
+  * Cumplimiento WCAG 2.1 nivel AA
+  * Navegación por teclado completa
+  * Lectores de pantalla compatibles
+* **Internacionalización:**
+  * Soporte multiidioma (i18n)
+  * Formato de fechas y monedas por región
+* **API Documentation:**
+  * Documentación Swagger/OpenAPI
+  * Ejemplos de uso con Postman
+  * Versionado de API
+
+
+
+
+
+## �📋 Guía de Commits
 
 Para mantener un historial limpio en el desarrollo colaborativo, utilizamos la siguiente convención:
 
