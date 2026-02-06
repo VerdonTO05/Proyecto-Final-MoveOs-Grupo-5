@@ -17,6 +17,12 @@
   gap: 1rem;
   padding: 1rem;
   width: 100%;
+
+  >.activity {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
 }
 
 .filters {
@@ -62,6 +68,7 @@
   display: flex;
   flex-direction: column;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  height: 100%;
 
   &:hover {
     transform: translateY(-5px);
@@ -182,8 +189,13 @@
   }
 
   #gridActivities {
-    padding: 0.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+    width: 100%;
   }
+
 
   .activity {
     border-radius: 16px;

@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function initTabSwitch() {
     const buttons = document.querySelectorAll('.tab-btn.control');
+    const title = document.getElementById('view-title');
+    const subtitle = document.getElementById('view-subtitle');
 
     buttons.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -14,8 +16,12 @@ function initTabSwitch() {
             const type = btn.dataset.type;
 
             if (type === 'activities') {
+                title.innerHTML = 'Explorar Actividades';
+                subtitle.innerHTML = 'Los organizadores han añadido actividades para los próximos días';
                 loadActivities();
             } else if (type === 'requests') {
+                title.innerHTML = 'Explorar Peticiones';
+                subtitle.innerHTML = 'Los participantes han añadido peticiones para llevar a cabo sus ideas';
                 loadRequests();
             }
         });
