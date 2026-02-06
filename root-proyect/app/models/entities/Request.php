@@ -34,7 +34,6 @@ class Request
     public $departure_city;
     public $language;
     public $min_age;
-    public $max_age;
     public $pets_allowed;
     public $dress_code;
     public $is_accepted;
@@ -118,10 +117,10 @@ class Request
     {
         $sql = "INSERT INTO {$this->table_name} 
                 (participant_id, category_id, title, description, date, time, location, current_registrations, organizer_email,
-                 transport_included, departure_city, language, min_age, max_age, pets_allowed, dress_code, image_url, state)
+                 transport_included, departure_city, language, min_age, pets_allowed, dress_code, image_url, state)
                 VALUES 
                 (:participant_id, :category_id, :title, :description, :date, :time, :location, :current_registrations, :organizer_email,
-                 :transport_included, :departure_city, :language, :min_age, :max_age, :pets_allowed, :dress_code, :image_url, :state)";
+                 :transport_included, :departure_city, :language, :min_age, :pets_allowed, :dress_code, :image_url, :state)";
 
         $stmt = $this->conn->prepare($sql);
         if ($stmt->execute($data)) {
@@ -151,7 +150,6 @@ class Request
                     departure_city = :departure_city,
                     language = :language,
                     min_age = :min_age,
-                    max_age = :max_age,
                     pets_allowed = :pets_allowed,
                     dress_code = :dress_code,
                     is_accepted = :is_accepted,

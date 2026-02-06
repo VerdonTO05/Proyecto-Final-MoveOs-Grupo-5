@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($price < 0) $errors[] = "El precio no puede ser negativo.";
-    if ($max_people < 1) $errors[] = "La cantidad de usuarios debe ser al menos 1.";
+    if ($max_people < 0) $errors[] = "La cantidad de usuarios debe ser al menos 1.";
 
     // Validación de imagen
     $imagePath = null;
