@@ -1925,6 +1925,10 @@ body {
 }
 .c {
   margin: 0.5rem;
+  position: relative;
+  top: auto;
+  left: auto;
+  transform: none;
 }
 
 .create {
@@ -1966,6 +1970,7 @@ select {
 }
 
 textarea {
+  color: var(--text-secondary);
   resize: vertical;
   min-height: 7rem;
 }

@@ -20,6 +20,13 @@ $participante = ($rol === 'participante');
 </head>
 
 <body>
+    <div class="icons">
+        <label class="switch top-right">
+            <input type="checkbox" id="theme-toggle" role="switch" aria-checked="false"
+                aria-label="Cambiar tema claro/oscuro">
+            <span class="slider"></span>
+        </label>
+    </div>
     <div class="container c">
         <header class="header-form create">
             <?php if ($participante): ?>
@@ -32,17 +39,19 @@ $participante = ($rol === 'participante');
         </header>
 
         <form class="form-activity" id="form-create-activity" action="../app/controllers/activity-controller.php"
-            method="POST" enctype="multipart/form-data" aria-labelledby="form-title" aria-describedby="form-desc"></form>>
+            method="POST" enctype="multipart/form-data" aria-labelledby="form-title" aria-describedby="form-desc">
+
 
             <div class="full">
                 <label for="titulo">Título de la <?= $participante ? "Petición" : "Actividad" ?> *</label>
-                <input type="text" id="titulo" name="title" placeholder="Ej: Yoga al aire libre" required aria-required="true"/>
+                <input type="text" id="titulo" name="title" placeholder="Ej: Yoga al aire libre" required
+                    aria-required="true" />
             </div>
 
             <div class="full">
                 <label for="descripcion">Descripción *</label>
-                <textarea id="descripcion" name="description" placeholder="Describe los detalles..."
-                    required aria-required="true"></textarea>
+                <textarea id="descripcion" name="description" placeholder="Describe los detalles..." required
+                    aria-required="true"></textarea>
             </div>
 
             <div>
@@ -65,7 +74,8 @@ $participante = ($rol === 'participante');
 
             <div>
                 <label for="ubicacion">Ubicación *</label>
-                <input type="text" id="ubicacion" name="location" placeholder="Dirección o ciudad" required aria-required="true"/>
+                <input type="text" id="ubicacion" name="location" placeholder="Dirección o ciudad" required
+                    aria-required="true" />
             </div>
 
             <div>
@@ -78,27 +88,36 @@ $participante = ($rol === 'participante');
                 <input type="time" id="hora" name="time" />
             </div>
 
-            <div>
-                <label for="precio">Precio (€)</label>
-                <input type="number" id="precio" name="price" step="0.01" value="0" />
-            </div>
+            <?php if (!$participante) { ?>
+                <div>
+                    <label for="precio">Precio (€)</label>
+                    <input type="number" id="precio" name="price" step="1" min="0" value="0" />
+                </div>
 
-            <div>
-                <label for="max">Cantidad de usuarios</label>
-                <input type="number" id="max" name="max_people" value="10" />
-            </div>
-
+                <div>
+                    <label for="max">Cantidad de usuarios</label>
+                    <input type="number" id="max" name="max_people" value="10" min="1" />
+                </div>
+            <?php } ?>
             <div>
                 <label for="idioma">Idioma</label>
                 <select id="idioma" name="language">
                     <option value="Español">Español</option>
                     <option value="Inglés">Inglés</option>
+                    <option value="Francés">Francés</option>
+                    <option value="Alemán">Alemán</option>
+                    <option value="Italiano">Italiano</option>
+                    <option value="Portugués">Portugués</option>
+                    <option value="Chino">Chino</option>
+                    <option value="Japonés">Japonés</option>
+                    <option value="Ruso">Ruso</option>
+                    <option value="Árabe">Árabe</option>
                 </select>
             </div>
 
             <div>
                 <label for="edad">Edad Mínima</label>
-                <input type="number" id="edad" name="min_age" value="0" />
+                <input type="number" id="edad" name="min_age" value="0" min="0" />
             </div>
 
             <div>

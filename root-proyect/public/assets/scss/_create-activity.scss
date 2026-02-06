@@ -2,6 +2,10 @@
 
 .c {
   margin: 0.5rem;
+  position: relative;
+  top: auto;
+  left: auto;
+  transform: none;
 }
 
 .create {
@@ -44,6 +48,7 @@ select {
 }
 
 textarea {
+  color: var(--text-secondary);
   resize: vertical;
   min-height: 7rem;
 }
@@ -112,7 +117,8 @@ input[type="checkbox"] {
   width: 30%;
 }
 
-@media (max-width: 576px), (max-height: 700px) {
+@media (max-width: 576px),
+(max-height: 700px) {
   .form-activity {
     grid-template-columns: 1fr !important; // fuerza una columna única
     gap: 1.5rem;
@@ -140,4 +146,3 @@ input[type="checkbox"] {
     font-size: 1rem;
   }
 }
-
