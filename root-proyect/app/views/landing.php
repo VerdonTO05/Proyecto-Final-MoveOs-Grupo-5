@@ -23,29 +23,24 @@ $user = getCurrentUser();
     <script src="../app/models/steps.js"></script>
     <script src="../app/models/how-it-works.js"></script>
     <script src="assets/js/controllers/landing-controller.js"></script>
-
     <script src="assets/js/theme-init.js"></script>
     <script src="assets/js/main.js"></script>
-
-
     <link rel="stylesheet" href="assets/css/main.css">
-
     <link rel="icon" type="image/png" href="assets/img/ico/icono.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body>
-    <div id="alert-container"></div>
+    <div id="alert-container" aria-live="polite"></div>
     <!-- Encabezado -->
     <div id="header"></div>
 
     <!-- Contenido principal -->
-    <main>
-
+    <main aria-labelledby="landing-title">
         <!-- Sección principal -->
-        <section>
-            <div class="slogan">
-                <i class="fas fa-star"></i>
+        <section aria-labelledby="landing-title">
+            <div class="slogan" role="region" aria-label="Lema de la plataforma">
+                <i class="fas fa-star" aria-hidden="true"></i>
                 <p>Dinamismo · Cambio · Participación Activa</p>
             </div>
 
@@ -56,7 +51,7 @@ $user = getCurrentUser();
                 encuentra tu próxima aventura.
             </p>
 
-            <div class="options">
+            <div class="options" role="region" aria-label="Opciones de acción">
                 <?php
                 if ($role == 'organizador') {
                     echo '<a id="a-explore" href="index.php?accion=seeActivities">';
@@ -74,10 +69,10 @@ $user = getCurrentUser();
         </section>
 
         <!-- Características principales -->
-        <section class="features">
+        <section class="features" aria-label="Características principales">
             <div class="feature-card">
                 <div class="icon-circle">
-                    <i class="fas fa-calendar-alt"></i>
+                    <i class="fas fa-calendar-alt" aria-hidden="true"></i>
                 </div>
                 <h3>Variedad de Actividades</h3>
                 <p>Excursiones, clases, talleres y eventos para todos los gustos e intereses</p>
@@ -85,7 +80,7 @@ $user = getCurrentUser();
 
             <div class="feature-card">
                 <div class="icon-circle">
-                    <i class="fas fa-users"></i>
+                    <i class="fas fa-users" aria-hidden="true"></i>
                 </div>
                 <h3>Comunidad Activa</h3>
                 <p>Conecta con organizadores apasionados y participantes entusiastas</p>
@@ -93,7 +88,7 @@ $user = getCurrentUser();
 
             <div class="feature-card">
                 <div class="icon-circle">
-                    <i class="fas fa-shield-alt"></i>
+                    <i class="fas fa-shield-alt" aria-hidden="true"></i>
                 </div>
                 <h3>Contenido Verificado</h3>
                 <p>Todas las actividades son revisadas para garantizar calidad y seguridad</p>
@@ -120,7 +115,7 @@ $user = getCurrentUser();
             </div>
         </section>
 
-        <div id="tutorial-container"></div>
+        <div id="tutorial-container" aria-live="polite"></div>
     </main>
 
     <!-- Pie de página -->

@@ -29,12 +29,15 @@ function initThemeLogic() {
 
   if (toggleSwitch) {
     toggleSwitch.checked = darkModeEnabled;
+    toggleSwitch.setAttribute('aria-checked', darkModeEnabled);
 
     toggleSwitch.addEventListener('change', () => {
       const isDark = toggleSwitch.checked;
       html.classList.toggle('dark-mode', isDark);
       html.classList.toggle('light-mode', !isDark);
       localStorage.setItem('mode', isDark ? 'dark' : 'light');
+
+      toggleSwitch.setAttribute('aria-checked', isDark);
     });
   }
 }

@@ -19,29 +19,26 @@ $user = getCurrentUser();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOVEos - Explora Actividades</title>
+    <title>MOVEos - Explorar </title>
     <script src="../app/models/header-footer.js"></script>
     <script src="assets/js/theme-init.js"></script>
     <script src="assets/js/main.js"></script>
-
     <link rel="stylesheet" href="assets/css/main.css">
-
     <link rel="icon" type="image/png" href="assets/img/ico/icono.svg" if="icon.ico">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="assets/js/controllers/all-post-controller.js"></script>
 </head>
 
 <body>
-    <div id="alert-container"></div>
+    <div id="alert-container" aria-live="polite"></div>
     <!-- Encabezado -->
     <div id="header"></div>
 
-    <section class="tab-switch-home">
-        <button class="tab-btn control active" data-type="activities">
+    <section class="tab-switch-home" role="tablist" aria-label="Opciones de vista">
+        <button class="tab-btn control active" data-type="activities" role="tab" aria-selected="true" tabindex="0">
             Actividades
         </button>
-        <button class="tab-btn control" data-type="requests">
+        <button class="tab-btn control" data-type="requests" role="tab" aria-selected="false" tabindex="0">
             Peticiones
         </button>
     </section>
@@ -49,7 +46,7 @@ $user = getCurrentUser();
 
     <!-- Contenido principal -->
     <main class="main-content container-home">
-        <section class="explore">
+        <section class="explore" aria-labelledby="view-title">
             <h1 id="view-title">Explora Actividades</h1>
             <p id="view-subtitle">Los organizadores han añadido actividades para los próximos días</p>
 
@@ -58,10 +55,10 @@ $user = getCurrentUser();
                 <select>
                     <option>Todas las ubicaciones</option>
                 </select>
-                <button class="btn-filters">Más Filtros</button>
+                <button class="btn-filters" aria-label="Más filtros">Más Filtros</button>
             </div>
 
-            <section class="grid-activities" id="gridActivities"></section>
+            <section class="grid-activities" id="gridActivities" aria-live="polite" aria-label="Listado de actividades"></section>
         </section>
     </main>
 </body>

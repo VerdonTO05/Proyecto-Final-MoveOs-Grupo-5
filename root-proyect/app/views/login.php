@@ -18,24 +18,22 @@
     <!-- Switch del tema -->
     <div class="icons">
         <label class="switch top-right">
-            <input type="checkbox" id="theme-toggle">
+            <input type="checkbox" id="theme-toggle" role="switch" aria-checked="false" aria-label="Cambiar tema claro/oscuro">
             <span class="slider"></span>
         </label>
     </div>
     <!-- Contenedor principal -->
-    <div class="first">
+    <main class="first">
         <div class="container">
-            <button class="close-btn">&times;</button>
+            <button class="close-btn" aria-label="Cerrar formulario" type="button">&times;</button>
             <header class="header-form">
                 <h1>BIENVENIDO a MOVEos</h1>
                 <p>Inicia sesión para continuar tu aventura</p>
             </header>
 
-            <div class="tab-switch">
-                <button class="tab-btn active">Iniciar Sesión</button>
-                <a href="index.php?accion=register">
-                    <button class="tab-btn">Registrarse</button>
-                </a>
+            <div class="tab-switch" role="tablist">
+                <a href="#" class="tab-btn active" role="tab" aria-selected="true">Iniciar Sesión</a>
+                <a class="tab-btn" href="index.php?accion=register" role="tab" aria-selected="false">Registrarse</a>
             </div>
 
             <!-- Formulario -->
@@ -44,22 +42,23 @@
 
                 <label for="username">Nombre de Usuario</label>
                 <div class="input-group">
-                    <i class="fas fa-user icon"></i> <input type="text" id="username" name="username"
-                        placeholder="tu_usuario" required>
+                    <i class="fas fa-user icon" aria-hidden="true"></i>
+                    <input type="text" id="username" name="username" placeholder="tu_usuario" required
+                        aria-required="true">
                 </div>
 
                 <label for="password">Contraseña</label>
                 <div class="input-group">
-                    <i class="fas fa-lock icon"></i> <input type="password" id="password" name="password"
-                        placeholder="••••••••" required>
+                    <i class="fas fa-lock icon" aria-hidden="true"></i> 
+                    <input type="password" id="password" name="password" placeholder="••••••••" required aria-required="true">
                 </div>
 
-                <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+                <a href="#" class="forgot-password" role="button" tabindex="0">¿Olvidaste tu contraseña?</a>
 
-                <input type="submit" class="submit-btn" name="login" value="Iniciar Sesión">
+                <input type="submit" class="submit-btn" name="login" value="Iniciar Sesión" aria-label="Iniciar sesión">
             </form>
         </div>
-    </div>
+    </main>
 </body>
 
 </html>

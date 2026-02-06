@@ -30,13 +30,13 @@ $user = getCurrentUser();
 </head>
 
 <body>
-  <div id="alert-container"></div>
+  <div id="alert-container" aria-live="polite"></div>
   <!-- Encabezado -->
   <div id="header"></div>
 
   <!-- Contenido principal -->
   <main class="main-content container-home">
-    <section class="explore">
+    <section class="explore" aria-labelledby="explore-title">
       <?php if ($role == 'participante') { ?>
         <h1>Explora Actividades</h1>
         <p>Descubre experiencias únicas cerca de ti</p>
@@ -55,10 +55,10 @@ $user = getCurrentUser();
         <select>
           <option>Todas las ubicaciones</option>
         </select>
-        <button class="btn-filters">Más Filtros</button>
+        <button class="btn-filters" aria-label="Más filtros">Más Filtros</button>
       </div>
       <!-- Actividades -->
-      <section class="grid-activities" id="gridActivities"></section>
+      <section class="grid-activities" id="gridActivities" aria-live="polite" aria-label="<?= $role == 'participante' ? 'Listado de actividades' : 'Listado de peticiones' ?>"></section>
       </div>
     </section>
   </main>

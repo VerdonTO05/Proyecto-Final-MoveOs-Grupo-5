@@ -32,22 +32,22 @@ $participante = ($rol === 'participante');
         </header>
 
         <form class="form-activity" id="form-create-activity" action="../app/controllers/activity-controller.php"
-            method="POST" enctype="multipart/form-data">
+            method="POST" enctype="multipart/form-data" aria-labelledby="form-title" aria-describedby="form-desc"></form>>
 
             <div class="full">
                 <label for="titulo">Título de la <?= $participante ? "Petición" : "Actividad" ?> *</label>
-                <input type="text" id="titulo" name="title" placeholder="Ej: Yoga al aire libre" required />
+                <input type="text" id="titulo" name="title" placeholder="Ej: Yoga al aire libre" required aria-required="true"/>
             </div>
 
             <div class="full">
                 <label for="descripcion">Descripción *</label>
                 <textarea id="descripcion" name="description" placeholder="Describe los detalles..."
-                    required></textarea>
+                    required aria-required="true"></textarea>
             </div>
 
             <div>
                 <label for="category">Categoría *</label>
-                <select id="category" name="category_id" required>
+                <select id="category" name="category_id" required aria-required="true">
                     <option value="">Selecciona...</option>
                     <option value="1">Taller</option>
                     <option value="2">Clase</option>
@@ -65,7 +65,7 @@ $participante = ($rol === 'participante');
 
             <div>
                 <label for="ubicacion">Ubicación *</label>
-                <input type="text" id="ubicacion" name="location" placeholder="Dirección o ciudad" required />
+                <input type="text" id="ubicacion" name="location" placeholder="Dirección o ciudad" required aria-required="true"/>
             </div>
 
             <div>

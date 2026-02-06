@@ -35,7 +35,7 @@ $user = getCurrentUser();
 
         <!-- Header -->
         <header class="header">
-            <div class="header-icon">
+            <div class="header-icon" aria-hidden="true">
                 <i class="fas fa-shield-alt"></i>
             </div>
             <div class="header-content">
@@ -46,30 +46,30 @@ $user = getCurrentUser();
 
 
         <!-- Stats - Se llenarán dinámicamente -->
-        <section class="stats">
-            <div class="card pending">
-                <i class="fas fa-clock icon"></i>
+        <section class="stats" aria-label="Resumen de actividades">
+            <div class="card pending" role="region" aria-labelledby="pending-title">
+                <i class="fas fa-clock icon" aria-hidden="true"></i>
                 <h2>...</h2>
                 <p>Pendientes</p>
                 <small>Requieren revisión</small>
             </div>
 
-            <div class="card approved">
-                <i class="fas fa-check-circle icon"></i>
+            <div class="card approved" role="region" aria-labelledby="approved-title">
+                <i class="fas fa-check-circle icon" aria-hidden="true"></i>
                 <h2>...</h2>
                 <p>Aprobadas</p>
                 <small>Activas en la plataforma</small>
             </div>
 
-            <div class="card rejected">
-                <i class="fas fa-times-circle icon"></i>
+            <div class="card rejected" role="region" aria-labelledby="rejected-title">
+                <i class="fas fa-times-circle icon" aria-hidden="true"></i>
                 <h2>...</h2>
                 <p>Rechazadas</p>
                 <small>No cumplen requisitos</small>
             </div>
 
-            <div class="card total">
-                <i class="fas fa-circle-info icon"></i>
+            <div class="card total" role="region" aria-labelledby="total-title">
+                <i class="fas fa-circle-info icon" aria-hidden="true"></i>
                 <h2>...</h2>
                 <p>Total</p>
                 <small>Todas las actividades</small>
@@ -77,16 +77,14 @@ $user = getCurrentUser();
         </section>
 
         <!-- Tabs -->
-        <section class="tab-switch">
-            <button class="tab-btn control active">Actividades <span>...</span></button>
-            <button class="tab-btn control">Peticiones <span>...</span></button>
+        <section class="tab-switch" role="tablist" aria-label="Opciones de vista de actividades">
+            <button class="tab-btn control active" role="tab" aria-selected="true" tabindex="0">Actividades <span aria-hidden="true">...</span></button>
+            <button class="tab-btn control" role="tab" aria-selected="false" tabindex="0">Peticiones <span aria-hidden="true">...</span></button>
         </section>
 
         <!-- Activity Cards - Se llenarán dinámicamente -->
-        <div class="activities">
-            <p style="text-align: center; padding: 2rem; color: var(--text-secondary);">
-                <i class="fas fa-spinner fa-spin"></i> Cargando actividades pendientes...
-            </p>
+        <div class="activities" aria-live="polite" aria-label="Lista de publicaciones pendientes">
+            <p role="status"><i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Cargando actividades pendientes...</p>
         </div>
     </div>
     <!-- Contenedor de modal -->
