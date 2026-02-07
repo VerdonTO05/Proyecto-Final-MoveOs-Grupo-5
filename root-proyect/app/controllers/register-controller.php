@@ -39,8 +39,8 @@ try {
     $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
     // Insertar usuario
-    $insert = $bd->prepare('INSERT INTO users (full_name, email, username, password_hash, role_id) VALUES (?, ?, ?, ?, ?)');
-    $insert->execute([$fullname, $email, $username, $password_hash, $idRol]);
+    $insert = $bd->prepare('INSERT INTO users (full_name, email, username, password_hash, state ,role_id) VALUES (?, ?, ?, ? ,?, ?)');
+    $insert->execute([$fullname, $email, $username, $password_hash, 'activa' ,$idRol]);
 
     if ($insert->rowCount() == 1) {
         $userId = $bd->lastInsertId();
