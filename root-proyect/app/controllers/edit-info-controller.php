@@ -31,11 +31,11 @@ try {
         // Recoger datos del formulario
         $fullname = trim($_POST['fullname'] ?? '');
         $username = trim($_POST['username'] ?? '');
-        $email    = trim($_POST['email'] ?? '');
+        $email = trim($_POST['email'] ?? '');
 
-        $changePassword   = isset($_POST['changePassword']);
-        $currentPassword  = $_POST['current_password'] ?? '';
-        $newPassword      = $_POST['new_password'] ?? '';
+        $changePassword = isset($_POST['changePassword']);
+        $currentPassword = $_POST['current_password'] ?? '';
+        $newPassword = $_POST['new_password'] ?? '';
 
         // Validaciones básicas
         if (!$fullname || !$username || !$email) {

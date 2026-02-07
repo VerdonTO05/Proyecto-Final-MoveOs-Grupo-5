@@ -65,7 +65,7 @@ requireAuth();
                 </div>
 
                 <label>
-                    <input type="checkbox" id="changePassword">
+                    <input type="checkbox" name="changePassword" id="changePassword">
                     Cambiar contraseña
                 </label>
 

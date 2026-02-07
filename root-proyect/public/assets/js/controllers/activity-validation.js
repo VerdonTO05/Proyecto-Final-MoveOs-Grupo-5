@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Validaciones
         if (titulo.length < 5) errors.push("El título debe tener al menos 5 caracteres.");
+        if (titulo.length > 50) errors.push("El título debe tener menos de 50 caracteres.");
         if (descripcion.length < 15) errors.push("La descripción es demasiado breve.");
         if (!categoria) errors.push("Debes seleccionar una categoría.");
         if (!ubicacion) errors.push("La ubicación es obligatoria.");

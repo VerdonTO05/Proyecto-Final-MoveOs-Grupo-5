@@ -16,7 +16,6 @@
   grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
   gap: 1rem;
   padding: 1rem;
-  width: 100%;
 
   >.activity {
     display: flex;
@@ -61,6 +60,7 @@
    Componentes: Tarjeta Actividad
 ========================= */
 .activity {
+  min-width: 0;
   background-color: var(--bg-surface);
   border-radius: 20px;
   overflow: hidden;
@@ -109,11 +109,15 @@
 
   /* ---------- Contenido ---------- */
   .activity-content {
+    min-width: 0;
     flex: 1;
     padding: 1.2rem;
     display: flex;
     flex-direction: column;
     background-color: var(--bg-main);
+
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 
     h3 {
       font-size: 1.1rem;

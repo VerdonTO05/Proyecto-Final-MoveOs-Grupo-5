@@ -62,7 +62,7 @@ class User
      */
     public function getUserById($id)
     {
-        $sql = "SELECT u.id, u.full_name, u.email, u.username, r.name AS role, u.created_at
+        $sql = "SELECT u.id, u.full_name, u.email, u.username, u.password_hash, r.name AS role, u.created_at
                 FROM {$this->table_name} u
                 JOIN roles r ON u.role_id = r.id
                 WHERE u.id = :id";
