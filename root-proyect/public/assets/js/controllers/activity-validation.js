@@ -1,9 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('.form-activity');
 
-    /**
-     * Maneja la validación del formulario de creación/edición de actividad
-     */
     form.addEventListener('submit', (e) => {
         let errors = [];
 
@@ -15,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const fecha = document.getElementById('fecha').value;
         const precio = document.getElementById('precio').value;
 
-        // Validaciones de los campos
+        // Validaciones
         if (titulo.length < 5) errors.push("El título debe tener al menos 5 caracteres.");
         if (titulo.length > 50) errors.push("El título debe tener menos de 50 caracteres.");
         if (descripcion.length < 15) errors.push("La descripción es demasiado breve.");
@@ -29,25 +26,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (precio < 0) errors.push("El precio no puede ser negativo.");
 
-        // Mostrar errores y detener envío si existen
         if (errors.length > 0) {
-            e.preventDefault();
+            e.preventDefault(); // Detiene el envío
             alert("Errores en el formulario:\n- " + errors.join("\n- "));
         }
     });
 
-    /**
-     * Muestra u oculta el campo de ciudad de salida según el transporte incluido
-     */
+
+    // Mostrar ciudad de salida
     document.getElementById('transport_toggle').addEventListener('change', function () {
         document.getElementById('departure_box').style.display = this.checked ? 'block' : 'none';
     });
 
-    /**
-     * Actualiza el texto con el nombre del archivo de imagen seleccionado
-     */
+    // Mostrar nombre del archivo seleccionado
     document.getElementById('image_file').addEventListener('change', function () {
         const fileName = this.files[0] ? this.files[0].name : "Haz clic para subir una imagen";
         document.getElementById('file-name').innerText = fileName;
     });
+
+
 });

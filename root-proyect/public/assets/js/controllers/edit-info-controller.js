@@ -1,61 +1,28 @@
 document.addEventListener("DOMContentLoaded", () => {
-
-  /** @type {HTMLFormElement|null} Formulario de edición de usuario */
   const editForm = document.getElementById("edit-form");
-
-  /** @type {HTMLElement|null} Botón de cierre */
   const closeBtn = document.querySelector('.close-btn');
 
-  // ---------------------
   // Botón cerrar
-  // ---------------------
   if (closeBtn) {
-    /**
-     * Evento click del botón de cierre.
-     * Redirige al usuario a la página principal (index.php).
-     * @event click
-     */
     closeBtn.addEventListener('click', () => {
       window.location.href = "index.php";
     });
   }
 
-  // ---------------------
-  // Funciones de validación
-  // ---------------------
-  /** @type {function(string): boolean} Valida que el nombre completo tenga al menos nombre y apellido */
+  // Validaciones simples
   const validateFullName = (name) => name.trim().split(' ').filter(p => p.length > 0).length >= 2;
-
-  /** @type {function(string): boolean} Valida que el nombre de usuario no esté vacío */
   const validateUsername = (username) => username.trim().length > 0;
-
-  /** @type {function(string): boolean} Valida el formato del email */
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).toLowerCase());
-
-  /** @type {function(string): boolean} Valida que la contraseña tenga al menos 8 caracteres */
   const validatePassword = (password) => password.length >= 8;
 
-  // ---------------------
   // Campos de contraseña opcionales
-  // ---------------------
-  /** @type {HTMLInputElement|null} Checkbox para cambiar contraseña */
   const changePasswordCheckbox = document.getElementById('changePassword');
-
-  /** @type {HTMLElement|null} Contenedor de campos de contraseña */
   const passwordFields = document.getElementById('passwordFields');
-
-  /** @type {HTMLInputElement|null} Campo de contraseña actual */
   const currentPassword = document.getElementById('current_password');
-
-  /** @type {HTMLInputElement|null} Campo de nueva contraseña */
   const newPassword = document.getElementById('new_password');
 
   if (changePasswordCheckbox && passwordFields) {
     passwordFields.style.display = 'none';
-    /**
-     * Muestra u oculta los campos de contraseña según el checkbox.
-     * @event change
-     */
     changePasswordCheckbox.addEventListener('change', () => {
       passwordFields.style.display = changePasswordCheckbox.checked ? 'block' : 'none';
 
@@ -67,16 +34,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ---------------------
   // Validación del formulario
-  // ---------------------
   if (editForm) {
-    /**
-     * Evento submit del formulario de edición.
-     * Valida los campos obligatorios y la contraseña si se cambia.
-     * @param {Event} event Evento submit
-     */
     editForm.addEventListener("submit", (event) => {
+      // Evitar envío si hay errores
       event.preventDefault();
 
       const fullname = document.getElementById("fullname").value.trim();
@@ -113,9 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      // Enviar formulario si todo es correcto
       editForm.submit();
     });
   }
-
 });

@@ -1,28 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Inicializa el tema claro/oscuro y renderiza el header según rol
   initThemeLogic();
   renderHeaderByRole();
 });
 
-/**
- * Manejo del menú hamburguesa
- */
 document.addEventListener("click", (e) => {
-  const toggle = e.target.closest(".menu-toggle");
-  if (!toggle) return;
+    const toggle = e.target.closest(".menu-toggle");
+    if (!toggle) return;
 
-  const nav = document.querySelector("header nav");
-  if (!nav) return;
+    const nav = document.querySelector("header nav");
+    if (!nav) return;
 
-  nav.classList.toggle("open");
-  toggle.innerHTML = nav.classList.contains("open")
-    ? '<i class="fa-solid fa-xmark"></i>'
-    : '<i class="fa-solid fa-bars"></i>';
-});
+    nav.classList.toggle("open");
+    toggle.innerHTML = nav.classList.contains("open")
+      ? '<i class="fa-solid fa-xmark"></i>'
+      : '<i class="fa-solid fa-bars"></i>';
+  });
 
 /**
- * Inicializa la lógica de tema claro/oscuro.
- * Lee el estado guardado en localStorage y permite alternar el tema.
+ * Inicializar tema claro/oscuro
  */
 function initThemeLogic() {
   const html = document.documentElement;
@@ -48,8 +43,7 @@ function initThemeLogic() {
 }
 
 /**
- * Renderiza dinámicamente el header según el rol del usuario actual
- * @description Inserta enlaces específicos según el rol: administrador, participante u organizador.
+ * Renderiza el header dinámicamente según rol
  */
 function renderHeaderByRole() {
   const header = document.getElementById('list');
@@ -79,7 +73,7 @@ function renderHeaderByRole() {
 
   if (!linksRol[rol]) return;
 
-  // Agregar los enlaces dinámicamente al header
+  // Agregar links dinámicos
   linksRol[rol].forEach(link => {
     const li = document.createElement('li');
     const a = document.createElement('a');
@@ -88,4 +82,6 @@ function renderHeaderByRole() {
     li.appendChild(a);
     header.appendChild(li);
   });
+
 }
+
