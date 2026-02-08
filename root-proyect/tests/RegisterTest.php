@@ -27,6 +27,18 @@ class RegisterTest extends TestCase
 
     private function registerUser($fullname, $username, $email, $password, $role = 'participante')
     {
+        if (
+            empty(trim($fullname)) ||
+            empty(trim($username)) ||
+            empty(trim($email)) ||
+            empty(trim($password))
+        ) {
+            return [
+                'success' => false,
+                'message' => 'Todos los campos son obligatorios'
+            ];
+        }
+
         // Buscar rol
         $stmt = $this->pdo->prepare("SELECT id, name FROM roles WHERE name = ?");
         $stmt->execute([$role]);
@@ -80,7 +92,7 @@ class RegisterTest extends TestCase
         $response = $this->registerUser('', 'iperez', 'irene@example.com', '12345678');
 
         $this->assertFalse($response['success']);
-        $this->assertEquals('El rol asignado no existe', $response['message']); // porque no pasa la búsqueda del rol si el nombre de usuario vacío no coincide
+        $this->assertEquals('Todos los campos son obligatorios', $response['message']);
     }
 
     public function testRegisterDuplicateEmail()

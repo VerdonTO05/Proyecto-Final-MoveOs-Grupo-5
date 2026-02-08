@@ -18,20 +18,27 @@ class ActivityRequestTest extends TestCase
         $this->pdo = new PDO('mysql:host=localhost;dbname=moveos_test;charset=utf8', 'root', '');
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        // Limpiar tablas relevantes
+        // Limpiar tablas
         $this->pdo->exec("DELETE FROM activities");
         $this->pdo->exec("DELETE FROM requests");
         $this->pdo->exec("DELETE FROM users");
+        $this->pdo->exec("DELETE FROM roles");
 
-        // Insertar un usuario de prueba
+        // Insertar rol
+        $this->pdo->exec("INSERT INTO roles (id, name) VALUES (1, 'participante')");
+
+        // Insertar usuario de prueba
         $passwordHash = password_hash('123456', PASSWORD_DEFAULT);
-        $stmt = $this->pdo->prepare("INSERT INTO users (full_name, email, username, password_hash, state, role_id) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->execute(['Test User', $this->userEmail, 'testuser', $passwordHash, 'activa', 2]); // role_id = 2 por ejemplo
+        $stmt = $this->pdo->prepare(
+            "INSERT INTO users (full_name, email, username, password_hash, state, role_id)
+             VALUES (?, ?, ?, ?, ?, ?)"
+        );
+        $stmt->execute(['Test User', $this->userEmail, 'testuser', $passwordHash, 'activa', 1]);
 
         $this->userId = $this->pdo->lastInsertId();
 
         $this->activityModel = new Activity($this->pdo);
-        $this->requestModel = new Request($this->pdo);
+        $this->requestModel  = new Request($this->pdo);
     }
 
     public function testCreateActivity()
@@ -59,9 +66,11 @@ class ActivityRequestTest extends TestCase
         ];
 
         $result = $this->activityModel->createActivity($data);
-        $this->assertTrue($result);
 
-        // Verificar que se insertó
+        // ✅ FIX
+        $this->assertIsNumeric($result);
+        $this->assertGreaterThan(0, $result);
+
         $stmt = $this->pdo->prepare("SELECT * FROM activities WHERE title = ?");
         $stmt->execute([$data['title']]);
         $activity = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -94,9 +103,11 @@ class ActivityRequestTest extends TestCase
         ];
 
         $result = $this->requestModel->createRequest($data);
-        $this->assertTrue($result);
 
-        // Verificar que se insertó
+        // ✅ FIX
+        $this->assertIsNumeric($result);
+        $this->assertGreaterThan(0, $result);
+
         $stmt = $this->pdo->prepare("SELECT * FROM requests WHERE title = ?");
         $stmt->execute([$data['title']]);
         $request = $stmt->fetch(PDO::FETCH_ASSOC);
