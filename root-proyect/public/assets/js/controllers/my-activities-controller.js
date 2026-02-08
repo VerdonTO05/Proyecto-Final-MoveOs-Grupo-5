@@ -2,12 +2,20 @@ document.addEventListener("DOMContentLoaded", () => {
     loadActivities();
 });
 
+/**
+ * Carga las actividades propias del usuario desde el servidor
+ * y las renderiza dentro del contenedor de la página.
+ * @async
+ */
 async function loadActivities() {
+    /** @type {HTMLElement|null} Contenedor donde se mostrarán las actividades */
     const gridContainer = document.getElementById('gridActivities');
     if (!gridContainer) return;
+
     try {
         const response = await fetch('index.php?accion=getMyActivities');
         const text = await response.text();
+        /** @type {{success: boolean, data: any[]}} */
         const result = JSON.parse(text);
 
         if (result.success && result.data.length > 0) {
@@ -16,8 +24,10 @@ async function loadActivities() {
                 gridContainer.appendChild(createActivityCard(activity));
             });
         } else {
-            gridContainer.innerHTML = '<p class="no-activities">Todavía no tienes ninguna actividad propia.</p>';
-            gridContainer.innerHTML = '<p><a href="index.php?accion=createActivity"></a>Crea una ahora</p>';
+            gridContainer.innerHTML = `
+                <p class="no-activities">Todavía no tienes ninguna actividad propia.</p>
+                <p><a href="index.php?accion=createActivity">Crea una ahora</a></p>
+            `;
         }
     } catch (error) {
         console.error('Error al cargar publicaciones:', error);
@@ -25,6 +35,26 @@ async function loadActivities() {
     }
 }
 
+/**
+ * Crea una tarjeta HTML representando una actividad.
+ * @param {Object} publication Objeto con los datos de la actividad.
+ * @param {number} publication.id ID de la actividad
+ * @param {string} publication.title Título de la actividad
+ * @param {string} [publication.description] Descripción de la actividad
+ * @param {string} [publication.date] Fecha de la actividad
+ * @param {string} [publication.image_url] URL de la imagen
+ * @param {string} [publication.alt] Texto alternativo de la imagen
+ * @param {string} [publication.label] Etiqueta de la actividad
+ * @param {string} [publication.labelClass] Clase CSS para la etiqueta
+ * @param {string} [publication.category_name] Nombre de la categoría
+ * @param {string} [publication.location] Ubicación de la actividad
+ * @param {number} [publication.price] Precio de la actividad
+ * @param {number} [publication.current_registrations] Número de inscritos
+ * @param {number} [publication.max_people] Número máximo de participantes
+ * @param {string} [publication.offertant_name] Nombre del organizador
+ * @param {Array<string>} [publication.details] Lista de detalles adicionales
+ * @returns {HTMLElement} Elemento artículo representando la actividad
+ */
 function createActivityCard(publication) {
     const card = document.createElement("article");
     card.className = "activity activity-card";
@@ -60,7 +90,6 @@ function createActivityCard(publication) {
         </div>
     `;
 
-    //Ajustar clases a los botones
     card.innerHTML = `
         <div class="activity-image">${imgHTML}${tagHTML}</div>
         <div class="${contentClass}">
@@ -75,6 +104,7 @@ function createActivityCard(publication) {
         </div>
     `;
 
+    // Eventos de los botones
     card.querySelector(".btn-detail")?.addEventListener("click", () => {
         console.log("Editar actividad con id:", publication.id); //por terminar
     });

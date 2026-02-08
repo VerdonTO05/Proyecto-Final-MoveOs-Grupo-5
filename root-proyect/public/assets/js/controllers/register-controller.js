@@ -1,19 +1,51 @@
 document.addEventListener("DOMContentLoaded", () => {
+
+  /** @type {HTMLFormElement|null} Formulario de registro */
   const registerForm = document.querySelector(".register-form");
+
+  /** @type {HTMLElement|null} Botón de cierre */
   const closeBtn = document.querySelector('.close-btn');
 
-  // Botón cerrar
+  // Botón cerrar: redirige al home si existe
   if (closeBtn) {
+    /**
+     * Evento click del botón de cierre.
+     * Redirige al usuario a la página principal (index.php).
+     * @event click
+     */
     closeBtn.addEventListener('click', () => {
       window.location.href = "index.php";
     });
   }
 
-  // Validaciones simples
+  // ---------------------
+  // Funciones de validación
+  // ---------------------
+
+  /**
+   * Valida que el nombre completo tenga al menos dos palabras.
+   * @param {string} name Nombre completo
+   * @returns {boolean} True si es válido
+   */
   const validateFullName = (name) => name.trim().split(' ').filter(p => p.length > 0).length >= 2;
+
+  /**
+   * Valida el formato de correo electrónico.
+   * @param {string} email Correo a validar
+   * @returns {boolean} True si es un email válido
+   */
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).toLowerCase());
+
+  /**
+   * Valida que la contraseña tenga al menos 8 caracteres.
+   * @param {string} password Contraseña a validar
+   * @returns {boolean} True si cumple la longitud mínima
+   */
   const validatePassword = (password) => password.length >= 8;
 
+  // ---------------------
+  // Manejo del submit del formulario
+  // ---------------------
   if (registerForm) {
     registerForm.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -24,6 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const password = document.getElementById("password").value;
       const rolInput = document.querySelector('input[name="type"]:checked');
 
+      // Validaciones simples
       if (!validateFullName(fullname)) return alert("Por favor, introduce nombre y apellido.");
       if (!username) return alert("El nombre de usuario es obligatorio.");
       if (!validateEmail(email)) return alert("El formato del correo electrónico no es válido.");
@@ -32,6 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const rol = rolInput.value;
 
+      /** @type {{accion: string, fullname: string, username: string, email: string, password: string, rol: string}} */
       const userData = { accion: 'registerUser', fullname, username, email, password, rol };
 
       try {
@@ -41,6 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
           body: JSON.stringify(userData)
         });
 
+        /** @type {{success: boolean, message?: string}} */
         const result = await response.json();
 
         if (result.success) {
@@ -60,4 +95,5 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+
 });

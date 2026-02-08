@@ -3,6 +3,9 @@ document.addEventListener("DOMContentLoaded", () => {
     loadActivities();
 });
 
+/**
+ * Inicializa la navegación entre pestañas "Actividades" y "Peticiones"
+ */
 function initTabSwitch() {
     const buttons = document.querySelectorAll('.tab-btn.control');
     const title = document.getElementById('view-title');
@@ -10,6 +13,7 @@ function initTabSwitch() {
 
     buttons.forEach(btn => {
         btn.addEventListener('click', () => {
+            // Activar la pestaña seleccionada
             buttons.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
 
@@ -28,10 +32,13 @@ function initTabSwitch() {
     });
 }
 
-
+/**
+ * Carga y renderiza las actividades desde el servidor
+ */
 async function loadActivities() {
     const gridContainer = document.getElementById('gridActivities');
     if (!gridContainer) return;
+
     try {
         const response = await fetch('index.php?accion=getActivities');
         const text = await response.text();
@@ -51,6 +58,9 @@ async function loadActivities() {
     }
 }
 
+/**
+ * Carga y renderiza las peticiones desde el servidor
+ */
 async function loadRequests() {
     const gridContainer = document.getElementById('gridActivities');
     if (!gridContainer) return;
@@ -74,7 +84,11 @@ async function loadRequests() {
     }
 }
 
-
+/**
+ * Crea una tarjeta HTML de actividad o petición
+ * @param {Object} activity - Objeto con datos de la actividad/ petición
+ * @returns {HTMLElement} Elemento `article` con la tarjeta completa
+ */
 function createActivityCard(activity) {
     const card = document.createElement("article");
     card.className = "activity activity-card";
@@ -82,6 +96,7 @@ function createActivityCard(activity) {
     const isActive = true;
     const contentClass = isActive ? "activity-content" : "activity-content desactivate";
 
+    // Formatear fecha
     let formattedDate = "";
     if (activity.date) {
         const date = new Date(activity.date);
@@ -110,6 +125,7 @@ function createActivityCard(activity) {
         </div>
     `;
 
+    // Construir el HTML de la tarjeta
     card.innerHTML = `
         <div class="activity-image">${imgHTML}${tagHTML}</div>
         <div class="${contentClass}">
@@ -124,6 +140,7 @@ function createActivityCard(activity) {
         </div>
     `;
 
+    // Eventos de botones
     card.querySelector(".btn-detail")?.addEventListener("click", () => {
         console.log("Detalles de:", activity.id);
     });
