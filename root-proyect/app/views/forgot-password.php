@@ -25,10 +25,12 @@
     <!-- Contenedor principal -->
     <main class="first">
         <div class="container">
-            <button class="close-btn" aria-label="Cerrar formulario" type="button">&times;</button>
+            <a href="index.php?accion=loginView" class="back-btn" aria-label="Volver al login">
+                <i class="fas fa-arrow-left"></i>
+            </a>
             <header class="header-form">
                 <h1>RECUPERAR CONTRASEÑA</h1>
-                <p>Ingresa tu correo electrónico para recuperar tu contraseña</p>
+                <p id="header-description">Ingresa tu correo electrónico para recibir un código de verificación</p>
             </header>
 
             <div class="tab-switch" role="tablist">
@@ -36,9 +38,9 @@
                     Contraseña</a>
             </div>
 
-            <!-- Formulario -->
-            <form id="forgot-password-form" class="forgot-password-form">
-                <input type="hidden" name="accion" value="forgot-password">
+            <!-- Paso 1: Solicitar código -->
+            <form id="request-code-form" class="forgot-password-form">
+                <input type="hidden" name="accion" value="requestCode">
 
                 <label for="email">Correo Electrónico</label>
                 <div class="input-group">
@@ -47,13 +49,25 @@
                         aria-required="true">
                 </div>
 
-                <label for="old-password">Contraseña Antigua</label>
+                <input type="submit" class="submit-btn" value="Enviar Código de Verificación"
+                    aria-label="Enviar código de verificación">
+            </form>
+
+            <!-- Paso 2: Verificar código y cambiar contraseña -->
+            <form id="change-password-form" class="forgot-password-form" style="display: none;">
+                <input type="hidden" name="accion" value="changePassword">
+                <input type="hidden" id="email-hidden" name="email" value="">
+
+                <div class="info-message">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Hemos enviado un código de 6 dígitos a tu correo electrónico.</span>
+                </div>
+
+                <label for="verification-code">Código de Verificación</label>
                 <div class="input-group">
-                    <i class="fas fa-lock icon" aria-hidden="true"></i>
-                    <input type="password" id="old-password" name="old_password" placeholder="Tu contraseña actual"
-                        required aria-required="true">
-                    <i class="fas fa-eye toggle-password" data-target="old-password" aria-label="Mostrar contraseña"
-                        role="button" tabindex="0"></i>
+                    <i class="fas fa-key icon" aria-hidden="true"></i>
+                    <input type="text" id="verification-code" name="verification_code" placeholder="123456"
+                        maxlength="6" pattern="\d{6}" required aria-required="true">
                 </div>
 
                 <label for="new-password">Nueva Contraseña</label>
@@ -74,8 +88,11 @@
                         role="button" tabindex="0"></i>
                 </div>
 
-                <input type="submit" class="submit-btn" name="forgot-password" value="Cambiar Contraseña"
-                    aria-label="Cambiar contraseña">
+                <input type="submit" class="submit-btn" value="Cambiar Contraseña" aria-label="Cambiar contraseña">
+
+                <button type="button" id="back-to-email" class="link-btn">
+                    <i class="fas fa-arrow-left"></i> Volver a ingresar email
+                </button>
             </form>
         </div>
     </main>

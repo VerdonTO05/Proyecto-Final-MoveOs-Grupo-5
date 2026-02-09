@@ -176,6 +176,54 @@ select {
     text-align: center;
 }
 
+/* Info message */
+.info-message {
+    background-color: var(--bg-main);
+    border-left: 4px solid var(--brand-primary);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    i {
+        color: var(--brand-primary);
+        font-size: 1.25rem;
+    }
+
+    span {
+        color: var(--text-primary);
+        font-size: 0.95rem;
+    }
+}
+
+/* Link button */
+.link-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 0.95rem;
+    margin-top: 1rem;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.3s ease;
+    width: 100%;
+    justify-content: center;
+
+    &:hover {
+        color: var(--brand-primary);
+    }
+
+    i {
+        font-size: 0.9rem;
+    }
+}
+
+
 /* Lista usuarios */
 .user-list {
     padding: 0;
