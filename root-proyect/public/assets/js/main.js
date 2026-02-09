@@ -57,7 +57,9 @@ function renderHeaderByRole() {
   const linksRol = {
     administrador: [
       { texto: "Panel de control", href: "index.php?accion=controlPanel" },
+      { texto: "Control de usuarios", href: "index.php?accion=users"},
       { texto: "Explorar Publicaciones", href: "index.php?accion=seeBoth" }
+      
     ],
     participante: [
       { texto: "Explorar Actividades", href: "index.php?accion=seeActivities" },
