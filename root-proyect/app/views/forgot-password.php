@@ -34,7 +34,6 @@
             <div class="tab-switch" role="tablist">
                 <a href="#" class="tab-btn active" role="tab" aria-selected="true" style="text-align: center;">Recuperar
                     Contraseña</a>
-                <a class="tab-btn" href="index.php?accion=register" role="tab" aria-selected="false">Registrarse</a>
             </div>
 
             <!-- Formulario -->
