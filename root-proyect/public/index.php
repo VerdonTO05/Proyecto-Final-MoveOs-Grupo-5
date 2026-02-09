@@ -101,6 +101,12 @@ switch ($action) {
   case 'seeBoth':
     require __DIR__ . '/../app/views/all-posts.php';
     break;
+  case 'forgot-password':
+    require __DIR__ . '/../app/views/forgot-password.php';
+    break;
+  case 'changePassword':
+    require __DIR__ . '/../app/controllers/forgot-password-controller.php';
+    break;
   default:
     require __DIR__ . '/../app/views/landing.php';
     break;

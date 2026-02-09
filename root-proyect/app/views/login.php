@@ -2,7 +2,7 @@
 <html lang="es">
 
 <?php
-if(isset($_SESSION['user_id'])){
+if (isset($_SESSION['user_id'])) {
     header("Location: index.php");
     exit;
 }
@@ -25,7 +25,8 @@ if(isset($_SESSION['user_id'])){
     <!-- Switch del tema -->
     <div class="icons">
         <label class="switch top-right">
-            <input type="checkbox" id="theme-toggle" role="switch" aria-checked="false" aria-label="Cambiar tema claro/oscuro">
+            <input type="checkbox" id="theme-toggle" role="switch" aria-checked="false"
+                aria-label="Cambiar tema claro/oscuro">
             <span class="slider"></span>
         </label>
     </div>
@@ -56,11 +57,13 @@ if(isset($_SESSION['user_id'])){
 
                 <label for="password">Contraseña</label>
                 <div class="input-group">
-                    <i class="fas fa-lock icon" aria-hidden="true"></i> 
-                    <input type="password" id="password" name="password" placeholder="••••••••" required aria-required="true">
+                    <i class="fas fa-lock icon" aria-hidden="true"></i>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required
+                        aria-required="true">
                 </div>
 
-                <a href="#" class="forgot-password" role="button" tabindex="0">¿Olvidaste tu contraseña?</a>
+                <a href="index.php?accion=forgot-password" class="forgot-password" role="button" tabindex="0">¿Olvidaste
+                    tu contraseña?</a>
 
                 <input type="submit" class="submit-btn" name="login" value="Iniciar Sesión" aria-label="Iniciar sesión">
             </form>

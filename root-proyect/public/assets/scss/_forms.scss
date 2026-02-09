@@ -53,12 +53,14 @@
     padding: 0.3rem;
     margin-bottom: 1.5rem;
 
+
     .tab-btn {
         @include m.btn-base(var(--bg-main), var(--text-secondary), clamp(0.6rem, 2vw, 0.9rem) clamp(1rem, 3vw, 1.3rem), 2rem);
         flex-grow: 1;
         font-weight: bold;
         font-size: 1.125rem;
         transition: all 0.3s ease;
+        text-align: center;
 
         &.active {
             background-color: var(--bg-surface);
@@ -159,7 +161,7 @@ select {
     align-items: center;
     margin-top: 1rem;
 
-    a:hover{
+    a:hover {
         color: var(--brand-primary);
     }
 }

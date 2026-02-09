@@ -576,6 +576,7 @@ main section {
   font-weight: bold;
   font-size: 1.125rem;
   transition: all 0.3s ease;
+  text-align: center;
 }
 .tab-switch .tab-btn.active {
   background-color: var(--bg-surface);
