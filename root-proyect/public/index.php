@@ -110,6 +110,9 @@ switch ($action) {
   case 'changePassword':
     require __DIR__ . '/../app/controllers/forgot-password-controller.php';
     break;
+  case 'requestCode':
+    require __DIR__ . '/../app/controllers/request-code-controller.php';
+    break;
   default:
     require __DIR__ . '/../app/views/landing.php';
     break;

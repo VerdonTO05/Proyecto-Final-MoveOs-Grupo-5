@@ -1,0 +1,19 @@
+# Dependencias
+vendor/
+node_modules/
+
+# Configuración sensible
+config/email-config.php
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+verification_codes.log
+
+# Archivos temporales
+tmp/
+temp/
