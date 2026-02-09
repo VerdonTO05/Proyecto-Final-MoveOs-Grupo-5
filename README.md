@@ -319,42 +319,8 @@ El backend expone varios endpoints API para operaciones CRUD:
 
 Todas las APIs retornan respuestas en formato JSON y utilizan códigos de estado HTTP apropiados.
 
-## 🚧 Mejoras Futuras
-
-### Funcionalidades Planificadas
-* **Sistema de notificaciones:**
-  * Notificaciones en tiempo real para nuevas actividades
-  * Emails automáticos al aprobar/rechazar actividades
-  * Recordatorios de actividades próximas
-* **Sistema de valoraciones:**
-  * Calificación de actividades completadas
-  * Reseñas y comentarios de participantes
-  * Reputación de organizadores
-* **Chat en tiempo real:**
-  * Mensajería entre participantes y organizadores
-  * WebSockets o Socket.io para comunicación instantánea
-* **Panel de estadísticas:**
-  * Gráficas de actividades más populares
-  * Métricas de participación
-  * Dashboard analítico para administradores
-* **Sistema de pagos:**
-  * Integración con pasarelas de pago (Stripe, PayPal)
-  * Gestión de reembolsos
-  * Facturación automática
-* **Búsqueda avanzada:**
-  * Filtros múltiples (fecha, precio, ubicación, categoría)
-  * Búsqueda por texto con coincidencias parciales
-  * Ordenamiento por relevancia, fecha, precio
-* **Mapa interactivo:**
-  * Visualización de actividades en mapa (Google Maps/Leaflet)
-  * Filtrado por distancia
-  * Geolocalización del usuario
 
 ### Mejoras Técnicas
-* **Testing:**
-  * Unit tests con PHPUnit
-  * Tests de integración
-  * Tests E2E con Selenium
 * **CI/CD:**
   * Pipeline de integración continua (GitHub Actions)
   * Despliegue automático a staging/producción
@@ -375,8 +341,6 @@ Todas las APIs retornan respuestas en formato JSON y utilizan códigos de estado
   * Documentación Swagger/OpenAPI
   * Ejemplos de uso con Postman
   * Versionado de API
-
-
 
 
 
@@ -405,7 +369,6 @@ Para mantener un historial limpio en el desarrollo colaborativo, utilizamos la s
 
 El diseño de la interfaz de usuario (UI) y la experiencia de usuario (UX) han sido elaborados previamente en Figma para garantizar la usabilidad antes de la codificación.
 
-* **Ver Prototipo en Figma:** [MOVE.os Platform Development](https://www.figma.com/make/4lG0w2wX0BJ293Qo0oCtUj/MOVE.os-Platform-Development?node-id=0-1&t=ylrb2UJsruqVfndY-1) *(Enlace al prototipo interactivo)*
 
 ## Documentación T. 6, 7 y 8 
 
