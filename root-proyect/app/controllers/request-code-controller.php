@@ -1,15 +1,12 @@
 <?php
 /**
- * Controlador para solicitar código de verificación por email
+ * Controlador para solicitar código de verificación
  */
 
 // Asegurarse de que la sesión esté iniciada
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-
-// Cargar autoloader de Composer para PHPMailer
-require_once __DIR__ . '/../../vendor/autoload.php';
 
 // Limpiar cualquier salida previa
 if (ob_get_level()) {
