@@ -77,9 +77,21 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("click", (e) => {
     if (e.target.id === "openVideo") {
       e.preventDefault();
-      openVideo(tutorialContainer);
+
+      const enlace = e.target;
+      const textoOriginal = enlace.textContent;
+
+      enlace.textContent = "Cargando...";
+      enlace.style.pointerEvents = "none"; //evita múltiples clicks
+
+      // Esperamos 3 segundos antes de abrir el vídeo
+      setTimeout(() => {
+        enlace.style.pointerEvents = "auto";
+        openVideo(tutorialContainer);
+      }, 3000);
     }
   });
+
 });
 
 /* =========================

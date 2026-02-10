@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
   initThemeLogic();
   renderHeaderByRole();
+
+  
 });
 
 document.addEventListener("click", (e) => {
