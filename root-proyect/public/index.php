@@ -104,6 +104,9 @@ switch ($action) {
   case 'users':
     require __DIR__ . '/../app/views/users.php';
     break;
+  case 'getUsers':
+    require __DIR__ . '/../app/controllers/get-users-controller.php';
+    break;
   case 'forgot-password':
     require __DIR__ . '/../app/views/forgot-password.php';
     break;
