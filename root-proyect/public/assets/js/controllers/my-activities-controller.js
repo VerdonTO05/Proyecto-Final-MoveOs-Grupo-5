@@ -76,8 +76,11 @@ function createActivityCard(publication) {
     `;
 
     card.querySelector(".btn-detail")?.addEventListener("click", () => {
-        console.log("Editar actividad con id:", publication.id); //por terminar
+        const id = publication.id;
+        window.location.href = `index.php?accion=editActivity&id=${id}`;
     });
+
+    
 
     card.querySelector(".btn-signup")?.addEventListener("click", () => {
         console.log("Borrar actividad con id:", publication.id); //por terminar

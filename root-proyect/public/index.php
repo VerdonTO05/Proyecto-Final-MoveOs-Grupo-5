@@ -46,6 +46,7 @@ switch ($action) {
     require __DIR__ . '/../app/controllers/activity-controller.php';
     break;
   case 'editActivity':
+    require __DIR__ . '/../app/controllers/edit-activity-controller.php';
     break;
   case 'deleteActivity':
     break;
