@@ -60,7 +60,8 @@
    Componentes: Tarjeta Actividad
 ========================= */
 .activity {
-  min-width: 0;
+  position: relative;
+  // min-width: 0;
   background-color: var(--bg-surface);
   border-radius: 20px;
   overflow: hidden;
@@ -168,6 +169,21 @@
     &.desactivate {
       background-color: var(--desactivate-color);
       opacity: 0.55;
+    }
+
+    .category{
+      display: block;
+      position: absolute;
+      top: 0.5rem;
+      left: 0.7rem;
+      background-color: var(--alert);
+      border: solid 1px var(--c-yellow);
+      border-radius: 2rem;
+      padding: 0.4rem;
+    }
+
+    i{
+      color: var(--brand-dark);
     }
   }
 }

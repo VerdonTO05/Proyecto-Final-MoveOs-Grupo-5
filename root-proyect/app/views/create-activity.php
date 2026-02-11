@@ -38,6 +38,9 @@ $participante = ($rol === 'participante');
             <?php endif; ?>
         </header>
 
+        <div class="alert">
+            <p>La actividad ingresada quedará <strong>pendiente de revisión administrativa</strong> y será publicada una vez reciba la aprobación correspondiente.</p>
+        </div>
         <form class="form-activity" id="form-create-activity" action="../app/controllers/activity-controller.php"
             method="POST" enctype="multipart/form-data" aria-labelledby="form-title" aria-describedby="form-desc">
 

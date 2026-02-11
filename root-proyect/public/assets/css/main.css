@@ -162,7 +162,6 @@ header nav > div button {
   border-radius: 8px;
   cursor: pointer;
   font-weight: 500;
-  border: none;
 }
 header nav > div button:last-child {
   color: var(--text-on-primary);
@@ -295,11 +294,10 @@ footer p {
 
 .sidebar a {
   padding: 1.3rem;
+  padding-bottom: 1rem;
   font-size: 16px;
   color: var(--bg-main);
-  display: block;
-  transition: 0.2s;
-  height: 3rem;
+  justify-content: center;
 }
 
 .sidebar a:hover {
@@ -377,7 +375,6 @@ main section:first-of-type button {
   border-radius: 8px;
   cursor: pointer;
   font-weight: 500;
-  border: none;
   border: 1px solid var(--brand-primary);
   background: var(--bg-surface);
   font-weight: 600;
@@ -1083,7 +1080,7 @@ select {
    Componentes: Tarjeta Actividad
 ========================= */
 .activity {
-  min-width: 0;
+  position: relative;
   background-color: var(--bg-surface);
   border-radius: 20px;
   overflow: hidden;
@@ -1200,6 +1197,19 @@ select {
 .activity .activity-content.desactivate {
   background-color: var(--desactivate-color);
   opacity: 0.55;
+}
+.activity .activity-content .category {
+  display: block;
+  position: absolute;
+  top: 0.5rem;
+  left: 0.7rem;
+  background-color: var(--alert);
+  border: solid 1px var(--c-yellow);
+  border-radius: 2rem;
+  padding: 0.4rem;
+}
+.activity .activity-content i {
+  color: var(--brand-dark);
 }
 
 /* =========================
@@ -1989,10 +1999,6 @@ body {
   border-radius: 8px;
   font-size: 14px;
   margin-bottom: 1.8rem;
-}
-.alert strong {
-  display: block;
-  margin-bottom: 0.5rem;
 }
 
 .form-activity {
