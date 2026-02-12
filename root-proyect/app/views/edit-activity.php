@@ -17,6 +17,7 @@ $participante = ($rol === 'participante');
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="assets/js/controllers/activity-validation.js"></script>
     <script src="assets/js/main.js"></script>
+    <script src="assets/js/controllers/edit-activity-controller.js"></script>
 </head>
 
 <body>
@@ -61,9 +62,19 @@ $participante = ($rol === 'participante');
             <div>
                 <?php
                 $categories = [
-                    1 => 'Taller',2 => 'Clase',3 => 'Evento', 4 => 'Excursión', 5 => 'Formación técnica', 6 => 'Conferencia', 7 => 'Reunión',8 => 'Experiencia',9 => 'Tour',10 => 'Competición',11 => 'Evento social'
+                    1 => 'Taller',
+                    2 => 'Clase',
+                    3 => 'Evento',
+                    4 => 'Excursión',
+                    5 => 'Formación técnica',
+                    6 => 'Conferencia',
+                    7 => 'Reunión',
+                    8 => 'Experiencia',
+                    9 => 'Tour',
+                    10 => 'Competición',
+                    11 => 'Evento social'
                 ];
-                $selectedCategory = $publication['language'] ?? '';
+                $selectedCategory = $publication['category_id'] ?? '';
                 ?>
 
                 <label for="category">Categoría *</label>
@@ -153,18 +164,36 @@ $participante = ($rol === 'participante');
                 </label>
             </div>
 
+            <!-- Por revisar, no funciona obtener las imagenes -->
+
             <div class="full">
-                <label>Imagen de la <?= $participante ? "Petición" : "Actividad" ?> *</label>
+                <label>Imagen de la
+                    <?= $participante ? "Petición" : "Actividad" ?> *
+                </label>
+
+                <?php if (!empty($publication['image_url'])): ?>
+                    <div class="current-image">
+                        <p>Imagen actual:</p>
+                        <img src="<?= htmlspecialchars($publication['image_url']) ?>" alt="Imagen actual"
+                            style="max-width:200px; display:block; margin-bottom:10px;">
+                    </div>
+                <?php endif; ?>
 
                 <div class="upload-box">
-                    <input type="file" name="image_file" id="image_file" accept="image/png, image/jpeg" required
-                        value="<?= htmlspecialchars($publication['image_url']) ?? "" ?>" />
+                    <input type="file" name="image_file" id="image_file" accept="image/png, image/jpeg"
+                        <?= empty($publication['image_url']) ? 'required' : '' ?> />
+
+                    <!-- Guardamos la URL actual -->
+                    <input type="hidden" name="current_image"
+                        value="<?= htmlspecialchars($publication['image_url'] ?? '') ?>">
+
                     <div class="upload-content">
                         <i class="fas fa-upload"></i>
-                        <p id="file-name">Haz clic para subir una imagen (JPG/PNG)</p>
+                        <p id="file-name">Haz clic para subir una nueva imagen (JPG/PNG)</p>
                     </div>
                 </div>
             </div>
+
 
             <?php if ($participante): ?>
                 <input type="hidden" name="type" value="request">
@@ -174,9 +203,9 @@ $participante = ($rol === 'participante');
 
             <div class="actions">
                 <?php if ($participante): ?>
-                    <button type="submit" class="btn-submit">Publicar Petición</button>
+                    <button type="submit" class="btn-submit">Editar Petición</button>
                 <?php else: ?>
-                    <button type="submit" class="btn-submit">Publicar Actividad</button>
+                    <button type="submit" class="btn-submit">Editar Actividad</button>
                 <?php endif; ?>
             </div>
         </form>

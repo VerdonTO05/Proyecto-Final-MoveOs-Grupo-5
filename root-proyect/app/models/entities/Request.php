@@ -50,6 +50,9 @@ class Request
         $this->conn = $db;
     }
 
+    public function getParticipant_Id(){
+        return $participant_id;
+    }
     /* =========================
        FUNCIONES PÚBLICAS
        ========================= */
@@ -224,5 +227,10 @@ class Request
         $stmt = $this->conn->query($sql);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function updateRequest($id,$title, $description,$category_id, $location, $date, $time, $price, $max_people, $language, $min_age, $dress_code, $transport_included, $pets_allowed, $departure_city, $image_url){
+
+    }
+
 }
 ?>
