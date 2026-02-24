@@ -50,9 +50,11 @@ class Request
         $this->conn = $db;
     }
 
-    public function getParticipant_Id(){
-        return $participant_id;
-    }
+    // public function getParticipant_Id()
+    // {
+    //     return $this->$participant_id;
+    // }
+    
     /* =========================
        FUNCIONES PÚBLICAS
        ========================= */
@@ -138,30 +140,24 @@ class Request
      * @param array $data Datos a actualizar (debe incluir todas las columnas que se actualizan)
      * @return bool True si se actualizó correctamente, false si falla
      */
-    public function editRequest($id, $data)
+    public function updateRequest($data)
     {
-        $sql = "UPDATE {$this->table_name} SET
-                    category_id = :category_id,
-                    title = :title,
-                    description = :description,
-                    date = :date,
-                    time = :time,
-                    location = :location,
-                    current_registrations = :current_registrations,
-                    organizer_email = :organizer_email,
-                    transport_included = :transport_included,
-                    departure_city = :departure_city,
-                    language = :language,
-                    min_age = :min_age,
-                    pets_allowed = :pets_allowed,
-                    dress_code = :dress_code,
-                    is_accepted = :is_accepted,
-                    accepted_by = :accepted_by,
-                    state = :state
-                WHERE id = :id";
+        $sql = "UPDATE requests SET
+                title = :title,
+                description = :description,
+                category_id = :category_id,
+                location = :location,
+                date = :date,
+                time = :time,
+                language = :language,
+                min_age = :min_age,
+                dress_code = :dress_code,
+                transport_included = :transport_included,
+                departure_city = :departure_city,
+                pets_allowed = :pets_allowed
+            WHERE id = :id";
 
         $stmt = $this->conn->prepare($sql);
-        $data['id'] = $id;
         return $stmt->execute($data);
     }
 
@@ -227,10 +223,5 @@ class Request
         $stmt = $this->conn->query($sql);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-
-    public function updateRequest($id,$title, $description,$category_id, $location, $date, $time, $price, $max_people, $language, $min_age, $dress_code, $transport_included, $pets_allowed, $departure_city, $image_url){
-
-    }
-
 }
 ?>

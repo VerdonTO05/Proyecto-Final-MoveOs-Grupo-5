@@ -7,90 +7,86 @@ require_once __DIR__ . '/../models/entities/Activity.php';
 require_once __DIR__ . '/../models/entities/Request.php';
 require_once __DIR__ . '/../../config/database.php';
 
-// Comprobar que el usuario está logueado
 if (!isset($_SESSION['user_id'])) {
     header('Location: index.php?accion=loginView');
     exit;
 }
 
 try {
-    // Conexión a la base de datos
+
     $database = new Database();
     $db = $database->getConnection();
-    $activityModel = new Activity($db);
-    $requestModel = new Request($db);
 
-    $id = $_GET['id'] ?? null;
+    $activityModel = new Activity($db);
+    $requestModel  = new Request($db);
+
+    $id = $_POST['id'] ?? null;
 
     if (!$id) {
-        //Por si se borra de la url el id (comporbar que la actividad pertenece al usuario para evitar que pueda editar otras peticiones, si no es suya penalizar)
-        die('ID publicación no recibida');
+        die('ID publicación no recibido');
     }
 
-    if($_SESSION['role'] == 'participante'){
+    if ($_SESSION['role'] === 'participante') {
         $publication = $requestModel->getRequestById($id);
         $typePublication = 'request';
-    }else{
+    } else {
         $publication = $activityModel->getActivityById($id);
         $typePublication = 'activity';
     }
 
-    // Obtener usuario actual
     if (!$publication) {
-        die('Actividad no encontrada');
+        die('Publicación no encontrada');
     }
 
-    //Comprobar aqui si la actividad pertenece al usuario
-    if($typePublication == 'activity'){
-        if($publication['offertant_id'] != $_SESSION['user_id']){
+    // Comprobar propiedad 
+    if ($typePublication === 'activity') {
+        if ($publication['offertant_id'] != $_SESSION['user_id']) {
             die('Esta actividad no te pertenece');
         }
-    }else{
-        if($publication['participant_id'] != $_SESSION['user_id']){
-            die('esta petición no te pertenece');
+    } else {
+        if ($publication['participant_id'] != $_SESSION['user_id']) {
+            die('Esta petición no te pertenece');
         }
     }
 
-    // ===========================
-    // Si se envió el formulario
-    // ===========================
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Recoger datos del formulario
-        $title = trim($_POST['title'] ?? '');
-        $description = trim($_POST['description'] ?? '');
-        $category_id = $_POST['category_id'] ?? '';
-        $location = trim($_POST['location'] ?? '');
-        $date = $_POST['date'] ?? '';
-        $time = $_POST['time'] ?? '';
-        //si no es actividad no tiene precio nu cantidad maxima usuarios(posible error si no se trata)
-        $price = $_POST['price'] ?? '';
-        $max_people = $_POST['max_people'] ?? '';
-        $language = trim($_POST['language'] ?? '');
-        $min_age = $_POST['min_age'] ?? '';
-        $dress_code = trim($_POST['dress_code'] ?? '');
-        $transport_included = isset($_POST['transport_included']);
-        $departure_city = trim($_POST['departure_city'] ?? '');
-        $pets_allowed = isset($_POST['pets_allowed']);
-        //url imagen falta por buscar como guardar
+    // ==================================================
+    // SI SE ENVÍA EL FORMULARIO (UPDATE)
+    // ==================================================
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['title'])) {
 
-        // Validaciones básicas
+        $data = [
+            'id' => $id,
+            'title' => trim($_POST['title'] ?? ''),
+            'description' => trim($_POST['description'] ?? ''),
+            'category_id' => $_POST['category_id'] ?? null,
+            'location' => trim($_POST['location'] ?? ''),
+            'date' => $_POST['date'] ?? null,
+            'time' => $_POST['time'] ?? null,
+            'language' => trim($_POST['language'] ?? ''),
+            'min_age' => $_POST['min_age'] ?: null,
+            'dress_code' => trim($_POST['dress_code'] ?? ''),
+            'transport_included' => isset($_POST['transport_included']) ? 1 : 0,
+            'departure_city' => trim($_POST['departure_city'] ?? ''),
+            'pets_allowed' => isset($_POST['pets_allowed']) ? 1 : 0,
+        ];
 
+        // Solo actividades tienen estos campos
+        if ($typePublication === 'activity') {
+            $data['price'] = $_POST['price'] ?: null;
+            $data['max_people'] = $_POST['max_people'] ?: null;
 
-
-
-        // Actualizar actividad en la base de datos
-        if($_POST['type'] == 'request'){
-            // $publication->
-        }else{
-            //Actividad
+            $activityModel->updateActivity($data);
+        } else {
+            $requestModel->updateRequest($data);
         }
 
-        // Redirigir a la misma vista con parámetro de éxito
         header('Location: index.php?accion=seeMyActivities');
         exit;
     }
 
-    // Si es GET, solo mostrar vista
+    // ==================================================
+    // MOSTRAR VISTA
+    // ==================================================
     require __DIR__ . '/../views/edit-activity.php';
 
 } catch (Exception $e) {

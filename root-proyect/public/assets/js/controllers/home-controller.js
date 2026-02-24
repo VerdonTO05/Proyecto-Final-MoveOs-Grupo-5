@@ -6,18 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     role = CURRENT_USER.role;
   }
 
-  //Prueba boton cargar con timeout
-  const btn = document.getElementById('btn-activities');
-  btn.addEventListener('click', ()=>{
-    btn.textContent = 'Cargando..';
-    btn.style.pointerEvents = 'none';
-    
-    setTimeout(() => {
-        btn.style.pointerEvents = "auto";
-        loadPublications(role);
-      }, 3000);
-  });
-  // loadPublications(role);
+  loadPublications(role);
 });
 
 async function loadPublications(role) {

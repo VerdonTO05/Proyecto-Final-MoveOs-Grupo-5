@@ -117,6 +117,29 @@ class Activity
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function updateActivity($data)
+    {
+        $sql = "UPDATE activities SET
+                title = :title,
+                description = :description,
+                category_id = :category_id,
+                location = :location,
+                date = :date,
+                time = :time,
+                price = :price,
+                max_people = :max_people,
+                language = :language,
+                min_age = :min_age,
+                dress_code = :dress_code,
+                transport_included = :transport_included,
+                departure_city = :departure_city,
+                pets_allowed = :pets_allowed
+            WHERE id = :id";
+
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute($data);
+    }
+    
     /**
      * Eliminar una actividad por su ID
      * @param int $id ID de la actividad

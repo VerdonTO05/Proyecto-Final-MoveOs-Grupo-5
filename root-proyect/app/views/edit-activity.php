@@ -43,10 +43,8 @@ $participante = ($rol === 'participante');
             <p>La <?php $participante ? 'petición' : 'actividad' ?> ingresada quedará <strong>pendiente de revisión
                     administrativa</strong> y será publicada una vez reciba la aprobación correspondiente.</p>
         </div>
-        <form class="form-activity" id="form-create-activity" action="../app/controllers/edit-activity-controller.php"
-            method="POST" enctype="multipart/form-data" aria-labelledby="form-title" aria-describedby="form-desc">
-
-
+        <form class="form-activity" id="form-create-activity" action="index.php" method="POST"
+            enctype="multipart/form-data">
             <div class="full">
                 <label for="titulo">Título de la <?= $participante ? "Petición" : "Actividad" ?> *</label>
                 <input type="text" id="titulo" name="title" placeholder="Ej: Yoga al aire libre" required
@@ -208,6 +206,9 @@ $participante = ($rol === 'participante');
                     <button type="submit" class="btn-submit">Editar Actividad</button>
                 <?php endif; ?>
             </div>
+
+            <input type="hidden" name="accion" value="editActivity">
+            <input type="hidden" name="id" value="<?= htmlspecialchars($publication['id']) ?>">
         </form>
     </div>
 </body>

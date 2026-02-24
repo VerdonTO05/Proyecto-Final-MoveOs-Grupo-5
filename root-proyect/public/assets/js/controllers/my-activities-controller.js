@@ -17,7 +17,7 @@ async function loadActivities() {
             });
         } else {
             gridContainer.innerHTML = '<p class="no-activities">Todavía no tienes ninguna actividad propia.</p>';
-            gridContainer.innerHTML = '<p><a href="index.php?accion=createActivity"></a>Crea una ahora</p>';
+            gridContainer.innerHTML = '<p><a href="index.php?accion=createActivity">Crea una ahora</a></p>';
         }
     } catch (error) {
         console.error('Error al cargar publicaciones:', error);
@@ -75,12 +75,22 @@ function createActivityCard(publication) {
         </div>
     `;
 
-    card.querySelector(".btn-detail")?.addEventListener("click", () => {
-        const id = publication.id;
-        window.location.href = `index.php?accion=editActivity&id=${id}`;
-    });
+    card.querySelector(".btn-detail")?.addEventListener("click", function () {
 
-    
+        const id = this.dataset.id;
+        console.log("ID enviado:", id);
+
+        const form = document.createElement("form");
+        form.method = "POST";
+        form.action = "index.php";
+
+        form.innerHTML = `
+        <input type="hidden" name="accion" value="editActivity">
+        <input type="hidden" name="id" value="${id}">`;
+
+        document.body.appendChild(form);
+        form.submit();
+    });
 
     card.querySelector(".btn-signup")?.addEventListener("click", () => {
         console.log("Borrar actividad con id:", publication.id); //por terminar

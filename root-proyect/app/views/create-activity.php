@@ -39,105 +39,100 @@ $participante = ($rol === 'participante');
         </header>
 
         <div class="alert">
-            <p>La <?php $participante ?'petición' :'actividad'?> ingresada quedará <strong>pendiente de revisión administrativa</strong> y será publicada una vez reciba la aprobación correspondiente.</p>
+            <p>La <?php $participante ? 'petición' : 'actividad' ?> ingresada quedará <strong>pendiente de revisión
+                    administrativa</strong> y será publicada una vez reciba la aprobación correspondiente.</p>
         </div>
-        <form class="form-activity" id="form-create-activity" action="../app/controllers/activity-controller.php"
-            method="POST" enctype="multipart/form-data" aria-labelledby="form-title" aria-describedby="form-desc">
+        <form class="form-activity" id="form-create-activity" action="index.php" method="POST"
+            enctype="multipart/form-data">
 
+            <input type="hidden" name="accion" value="create">
+            <input type="hidden" name="type" value="<?= $participante ? 'request' : 'activity' ?>">
 
+            <!-- TÍTULO -->
             <div class="full">
-                <label for="titulo">Título de la <?= $participante ? "Petición" : "Actividad" ?> *</label>
-                <input type="text" id="titulo" name="title" placeholder="Ej: Yoga al aire libre" required
-                    aria-required="true" />
+                <label>Título *</label>
+                <input type="text" name="title" required>
             </div>
 
+            <!-- DESCRIPCIÓN -->
             <div class="full">
-                <label for="descripcion">Descripción *</label>
-                <textarea id="descripcion" name="description" placeholder="Describe los detalles..." required
-                    aria-required="true"></textarea>
+                <label>Descripción *</label>
+                <textarea name="description" required></textarea>
             </div>
 
+            <!-- CATEGORÍA -->
             <div>
-                <label for="category">Categoría *</label>
-                <select id="category" name="category_id" required aria-required="true">
+                <label>Categoría *</label>
+                <select name="category_id" required>
                     <option value="">Selecciona...</option>
-                    <option value="1">Taller</option>
-                    <option value="2">Clase</option>
-                    <option value="3">Evento</option>
-                    <option value="4">Excursión</option>
-                    <option value="5">Formación técnica</option>
-                    <option value="6">Conferencia</option>
-                    <option value="7">Reunión</option>
-                    <option value="8">Experiencia</option>
-                    <option value="9">Tour</option>
-                    <option value="10">Competición</option>
-                    <option value="11">Evento social</option>
+                    <?php foreach ($categories as $id => $name): ?>
+                        <option value="<?= $id ?>"><?= $name ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <!-- UBICACIÓN -->
+            <div>
+                <label>Ubicación *</label>
+                <input type="text" name="location" required>
+            </div>
+
+            <!-- FECHA -->
+            <div>
+                <label>Fecha</label>
+                <input type="date" name="date">
+            </div>
+
+            <!-- HORA -->
+            <div>
+                <label>Hora</label>
+                <input type="time" name="time">
+            </div>
+
+            <?php if (!$participante): ?>
+                <div>
+                    <label>Precio (€)</label>
+                    <input type="number" name="price" step="0.01" min="0">
+                </div>
+
+                <div>
+                    <label>Máximo de participantes</label>
+                    <input type="number" name="max_people" min="1">
+                </div>
+            <?php endif; ?>
+
+            <!-- CAMPOS COMUNES -->
+            <div>
+                <label>Idioma</label>
+                <select name="language">
+                    <?php foreach ($languages as $lang): ?>
+                        <option value="<?= $lang ?>"><?= $lang ?></option>
+                    <?php endforeach; ?>
                 </select>
             </div>
 
             <div>
-                <label for="ubicacion">Ubicación *</label>
-                <input type="text" id="ubicacion" name="location" placeholder="Dirección o ciudad" required
-                    aria-required="true" />
+                <label>Edad mínima</label>
+                <input type="number" name="min_age" min="0">
             </div>
 
             <div>
-                <label for="fecha">Fecha</label>
-                <input type="date" id="fecha" name="date" />
-            </div>
-
-            <div>
-                <label for="hora">Hora</label>
-                <input type="time" id="hora" name="time" />
-            </div>
-
-            <?php if (!$participante) { ?>
-                <div>
-                    <label for="precio">Precio (€)</label>
-                    <input type="number" id="precio" name="price" step="1" min="0" value="0" />
-                </div>
-
-                <div>
-                    <label for="max">Cantidad de usuarios</label>
-                    <input type="number" id="max" name="max_people" value="10" min="1" />
-                </div>
-            <?php } ?>
-            <div>
-                <label for="idioma">Idioma</label>
-                <select id="idioma" name="language">
-                    <option value="Español">Español</option>
-                    <option value="Inglés">Inglés</option>
-                    <option value="Francés">Francés</option>
-                    <option value="Alemán">Alemán</option>
-                    <option value="Italiano">Italiano</option>
-                    <option value="Portugués">Portugués</option>
-                    <option value="Chino">Chino</option>
-                    <option value="Japonés">Japonés</option>
-                    <option value="Ruso">Ruso</option>
-                    <option value="Árabe">Árabe</option>
-                </select>
-            </div>
-
-            <div>
-                <label for="edad">Edad Mínima</label>
-                <input type="number" id="edad" name="min_age" value="0" min="0" />
-            </div>
-
-            <div>
-                <label for="vestimenta">Código de Vestimenta</label>
-                <input type="text" id="vestimenta" name="dress_code" placeholder="Ej: Ropa cómoda" />
+                <label>Código vestimenta</label>
+                <input type="text" name="dress_code">
             </div>
 
             <div class="checkbox-group full">
                 <label>
-                    <input type="checkbox" name="transport_included" id="transport_toggle" value="1" />
+                    <input type="checkbox" name="transport_included" value="1">
                     Transporte incluido
                 </label>
-                <div id="departure_box" style="display:none; margin: 10px 0;">
-                    <input type="text" name="departure_city" placeholder="¿Desde dónde salen?">
+
+                <div>
+                    <input type="text" name="departure_city" placeholder="Ciudad de salida">
                 </div>
+
                 <label>
-                    <input type="checkbox" name="pets_allowed" value="1" />
+                    <input type="checkbox" name="pets_allowed" value="1">
                     Mascotas permitidas
                 </label>
             </div>
