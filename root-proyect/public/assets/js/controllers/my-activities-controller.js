@@ -65,6 +65,7 @@ function createActivityCard(publication) {
         <div class="activity-image">${imgHTML}${tagHTML}</div>
         <div class="${contentClass}">
             ${publication.category_name ? `<span class="category">${publication.category_name}</span>` : ""}
+            ${publication.state == 'pendiente' ? `<span class="state"><i class="fas fa-hourglass-half"></i></span>` : `<span class="state"><i class="fas fa-check-double"></i></span>`}
             <h3>${publication.title}</h3>
             <p class="description">${publication.description}</p>
             ${detailsHTML}${metaHTML}${footerHTML}
@@ -76,9 +77,7 @@ function createActivityCard(publication) {
     `;
 
     card.querySelector(".btn-detail")?.addEventListener("click", function () {
-
         const id = this.dataset.id;
-        console.log("ID enviado:", id);
 
         const form = document.createElement("form");
         form.method = "POST";
@@ -92,8 +91,24 @@ function createActivityCard(publication) {
         form.submit();
     });
 
-    card.querySelector(".btn-signup")?.addEventListener("click", () => {
-        console.log("Borrar actividad con id:", publication.id); //por terminar
+    //CREAR MODAL PERSONALIZADO (funcion ya creada en control-controller.js- buscar forma de exportar)
+    card.querySelector(".btn-signup")?.addEventListener("click", function () {
+        const id = this.dataset.id;
+        const confirmacion = confirm("¿Estás seguro de que quieres eliminar esta publicación?");
+
+        if (!confirmacion) {
+            return; // Si pulsa Cancelar, no hace nada
+        }
+        const form = document.createElement("form");
+        form.method = "POST";
+        form.action = "index.php";
+
+        form.innerHTML = `
+        <input type="hidden" name="accion" value="deleteActivity">
+        <input type="hidden" name="id" value="${id}">`;
+
+        document.body.appendChild(form);
+        form.submit();
     });
 
     return card;

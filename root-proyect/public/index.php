@@ -49,12 +49,7 @@ switch ($action) {
     require __DIR__ . '/../app/controllers/edit-activity-controller.php';
     break;
   case 'deleteActivity':
-    break;
-  case 'createRequest':
-    break;
-  case 'editRequest':
-    break;
-  case 'deleteRequest':
+    require __DIR__ .  '/../app/controllers/delete-activity-controller.php';
     break;
   case 'seeMyActivities':
     require __DIR__ . '/../app/views/my-activities.php';

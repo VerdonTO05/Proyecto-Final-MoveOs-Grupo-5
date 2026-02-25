@@ -1021,20 +1021,16 @@ select {
   background-color: var(--bg-surface);
   box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
   width: 100%;
+  max-width: 100%;
   position: relative;
   box-sizing: border-box;
 }
 
 #gridActivities {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   padding: 1rem;
-}
-#gridActivities > .activity {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
 }
 
 .filters {
@@ -1080,15 +1076,15 @@ select {
    Componentes: Tarjeta Actividad
 ========================= */
 .activity {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   position: relative;
   background-color: var(--bg-surface);
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  display: flex;
-  flex-direction: column;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  height: 100%;
 }
 .activity:hover {
   transform: translateY(-5px);
@@ -1208,10 +1204,46 @@ select {
   border-radius: 2rem;
   padding: 0.4rem;
 }
+.activity .activity-content .state {
+  display: block;
+  position: absolute;
+  top: 0.5rem;
+  right: 0.7rem;
+  padding: 0.4rem;
+}
 .activity .activity-content i {
   color: var(--brand-dark);
 }
+.activity .activity-content .state i.fa-hourglass-half {
+  display: inline-block;
+  animation: spin 3s linear infinite;
+}
+.activity .activity-content .state i.fa-check-double {
+  display: inline-block;
+  opacity: 0;
+  transform: scale(0.5);
+  animation: popIn 0.5s forwards;
+}
 
+/* ---------- Keyframes ---------- */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
 /* =========================
    Responsive
 ========================= */
