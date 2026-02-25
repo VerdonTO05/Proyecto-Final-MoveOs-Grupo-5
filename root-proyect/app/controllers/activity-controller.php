@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'state' => 'pendiente'
         ];
         if ($request->createRequest($data)) {
-            header("Location: ../../public/index.php?accion=seeMyActivities"); exit;
+            header("Location: index.php?accion=seeMyActivities"); exit;
         } else {
             echo "Error al crear la petición";
         }
@@ -129,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'state' => 'pendiente'
         ];
         if ($activity->createActivity($data)) {
-            header("Location: ../../public/index.php?accion=seeMyActivities"); exit;
+            header("Location: index.php?accion=seeMyActivities"); exit;
         } else {
             echo "Error al crear la actividad";
         }

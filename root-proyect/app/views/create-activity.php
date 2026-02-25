@@ -62,12 +62,20 @@ $participante = ($rol === 'participante');
 
             <!-- CATEGORÍA -->
             <div>
-                <label>Categoría *</label>
-                <select name="category_id" required>
+                <label for="category">Categoría *</label>
+                <select id="category" name="category_id" required aria-required="true">
                     <option value="">Selecciona...</option>
-                    <?php foreach ($categories as $id => $name): ?>
-                        <option value="<?= $id ?>"><?= $name ?></option>
-                    <?php endforeach; ?>
+                    <option value="1">Taller</option>
+                    <option value="2">Clase</option>
+                    <option value="3">Evento</option>
+                    <option value="4">Excursión</option>
+                    <option value="5">Formación técnica</option>
+                    <option value="6">Conferencia</option>
+                    <option value="7">Reunión</option>
+                    <option value="8">Experiencia</option>
+                    <option value="9">Tour</option>
+                    <option value="10">Competición</option>
+                    <option value="11">Evento social</option>
                 </select>
             </div>
 
@@ -103,11 +111,18 @@ $participante = ($rol === 'participante');
 
             <!-- CAMPOS COMUNES -->
             <div>
-                <label>Idioma</label>
-                <select name="language">
-                    <?php foreach ($languages as $lang): ?>
-                        <option value="<?= $lang ?>"><?= $lang ?></option>
-                    <?php endforeach; ?>
+                <label for="idioma">Idioma</label>
+                <select id="idioma" name="language">
+                    <option value="Español">Español</option>
+                    <option value="Inglés">Inglés</option>
+                    <option value="Francés">Francés</option>
+                    <option value="Alemán">Alemán</option>
+                    <option value="Italiano">Italiano</option>
+                    <option value="Portugués">Portugués</option>
+                    <option value="Chino">Chino</option>
+                    <option value="Japonés">Japonés</option>
+                    <option value="Ruso">Ruso</option>
+                    <option value="Árabe">Árabe</option>
                 </select>
             </div>
 
@@ -123,16 +138,14 @@ $participante = ($rol === 'participante');
 
             <div class="checkbox-group full">
                 <label>
-                    <input type="checkbox" name="transport_included" value="1">
+                    <input type="checkbox" name="transport_included" id="transport_toggle" value="1" />
                     Transporte incluido
                 </label>
-
-                <div>
-                    <input type="text" name="departure_city" placeholder="Ciudad de salida">
+                <div id="departure_box" style="display:none; margin: 10px 0;">
+                    <input type="text" name="departure_city" placeholder="¿Desde dónde salen?">
                 </div>
-
                 <label>
-                    <input type="checkbox" name="pets_allowed" value="1">
+                    <input type="checkbox" name="pets_allowed" value="1" />
                     Mascotas permitidas
                 </label>
             </div>
