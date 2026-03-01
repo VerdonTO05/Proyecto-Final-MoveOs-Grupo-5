@@ -83,14 +83,36 @@ class Activity
     public function getActivitiesByOffertantId($offertantId)
     {
         $sql = "SELECT 
-                a.*,
-                u.full_name AS offertant_name,
-                c.name AS category_name
-            FROM {$this->table_name} a
-            JOIN users u ON a.offertant_id = u.id
-            JOIN categories c ON a.category_id = c.id
-            WHERE a.offertant_id = :offertant_id
-            ORDER BY a.created_at DESC";
+            a.*,
+            u.full_name AS offertant_name,
+            c.name AS category_name
+        FROM {$this->table_name} a
+        JOIN users u ON a.offertant_id = u.id
+        JOIN categories c ON a.category_id = c.id
+        WHERE a.offertant_id = :offertant_id
+        AND a.date >= CURDATE()
+        ORDER BY a.date ASC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            'offertant_id' => $offertantId
+        ]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getActivitiesFinishedByOffertantId($offertantId)
+    {
+        $sql = "SELECT 
+            a.*,
+            u.full_name AS offertant_name,
+            c.name AS category_name
+        FROM {$this->table_name} a
+        JOIN users u ON a.offertant_id = u.id
+        JOIN categories c ON a.category_id = c.id
+        WHERE a.offertant_id = :offertant_id
+        AND a.date < CURDATE()
+        ORDER BY a.date ASC";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([
@@ -139,7 +161,7 @@ class Activity
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute($data);
     }
-    
+
     /**
      * Eliminar una actividad por su ID
      * @param int $id ID de la actividad

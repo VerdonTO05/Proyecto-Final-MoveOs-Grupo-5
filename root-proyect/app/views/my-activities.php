@@ -41,7 +41,8 @@ $user = getCurrentUser();
                     echo 'Mis Actividades';
                 } else {
                     echo 'Mis Peticiones';
-                } ?></h1>
+                } ?>
+            </h1>
             <p id="view-subtitle">Ajusta tus publicaciones para llamar la atención de más usuarios</p>
 
             <div class="filters" role="region" aria-label="Filtros de búsqueda">
@@ -52,8 +53,23 @@ $user = getCurrentUser();
                 <button class="btn-filters" aria-label="Más filtros">Más Filtros</button>
             </div>
 
-            <section class="grid-activities" id="gridActivities" aria-live="polite" aria-label="<?= $user['role'] == 'organizador' ? 'Listado de mis actividades' : 'Listado de mis peticiones' ?>"></section>
+            <div class="grid-activities" id="gridActivities" aria-live="polite"
+                aria-label="<?= $user['role'] == 'organizador' ? 'Listado de mis actividades' : 'Listado de mis peticiones' ?>">
+            </div>
+            <button id="toggleFinished" class="btn">
+                <?php
+                if ($user['role'] == 'organizador') {
+                    echo 'Ver actividades terminadas';
+                } else {
+                    echo 'Ver peticiones terminadas';
+                }
+                ?>
+            </button>
+            <div class="grid-activities" id="gridActivitiesFinished" aria-live="polite"
+                aria-label="<?= $user['role'] == 'organizador' ? 'Listado de mis actividades terminadas' : 'Listado de mis peticiones terminadas' ?>">
+            </div>
         </section>
+
     </main>
     <div id="footer"></div>
     <div id="modal-container"></div>

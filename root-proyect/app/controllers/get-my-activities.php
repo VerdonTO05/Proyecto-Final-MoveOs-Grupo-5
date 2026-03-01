@@ -24,8 +24,10 @@ if (!isset($_SESSION['role'])) {
 // Obtener actividades aprobadas
 if ($_SESSION['role'] == 'organizador') {
     $publics = $activity->getActivitiesByOffertantId($_SESSION['user_id']);
+    $publicsFinished = $activity->getActivitiesFinishedByOffertantId($_SESSION['user_id']); 
 } elseif ($_SESSION['role'] == 'participante') {
     $publics = $request->getRequestsByParticipantId($_SESSION['user_id']);
+    $publicsFinished = $request->getRequestsFinishedByParticipantId($_SESSION['user_id']);
 }
 
 // Agregar URL completa para las imágenes
@@ -45,10 +47,29 @@ if ($_SESSION['role'] == 'organizador') {
             $public['image_url'] = 'assets/img/default-activity.jpg';
         }
     }
+
+    foreach ($publicsFinished as &$public) {
+        if ($public['image_url']) {
+            // Construir ruta completa del archivo
+            $fullPath = __DIR__ . $public['image_url'];
+
+            // Verificar si el archivo existe
+            if (file_exists($fullPath)) {
+            } else {
+                // Si no existe, usar placeholder
+                $public['image_url'] = 'assets/img/default-activity.jpg';
+            }
+        } else {
+            $public['image_url'] = 'assets/img/default-activity.jpg';
+        }
+    }
 }
 
 echo json_encode([
     'success' => true,
-    'data' => $publics
+    'data' => [
+        'active' => $publics,
+        'finished' => $publicsFinished
+    ]
 ]);
 ?>

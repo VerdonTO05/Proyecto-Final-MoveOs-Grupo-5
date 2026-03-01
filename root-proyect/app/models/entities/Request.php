@@ -54,7 +54,7 @@ class Request
     // {
     //     return $this->$participant_id;
     // }
-    
+
     /* =========================
        FUNCIONES PÚBLICAS
        ========================= */
@@ -101,12 +101,32 @@ class Request
      */
     public function getRequestsByParticipantId($participantId)
     {
-        $sql = "SELECT r.*, u.full_name AS participant_name, c.name AS category_name
-                FROM {$this->table_name} r
-                JOIN users u ON r.participant_id = u.id
-                JOIN categories c ON r.category_id = c.id
-                WHERE r.participant_id = :participant_id
-                ORDER BY r.created_at DESC";
+        $sql = "SELECT r.*, 
+                   u.full_name AS participant_name, 
+                   c.name AS category_name
+            FROM {$this->table_name} r
+            JOIN users u ON r.participant_id = u.id
+            JOIN categories c ON r.category_id = c.id
+            WHERE r.participant_id = :participant_id
+            AND r.date >= CURDATE()
+            ORDER BY r.date ASC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(['participant_id' => $participantId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getRequestsFinishedByParticipantId($participantId)
+    {
+        $sql = "SELECT r.*, 
+                   u.full_name AS participant_name, 
+                   c.name AS category_name
+            FROM {$this->table_name} r
+            JOIN users u ON r.participant_id = u.id
+            JOIN categories c ON r.category_id = c.id
+            WHERE r.participant_id = :participant_id
+            AND r.date < CURDATE()
+            ORDER BY r.date ASC";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(['participant_id' => $participantId]);
