@@ -10,10 +10,10 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("Debes iniciar sesión o registrarte para explorar.");
         window.location.href = "index.php?accion=loginView";
       } else {
-        if (currentUser == 'administrador') {
-          window.location.href = "index.php?accion=seeBoth";
-        } else {
+        if (currentUser.role != 'administrador') {
           window.location.href = "index.php?accion=seeActivities";
+        } else {
+          window.location.href = "index.php?accion=seeBoth";
         }
       }
     });

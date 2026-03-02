@@ -60,8 +60,6 @@ $user = getCurrentUser();
       <!-- Actividades -->
       <section class="grid-activities" id="gridActivities" aria-live="polite"
         aria-label="<?= $role == 'participante' ? 'Listado de actividades' : 'Listado de peticiones' ?>">
-        <button id="btn-activities" class="close-btn" aria-label="Obtener actividades" type="button">Obtener
-          actividades</button>
       </section>
       </div>
     </section>
