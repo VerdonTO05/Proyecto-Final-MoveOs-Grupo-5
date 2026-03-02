@@ -65,7 +65,7 @@ $user = getCurrentUser();
       </section>
       </div>
     </section>
-    <div id="activityModal" class="modal">
+    <div id="activityModal" class="modalHome">
       <div class="modal-content">
         <span class="modal-close">&times;</span>
 

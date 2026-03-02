@@ -208,7 +208,7 @@ footer {
 
 .sidebar a {
     padding: 1.3rem;
-    padding-bottom:1rem ;
+    padding-bottom: 1rem;
     font-size: 16px;
     color: var(--bg-main);
     justify-content: center;
@@ -310,6 +310,17 @@ main section:first-of-type {
     }
 }
 
+.grid-activities {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start; // 👈 importante
+    gap: 1rem;
+}
+
+.grid-activities article {
+    flex: 0 0 calc(33.333% - 1rem);
+}
+
 /* Características y demás secciones */
 main section {
     display: flex;
@@ -364,7 +375,7 @@ main section {
     display: none;
 
     &.visible {
-        display: flex; 
+        display: flex;
     }
 }
 
@@ -405,6 +416,7 @@ main section {
                 gap: 1rem;
                 margin-top: 1rem;
             }
+
             .icons {
                 display: flex;
                 flex-direction: row;
@@ -444,10 +456,5 @@ main section {
             align-items: center;
             text-align: center;
         }
-    }
-
-    .grid-activities {
-        width: 100%;
-        padding: 0.5rem;
     }
 }
