@@ -3,6 +3,10 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
+if (isset($_SESSION['error'])) {
+    echo "<script>alert('{$_SESSION['error']}');</script>";
+    unset($_SESSION['error']); // eliminar mensaje después de mostrarlo
+}
 
 // Leer JSON si viene por fetch
 $input = [];

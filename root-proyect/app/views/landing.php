@@ -61,7 +61,7 @@ $user = getCurrentUser();
                     echo '<a id="a-explore" href="index.php?accion=seeRequest">';
                     echo '<button id="button-explore">Explorar Actividades</button></a>';
                     echo '<button id="button-post">Publicar Petición</button>';
-                } elseif ($role == 'administrador') {
+                } else{
                     echo '<a id="a-explore" href="index.php?accion=seeBoth">';
                     echo '<button id="button-explore">Explorar Publicaciones</button></a>';
                 } ?>

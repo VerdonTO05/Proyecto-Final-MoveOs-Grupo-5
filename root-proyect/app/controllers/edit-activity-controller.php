@@ -20,7 +20,7 @@ try {
     $activityModel = new Activity($db);
     $requestModel  = new Request($db);
 
-    $id = $_POST['id'] ?? null;
+    $id = $_GET['id'] ?? null;
 
     if (!$id) {
         die('ID publicación no recibido');
@@ -35,23 +35,24 @@ try {
     }
 
     if (!$publication) {
-        die('Publicación no encontrada');
+        $_SESSION['error'] = 'Publicación no encontrada';
+        header('Location: index.php?accion=seeMyActivities');
+        exit;
     }
 
-    // Comprobar propiedad 
-    if ($typePublication === 'activity') {
-        if ($publication['offertant_id'] != $_SESSION['user_id']) {
-            die('Esta actividad no te pertenece');
-        }
-    } else {
-        if ($publication['participant_id'] != $_SESSION['user_id']) {
-            die('Esta petición no te pertenece');
-        }
+    $userId = $_SESSION['user_id'];
+
+    $field = ($typePublication === 'activity') 
+        ? 'offertant_id' 
+        : 'participant_id';
+
+    if ($publication[$field] != $userId) {
+        $_SESSION['error'] = 'No tienes permiso para editar esta publicación';
+        header('Location: index.php?accion=seeMyActivities');
+        exit;
     }
 
-    // ==================================================
-    // SI SE ENVÍA EL FORMULARIO (UPDATE)
-    // ==================================================
+    // Si se envia el formulario (update)
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['title'])) {
 
         $data = [
@@ -84,9 +85,7 @@ try {
         exit;
     }
 
-    // ==================================================
-    // MOSTRAR VISTA
-    // ==================================================
+    // Mostrar vista
     require __DIR__ . '/../views/edit-activity.php';
 
 } catch (Exception $e) {

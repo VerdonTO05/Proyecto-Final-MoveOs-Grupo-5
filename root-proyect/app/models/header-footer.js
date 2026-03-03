@@ -40,6 +40,9 @@ const headerHTML = `
       <span class="closebtn">&times;</span>
       <a href="index.php?accion=viewInfo">Ver datos usuario</a>
       <a href="index.php?accion=editUser">Editar datos</a>
+      <a href="#">Recuperar contraseña</a>
+      <a href="#">Redes sociales</a>
+      <a href="#">Contáctanos</a>
       <a href="index.php?accion=unsubscribe">Dar de baja</a>
     </div>
   </nav>
