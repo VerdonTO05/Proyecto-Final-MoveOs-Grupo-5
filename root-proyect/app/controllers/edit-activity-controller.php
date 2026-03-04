@@ -20,10 +20,12 @@ try {
     $activityModel = new Activity($db);
     $requestModel  = new Request($db);
 
-    $id = $_GET['id'] ?? null;
+    $id = $_POST['id'] ?? null;
 
     if (!$id) {
-        die('ID publicación no recibido');
+        $_SESSION['error'] = 'Información no recibida';
+        header('Location: index.php?accion=seeMyActivities');
+        exit;
     }
 
     if ($_SESSION['role'] === 'participante') {

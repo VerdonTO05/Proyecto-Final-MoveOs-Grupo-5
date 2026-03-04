@@ -8,6 +8,7 @@ require_once __DIR__ . '/../models/entities/Request.php';
 require_once __DIR__ . '/../../config/database.php';
 
 if (!isset($_SESSION['user_id'])) {
+    $_SESSION['error'] = 'Debes iniciar sesión';
     header('Location: index.php?accion=loginView');
     exit;
 }
@@ -23,7 +24,9 @@ try {
     $id = $_POST['id'] ?? null;
 
     if (!$id) {
-        die('ID publicación no recibido');
+        $_SESSION['error'] = 'Publicación a eliminar no recibida';
+        header('Location: index.php?accion=seeMyActivities');
+        exit;
     }
 
     if ($_SESSION['role'] === 'participante') {
@@ -35,17 +38,23 @@ try {
     }
 
     if (!$publication) {
-        die('Publicación no encontrada');
+        $_SESSION['error'] = 'Publicación no encontrada';
+        header('Location: index.php?accion=seeMyActivities');
+        exit;
     }
 
     // Comprobar propiedad 
     if ($typePublication === 'activity') {
         if ($publication['offertant_id'] != $_SESSION['user_id']) {
-            die('Esta actividad no te pertenece');
+            $_SESSION['error'] = 'Esta actividad no te pertenece';
+            header('Location: index.php?accion=seeMyActivities');
+            exit;
         }
     } else {
         if ($publication['participant_id'] != $_SESSION['user_id']) {
-            die('Esta petición no te pertenece');
+            $_SESSION['error'] = 'Esta petición no te pertenece';
+            header('Location: index.php?accion=seeMyActivities');
+            exit;
         }
     }
 

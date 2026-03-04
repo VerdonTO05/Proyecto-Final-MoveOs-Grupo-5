@@ -1350,6 +1350,8 @@ select {
   background: var(--bg-surface);
   padding: 1rem;
   border-radius: 10px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 .modalHome .modal-content .modal-body .modal-info,
 .modalHome .modal-content .modal-body .modal-info-aditional {

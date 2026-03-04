@@ -24,23 +24,6 @@ if($_SESSION['role'] == 'administrador'){
     $publics = $request->getRequests();
 }
 
-//DESCOMENTAR SI SE AÑADEN IMAGENES A LAS PETICIONES
-// foreach ($publics as &$public) {
-//     if ($public['image_url']) {
-//         // Construir ruta completa del archivo
-//         $fullPath = __DIR__ . $public['image_url'];
-
-//         // Verificar si el archivo existe
-//         if (file_exists($fullPath)) {
-//         } else {
-//             // Si no existe, usar placeholder
-//             $public['image_url'] = 'assets/img/default-activity.jpg';
-//         }
-//     } else {
-//         $public['image_url'] = 'assets/img/default-activity.jpg';
-//     }
-// }
-
 echo json_encode([
     'success' => true,
     'data' => $publics

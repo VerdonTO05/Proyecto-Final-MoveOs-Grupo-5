@@ -110,7 +110,7 @@ function createCard(activity, role) {
   // Eventos de la card
   // ============================
   card.querySelector(".btn-detail")?.addEventListener("click", () => {
-    if (modal && modalBody) openModal(activity, modalBody, modal);
+    if (modal && modalBody) openModal(activity, role, modalBody, modal);
   });
 
   card.querySelector(".btn-signup")?.addEventListener("click", () => {
@@ -127,14 +127,14 @@ function createCard(activity, role) {
 // ============================
 // Función para abrir el modal
 // ============================
-function openModal(activity) {
+function openModal(activity, role) {
   const modal = document.getElementById("activityModal");
   const modalTitle = modal.querySelector(".modal-title");
   const modalCategory = modal.querySelector(".category");
   const modalImage = modal.querySelector(".modal-image");
   const modalDescription = modal.querySelector(".modal-description");
   const modalInfo = modal.querySelector(".modal-info");
-  const modalInfoAditional =modal.querySelector(".modal-info-aditional");
+  const modalInfoAditional = modal.querySelector(".modal-info-aditional");
 
   // Cabecera
   modalTitle.textContent = activity.title;
@@ -149,23 +149,21 @@ function openModal(activity) {
   <p>${activity.description || 'Sin descripción.'}</p>`;
 
   // Información principal
-modalInfo.innerHTML = `
+  modalInfo.innerHTML = `
   <h3>Información Principal</h3>
   <p><span class="title"><i class="fas fa-calendar-day"></i> <strong>Fecha</strong></span> ${activity.date || 'No disponible'}</p>
   <p><span class="title"><i class="fas fa-clock"></i> <strong>Hora</strong></span> ${activity.time || 'No disponible'}</p>
   <p><span class="title"><i class="fas fa-location-dot"></i> <strong>Ubicación</strong></span> ${activity.location || 'No disponible'}</p>
-  <p><span class="title"><i class="fas fa-stopwatch"></i> <strong>Duración</strong></span> ${activity.duration || 'No disponible'}</p>
-  <p><span class="title"><i class="fas fa-users"></i> <strong>Participantes</strong></span> ${activity.current_registrations || 0}/${activity.max_people || '-'}</p>
-  <p><span class="title"><i class="fas fa-euro-sign"></i> <strong>Precio</strong></span> ${activity.price || 'Gratis'}</p>
-  <p><span class="title"><i class="fas fa-user"></i> <strong>Organizador</strong></span> ${activity.offertant_name || 'No disponible'}</p>
+  ${role !== 'organizador' ? `<p><span class="title"><i class="fas fa-users"></i> <strong>Participantes</strong></span> ${activity.current_registrations || 0}/${activity.max_people || '-'}</p>` : ''} 
+  ${role !== 'organizador' ? `<p><span class="title"><i class="fas fa-euro-sign"></i> <strong>Precio</strong></span>${activity.price || "Gratis"}</p>` : ''}
+  <p><span class="title"><i class="fas fa-user"></i> <strong>${role != 'organizador' ? 'Organizador' : 'Participante'}</strong></span>${activity.organizer_email || 'No disponible'}</p>
 `;
 
-modalInfoAditional.innerHTML = `
+  modalInfoAditional.innerHTML = `
   <h3>Información Adicional</h3>
   <p><span class="title"><i class="fas fa-car"></i> <strong>${activity.transport_included ? 'Transporte incluido' : 'Transporte no incluido'}</strong></span></p>
   <p><span class="title"><i class="fas fa-language"></i> <strong>Idioma</strong></span> ${activity.language || 'No disponible'}</p>
-  <p><span class="title"><i class="fas fa-plus"></i> <strong>Edad recomendada</strong></span> ${activity.min_age || 'No disponible'} ${activity.min_age == 1 ? 'año' : 'años'}</p>
-  <p><span class="title"><i class="fas fa-location-dot"></i> <strong>Ciudad de partida</strong></span> ${activity.departure_city || 'No disponible'}</p>
+  ${role !== 'organizador' ? `<p><span class='title'><i class='fas fa-plus'></i> <strong>Edad recomendada</strong></span> ${activity.min_age || '0'} ${activity.min_age == 1 ? 'año' : 'años'}</p>` : ''}  <p><span class="title"><i class="fas fa-location-dot"></i> <strong>Ciudad de partida</strong></span> ${activity.departure_city || activity.location}</p>
   <p><span class="title"><i class="fas fa-paw"></i> <strong>${activity.pets_allowed ? 'Mascotas permitidas' : 'Mascotas no permitidas'}</strong></span></p>
   <p><span class="title"><i class="fas fa-tshirt"></i> <strong>Código de vestimenta</strong></span> ${activity.dress_code || 'No disponible'}</p> 
 `;

@@ -8,6 +8,7 @@ require_once __DIR__ . '/../../config/database.php';
 
 // Comprobar que el usuario está logueado
 if (!isset($_SESSION['user_id'])) {
+    $_SESSION['error'] = 'Debes iniciar sesión';
     header('Location: index.php?accion=loginView');
     exit;
 }
@@ -21,7 +22,9 @@ try {
     // Obtener usuario actual
     $user = $userModel->getUserById($_SESSION['user_id']);
     if (!$user) {
-        die('Usuario no encontrado');
+        $_SESSION['error'] = 'Usuario no encontrado';
+        header('Location: index.php?accion=editUser');
+        exit;
     }
 
     // ===========================
@@ -45,7 +48,9 @@ try {
         // Validación de contraseña si el usuario quiere cambiarla
         if ($changePassword) {
             if (!password_verify($currentPassword, $user['password_hash'])) {
-                die('La contraseña actual no es correcta.');
+                $_SESSION['error'] = 'Contraseña incorrecta';
+                header('Location: index.php?accion=editUser');
+                exit;
             }
             $passwordHash = password_hash($newPassword, PASSWORD_DEFAULT);
         } else {
