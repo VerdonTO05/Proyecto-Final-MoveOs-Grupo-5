@@ -70,7 +70,7 @@ class Request
                 JOIN users u ON r.participant_id = u.id
                 LEFT JOIN users ru ON r.accepted_by = ru.id
                 JOIN categories c ON r.category_id = c.id
-                ORDER BY r.date ASC";
+                ORDER BY r.created_at DESC";
         $stmt = $this->conn->query($sql);
         return $stmt->fetchAll();
     }
@@ -109,7 +109,7 @@ class Request
             JOIN categories c ON r.category_id = c.id
             WHERE r.participant_id = :participant_id
             AND r.date >= CURDATE()
-            ORDER BY r.date ASC";
+            ORDER BY r.created_at DESC";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(['participant_id' => $participantId]);
@@ -126,7 +126,7 @@ class Request
             JOIN categories c ON r.category_id = c.id
             WHERE r.participant_id = :participant_id
             AND r.date < CURDATE()
-            ORDER BY r.date ASC";
+            ORDER BY r.created_at DESC";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(['participant_id' => $participantId]);
@@ -205,7 +205,7 @@ class Request
                 JOIN users u ON r.participant_id = u.id
                 JOIN categories c ON r.category_id = c.id
                 WHERE r.state = :state
-                ORDER BY r.date ASC";
+                ORDER BY r.created_at DESC";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(['state' => $state]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

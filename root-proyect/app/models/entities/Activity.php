@@ -70,7 +70,7 @@ class Activity
                 FROM {$this->table_name} a
                 JOIN users u ON a.offertant_id = u.id
                 JOIN categories c ON a.category_id = c.id
-                ORDER BY a.date ASC";
+                ORDER BY a.created_at DESC";
         $stmt = $this->conn->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -91,7 +91,7 @@ class Activity
         JOIN categories c ON a.category_id = c.id
         WHERE a.offertant_id = :offertant_id
         AND a.date >= CURDATE()
-        ORDER BY a.date ASC";
+        ORDER BY a.created_at DESC";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([
@@ -112,7 +112,7 @@ class Activity
         JOIN categories c ON a.category_id = c.id
         WHERE a.offertant_id = :offertant_id
         AND a.date < CURDATE()
-        ORDER BY a.date ASC";
+        ORDER BY a.created_at DESC";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([
@@ -186,7 +186,7 @@ class Activity
                 JOIN users u ON a.offertant_id = u.id
                 JOIN categories c ON a.category_id = c.id
                 WHERE a.state = :state
-                ORDER BY a.date ASC";
+                ORDER BY a.created_at DESC";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(['state' => $state]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

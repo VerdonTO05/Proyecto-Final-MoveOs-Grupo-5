@@ -7,6 +7,7 @@ function initTabSwitch() {
     const buttons = document.querySelectorAll('.tab-btn.control');
     const title = document.getElementById('view-title');
     const subtitle = document.getElementById('view-subtitle');
+    //Al pulsar el btn-state que se habra un modal que pregunte si se quiere aceptar o rechazar la actividad
 
     buttons.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -76,6 +77,9 @@ async function loadRequests() {
 
 
 function createActivityCard(activity) {
+    const modal = document.getElementById("activityModal");
+    const modalBody = modal?.querySelector(".modal-body");
+    const modalClose = modal?.querySelector(".modal-close");
     const card = document.createElement("article");
     card.className = "activity activity-card";
 
@@ -114,7 +118,11 @@ function createActivityCard(activity) {
         <div class="activity-image">${imgHTML}${tagHTML}</div>
         <div class="${contentClass}">
             ${activity.category_name ? `<span class="category">${activity.category_name}</span>` : ""}
-            <h3>${activity.title}</h3>
+            ${activity.state === 'pendiente'
+            ? `<button id="btn-state" class="state"><i class="fas fa-hourglass-half"></i></button>`
+            : activity.state === 'rechazada'
+                ? `<span class="state"><i class="fas fa-times"></i></span>`
+                : `<span class="state"><i class="fas fa-check-double"></i></span>`}<h3>${activity.title}</h3>
             <p class="description">${activity.description}</p>
             ${detailsHTML}${metaHTML}${footerHTML}
             <div class="actions">
@@ -125,12 +133,71 @@ function createActivityCard(activity) {
     `;
 
     card.querySelector(".btn-detail")?.addEventListener("click", () => {
-        console.log("Detalles de:", activity.id);
+        if (modal && modalBody) openModal(activity, modalBody, modal);
     });
 
     card.querySelector(".btn-signup")?.addEventListener("click", () => {
         console.log("Inscripción en:", activity.id);
     });
 
+    card.querySelector("#btn-state")?.addEventListener("click", ()=>{
+        console.log("state");
+        //Abrir alert-container y mostrar un dialog personalizado para aceptar o rechazar publicacion
+    });
+
+    modalClose?.addEventListener("click", () => { modal.style.display = "none"; });
+    modal?.addEventListener("click", (e) => { if (e.target === modal) modal.style.display = "none"; });
+
     return card;
+}
+
+
+function openModal(activity) {
+    const modal = document.getElementById("activityModal");
+    const modalTitle = modal.querySelector(".modal-title");
+    const modalCategory = modal.querySelector(".category");
+    const modalImage = modal.querySelector(".modal-image");
+    const modalDescription = modal.querySelector(".modal-description");
+    const modalInfo = modal.querySelector(".modal-info");
+    const modalInfoAditional = modal.querySelector(".modal-info-aditional");
+
+    // Cabecera
+    modalTitle.textContent = activity.title;
+    modalCategory.textContent = activity.category_name || '';
+
+    // Imagen
+    modalImage.innerHTML = `<img src="${activity.image_url || 'assets/img/default-activity.jpg'}" alt="${activity.title}">`;
+
+    // Descripción
+    modalDescription.innerHTML = `
+  <h3><i class="fas fa-circle-info"></i> Descripción</h3>
+  <p>${activity.description || 'Sin descripción.'}</p>`;
+
+    // Información principal
+    modalInfo.innerHTML = `
+  <h3>Información Principal</h3>
+  <p><span class="title"><i class="fas fa-calendar-day"></i> <strong>Fecha</strong></span> ${activity.date || 'No disponible'}</p>
+  <p><span class="title"><i class="fas fa-clock"></i> <strong>Hora</strong></span> ${activity.time || 'No disponible'}</p>
+  <p><span class="title"><i class="fas fa-location-dot"></i> <strong>Ubicación</strong></span> ${activity.location || 'No disponible'}</p>
+  <p><span class="title"><i class="fas fa-stopwatch"></i> <strong>Duración</strong></span> ${activity.duration || 'No disponible'}</p>
+  <p><span class="title"><i class="fas fa-users"></i> <strong>Participantes</strong></span> ${activity.current_registrations || 0}/${activity.max_people || '-'}</p>
+  <p><span class="title"><i class="fas fa-euro-sign"></i> <strong>Precio</strong></span> ${activity.price || 'Gratis'}</p>
+  <p><span class="title"><i class="fas fa-user"></i> <strong>Organizador</strong></span> ${activity.offertant_name || 'No disponible'}</p>
+`;
+
+    modalInfoAditional.innerHTML = `
+  <h3>Información Adicional</h3>
+  <p><span class="title"><i class="fas fa-car"></i> <strong>${activity.transport_included ? 'Transporte incluido' : 'Transporte no incluido'}</strong></span></p>
+  <p><span class="title"><i class="fas fa-language"></i> <strong>Idioma</strong></span> ${activity.language || 'No disponible'}</p>
+  <p><span class="title"><i class="fas fa-plus"></i> <strong>Edad recomendada</strong></span> ${activity.min_age || 'No disponible'} ${activity.min_age == 1 ? 'año' : 'años'}</p>
+  <p><span class="title"><i class="fas fa-location-dot"></i> <strong>Ciudad de partida</strong></span> ${activity.departure_city || 'No disponible'}</p>
+  <p><span class="title"><i class="fas fa-paw"></i> <strong>${activity.pets_allowed ? 'Mascotas permitidas' : 'Mascotas no permitidas'}</strong></span></p>
+  <p><span class="title"><i class="fas fa-tshirt"></i> <strong>Código de vestimenta</strong></span> ${activity.dress_code || 'No disponible'}</p> 
+`;
+
+    modal.style.display = "flex";
+
+    // Cerrar modal
+    modal.querySelector(".modal-close").onclick = () => modal.style.display = "none";
+    modal.onclick = (e) => { if (e.target === modal) modal.style.display = "none"; };
 }

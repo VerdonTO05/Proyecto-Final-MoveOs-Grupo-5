@@ -58,8 +58,34 @@ $user = getCurrentUser();
                 <button class="btn-filters" aria-label="Más filtros">Más Filtros</button>
             </div>
 
-            <section class="grid-activities" id="gridActivities" aria-live="polite" aria-label="Listado de actividades"></section>
+            <div class="grid-activities" id="gridActivities" aria-live="polite" aria-label="Listado de actividades">
+            </div>
         </section>
+        <div id="activityModal" class="modalHome">
+            <div class="modal-content">
+                <span class="modal-close">&times;</span>
+
+                <!-- Cabecera con título y categoría -->
+                <div class="modal-header">
+                    <h2 class="modal-title"></h2>
+                    <span class="category"></span>
+                </div>
+
+                <!-- Tabs -->
+                <div class="modal-tabs">
+                    <button class="tab-btn active" data-tab="details">Detalles</button>
+                    <button class="tab-btn" data-tab="chat">Chat Grupal</button>
+                </div>
+
+                <!-- Cuerpo del modal -->
+                <div class="modal-body">
+                    <div class="modal-image"></div>
+                    <div class="modal-description"></div>
+                    <div class="modal-info"></div>
+                    <div class="modal-info-aditional"></div>
+                </div>
+            </div>
+        </div>
     </main>
 </body>
 

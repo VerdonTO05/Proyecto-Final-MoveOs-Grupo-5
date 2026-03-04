@@ -318,7 +318,8 @@ main section:first-of-type {
 }
 
 .grid-activities article {
-    flex: 0 0 calc(33.333% - 1rem);
+    width: calc(30vw - 1rem);
+    height: calc(40vh - 1rem);
 }
 
 /* Características y demás secciones */
@@ -377,6 +378,15 @@ main section {
     &.visible {
         display: flex;
     }
+}
+
+#btn-state{
+    all: unset;
+    position: absolute;
+    top: 0.5rem;
+    right: 0.7rem;
+    padding: 0.4rem;
+    cursor: pointer;
 }
 
 @media (max-width: 1100px) {

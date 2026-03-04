@@ -58,9 +58,8 @@ $user = getCurrentUser();
         <button class="btn-filters" aria-label="Más filtros">Más Filtros</button>
       </div>
       <!-- Actividades -->
-      <section class="grid-activities" id="gridActivities" aria-live="polite"
+      <div class="grid-activities" id="gridActivities" aria-live="polite"
         aria-label="<?= $role == 'participante' ? 'Listado de actividades' : 'Listado de peticiones' ?>">
-      </section>
       </div>
     </section>
     <div id="activityModal" class="modalHome">
