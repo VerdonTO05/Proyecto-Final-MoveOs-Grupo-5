@@ -72,7 +72,7 @@ $user = getCurrentUser();
                 <i class="fas fa-circle-info icon" aria-hidden="true"></i>
                 <h2>...</h2>
                 <p>Total</p>
-                <small>Todas las actividades</small>
+                <small>Todas las publicaciones</small>
             </div>
         </section>
 

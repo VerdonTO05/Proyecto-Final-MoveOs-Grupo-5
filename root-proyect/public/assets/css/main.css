@@ -2153,6 +2153,79 @@ body {
     transform: translateY(-20px);
   }
 }
+/* Contenedor de la alerta */
+.alert-overlay {
+  position: fixed;
+  inset: 0;
+  display: none; /* oculto por defecto */
+  justify-content: center;
+  align-items: flex-start; /* se puede ajustar para que aparezca abajo o arriba */
+  padding-top: 2rem; /* separa del top */
+  z-index: 10000;
+  pointer-events: none; /* evita bloquear clicks fuera del alert */
+}
+.alert-overlay.active {
+  display: flex !important;
+  pointer-events: auto;
+}
+
+/* Caja de alerta */
+.alert-box {
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.3s ease forwards;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  pointer-events: all;
+}
+.alert-box .alert-header {
+  font-weight: bold;
+  font-size: 1rem;
+}
+.alert-box .alert-body {
+  font-size: 0.9rem;
+}
+
+/* Tipos de alertas */
+.alert-overlay.info .alert-box {
+  border-left: 4px solid var(--brand);
+}
+
+.alert-overlay.success .alert-box {
+  border-left: 4px solid var(--c-green);
+}
+
+.alert-overlay.error .alert-box {
+  border-left: 4px solid var(--c-red);
+}
+
+.alert-overlay.warning .alert-box {
+  border-left: 4px solid var(--c-yellow);
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
 .c {
   margin: 0.5rem;
   position: relative;

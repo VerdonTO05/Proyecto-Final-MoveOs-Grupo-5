@@ -90,9 +90,6 @@ switch ($action) {
   case 'seeRegistrations':
     require __DIR__ . '/../app/views/my-registrations.php';
     break;
-  case 'seeRequestAccepted':
-    require __DIR__ . '/../app/views/my-registrations.php';
-    break;
   case 'approveActivity':
     require __DIR__ . '/../app/controllers/approve-activity.php';
     break;
