@@ -136,11 +136,12 @@ function createActivityCard(activity) {
         if (modal && modalBody) openModal(activity, modalBody, modal);
     });
 
+    //Cambiar esto
     card.querySelector(".btn-signup")?.addEventListener("click", () => {
         console.log("Inscripción en:", activity.id);
     });
 
-    card.querySelector("#btn-state")?.addEventListener("click", ()=>{
+    card.querySelector("#btn-state")?.addEventListener("click", () => {
         console.log("state");
         //Abrir alert-container y mostrar un dialog personalizado para aceptar o rechazar publicacion
     });

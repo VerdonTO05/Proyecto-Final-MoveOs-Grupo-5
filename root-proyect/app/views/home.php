@@ -62,6 +62,7 @@ $user = getCurrentUser();
         aria-label="<?= $role == 'participante' ? 'Listado de actividades' : 'Listado de peticiones' ?>">
       </div>
     </section>
+    <!-- Detalles de la actividad seleccionada -->
     <div id="activityModal" class="modalHome">
       <div class="modal-content">
         <span class="modal-close">&times;</span>
@@ -87,9 +88,11 @@ $user = getCurrentUser();
         </div>
       </div>
     </div>
+
   </main>
   <div id="footer"></div>
-
+  <!-- Contenedor de modal -->
+  <div id="modal-container"></div>
 </body>
 
 </html>

@@ -185,7 +185,7 @@ class Activity
                 FROM {$this->table_name} a
                 JOIN users u ON a.offertant_id = u.id
                 JOIN categories c ON a.category_id = c.id
-                WHERE a.state = :state
+                WHERE a.state = :state AND a.is_completed = 0
                 ORDER BY a.created_at DESC";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(['state' => $state]);

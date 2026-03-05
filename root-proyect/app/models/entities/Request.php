@@ -204,7 +204,7 @@ class Request
                 FROM {$this->table_name} r
                 JOIN users u ON r.participant_id = u.id
                 JOIN categories c ON r.category_id = c.id
-                WHERE r.state = :state
+                WHERE r.state = :state AND r.is_accepted = 0
                 ORDER BY r.created_at DESC";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(['state' => $state]);
@@ -242,6 +242,22 @@ class Request
                 FROM {$this->table_name}";
         $stmt = $this->conn->query($sql);
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function acceptRequest($request_id, $organizer_id)
+    {
+        $sql = "UPDATE {$this->table_name}
+            SET is_accepted = 1,
+                accepted_by = :organizer_id
+            WHERE id = :request_id
+            AND is_accepted = 0";
+
+        $stmt = $this->conn->prepare($sql);
+
+        return $stmt->execute([
+            'request_id' => $request_id,
+            'organizer_id' => $organizer_id
+        ]);
     }
 }
 ?>

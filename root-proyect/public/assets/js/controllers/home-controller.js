@@ -38,7 +38,6 @@ async function loadPublications(role) {
       gridContainer.innerHTML = message;
     }
   } catch (error) {
-    console.error('Error al cargar actividades:', error);
     gridContainer.innerHTML = '<p class="error">Error al cargar las actividades.</p>';
   }
 }
@@ -113,17 +112,73 @@ function createCard(activity, role) {
     if (modal && modalBody) openModal(activity, role, modalBody, modal);
   });
 
-  card.querySelector(".btn-signup")?.addEventListener("click", () => {
-    console.log("Inscripción en:", activity.id);
+  const signupBtn = card.querySelector(".btn-signup");
+
+  signupBtn?.addEventListener("click", async () => {
+
+    const id_activity = signupBtn.dataset.id;
+    const activityCard = signupBtn.closest('.activity-card');
+
+    const actionText = role === 'organizador'
+      ? 'aceptar esta actividad'
+      : 'inscribirte en esta actividad';
+
+    const confirmed = await showConfirm({
+      title: role === 'organizador' ? '¿Aceptar actividad?' : '¿Inscribirse en actividad?',
+      message: `Estás a punto de ${actionText}.`
+    });
+
+    if (!confirmed) return;
+
+    signupBtn.disabled = true;
+
+    try {
+
+      const response = await fetch('index.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          accion: role === 'organizador' ? 'acceptRequest' : 'signupActivity',
+          id_activity,
+        })
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+
+        showAlert(
+          role === 'organizador' ? 'Actividad aceptada' : 'Inscripción realizada',
+          result.message,
+          'success'
+        );
+
+        if (role === 'organizador') {
+          // eliminar card (solo organizador)
+          if (activityCard) {
+            activityCard.style.transition = 'opacity 0.3s, transform 0.3s';
+            activityCard.style.opacity = '0';
+            activityCard.style.transform = 'scale(0.9)';
+
+            setTimeout(() => {
+              activityCard.remove();
+            }, 300);
+          }
+        } else {
+          // usuario inscrito → cambiar botón
+          signupBtn.textContent = "Inscrito";
+          signupBtn.disabled = true;
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      showAlert('Error', 'Ocurrió un error al realizar la acción.', 'error');
+      signupBtn.disabled = false;
+      signupBtn.textContent = role === 'organizador' ? 'Aceptar' : 'Inscribirse';
+    }
   });
-
-  // Cerrar modal
-  modalClose?.addEventListener("click", () => { modal.style.display = "none"; });
-  modal?.addEventListener("click", (e) => { if (e.target === modal) modal.style.display = "none"; });
-
   return card;
 }
-
 // ============================
 // Función para abrir el modal
 // ============================
@@ -173,4 +228,67 @@ function openModal(activity, role) {
   // Cerrar modal
   modal.querySelector(".modal-close").onclick = () => modal.style.display = "none";
   modal.onclick = (e) => { if (e.target === modal) modal.style.display = "none"; };
+}
+
+
+function showConfirm({ title, message }) {
+  return new Promise((resolve) => {
+    const overlay = document.createElement('div');
+    overlay.id = 'modal-container';
+    overlay.classList.add('active');
+
+    const modal = document.createElement('div');
+    modal.classList.add('modal');
+    modal.innerHTML = `
+            <div class="modal-header">${title}</div>
+            <div class="modal-body">${message}</div>
+            <div class="modal-actions">
+                <button class="confirm">Aceptar</button>
+                <button class="cancel">Cancelar</button>
+            </div>
+        `;
+
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+
+    const closeModal = () => {
+      modal.style.animation = 'fadeOut 0.25s forwards';
+      overlay.classList.remove('active');
+      setTimeout(() => document.body.removeChild(overlay), 250);
+    };
+
+    modal.querySelector('.confirm').addEventListener('click', () => { resolve(true); closeModal(); });
+    modal.querySelector('.cancel').addEventListener('click', () => { resolve(false); closeModal(); });
+  });
+}
+
+
+function showAlert(title, message, type = 'info', duration = 3000) {
+  const overlay = document.createElement('div');
+  overlay.classList.add('alert-overlay', type);
+
+  const alertBox = document.createElement('div');
+  alertBox.classList.add('alert-box');
+  alertBox.innerHTML = `
+        <div class="alert-header">${title}</div>
+        <div class="alert-body">${message}</div>
+        <button class="alert-close">&times;</button>
+    `;
+
+  overlay.appendChild(alertBox);
+  document.body.appendChild(overlay);
+
+  const closeAlert = () => {
+    alertBox.style.animation = 'fadeOut 0.3s forwards';
+    overlay.classList.remove('active');
+    setTimeout(() => document.body.removeChild(overlay), 300);
+  };
+
+  alertBox.querySelector('.alert-close').addEventListener('click', closeAlert);
+  setTimeout(closeAlert, duration);
+
+  requestAnimationFrame(() => {
+    overlay.classList.add('active');
+    alertBox.style.animation = 'fadeIn 0.3s forwards';
+  });
 }

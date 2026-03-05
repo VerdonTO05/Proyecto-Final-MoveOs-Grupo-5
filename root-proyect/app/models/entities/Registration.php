@@ -3,7 +3,8 @@
  * Clase Registration
  * Gestiona las inscripciones de participantes a actividades.
  */
-class Registration {
+class Registration
+{
     /**
      * Conexión a la base de datos (PDO)
      * @var PDO
@@ -44,7 +45,8 @@ class Registration {
      * Constructor de la clase
      * @param PDO $db Conexión a la base de datos
      */
-    public function __construct($db){
+    public function __construct($db)
+    {
         $this->conn = $db;
     }
 
@@ -56,7 +58,8 @@ class Registration {
      * Obtener todas las inscripciones
      * @return array Lista de inscripciones con nombre del participante y título de la actividad
      */
-    public function getRegistrations(){
+    public function getRegistrations()
+    {
         $sql = "SELECT r.*, u.full_name AS participant_name, a.title AS activity_title
                 FROM {$this->table_name} r
                 JOIN users u ON r.participant_id = u.id
@@ -71,7 +74,8 @@ class Registration {
      * @param int $id ID de la inscripción
      * @return array|false Datos de la inscripción o false si no existe
      */
-    public function getRegistrationById($id){
+    public function getRegistrationById($id)
+    {
         $sql = "SELECT r.*, u.full_name AS participant_name, a.title AS activity_title
                 FROM {$this->table_name} r
                 JOIN users u ON r.participant_id = u.id
@@ -89,28 +93,89 @@ class Registration {
      * @param int $participant_id ID del participante
      * @return mixed ID de la inscripción creada o false si ya existe o falla
      */
-    public function createRegistration($activity_id, $participant_id){
-        // Verificar si ya existe la inscripción (actividad + participante)
-        $checkSql = "SELECT id FROM {$this->table_name} 
-                     WHERE activity_id = :activity_id AND participant_id = :participant_id";
-        $stmt = $this->conn->prepare($checkSql);
-        $stmt->execute(['activity_id' => $activity_id, 'participant_id' => $participant_id]);
+    public function createRegistration($activity_id, $participant_id)
+    {
+        try {
+            // Verificar si ya está inscrito
+            $checkSql = "SELECT id 
+                     FROM {$this->table_name} 
+                     WHERE activity_id = :activity_id 
+                     AND participant_id = :participant_id";
 
-        if($stmt->rowCount() > 0){
-            return false; // Ya existe la inscripción
-        }
+            $stmt = $this->conn->prepare($checkSql);
+            $stmt->execute([
+                'activity_id' => $activity_id,
+                'participant_id' => $participant_id
+            ]);
 
-        // Crear inscripción
-        $sql = "INSERT INTO {$this->table_name} (activity_id, participant_id) 
-                VALUES (:activity_id, :participant_id)";
-        $stmt = $this->conn->prepare($sql);
+            if ($stmt->rowCount() > 0) {
+                return false;
+            }
 
-        if($stmt->execute(['activity_id' => $activity_id, 'participant_id' => $participant_id])){
-            // current_registrations se actualiza automáticamente gracias a un trigger en la BD
+            // Obtener datos de la actividad
+            $activitySql = "SELECT max_people, is_completed 
+                        FROM activities 
+                        WHERE id = :activity_id";
+
+            $stmt = $this->conn->prepare($activitySql);
+            $stmt->execute(['activity_id' => $activity_id]);
+            $activity = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$activity) {
+                return false;
+            }
+
+            if ($activity['is_completed'] == 1) {
+                return false;
+            }
+
+            // Contar inscripciones actuales
+            $countSql = "SELECT COUNT(*) as total 
+                     FROM {$this->table_name} 
+                     WHERE activity_id = :activity_id";
+
+            $stmt = $this->conn->prepare($countSql);
+            $stmt->execute(['activity_id' => $activity_id]);
+            $registrations = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+
+            // Evitar overbooking
+            if ($registrations >= $activity['max_people']) {
+                return false;
+            }
+
+            // Insertar inscripción
+            $insertSql = "INSERT INTO {$this->table_name} (activity_id, participant_id) 
+                      VALUES (:activity_id, :participant_id)";
+
+            $stmt = $this->conn->prepare($insertSql);
+            $stmt->execute([
+                'activity_id' => $activity_id,
+                'participant_id' => $participant_id
+            ]);
+
+            // Volver a contar inscripciones
+            $stmt = $this->conn->prepare($countSql);
+            $stmt->execute(['activity_id' => $activity_id]);
+            $registrations = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+
+            //Si se llena la actividad → marcar completada
+            if ($registrations >= $activity['max_people']) {
+
+                $updateSql = "UPDATE activities 
+                          SET is_completed = 1 
+                          WHERE id = :activity_id";
+
+                $stmt = $this->conn->prepare($updateSql);
+                $stmt->execute(['activity_id' => $activity_id]);
+            }
+
             return $this->conn->lastInsertId();
-        }
 
-        return false;
+        } catch (Exception $e) {
+
+            return false;
+
+        }
     }
 
     /**
@@ -118,7 +183,8 @@ class Registration {
      * @param int $id ID de la inscripción a eliminar
      * @return bool True si se elimina correctamente, false si falla
      */
-    public function deleteRegistration($id){
+    public function deleteRegistration($id)
+    {
         $sql = "DELETE FROM {$this->table_name} WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         // current_registrations se decrementa automáticamente por trigger
