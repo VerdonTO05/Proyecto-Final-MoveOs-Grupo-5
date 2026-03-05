@@ -950,15 +950,18 @@ select {
   background-color: var(--bg-surface);
   padding: 1rem;
   border-radius: 8px;
-  font-family: monospace;
-  white-space: pre-wrap;
-  color: var(--text-secondary);
+  color: var(--text-primary);
+  margin: 0.2rem;
+  display: none;
 }
 .user-card .vac-data h3 {
   margin-top: 0;
   margin-bottom: 0.5rem;
   font-weight: 600;
-  font-size: 1rem;
+  font-style: italic;
+}
+.user-card .vac-data p {
+  color: var(--text-secondary);
 }
 .user-card .alert-message {
   background-color: #ffe5e5;
@@ -967,6 +970,13 @@ select {
   border-radius: 6px;
   font-weight: 600;
   color: #a00;
+}
+
+.buttons .btn {
+  color: var(--text-primary);
+  background-color: var(--bg-surface);
+  border: solid 1px;
+  border-color: var(--text-secondary);
 }
 
 /* Switch del tema */

@@ -64,15 +64,19 @@
     background-color: var(--bg-surface);
     padding: 1rem;
     border-radius: 8px;
-    font-family: monospace;
-    white-space: pre-wrap;
-    color: var(--text-secondary);
+    color: var(--text-primary);
+    margin: 0.2rem;
+    display: none;
 
     h3 {
       margin-top: 0;
       margin-bottom: 0.5rem;
       font-weight: 600;
-      font-size: 1rem;
+      font-style: italic;
+    }
+
+    p {
+      color: var(--text-secondary);
     }
   }
 
@@ -84,4 +88,14 @@
     font-weight: 600;
     color: #a00;
   }
+}
+
+.buttons {
+  .btn {
+    color: var(--text-primary);
+    background-color: var(--bg-surface);
+    border: solid 1px;
+    border-color: var(--text-secondary);
+  }
+
 }

@@ -34,22 +34,14 @@ async function loadPublications() {
 
 //Crear card de usuario
 
-/**
- * Crea una tarjeta de usuario con estructura tipo "CARD USER"
- * @param {Object} user - Datos del usuario
- * @param {string} user.username - Nombre de usuario
- * @param {string} user.role - Rol del usuario
- * @param {Object} user.vacData - Datos adicionales ("vac datos")
- * @param {boolean} user.active - Estado activo/desactivado
- * @param {string} [user.message] - Mensaje de alerta (opcional)
- * @returns {HTMLElement} Elemento artículo con la tarjeta de usuario
- */
+
 function createUserCard(user) {
   const card = document.createElement('article');
   card.className = 'user-card';
 
-  const isActive = user.active;
+  const isActive = user.state === 'activa';
   const activeClass = isActive ? 'active' : 'inactive';
+  card.classList.add(activeClass);
 
   card.innerHTML = `
     <header class="user-header">
@@ -57,28 +49,60 @@ function createUserCard(user) {
         <h2 class="username">${user.username}</h2>
         <span class="role">${user.role}</span>
       </div>
-      <button class="btn-toggle ${activeClass}">
-        ${isActive ? 'Activo' : 'Desactivado'}
+      <button class="btn-toggle">
+        ${isActive ? 'Desactivar' : 'Activar'}
       </button>
     </header>
 
     <section class="vac-data">
-      <h3>Vac Datos</h3>
-      <pre>${JSON.stringify(user.vacData, null, 2)}</pre>
+      <h3>Información</h3>
+      <p id="full_name"><b>Nombre completo:</b> ${user.full_name}</p>
+      <p id="email"><b>Email:</b> ${user.email}</p>
+      <p id="created_at"><b>Fecha de registro:</b> ${user.created_at}</p>
+    </section>
+
+    <section class="buttons">
+      <button class="btn btn-edit">Ver datos</button>
+      <button class="btn btn-message">Chat</button>
     </section>
 
     ${user.message ? `<section class="alert-message">${user.message}</section>` : ''}
   `;
 
-  // Botón para activar/desactivar usuario
-  card.querySelector('.btn-toggle').addEventListener('click', () => {
-    card.classList.toggle('inactive');
-    card.classList.toggle('active');
-    const btn = card.querySelector('.btn-toggle');
-    if (btn.textContent === 'Activo') {
-      btn.textContent = 'Desactivado';
+  // Botón activar/desactivar usuario
+  const btnToggle = card.querySelector('.btn-toggle');
+  btnToggle.addEventListener('click', () => {
+    const currentlyActive = card.classList.contains('active');
+
+    if (currentlyActive) {
+      card.classList.remove('active');
+      card.classList.add('inactive');
+      btnToggle.textContent = 'Activar';
+      user.state = 'inactiva';
     } else {
-      btn.textContent = 'Activo';
+      card.classList.remove('inactive');
+      card.classList.add('active');
+      btnToggle.textContent = 'Desactivar';
+      user.state = 'activa';
+    }
+
+    // Opcional: enviar al servidor el cambio de estado
+    // fetch(`index.php?accion=toggleUser&id=${user.id}&state=${user.state}`);
+  });
+
+  // Botón ver/ocultar datos
+  const btnEdit = card.querySelector('.btn-edit');
+  const vacData = card.querySelector('.vac-data');
+
+  btnEdit.addEventListener('click', () => {
+    const currentDisplay = window.getComputedStyle(vacData).display;
+
+    if (currentDisplay === 'none') {
+      vacData.style.display = 'block';
+      btnEdit.textContent = 'Ocultar datos';
+    } else {
+      vacData.style.display = 'none';
+      btnEdit.textContent = 'Ver datos';
     }
   });
 

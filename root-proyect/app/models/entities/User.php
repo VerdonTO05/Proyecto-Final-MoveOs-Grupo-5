@@ -46,7 +46,7 @@ class User
      */
     public function getUsers()
     {
-        $sql = "SELECT u.id, u.full_name, u.email, u.username, r.name AS role, u.created_at
+        $sql = "SELECT u.id, u.full_name, u.email, u.username, u.state, r.name AS role, u.created_at
                 FROM {$this->table_name} u
                 JOIN roles r ON u.role_id = r.id
                 ORDER BY u.full_name ASC";
