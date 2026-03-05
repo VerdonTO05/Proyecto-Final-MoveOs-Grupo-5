@@ -1,52 +1,80 @@
 document.addEventListener("DOMContentLoaded", () => {
     loadActivities();
 
+    const role = CURRENT_USER.role;
+
     const toggleBtn = document.getElementById("toggleFinished");
-    const finishedSection = document.getElementById("gridActivitiesFinished");
+    const finishedSection = document.getElementById("gridRegistrationsFinished");
 
-    toggleBtn.addEventListener("click", () => {
-        const isVisible = finishedSection.classList.toggle("visible");
+    if (toggleBtn && finishedSection) {
+        toggleBtn.addEventListener("click", () => {
+            const isVisible = finishedSection.classList.toggle("visible");
 
-        toggleBtn.textContent = isVisible
-            ? "Ocultar actividades terminadas"
-            : "Ver actividades terminadas";
-    });
-
+            toggleBtn.textContent = isVisible
+                ? role === 'organizador'
+                    ? "Ocultar peticiones terminadas"
+                    : "Ocultar inscripciones terminadas"
+                : role === 'organizador'
+                    ? "Ver peticiones terminadas"
+                    : "Ver inscripciones terminadas";
+        });
+    }
 });
 
 async function loadActivities() {
-    const gridContainer = document.getElementById('gridActivities');
-    const gridContainerFinished = document.getElementById('gridActivitiesFinished');
-    if (!gridContainer) return;
-    if (!gridContainerFinished) return;
-    try {
-        const response = await fetch('index.php?accion=getMyActivities');
-        const text = await response.text();
-        const result = JSON.parse(text);
 
-        if (result.success && result.data.active.length > 0) {
+    const gridContainer = document.getElementById('gridRegistrations');
+    const gridContainerFinished = document.getElementById('gridRegistrationsFinished');
+
+    if (!gridContainer || !gridContainerFinished) return;
+
+    try {
+
+        const response = await fetch('index.php?accion=inscripciones');
+        const result = await response.json();
+
+        console.log(result); // DEBUG
+
+        // ACTIVAS
+        if (result.success && result.data?.active?.length > 0) {
+
             gridContainer.innerHTML = '';
+
             result.data.active.forEach(activity => {
                 gridContainer.appendChild(createActivityCard(activity));
             });
+
         } else {
+
             gridContainer.innerHTML = `
             <p class="no-activities">Todavía no tienes ninguna actividad.</p>
             <p><a href="index.php?accion=createActivity">Crea una ahora</a></p>
             `;
+
         }
 
-        if (result.success && result.data.finished.length > 0) {
+        // TERMINADAS
+        if (result.success && result.data?.finished?.length > 0) {
+
             gridContainerFinished.innerHTML = '';
+
             result.data.finished.forEach(activity => {
                 gridContainerFinished.appendChild(createActivityCardFinished(activity));
             });
+
         } else {
-            gridContainerFinished.innerHTML = '<p class="no-activities">Todavía no tienes ninguna actividad propia terminada.</p>';
+
+            gridContainerFinished.innerHTML = `
+            <p class="no-activities">Todavía no tienes actividades terminadas.</p>
+            `;
+
         }
+
     } catch (error) {
-        console.error('Error al cargar publicaciones:', error);
-        gridContainer.innerHTML = '<p class="error">Error al cargar tus propias publicaciones.</p>';
+
+        console.error('Error al cargar actividades:', error);
+        gridContainer.innerHTML = '<p class="error">Error al cargar actividades.</p>';
+
     }
 }
 

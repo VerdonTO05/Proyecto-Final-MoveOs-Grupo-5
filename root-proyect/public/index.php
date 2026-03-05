@@ -4,8 +4,8 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 if (isset($_SESSION['error'])) {
-    echo "<script>alert('{$_SESSION['error']}');</script>";
-    unset($_SESSION['error']); // eliminar mensaje después de mostrarlo
+  echo "<script>alert('{$_SESSION['error']}');</script>";
+  unset($_SESSION['error']); // eliminar mensaje después de mostrarlo
 }
 
 // Leer JSON si viene por fetch
@@ -53,17 +53,17 @@ switch ($action) {
     require __DIR__ . '/../app/controllers/edit-activity-controller.php';
     break;
   case 'deleteActivity':
-    require __DIR__ .  '/../app/controllers/delete-activity-controller.php';
+    require __DIR__ . '/../app/controllers/delete-activity-controller.php';
     break;
   case 'seeMyActivities':
     require __DIR__ . '/../app/views/my-activities.php';
     break;
   case 'acceptRequest':
-    require __DIR__ .  '/../app/controllers/accept-request-controller.php';
+    require __DIR__ . '/../app/controllers/accept-request-controller.php';
     // Aceptar petición
     break;
   case 'signupActivity':
-    require __DIR__ .  '/../app/controllers/signup-activity-controller.php';
+    require __DIR__ . '/../app/controllers/signup-activity-controller.php';
     // Inscribirse
     break;
   case 'seeActivities':
@@ -81,12 +81,17 @@ switch ($action) {
   case 'getMyActivities':
     require __DIR__ . '/../app/controllers/get-my-activities.php';
     break;
+  case 'inscripciones':
+    require __DIR__ . '/../app/controllers/get-my-registrations.php';
+    break;
   case 'seeRequest':
     require __DIR__ . '/../app/views/home.php';
     break;
   case 'seeRegistrations':
+    require __DIR__ . '/../app/views/my-registrations.php';
     break;
   case 'seeRequestAccepted':
+    require __DIR__ . '/../app/views/my-registrations.php';
     break;
   case 'approveActivity':
     require __DIR__ . '/../app/controllers/approve-activity.php';

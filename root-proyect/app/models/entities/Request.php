@@ -259,5 +259,40 @@ class Request
             'organizer_id' => $organizer_id
         ]);
     }
+
+    public function getAcceptedRequestsByOrganizerId($organizer_id, $state)
+    {
+        $sql = "SELECT r.*, c.name AS category_name
+            FROM requests r
+            LEFT JOIN categories c ON r.category_id = c.id
+            WHERE r.accepted_by = :organizer_id
+            AND r.state = :state
+            ORDER BY r.created_at DESC";
+
+        $stmt = $this->conn->prepare($sql);
+
+        $stmt->execute([
+            'organizer_id' => $organizer_id,
+            'state' => $state
+
+        ]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getAcceptedRequestsFinishedByOrganizerId($organizer_id)
+    {
+
+        $sql = "SELECT r.*, c.name AS category_name
+            FROM requests r
+            LEFT JOIN categories c ON r.category_id = c.id
+            WHERE r.accepted_by = :organizer_id
+            AND r.date < CURDATE()
+            ORDER BY r.created_at DESC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(['organizer_id' => $organizer_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 ?>

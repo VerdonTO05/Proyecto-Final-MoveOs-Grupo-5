@@ -1389,6 +1389,14 @@ select {
   color: var(--brand-dark);
 }
 
+#gridRegistrationsFinished {
+  display: none;
+}
+
+#gridRegistrationsFinished.visible {
+  display: grid;
+}
+
 /* =========================
    Responsive
 ========================= */

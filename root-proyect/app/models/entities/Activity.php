@@ -224,5 +224,36 @@ class Activity
         $stmt = $this->conn->query($sql);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+
+    public function getActivitiesByParticipantId($participant_id)
+    {
+        $sql = "SELECT a.*, c.name AS category_name
+            FROM activities a
+            INNER JOIN registrations r ON a.id = r.activity_id
+            LEFT JOIN categories c ON a.category_id = c.id
+            WHERE r.participant_id = :user_id
+            AND a.is_finished = 0";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(['user_id' => $participant_id]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getActivitiesFinishedByParticipantId($participant_id)
+    {
+        $sql = "SELECT a.*, c.name AS category_name
+            FROM activities a
+            INNER JOIN registrations r ON a.id = r.activity_id
+            LEFT JOIN categories c ON a.category_id = c.id
+            WHERE r.participant_id = :user_id
+            AND a.date < CURDATE()";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(['user_id' => $participant_id]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 ?>

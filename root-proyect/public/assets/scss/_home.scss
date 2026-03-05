@@ -351,6 +351,14 @@
   }
 }
 
+#gridRegistrationsFinished {
+  display: none;
+}
+
+#gridRegistrationsFinished.visible {
+  display: grid;
+}
+
 /* =========================
    Responsive
 ========================= */
