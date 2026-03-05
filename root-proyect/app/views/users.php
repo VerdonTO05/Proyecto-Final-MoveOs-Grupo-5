@@ -44,7 +44,7 @@ $user = getCurrentUser();
         </header>
 
         <!-- User Cards - Se llenarán dinámicamente -->
-        <div class="users" aria-live="polite" aria-label="Lista de usuarios registardos">
+        <div id="users" class="users" aria-live="polite" aria-label="Lista de usuarios registardos">
             <p role="status"><i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Cargando usuarios registrados...
             </p>
         </div>

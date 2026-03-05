@@ -890,106 +890,83 @@ select {
   border-color: var(--brand-primary);
 }
 
-/* --- Tabla (Estilo Clean/Modern) --- */
-/* Contenedor */
-.table-container {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-  overflow: hidden;
-  margin: 2rem 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
-}
-.table-container table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-}
-.table-container table thead {
-  background-color: var(--bg-muted);
-  border-bottom: 1px solid var(--border-color);
-}
-.table-container table thead th {
-  padding: 1rem 1.5rem;
-  font-weight: 600;
-  color: var(--brand-dark);
-  font-size: 0.95rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-.table-container table tbody tr {
-  transition: background-color 0.2s;
-}
-.table-container table tbody tr:hover {
-  background-color: var(--bg-muted);
-}
-.table-container table tbody tr:last-child td {
-  border-bottom: none;
-}
-.table-container table tbody tr td {
-  padding: 1rem 1.5rem;
-  color: var(--text-primary);
-  border-bottom: 1px solid var(--border-color);
-  vertical-align: middle;
-}
-.table-container table tbody tr td .status {
-  font-size: 0.85rem;
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  background: var(--bg-muted);
-  color: var(--brand-primary);
-  font-weight: 500;
+.users {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: var(--bg-surface);
 }
 
-/* --- Paginación --- */
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 2rem;
-  list-style: none;
-  padding: 0;
-}
-.pagination button,
-.pagination a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5rem 1rem;
-  min-width: 40px;
-  border: 1px solid var(--border-color);
-  background: var(--bg-surface);
+.user-card {
+  background-color: var(--bg-main);
+  border-radius: 12px;
+  margin: 0.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem 2rem;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: var(--text-primary);
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 500;
-  text-decoration: none;
-  transition: all 0.2s ease;
-  font-family: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
-.pagination button:hover,
-.pagination a:hover {
-  border-color: var(--brand-primary);
-  color: var(--brand-primary);
+.user-card.inactive {
+  opacity: 0.6;
+  filter: grayscale(0.7);
 }
-.pagination button:disabled,
-.pagination a:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  background-color: var(--bg-muted);
-  border-color: transparent;
+.user-card .user-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--bg-main);
+}
+.user-card .user-header .username-role {
+  display: flex;
+  flex-direction: column;
+}
+.user-card .user-header .username-role .username {
+  font-weight: 700;
+  font-size: 1.3rem;
+  margin: 0;
+}
+.user-card .user-header .username-role .role {
+  font-size: 0.9rem;
+  font-style: italic;
   color: var(--text-secondary);
 }
-.pagination button:disabled:hover,
-.pagination a:disabled:hover {
-  color: var(--text-secondary);
-  border-color: transparent;
-}
-.pagination .active {
-  background-color: var(--brand-primary);
+.user-card .user-header .btn-toggle {
+  background-color: var(--brand-dark);
+  border: none;
+  border-radius: 20px;
   color: var(--text-on-primary);
-  border-color: var(--brand-primary);
+  padding: 0.3rem 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  background-color: var(--alert);
+  border-color: var(--c-yellow);
+}
+.user-card .vac-data {
+  background-color: var(--bg-surface);
+  padding: 1rem;
+  border-radius: 8px;
+  font-family: monospace;
+  white-space: pre-wrap;
+  color: var(--text-secondary);
+}
+.user-card .vac-data h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+}
+.user-card .alert-message {
+  background-color: #ffe5e5;
+  border-left: 5px solid #dc3545;
+  padding: 0.8rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  color: #a00;
 }
 
 /* Switch del tema */

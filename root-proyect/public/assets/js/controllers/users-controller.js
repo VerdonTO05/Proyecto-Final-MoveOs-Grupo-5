@@ -6,10 +6,11 @@ document.addEventListener("DOMContentLoaded", () => {
     role = CURRENT_USER.role;
   }
 
-  loadPublications(role);
+  loadPublications();
+
 });
 
-async function loadPublications(role) {
+async function loadPublications() {
   const gridContainer = document.getElementById('users');
   if (!gridContainer) return;
   try {
@@ -20,76 +21,66 @@ async function loadPublications(role) {
     if (result.success && result.data.length > 0) {
       gridContainer.innerHTML = '';
       result.data.forEach(user => {
-        gridContainer.appendChild(createCard(user));
+        gridContainer.appendChild(createUserCard(user));
       });
     } else {
       $message = '<p class="no-activities">No hay usuarios registrados en este momento.</p>';
       gridContainer.innerHTML = $message;
     }
   } catch (error) {
-    console.error('Error al cargar usuarios:', error);
     gridContainer.innerHTML = '<p class="error">Error al cargar los usuarios.</p>';
   }
 }
 
 //Crear card de usuario
 
-// function createCard(user) {
-//   const card = document.createElement("article");
-//   card.className = "activity activity-card";
+/**
+ * Crea una tarjeta de usuario con estructura tipo "CARD USER"
+ * @param {Object} user - Datos del usuario
+ * @param {string} user.username - Nombre de usuario
+ * @param {string} user.role - Rol del usuario
+ * @param {Object} user.vacData - Datos adicionales ("vac datos")
+ * @param {boolean} user.active - Estado activo/desactivado
+ * @param {string} [user.message] - Mensaje de alerta (opcional)
+ * @returns {HTMLElement} Elemento artículo con la tarjeta de usuario
+ */
+function createUserCard(user) {
+  const card = document.createElement('article');
+  card.className = 'user-card';
 
-//   const isActive = true;
-//   const contentClass = isActive ? "activity-content" : "activity-content desactivate";
+  const isActive = user.active;
+  const activeClass = isActive ? 'active' : 'inactive';
 
-//   let formattedDate = "";
-//   if (publication.date) {
-//     const date = new Date(publication.date);
-//     formattedDate = date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
-//   }
+  card.innerHTML = `
+    <header class="user-header">
+      <div class="username-role">
+        <h2 class="username">${user.username}</h2>
+        <span class="role">${user.role}</span>
+      </div>
+      <button class="btn-toggle ${activeClass}">
+        ${isActive ? 'Activo' : 'Desactivado'}
+      </button>
+    </header>
 
-//   const imageUrl = publication.image_url || 'assets/img/default-activity.jpg';
-//   const imgHTML = `<img src="${imageUrl}" alt="${publication.alt || publication.title}" onerror="this.src='assets/img/default-activity.jpg'">`;
-//   const tagHTML = publication.label ? `<div class="tag ${publication.labelClass || ''}">${publication.label}</div>` : "";
-//   const detailsHTML = publication.details?.length ? `<ul class="details">${publication.details.map(d => `<li>${d}</li>`).join("")}</ul>` : "";
+    <section class="vac-data">
+      <h3>Vac Datos</h3>
+      <pre>${JSON.stringify(user.vacData, null, 2)}</pre>
+    </section>
 
-//   const metaHTML = `
-//         <div class="activity-meta">
-//             ${formattedDate ? `<span><i class="fas fa-calendar-alt"></i> ${formattedDate}</span>` : ""}
-//             ${publication.location ? `<span><i class="fas fa-map-marker-alt"></i> ${publication.location}</span>` : ""}
-//             ${publication.price ? `<span><i class="fas fa-euro-sign"></i> ${publication.price}€</span>` : ""}
-//         </div>
-//     `;
+    ${user.message ? `<section class="alert-message">${user.message}</section>` : ''}
+  `;
 
-//   const footerHTML = `
-//         <div class="activity-footer">
-//             ${publication.offertant_name ? `<span class="organizer"><i class="fas fa-user"></i> ${publication.offertant_name}</span>` : ""}
-//             ${publication.current_registrations != null && publication.max_people != null
-//       ? `<span class="participants"><i class="fas fa-users"></i> ${publication.current_registrations}/${publication.max_people}</span>`
-//       : ""}
-//         </div>
-//     `;
+  // Botón para activar/desactivar usuario
+  card.querySelector('.btn-toggle').addEventListener('click', () => {
+    card.classList.toggle('inactive');
+    card.classList.toggle('active');
+    const btn = card.querySelector('.btn-toggle');
+    if (btn.textContent === 'Activo') {
+      btn.textContent = 'Desactivado';
+    } else {
+      btn.textContent = 'Activo';
+    }
+  });
 
-//   card.innerHTML = `
-//         <div class="activity-image">${imgHTML}${tagHTML}</div>
-//         <div class="${contentClass}">
-//             ${publication.category_name ? `<span class="category">${publication.category_name}</span>` : ""}
-//             <h3>${publication.title}</h3>
-//             <p class="description">${publication.description}</p>
-//             ${detailsHTML}${metaHTML}${footerHTML}
-//             <div class="actions">
-//                 <button class="btn-detail" data-id="${publication.id}">Ver Detalles</button>
-//                 <button class="btn-signup" data-id="${publication.id}" ${!isActive ? "disabled" : ""}>${role == 'organizador' ? 'Aceptar' : 'Inscribirse' }</button>
-//             </div>
-//         </div>
-//     `;
-
-//   card.querySelector(".btn-detail")?.addEventListener("click", () => {
-//     console.log("Detalles de:", publication.id);
-//   });
-
-//   card.querySelector(".btn-signup")?.addEventListener("click", () => {
-//     console.log("Inscripción en:", publication.id);
-//   });
-
-//   return card;
-// }
+  return card;
+}
