@@ -122,7 +122,8 @@ function createActivityCard(activity) {
             ? `<button id="btn-state" class="state"><i class="fas fa-hourglass-half"></i></button>`
             : activity.state === 'rechazada'
                 ? `<span class="state"><i class="fas fa-times"></i></span>`
-                : `<span class="state"><i class="fas fa-check-double"></i></span>`}<h3>${activity.title}</h3>
+                : `<span class="state"><i class="fas fa-check-double"></i></span>`}
+                <h3>${activity.title}</h3>
             <p class="description">${activity.description}</p>
             ${detailsHTML}${metaHTML}${footerHTML}
             <div class="actions">
