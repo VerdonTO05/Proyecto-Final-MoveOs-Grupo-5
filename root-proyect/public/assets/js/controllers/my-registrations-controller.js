@@ -45,10 +45,10 @@ async function loadActivities() {
             });
 
         } else {
-
+            // que se vea una debajo de otro
             gridContainer.innerHTML = `
-            <p class="no-activities">Todavía no tienes ninguna actividad.</p>
-            <p><a href="index.php?accion=createActivity">Crea una ahora</a></p>
+            <p class="no-activities">Todavía no tienes ninguna inscripción.</p>
+            <p><a href="index.php?accion=seeActivities">Busca una nueva aventura</a></p>
             `;
 
         }
@@ -65,15 +65,15 @@ async function loadActivities() {
         } else {
 
             gridContainerFinished.innerHTML = `
-            <p class="no-activities">Todavía no tienes actividades terminadas.</p>
+            <p class="no-activities">Todavía no tienes inscripciones terminadas.</p>
             `;
 
         }
 
     } catch (error) {
 
-        console.error('Error al cargar actividades:', error);
-        gridContainer.innerHTML = '<p class="error">Error al cargar actividades.</p>';
+        console.error('Error al cargar inscripciones:', error);
+        gridContainer.innerHTML = '<p class="error">Error al cargar inscripciones.</p>';
 
     }
 }

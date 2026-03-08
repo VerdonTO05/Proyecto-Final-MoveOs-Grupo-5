@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // ===== Subida de imagen =====
     if (isset($file) && $file['error'] === 0) {
-        $uploadDir = __DIR__ .'/../../uploads/activities/';
+        $uploadDir = __DIR__ .'/../../public/uploads/activities/';
         if (!file_exists($uploadDir)) mkdir($uploadDir, 0755, true);
         $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
         $fileName = ($type === 'request' ? 'request_' : 'activity_') . time() . '_' . uniqid() . '.' . $extension;

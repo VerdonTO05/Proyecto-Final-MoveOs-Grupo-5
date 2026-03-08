@@ -30,45 +30,15 @@ $active = [];
 $finished = [];
 
 try {
-
-    // ============================
-    // ORGANIZADOR
-    // ============================
     if ($role === 'organizador') {
         $active = $request->getAcceptedRequestsByOrganizerId($user_id, 'aprobada');
         $finished = $request->getAcceptedRequestsFinishedByOrganizerId($user_id);
     }
 
-    // ============================
-    // PARTICIPANTE
-    // ============================
     if ($role === 'participante') {
         $active = $activity->getActivitiesByParticipantId($user_id);
         $finished = $activity->getActivitiesFinishedByParticipantId($user_id);
     }
-
-    // ============================
-    // Validar imágenes
-    // ============================
-
-    $fixImages = function (&$activities) {
-
-        foreach ($activities as &$activity) {
-
-            if (!empty($activity['image_url'])) {
-                $fullPath = __DIR__ . '/../../' . $activity['image_url'];
-                if (!file_exists($fullPath)) {
-                    $activity['image_url'] = 'assets/img/default-activity.jpg';
-                }
-            } else {
-
-                $activity['image_url'] = 'assets/img/default-activity.jpg';
-            }
-        }
-    };
-
-    $fixImages($active);
-    $fixImages($finished);
 
     echo json_encode([
         'success' => true,

@@ -45,24 +45,6 @@ $pendingActivities = $activity->getActivitiesByState('pendiente');
 // Obtener peticiones pendientes
 $pendingRequests = $request->getRequestsByState('pendiente');
 
-// Agregar URL completa para las imágenes de actividades
-foreach ($pendingActivities as &$act) {
-    if ($act['image_url']) {
-        // Construir ruta completa del archivo
-        $fullPath = __DIR__ . '/../../public/' . $act['image_url'];
-
-        // Verificar si el archivo existe
-        if (file_exists($fullPath)) {
-
-        } else {
-            // Si no existe, usar placeholder
-            $act['image_url'] = 'assets/img/default-activity.jpg';
-        }
-    } else {
-        $act['image_url'] = 'assets/img/default-activity.jpg';
-    }
-}
-
 echo json_encode([
     'success' => true,
     'stats' => $stats,

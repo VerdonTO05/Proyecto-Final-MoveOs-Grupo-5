@@ -5,7 +5,7 @@ require_once __DIR__ . '/../models/entities/Activity.php';
 require_once __DIR__ . '/../models/entities/Request.php';
 
 if (session_status() === PHP_SESSION_NONE) {
-  session_start();
+    session_start();
 }
 
 $database = new Database();
@@ -22,27 +22,10 @@ if (!isset($_SESSION['role'])) {
 }
 
 // Obtener actividades aprobadas
-if($_SESSION['role'] == 'organizador'){
+if ($_SESSION['role'] == 'organizador') {
     $publics = $request->getRequestsByState('aprobada');
-}else{
+} else {
     $publics = $activity->getActivitiesByState('aprobada');
-}
-
-// Agregar URL completa para las imágenes
-foreach ($publics as &$public) {
-    if ($public['image_url']) {
-        // Construir ruta completa del archivo
-        $fullPath = __DIR__ . $public['image_url'];
-
-        // Verificar si el archivo existe
-        if (file_exists($fullPath)) {
-        } else {
-            // Si no existe, usar placeholder
-            $public['image_url'] = 'assets/img/default-activity.jpg';
-        }
-    } else {
-        $public['image_url'] = 'assets/img/default-activity.jpg';
-    }
 }
 
 echo json_encode([

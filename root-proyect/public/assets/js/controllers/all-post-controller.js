@@ -37,7 +37,6 @@ async function loadActivities() {
         const response = await fetch('index.php?accion=getActivities');
         const text = await response.text();
         const result = JSON.parse(text);
-
         if (result.success && result.data.length > 0) {
             gridContainer.innerHTML = '';
             result.data.forEach(activity => {
@@ -50,6 +49,7 @@ async function loadActivities() {
         console.error('Error al cargar actividades:', error);
         gridContainer.innerHTML = '<p class="error">Error al cargar las actividades.</p>';
     }
+
 }
 
 async function loadRequests() {
