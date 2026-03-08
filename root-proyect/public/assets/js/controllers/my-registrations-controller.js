@@ -33,8 +33,6 @@ async function loadActivities() {
         const response = await fetch('index.php?accion=inscripciones');
         const result = await response.json();
 
-        console.log(result); // DEBUG
-
         // ACTIVAS
         if (result.success && result.data?.active?.length > 0) {
 
@@ -118,11 +116,7 @@ function createActivityCard(publication) {
         <div class="activity-image">${imgHTML}${tagHTML}</div>
         <div class="${contentClass}">
             ${publication.category_name ? `<span class="category">${publication.category_name}</span>` : ""}
-            ${publication.state === 'pendiente'
-            ? `<button id="btn-state" class="state"><i class="fas fa-hourglass-half"></i></button>`
-            : publication.state === 'rechazada'
-                ? `<span class="state"><i class="fas fa-times"></i></span>`
-                : `<span class="state"><i class="fas fa-check-double"></i></span>`}<h3>${publication.title}</h3>
+            <h3>${publication.title}</h3>
             <p class="description">${publication.description}</p>
             ${detailsHTML}${metaHTML}${footerHTML}
             <div class="actions">
@@ -210,11 +204,7 @@ function createActivityCardFinished(publication) {
         <div class="activity-image">${imgHTML}${tagHTML}</div>
         <div class="${contentClass}">
             ${publication.category_name ? `<span class="category">${publication.category_name}</span>` : ""}
-            ${publication.state === 'pendiente'
-            ? `<button id="btn-state" class="state"><i class="fas fa-hourglass-half"></i></button>`
-            : publication.state === 'rechazada'
-                ? `<span class="state"><i class="fas fa-times"></i></span>`
-                : `<span class="state"><i class="fas fa-check-double"></i></span>`}<h3>${publication.title}</h3>
+            <h3>${publication.title}</h3>
             <p class="description">${publication.description}</p>
             ${detailsHTML}${metaHTML}${footerHTML}
         </div>

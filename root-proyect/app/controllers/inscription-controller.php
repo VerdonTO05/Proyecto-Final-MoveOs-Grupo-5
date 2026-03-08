@@ -28,8 +28,6 @@ if (empty($data['activity_id'])) {
 $userId = $_SESSION['user_id'];
 $activityId = (int)$data['activity_id'];
 
-// $model = new Inscription();
-
 try {
   $result = $model->createInscription($userId, $activityId);
 

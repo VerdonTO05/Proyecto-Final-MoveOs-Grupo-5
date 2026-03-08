@@ -124,7 +124,7 @@ function createCard(activity, role) {
       : 'inscribirte en esta actividad';
 
     const confirmed = await showConfirm({
-      title: role === 'organizador' ? '¿Aceptar actividad?' : '¿Inscribirse en actividad?',
+      title: role === 'organizador' ? '¿Aceptar esta actividad?' : '¿Inscribirse a esta actividad?',
       message: `Estás a punto de ${actionText}.`
     });
 
