@@ -3,14 +3,11 @@ header('Content-Type: application/json');
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../models/entities/User.php';
 if (session_status() === PHP_SESSION_NONE) {
-  session_start();
+    session_start();
 }
 
-$database = new Database();
-$db = $database->getConnection();
-$user = new User($db);
-
-if (!isset($_SESSION['role'])) {
+// Solo administradores
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'administrador') {
     echo json_encode([
         'success' => false,
         'message' => 'No autorizado'
@@ -18,13 +15,39 @@ if (!isset($_SESSION['role'])) {
     exit;
 }
 
-// Obtener todos los usuarios
-if($_SESSION['role'] == 'administrador'){
-    $users = $user->getUsers();
+$database = new Database();
+$db = $database->getConnection();
+$user = new User($db);
+
+$action = $_GET['action'] ?? 'list';
+
+// --- Cambiar estado de usuario ---
+if ($action === 'toggle') {
+    $id    = $_GET['id']    ?? null;
+    $state = $_GET['state'] ?? null;
+
+    if (!$id || !$state || !in_array($state, ['activa', 'inactiva'])) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Parámetros inválidos'
+        ]);
+        exit;
+    }
+
+    $result = $user->toggleUserState($id, $state);
+
+    echo json_encode([
+        'success' => $result,
+        'message' => $result ? 'Estado actualizado correctamente' : 'Error al actualizar el estado'
+    ]);
+    exit;
 }
+
+// --- Listar todos los usuarios ---
+$users = $user->getUsers();
 
 echo json_encode([
     'success' => true,
-    'data' => $users
+    'data'    => $users
 ]);
 ?>

@@ -154,6 +154,19 @@ class User
 
 
     /**
+     * Cambiar el estado de un usuario (activa/inactiva)
+     * @param int $id ID del usuario
+     * @param string $state Nuevo estado ('activa' o 'inactiva')
+     * @return bool true si se actualiza, false si falla
+     */
+    public function toggleUserState($id, $state)
+    {
+        $sql = "UPDATE {$this->table_name} SET state = :state WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute(['state' => $state, 'id' => $id]);
+    }
+
+    /**
      * Eliminar un usuario por ID (hard delete)
      * @param int $id ID del usuario
      * @return bool true si se elimina, false si falla

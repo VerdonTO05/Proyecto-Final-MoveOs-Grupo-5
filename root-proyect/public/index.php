@@ -111,6 +111,10 @@ switch ($action) {
   case 'getUsers':
     require __DIR__ . '/../app/controllers/get-users-controller.php';
     break;
+  case 'toggleUser':
+    $_GET['action'] = 'toggle'; // redirige internamente al controlador unificado
+    require __DIR__ . '/../app/controllers/get-users-controller.php';
+    break;
   case 'forgot-password':
     require __DIR__ . '/../app/views/forgot-password.php';
     break;

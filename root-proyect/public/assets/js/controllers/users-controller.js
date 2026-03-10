@@ -71,23 +71,53 @@ function createUserCard(user) {
 
   // Botón activar/desactivar usuario
   const btnToggle = card.querySelector('.btn-toggle');
-  btnToggle.addEventListener('click', () => {
+  btnToggle.addEventListener('click', async () => {
     const currentlyActive = card.classList.contains('active');
+    const newState = currentlyActive ? 'inactiva' : 'activa';
 
+    // Actualizar UI inmediatamente
     if (currentlyActive) {
       card.classList.remove('active');
       card.classList.add('inactive');
       btnToggle.textContent = 'Activar';
-      user.state = 'inactiva';
     } else {
       card.classList.remove('inactive');
       card.classList.add('active');
       btnToggle.textContent = 'Desactivar';
-      user.state = 'activa';
     }
 
-    // Opcional: enviar al servidor el cambio de estado
-    // fetch(`index.php?accion=toggleUser&id=${user.id}&state=${user.state}`);
+    try {
+      const response = await fetch(`index.php?accion=toggleUser&id=${user.id}&state=${newState}`);
+      const result = await response.json();
+
+      if (result.success) {
+        user.state = newState;
+      } else {
+        // Revertir UI si falla
+        if (currentlyActive) {
+          card.classList.remove('inactive');
+          card.classList.add('active');
+          btnToggle.textContent = 'Desactivar';
+        } else {
+          card.classList.remove('active');
+          card.classList.add('inactive');
+          btnToggle.textContent = 'Activar';
+        }
+        alert('Error al cambiar el estado del usuario');
+      }
+    } catch (error) {
+      // Revertir UI si hay error de red
+      if (currentlyActive) {
+        card.classList.remove('inactive');
+        card.classList.add('active');
+        btnToggle.textContent = 'Desactivar';
+      } else {
+        card.classList.remove('active');
+        card.classList.add('inactive');
+        btnToggle.textContent = 'Activar';
+      }
+      alert('Error de conexión al cambiar el estado');
+    }
   });
 
   // Botón ver/ocultar datos
