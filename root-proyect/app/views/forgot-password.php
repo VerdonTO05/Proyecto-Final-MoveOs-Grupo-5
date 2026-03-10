@@ -29,7 +29,7 @@
                 <i class="fas fa-arrow-left"></i>
             </a>
             <header class="header-form">
-                <h1>RECUPERAR CONTRASEÑA</h1>
+                <h1>Recuperar contraseña</h1>
                 <p id="header-description">Ingresa tu correo electrónico para recibir un código de verificación</p>
             </header>
 

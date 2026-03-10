@@ -534,14 +534,12 @@ main section {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  padding: 3rem 0;
 }
 
 /* Contenedor del formulario */
 .container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  position: relative;
   background-color: var(--bg-surface);
   border: 1px solid var(--border-color);
   border-radius: 12px;
