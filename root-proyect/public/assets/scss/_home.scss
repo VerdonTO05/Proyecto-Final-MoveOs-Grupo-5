@@ -20,10 +20,13 @@
   align-items: stretch;
   margin-bottom: 2rem;
 
+  #filterInput {
+    flex: 1;
+  }
+
   input[type="text"],
   select {
-    flex: 1;
-    min-width: 250px;
+    width: 100%;
     padding: 0.75rem 1rem;
     border: 1px solid var(--border-color);
     border-radius: 10px;
@@ -34,17 +37,10 @@
   }
 
   select {
+    flex: 1;
     appearance: none;
   }
-
-  .btn-filters {
-    @include m.btn-base(); // usa defaults
-    flex: 0 0 auto;
-    padding: 0.75rem 1.25rem; // se puede sobrescribir si quieres
-  }
 }
-
-
 
 /* =========================
    Componentes: Tarjeta Actividad

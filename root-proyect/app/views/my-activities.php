@@ -46,12 +46,15 @@ $user = getCurrentUser();
             </h1>
             <p id="view-subtitle">Ajusta tus publicaciones para llamar la atención de más usuarios</p>
 
-            <div class="filters" role="region" aria-label="Filtros de búsqueda">
-                <input id="searchInput" type="text" placeholder="Buscar actividades..." />
-                <select>
-                    <option>Todas las ubicaciones</option>
+            <div class="filters">
+                <div id="filterInput">
+                    <input type="text" id="filterValue" placeholder="Buscar..." />
+                </div>
+                <select name="filterType" id="filterType">
+                    <option value="title">Título</option>
+                    <option value="date">Fecha</option>
+                    <option value="category">Categoría</option>
                 </select>
-                <button class="btn-filters" aria-label="Más filtros">Más Filtros</button>
             </div>
 
             <div class="grid-activities" id="gridActivities" aria-live="polite"

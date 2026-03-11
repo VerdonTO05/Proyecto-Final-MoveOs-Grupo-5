@@ -10,6 +10,48 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  //Filtro de publicaciones
+  const filterType = document.getElementById("filterType");
+  const filterInput = document.getElementById("filterInput");
+
+  if (filterType && filterInput) {
+    filterType.addEventListener("change", () => {
+      let html = "";
+      switch (filterType.value) {
+        case "title":
+          html = `<input type="text" id="filterValue" placeholder="Buscar por título">`;
+          break;
+        case "date":
+          html = `<input type="date" id="filterValue">`;
+          break;
+        case "category":
+          html = `
+          <select id="filterValue" name="category_id" required aria-required="true">
+            <option value="">Selecciona...</option>
+            <option value="Taller">Taller</option>
+            <option value="Clase">Clase</option>
+            <option value="Evento">Evento</option>
+            <option value="Excursión">Excursión</option>
+            <option value="Formación técnica">Formación técnica</option>
+            <option value="Conferencia">Conferencia</option>
+            <option value="Reunión">Reunión</option>
+            <option value="Experiencia">Experiencia</option>
+            <option value="Tour">Tour</option>
+            <option value="Competición">Competición</option>
+            <option value="Evento social">Evento social</option>
+          </select>`;
+          break;
+      }
+      filterInput.innerHTML = html;
+    });
+  }
+
+  // const filterInput = document.getElementById("filterInput");
+
+    if (filterInput) {
+        filterInput.addEventListener("input", applyFilters);
+        filterInput.addEventListener("change", applyFilters);
+    }
 });
 
 document.addEventListener("click", (e) => {
@@ -24,6 +66,8 @@ document.addEventListener("click", (e) => {
     ? '<i class="fa-solid fa-xmark"></i>'
     : '<i class="fa-solid fa-bars"></i>';
 });
+
+
 
 /**
  * Inicializar tema claro/oscuro

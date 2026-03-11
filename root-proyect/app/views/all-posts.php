@@ -51,11 +51,14 @@ $user = getCurrentUser();
             <p id="view-subtitle">Los organizadores han añadido actividades para los próximos días</p>
 
             <div class="filters">
-                <input id="searchInput" type="text" placeholder="Buscar actividades..." />
-                <select>
-                    <option>Todas las ubicaciones</option>
+                <div id="filterInput">
+                    <input type="text" id="filterValue" placeholder="Buscar..." />
+                </div>
+                <select name="filterType" id="filterType">
+                    <option value="title">Título</option>
+                    <option value="date">Fecha</option>
+                    <option value="category">Categoría</option>
                 </select>
-                <button class="btn-filters" aria-label="Más filtros">Más Filtros</button>
             </div>
 
             <div class="grid-activities" id="gridActivities" aria-live="polite" aria-label="Listado de actividades">

@@ -45,18 +45,17 @@ $user = getCurrentUser();
         <p>Cumple el sueño de otras personas</p>
       <?php } ?>
 
-      <!-- Filtros -->
       <div class="filters">
-        <?php if ($role == 'participante') { ?>
-          <input type="text" placeholder="Buscar actividades..." />
-        <?php } else { ?>
-          <input type="text" placeholder="Buscar peticiones..." />
-        <?php } ?>
-        <select>
-          <option>Todas las ubicaciones</option>
+        <div id="filterInput">
+          <input type="text" id="filterValue" placeholder="Buscar..."/>
+        </div>
+        <select name="filterType" id="filterType">
+          <option value="title">Título</option>
+          <option value="date">Fecha</option>
+          <option value="category">Categoría</option>
         </select>
-        <button class="btn-filters" aria-label="Más filtros">Más Filtros</button>
       </div>
+
       <!-- Actividades -->
       <div class="grid-activities" id="gridActivities" aria-live="polite"
         aria-label="<?= $role == 'participante' ? 'Listado de actividades' : 'Listado de peticiones' ?>">
