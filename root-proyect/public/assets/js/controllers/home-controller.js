@@ -1,3 +1,4 @@
+let publications = [];
 // ============================
 // Inicialización al cargar la página
 // ============================
@@ -10,6 +11,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const role = CURRENT_USER.role;
   loadPublications(role);
+
+  const filterInput = document.getElementById("filterInput");
+
+  if (filterInput) {
+    filterInput.addEventListener("input", applyFilters);
+    filterInput.addEventListener("change", applyFilters);
+  }
 });
 
 // ============================
@@ -26,19 +34,67 @@ async function loadPublications(role) {
 
     gridContainer.innerHTML = "";
 
-    if (result.success && result.data.length > 0) {
+    if (result.success) {
+
+      publications = result.data || [];
+
+      renderPublications(publications, role);
       // Crear y añadir cada card
-      result.data.forEach(activity => {
-        gridContainer.appendChild(createCard(activity, role));
-      });
-    } else {
-      const message = role === 'organizador'
-        ? '<p class="no-activities">No hay peticiones disponibles en este momento.</p>'
-        : '<p class="no-activities">No hay actividades disponibles en este momento.</p>';
-      gridContainer.innerHTML = message;
+      // result.data.forEach(activity => {
+      //   gridContainer.appendChild(createCard(activity, role));
+      // });
     }
+    //  else {
+    //   const message = role === 'organizador'
+    //     ? '<p class="no-activities">No hay peticiones disponibles en este momento.</p>'
+    //     : '<p class="no-activities">No hay actividades disponibles en este momento.</p>';
+    //   gridContainer.innerHTML = message;
+    // }
   } catch (error) {
     gridContainer.innerHTML = '<p class="error">Error al cargar las actividades.</p>';
+  }
+}
+
+function renderPublications(publications, role) {
+  const gridContainer = document.getElementById('gridActivities');
+
+  gridContainer.innerHTML = '';
+
+  if (publications.length === 0) {
+    const message = role === 'organizador'
+      ? '<p class="no-activities">No hay peticiones disponibles en este momento.</p>'
+      : '<p class="no-activities">No hay actividades disponibles en este momento.</p>';
+    gridContainer.innerHTML = message;
+  } else {
+    publications.forEach(activity => {
+      gridContainer.appendChild(createCard(activity, role));
+    });
+  }
+}
+
+function applyFilters() {
+
+  const type = document.getElementById("filterType")?.value;
+  const value = document.getElementById("filterValue")?.value?.toLowerCase() || "";
+
+  if (!type) return;
+
+  const publicationsFilter = publications.filter(a => matchFilter(a, type, value));
+
+  renderPublications(publicationsFilter);
+}
+
+function matchFilter(activity, type, value) {
+  if (!value) return true;
+  switch (type) {
+    case "title":
+      return activity.title?.toLowerCase().includes(value);
+    case "category":
+      return activity.category_name?.toLowerCase().includes(value);
+    case "date":
+      return activity.date?.includes(value);
+    default:
+      return true;
   }
 }
 

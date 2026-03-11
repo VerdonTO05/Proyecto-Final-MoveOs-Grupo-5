@@ -45,13 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
       filterInput.innerHTML = html;
     });
   }
-
-  // const filterInput = document.getElementById("filterInput");
-
-    if (filterInput) {
-        filterInput.addEventListener("input", applyFilters);
-        filterInput.addEventListener("change", applyFilters);
-    }
 });
 
 document.addEventListener("click", (e) => {
@@ -66,7 +59,6 @@ document.addEventListener("click", (e) => {
     ? '<i class="fa-solid fa-xmark"></i>'
     : '<i class="fa-solid fa-bars"></i>';
 });
-
 
 
 /**

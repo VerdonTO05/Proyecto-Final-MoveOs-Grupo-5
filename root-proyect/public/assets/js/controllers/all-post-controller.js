@@ -1,6 +1,16 @@
+let activities = [];
+let requests = [];
+
 document.addEventListener("DOMContentLoaded", () => {
     initTabSwitch();
     loadActivities();
+
+    const filterInput = document.getElementById("filterInput");
+
+    if (filterInput) {
+        filterInput.addEventListener("input", applyFilters);
+        filterInput.addEventListener("change", applyFilters);
+    }
 });
 
 function initTabSwitch() {
@@ -37,19 +47,37 @@ async function loadActivities() {
         const response = await fetch('index.php?accion=getActivities');
         const text = await response.text();
         const result = JSON.parse(text);
-        if (result.success && result.data.length > 0) {
-            gridContainer.innerHTML = '';
-            result.data.forEach(activity => {
-                gridContainer.appendChild(createActivityCard(activity));
-            });
-        } else {
-            gridContainer.innerHTML = '<p class="no-activities">No hay actividades disponibles en este momento.</p>';
+        if (result.success) {
+
+            activities = result.data || [];
+
+            renderActivities(activities);
+            // gridContainer.innerHTML = '';
+            // result.data.forEach(activity => {
+            //     gridContainer.appendChild(createActivityCard(activity));
+            // });
         }
     } catch (error) {
         console.error('Error al cargar actividades:', error);
         gridContainer.innerHTML = '<p class="error">Error al cargar las actividades.</p>';
     }
 
+}
+
+
+function renderActivities(activities) {
+    const gridContainer = document.getElementById('gridActivities');
+
+    gridContainer.innerHTML = '';
+
+    if (activities.length === 0) {
+        gridContainer.innerHTML = '<p class="no-activities">No hay actividades disponibles en este momento.</p>';
+
+    } else {
+        activities.forEach(activity => {
+            gridContainer.appendChild(createActivityCard(activity));
+        });
+    }
 }
 
 async function loadRequests() {
@@ -61,17 +89,69 @@ async function loadRequests() {
         const text = await response.text();
         const result = JSON.parse(text);
 
-        if (result.success && result.data.length > 0) {
-            gridContainer.innerHTML = '';
-            result.data.forEach(request => {
-                gridContainer.appendChild(createActivityCard(request));
-            });
+        if (result.success) {
+            requests = result.data || [];
+
+            renderRequests(requests);
+            // gridContainer.innerHTML = '';
+            // result.data.forEach(request => {
+            //     gridContainer.appendChild(createActivityCard(request));
+            // });
         } else {
             gridContainer.innerHTML = '<p class="no-activities">No hay peticiones disponibles en este momento.</p>';
         }
     } catch (error) {
         console.error('Error al cargar peticiones:', error);
         gridContainer.innerHTML = '<p class="error">Error al cargar las peticiones.</p>';
+    }
+}
+
+function renderRequests(requests) {
+    const gridContainer = document.getElementById('gridActivities');
+
+    gridContainer.innerHTML = '';
+
+    if (requests.length === 0) {
+        gridContainer.innerHTML = '<p class="no-activities">No hay actividades disponibles en este momento.</p>';
+
+    } else {
+        requests.forEach(request => {
+            gridContainer.appendChild(createActivityCard(request));
+        });
+    }
+}
+
+function applyFilters() {
+    const type = document.getElementById("filterType")?.value;
+    const value = document.getElementById("filterValue")?.value?.toLowerCase() || "";
+
+    if (!type) return;
+
+    // Determinar la tab activa
+    const activeTab = document.querySelector(".tab-btn.control.active")?.dataset.type;
+
+    if (activeTab === "activities") {
+        // Filtrar actividades
+        const filtered = activities.filter(item => matchFilter(item, type, value));
+        renderActivities(filtered);
+    } else if (activeTab === "requests") {
+        // Filtrar peticiones
+        const filtered = requests.filter(item => matchFilter(item, type, value));
+        renderRequests(filtered);
+    }
+}
+
+function matchFilter(activity, type, value) {
+    if (!value) return true;
+    switch (type) {
+        case "title":
+            return activity.title?.toLowerCase().includes(value);
+        case "category":
+            return activity.category_name?.toLowerCase().includes(value);
+        case "date":
+            return activity.date?.includes(value);
+        default:
+            return true;
     }
 }
 

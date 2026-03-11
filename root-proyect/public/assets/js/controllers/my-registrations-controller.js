@@ -1,3 +1,6 @@
+let registrationsActive = [];
+let registrationsFinished = [];
+
 document.addEventListener("DOMContentLoaded", () => {
     loadActivities();
 
@@ -19,6 +22,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     : "Ver inscripciones terminadas";
         });
     }
+
+    const filterInput = document.getElementById("filterInput");
+
+    if (filterInput) {
+        filterInput.addEventListener("input", applyFilters);
+        filterInput.addEventListener("change", applyFilters);
+    }
 });
 
 async function loadActivities() {
@@ -34,45 +44,113 @@ async function loadActivities() {
         const result = await response.json();
 
         // ACTIVAS
-        if (result.success && result.data?.active?.length > 0) {
+        if (result.success) {
 
-            gridContainer.innerHTML = '';
+            registrationsActive = result.data.active || [];
+            registrationsFinished = result.data.finished || [];
 
-            result.data.active.forEach(activity => {
-                gridContainer.appendChild(createActivityCard(activity));
-            });
+            renderRegistrations(registrationsActive, registrationsFinished)
+            // gridContainer.innerHTML = '';
 
-        } else {
-            // que se vea una debajo de otro
-            gridContainer.innerHTML = `
-            <p class="no-activities">Todavía no tienes ninguna inscripción.</p>
-            <p><a href="index.php?accion=seeActivities">Busca una nueva aventura</a></p>
-            `;
+            // result.data.active.forEach(activity => {
+            //     gridContainer.appendChild(createActivityCard(activity));
+            // });
 
-        }
+         } 
+        //  else {
+        //     // que se vea una debajo de otro
+        //     gridContainer.innerHTML = `
+        //     <p class="no-activities">Todavía no tienes ninguna inscripción.</p>
+        //     <p><a href="index.php?accion=seeActivities">Busca una nueva aventura</a></p>
+        //     `;
 
-        // TERMINADAS
-        if (result.success && result.data?.finished?.length > 0) {
+        // }
 
-            gridContainerFinished.innerHTML = '';
+        // // TERMINADAS
+        // if (result.success && result.data?.finished?.length > 0) {
 
-            result.data.finished.forEach(activity => {
-                gridContainerFinished.appendChild(createActivityCardFinished(activity));
-            });
+        //     gridContainerFinished.innerHTML = '';
 
-        } else {
+        //     result.data.finished.forEach(activity => {
+        //         gridContainerFinished.appendChild(createActivityCardFinished(activity));
+        //     });
 
-            gridContainerFinished.innerHTML = `
-            <p class="no-activities">Todavía no tienes inscripciones terminadas.</p>
-            `;
+        // } else {
 
-        }
+        //     gridContainerFinished.innerHTML = `
+        //     <p class="no-activities">Todavía no tienes inscripciones terminadas.</p>
+        //     `;
+
+        // }
 
     } catch (error) {
 
         console.error('Error al cargar inscripciones:', error);
         gridContainer.innerHTML = '<p class="error">Error al cargar inscripciones.</p>';
 
+    }
+}
+
+function renderRegistrations(active, finished){
+    const gridContainer = document.getElementById('gridRegistrations');
+    const gridContainerFinished = document.getElementById('gridRegistrationsFinished');
+
+    gridContainer.innerHTML = '';
+    gridContainerFinished.innerHTML = '';
+
+    if (active.length === 0) {
+
+        gridContainer.innerHTML = `
+            <p class="no-activities">Todavía no tienes ninguna inscripción.</p>
+            <p><a href="index.php?accion=seeActivities">Busca una nueva aventura</a></p>
+             `;
+    } else {
+
+        active.forEach(activity => {
+            gridContainer.appendChild(createActivityCard(activity));
+        });
+
+    }
+
+    if (finished.length === 0) {
+
+        gridContainerFinished.innerHTML = `
+             <p class="no-activities">Todavía no tienes inscripciones terminadas.</p>
+            `;
+    } else {
+
+        finished.forEach(activity => {
+            gridContainerFinished.appendChild(createActivityCardFinished(activity));
+        });
+
+    }
+
+}
+
+function applyFilters() {
+
+    const type = document.getElementById("filterType")?.value;
+    const value = document.getElementById("filterValue")?.value?.toLowerCase() || "";
+
+    if (!type) return;
+
+    const filteredActive = registrationsActive.filter(a => matchFilter(a, type, value));
+    const filteredFinished = registrationsFinished.filter(a => matchFilter(a, type, value));
+
+    renderRegistrations(filteredActive, filteredFinished);
+}
+
+function matchFilter(activity, type, value) {
+    if (!value) return true;
+    switch (type) {
+        case "title":
+            return activity.title?.toLowerCase().includes(value);
+        case "category":
+            return activity.category_name?.toLowerCase().includes(value);
+        case "date":
+            return activity.date?.includes(value);
+        default:
+            return true;
     }
 }
 
