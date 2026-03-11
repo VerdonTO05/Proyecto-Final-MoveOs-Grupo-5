@@ -130,4 +130,35 @@ function isParticipante()
 {
     return hasRole('participante');
 }
+
+/**
+ * Requerir que el usuario esté activo
+ * Consulta el state en la BD en cada petición para mayor seguridad y robustez.
+ * Redirige a la página de aviso si la cuenta está inactiva.
+ */
+function requireActiveUser()
+{
+    requireAuth();
+
+    // Consultar el state actual directamente en BD
+    try {
+        require_once __DIR__ . '/../../config/database.php';
+        $db = (new Database())->getConnection();
+        $stmt = $db->prepare("SELECT state FROM users WHERE id = :id LIMIT 1");
+        $stmt->execute(['id' => $_SESSION['user_id']]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $state = $row['state'] ?? 'activa';
+    } catch (Exception $e) {
+        // Si falla la consulta, asumir activo para no bloquear por error de BD
+        $state = 'activa';
+    }
+
+    // Actualizar sesión con el valor actual
+    $_SESSION['state'] = $state;
+
+    if ($state === 'inactiva') {
+        header('Location: index.php?accion=inactiveUser');
+        exit;
+    }
+}
 ?>

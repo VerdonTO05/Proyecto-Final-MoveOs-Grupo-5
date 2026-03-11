@@ -7,7 +7,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 require_once __DIR__ . '/../middleware/auth.php';
-requireAuth();
+requireActiveUser();
 
 $role = $_SESSION['role'] ?? null;
 $user = getCurrentUser();

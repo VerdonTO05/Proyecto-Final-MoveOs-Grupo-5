@@ -43,6 +43,7 @@ try {
     $_SESSION['username'] = $user['username'];
     $_SESSION['role'] = $user['role_name'];
     $_SESSION['email'] = $user['email'];
+    $_SESSION['state'] = $user['state']; // 'activa' o 'inactiva'
 
     $redirect = 'index.php?accion=seeActivities';
 

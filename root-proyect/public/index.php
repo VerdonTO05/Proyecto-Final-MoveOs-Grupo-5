@@ -108,6 +108,9 @@ switch ($action) {
   case 'users':
     require __DIR__ . '/../app/views/users.php';
     break;
+  case 'inactiveUser':
+    require __DIR__ . '/../app/views/inactive-user.php';
+    break;
   case 'getUsers':
     require __DIR__ . '/../app/controllers/get-users-controller.php';
     break;
