@@ -1,14 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const registerForm = document.querySelector(".register-form");
-  const closeBtn = document.querySelector('.close-btn');
-
-  // Botón cerrar
-  if (closeBtn) {
-    closeBtn.addEventListener('click', () => {
-      window.location.href = "index.php";
-    });
-  }
-
+ 
   // Validaciones simples
   const validateFullName = (name) => name.trim().split(' ').filter(p => p.length > 0).length >= 2;
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).toLowerCase());

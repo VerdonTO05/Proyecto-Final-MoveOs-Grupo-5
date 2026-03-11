@@ -1,12 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.querySelector(".login-form");
-  const closeBtn = document.querySelector(".close-btn");
-
-  if (closeBtn) {
-    closeBtn.addEventListener("click", () => {
-      window.location.href = "index.php";
-    });
-  }
 
   if (!loginForm) return;
 

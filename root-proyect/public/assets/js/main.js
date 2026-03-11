@@ -2,21 +2,28 @@ document.addEventListener('DOMContentLoaded', () => {
   initThemeLogic();
   renderHeaderByRole();
 
-  
+  const closeBtn = document.querySelector(".close-btn");
+
+  if (closeBtn) {
+    closeBtn.addEventListener("click", () => {
+      window.location.href = "index.php";
+    });
+  }
+
 });
 
 document.addEventListener("click", (e) => {
-    const toggle = e.target.closest(".menu-toggle");
-    if (!toggle) return;
+  const toggle = e.target.closest(".menu-toggle");
+  if (!toggle) return;
 
-    const nav = document.querySelector("header nav");
-    if (!nav) return;
+  const nav = document.querySelector("header nav");
+  if (!nav) return;
 
-    nav.classList.toggle("open");
-    toggle.innerHTML = nav.classList.contains("open")
-      ? '<i class="fa-solid fa-xmark"></i>'
-      : '<i class="fa-solid fa-bars"></i>';
-  });
+  nav.classList.toggle("open");
+  toggle.innerHTML = nav.classList.contains("open")
+    ? '<i class="fa-solid fa-xmark"></i>'
+    : '<i class="fa-solid fa-bars"></i>';
+});
 
 /**
  * Inicializar tema claro/oscuro
@@ -59,9 +66,9 @@ function renderHeaderByRole() {
   const linksRol = {
     administrador: [
       { texto: "Panel de control", href: "index.php?accion=controlPanel" },
-      { texto: "Control de usuarios", href: "index.php?accion=users"},
+      { texto: "Control de usuarios", href: "index.php?accion=users" },
       { texto: "Explorar Publicaciones", href: "index.php?accion=seeBoth" }
-      
+
     ],
     participante: [
       { texto: "Explorar Actividades", href: "index.php?accion=seeActivities" },

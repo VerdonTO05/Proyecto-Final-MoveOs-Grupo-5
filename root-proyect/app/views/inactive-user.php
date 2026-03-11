@@ -15,15 +15,25 @@ $username = $_SESSION['username'] ?? 'Usuario';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cuenta Inactiva - MOVEos</title>
     <script src="assets/js/theme-init.js"></script>
+    <script src="assets/js/main.js"></script>
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="icon" type="image/png" href="assets/img/ico/icono.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
+
 </head>
 
 <body>
     <div class="inactive-page">
-        <div class="inactive-card">
+        <div class="icons">
+            <!-- Theme switch -->
+            <label class="switch top-right">
+                <input type="checkbox" id="theme-toggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div class="container inactive-card">
+            <button class="close-btn" aria-label="Cerrar formulario" type="button">&times;</button>
+
             <div class="inactive-icon">
                 <i class="fas fa-user-slash" aria-hidden="true"></i>
             </div>
