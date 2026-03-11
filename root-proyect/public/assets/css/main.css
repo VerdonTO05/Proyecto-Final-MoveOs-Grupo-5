@@ -2353,5 +2353,117 @@ input[type=checkbox] {
     font-size: 1rem;
   }
 }
+.inactive-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+  background: var(--bg-main);
+}
+
+.inactive-card {
+  background: var(--bg-muted);
+  border-radius: 1.5rem;
+  padding: 3rem 2.5rem;
+  max-width: 520px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  animation: fadeInUp 0.5s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.inactive-icon {
+  font-size: 4rem;
+  color: var(--brand-primary);
+  margin-bottom: 1.5rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+.inactive-card h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+}
+
+.inactive-card .subtitle {
+  font-size: 1rem;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.inactive-card .username {
+  font-weight: 600;
+  color: var(--brand-primary);
+}
+
+.inactive-card .info-box {
+  background: var(--alert);
+  border: 1px solid var(--c-yellow);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  color: var(text-primary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.inactive-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+.btn-inactive-logout {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-inactive-logout:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-logout {
+  background: var(--brand-primary);
+  color: #fff;
+}
+
+.btn-profile {
+  background: var(--bg-card, #eee);
+  color: var(--text-primary, #333);
+  border: 1px solid var(--border, #ddd);
+}
 
 /*# sourceMappingURL=main.css.map */
