@@ -181,15 +181,35 @@ class Activity
      */
     public function getActivitiesByState($state)
     {
-        $sql = "SELECT a.*, u.full_name AS offertant_name, c.name AS category_name
-                FROM {$this->table_name} a
-                JOIN users u ON a.offertant_id = u.id
-                JOIN categories c ON a.category_id = c.id
-                WHERE a.state = :state AND a.is_completed = 0
-                ORDER BY a.created_at DESC";
+        $sql = "SELECT 
+                a.*, 
+                u.full_name AS offertant_name, 
+                c.name AS category_name,
+                IFNULL(
+                    (SELECT GROUP_CONCAT(participant_id) 
+                     FROM registrations r 
+                     WHERE r.activity_id = a.id
+                    ), ''
+                ) AS enrolled_user_ids
+            FROM {$this->table_name} a
+            JOIN users u ON a.offertant_id = u.id
+            JOIN categories c ON a.category_id = c.id
+            WHERE a.state = :state AND a.is_completed = 0
+            ORDER BY a.created_at DESC";
+
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(['state' => $state]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $activities = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Convertimos la cadena de IDs en array
+        foreach ($activities as &$activity) {
+            $activity['enrolled_user_ids'] = $activity['enrolled_user_ids'] !== ''
+                ? array_map('intval', explode(',', $activity['enrolled_user_ids']))
+                : [];
+        }
+
+        return $activities;
     }
 
     /**

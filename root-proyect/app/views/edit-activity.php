@@ -149,8 +149,8 @@ $participante = ($rol === 'participante');
 
             <div class="checkbox-group full">
                 <label>
-                    <input type="checkbox" name="transport_included" id="transport_toggle"
-                        value="<?= htmlspecialchars($publication['transport_included']) ?? "" ?>" />
+                    <input type="checkbox" name="transport_included" id="transport_toggle" value="1"
+                        <?= htmlspecialchars($publication['transport_included']) == 1 ? 'checked' : '' ?> />
                     Transporte incluido
                 </label>
                 <div id="departure_box" style="display:none; margin: 10px 0;">
@@ -158,7 +158,7 @@ $participante = ($rol === 'participante');
                         value="<?= htmlspecialchars($publication['departure_city']) ?? "" ?>">
                 </div>
                 <label>
-                    <input type="checkbox" name="pets_allowed" <?= htmlspecialchars($publication['pets_allowed']) ?? "" ?> />
+                    <input type="checkbox" name="pets_allowed" <?= htmlspecialchars($publication['pets_allowed']) == 1 ? 'checked' : '' ?> />
                     Mascotas permitidas
                 </label>
             </div>

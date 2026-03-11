@@ -407,7 +407,7 @@ function createActivityCard(activity) {
     card.className = "activity activity-card";
 
     const stateHTML = activity.state === 'pendiente'
-        ? `<button class="btn-state state"><i class="fas fa-hourglass-half"></i></button>`
+        ? `<button id="btn-state" class="state"><i class="fas fa-hourglass-half"></i></button>`
         : activity.state === 'rechazada'
             ? `<span class="state"><i class="fas fa-times"></i></span>`
             : `<span class="state"><i class="fas fa-check-double"></i></span>`;

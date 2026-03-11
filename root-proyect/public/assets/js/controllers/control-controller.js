@@ -428,7 +428,7 @@ function showConfirm({ title, message }) {
  *
  * @returns {void}
  */
-function showAlert(title, message, type = 'info', duration = 3000) {
+function showAlert(title, message, type = 'info', duration = 2000) {
     const overlay = document.createElement('div');
     overlay.classList.add('alert-overlay', type);
 

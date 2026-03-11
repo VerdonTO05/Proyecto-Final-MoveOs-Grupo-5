@@ -363,6 +363,11 @@ function createActiveCard(pub) {
         <div class="activity-image">${buildImageHTML(pub)}</div>
         <div class="activity-content">
             ${pub.category_name ? `<span class="category">${pub.category_name}</span>` : ""}
+            ${pub.state === 'pendiente'
+             ? `<button id="btn-state" class="state"><i class="fas fa-hourglass-half"></i></button>`
+            : pub.state === 'rechazada'
+                 ? `<span class="state"><i class="fas fa-times"></i></span>`
+                 : `<span class="state"><i class="fas fa-check-double"></i></span>`}
             <h3>${pub.title}</h3>
             <p class="description">${pub.description}</p>
             ${buildDetailsHTML(pub)}

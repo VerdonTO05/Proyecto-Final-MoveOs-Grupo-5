@@ -353,155 +353,182 @@
 // home-controller.js
 // ============================================================
 import {
-    matchFilter, getFilterValues, bindFilterListeners,
-    buildImageHTML, buildMetaHTML, buildFooterHTML, buildDetailsHTML,
-    openDetailModal, showConfirm, showAlert
+  matchFilter, getFilterValues, bindFilterListeners,
+  buildImageHTML, buildMetaHTML, buildFooterHTML, buildDetailsHTML,
+  openDetailModal, showConfirm, showAlert
 } from './shared.js';
 
 let publications = [];
 
 document.addEventListener("DOMContentLoaded", () => {
-    if (!window.CURRENT_USER) {
-        window.location.href = "index.php?accion=loginView";
-        return;
-    }
+  if (!window.CURRENT_USER) {
+    window.location.href = "index.php?accion=loginView";
+    return;
+  }
 
-    loadPublications(CURRENT_USER.role);
-    bindFilterListeners(applyFilters);
+  loadPublications(CURRENT_USER.role);
+  bindFilterListeners(applyFilters);
 });
 
 // ----------------------------
 // Carga de datos
 // ----------------------------
 async function loadPublications(role) {
-    const grid = document.getElementById('gridActivities');
-    if (!grid) return;
+  const grid = document.getElementById('gridActivities');
+  if (!grid) return;
 
-    try {
-        const result = await fetch('index.php?accion=getAprove').then(r => r.json());
-        if (result.success) {
-            publications = result.data || [];
-            render(publications, role);
-        }
-    } catch (error) {
-        console.error('Error al cargar publicaciones:', error);
-        grid.innerHTML = '<p class="error">Error al cargar las actividades.</p>';
+  try {
+    const result = await fetch('index.php?accion=getAprove').then(r => r.json());
+    if (result.success) {
+      publications = result.data || [];
+      render(publications, role);
     }
+  } catch (error) {
+    console.error('Error al cargar publicaciones:', error);
+    grid.innerHTML = '<p class="error">Error al cargar las actividades.</p>';
+  }
 }
 
 // ----------------------------
 // Render
 // ----------------------------
 function render(items, role) {
-    const grid = document.getElementById('gridActivities');
-    grid.innerHTML = '';
+  const grid = document.getElementById('gridActivities');
+  grid.innerHTML = '';
 
-    if (items.length === 0) {
-        grid.innerHTML = role === 'organizador'
-            ? '<p class="no-activities">No hay peticiones disponibles en este momento.</p>'
-            : '<p class="no-activities">No hay actividades disponibles en este momento.</p>';
-        return;
-    }
-    items.forEach(item => grid.appendChild(createCard(item, role)));
+  if (items.length === 0) {
+    grid.innerHTML = role === 'organizador'
+      ? '<p class="no-activities">No hay peticiones disponibles en este momento.</p>'
+      : '<p class="no-activities">No hay actividades disponibles en este momento.</p>';
+    return;
+  }
+  items.forEach(item => grid.appendChild(createCard(item, role)));
 }
 
 // ----------------------------
 // Filtros
 // ----------------------------
 function applyFilters() {
-    const { type, value } = getFilterValues();
-    if (!type) return;
+  const { type, value } = getFilterValues();
+  if (!type) return;
 
-    const role = CURRENT_USER.role;
-    render(publications.filter(a => matchFilter(a, type, value)), role);
+  const role = CURRENT_USER.role;
+  render(publications.filter(a => matchFilter(a, type, value)), role);
 }
 
 // ----------------------------
 // Card
 // ----------------------------
 function createCard(activity, role) {
-    const card = document.createElement("article");
-    card.className = "activity activity-card";
+  const card = document.createElement("article");
+  card.className = "activity activity-card";
 
-    card.innerHTML = `
-        <div class="activity-image">${buildImageHTML(activity)}</div>
-        <div class="activity-content">
-            ${activity.category_name ? `<span class="category">${activity.category_name}</span>` : ""}
-            <h3>${activity.title}</h3>
-            <p class="description">${activity.description}</p>
-            ${buildDetailsHTML(activity)}
-            ${buildMetaHTML(activity)}
-            ${buildFooterHTML(activity)}
-            <div class="actions">
-                <button class="btn-detail" data-id="${activity.id}">Ver Detalles</button>
-                <button class="btn-signup" data-id="${activity.id}">
-                    ${role === 'organizador' ? 'Aceptar' : 'Inscribirse'}
-                </button>
-            </div>
-        </div>`;
+  card.innerHTML = `
+    <div class="activity-image">${buildImageHTML(activity)}</div>
+    <div class="activity-content">
+        ${activity.category_name ? `<span class="category">${activity.category_name}</span>` : ""}
+        <h3>${activity.title}</h3>
+        <p class="description">${activity.description}</p>
+        ${buildDetailsHTML(activity)}
+        ${buildMetaHTML(activity)}
+        ${buildFooterHTML(activity)}
+        <div class="actions">
+            <button class="btn-detail" data-id="${activity.id}">Ver Detalles</button>
+            <button class="btn-signup" data-id="${activity.id}">
+                ${role === 'organizador' ? 'Aceptar' : 'Inscribirse'}
+            </button>
+        </div>
+    </div>`;
 
-    card.querySelector(".btn-detail")?.addEventListener("click", () => {
-        openDetailModal(activity, role);
-    });
+  const signupBtn = card.querySelector(".btn-signup");
 
-    card.querySelector(".btn-signup")?.addEventListener("click", (e) => {
-        handleSignup(e.currentTarget, activity, role, card);
-    });
+  // ✅ Deshabilitar si el usuario ya está inscrito
+  if (role !== 'organizador' && activity.enrolled_user_ids?.includes(CURRENT_USER.id)) {
+    signupBtn.textContent = "Inscrito";
+    signupBtn.disabled = true;
+    signupBtn.classList.add("enrolled");
+  }
 
-    return card;
+  card.querySelector(".btn-detail")?.addEventListener("click", () => {
+    openDetailModal(activity, role);
+  });
+
+  signupBtn?.addEventListener("click", (e) => {
+    handleSignup(e.currentTarget, activity, role, card);
+  });
+
+  return card;
 }
 
 // ----------------------------
 // Acción de signup / aceptar
 // ----------------------------
 async function handleSignup(btn, activity, role, card) {
-    const actionText = role === 'organizador' ? 'aceptar esta actividad' : 'inscribirte en esta actividad';
+  const actionText = role === 'organizador' ? 'aceptar esta actividad' : 'inscribirte en esta actividad';
 
-    const confirmed = await showConfirm({
-        title:   role === 'organizador' ? '¿Aceptar esta actividad?' : '¿Inscribirse a esta actividad?',
-        message: `Estás a punto de ${actionText}.`
+  const confirmed = await showConfirm({
+    title: role === 'organizador' ? '¿Aceptar esta actividad?' : '¿Inscribirse a esta actividad?',
+    message: `Estás a punto de ${actionText}.`
+  });
+
+  if (!confirmed) return;
+
+  const signupBtn = card.querySelector(".btn-signup");
+  signupBtn.disabled = true;
+
+  console.log(activity.enrolled_user_ids);
+
+  // Verifica si el usuario ya está inscrito
+  if (activity.enrolled_user_ids.includes(CURRENT_USER.id)) {
+
+    signupBtn.textContent = "Inscrito";
+    signupBtn.disabled = true;
+    signupBtn.classList.add("enrolled");
+  }
+
+  try {
+    const response = await fetch('index.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        accion: role === 'organizador' ? 'acceptRequest' : 'signupActivity',
+        id_activity: activity.id
+      })
     });
 
-    if (!confirmed) return;
+    const result = await response.json();
 
-    btn.disabled = true;
+    if (result.success) {
+      showAlert(
+        role === 'organizador' ? 'Actividad aceptada' : 'Inscripción realizada',
+        result.message,
+        'success'
+      );
 
-    try {
-        const response = await fetch('index.php', {
-            method:  'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body:    JSON.stringify({
-                accion:      role === 'organizador' ? 'acceptRequest' : 'signupActivity',
-                id_activity: activity.id
-            })
-        });
+      if (role === 'organizador') {
+        card.style.transition = 'opacity 0.3s, transform 0.3s';
+        card.style.opacity = '0';
+        card.style.transform = 'scale(0.9)';
+        setTimeout(() => card.remove(), 300);
+      } else {
+        signupBtn.textContent = "Inscrito";
+        signupBtn.disabled = true;
+        signupBtn.classList.add("enrolled");
 
-        const result = await response.json();
-
-        if (result.success) {
-            showAlert(
-                role === 'organizador' ? 'Actividad aceptada' : 'Inscripción realizada',
-                result.message,
-                'success'
-            );
-
-            if (role === 'organizador') {
-                // Eliminar card con animación
-                card.style.transition = 'opacity 0.3s, transform 0.3s';
-                card.style.opacity    = '0';
-                card.style.transform  = 'scale(0.9)';
-                setTimeout(() => card.remove(), 300);
-            } else {
-                btn.textContent = "Inscrito";
-                btn.disabled    = true;
-            }
-        } else {
-            throw new Error(result.message || 'Error desconocido');
+        const participantsSpan = card.querySelector(".participants");
+        if (participantsSpan) {
+          activity.current_registrations = (activity.current_registrations || 0) + 1;
+          participantsSpan.innerHTML =
+            `<i class="fas fa-users"></i> ${activity.current_registrations}/${activity.max_people}`;
         }
-    } catch (error) {
-        console.error(error);
-        showAlert('Error', 'Ocurrió un error al realizar la acción.', 'error');
-        btn.disabled    = false;
-        btn.textContent = role === 'organizador' ? 'Aceptar' : 'Inscribirse';
+      }
+    } else {
+      throw new Error(result.message || 'Error desconocido');
     }
+  } catch (error) {
+    console.error(error);
+    showAlert('Error', 'Ocurrió un error al realizar la acción.', 'error');
+    signupBtn.disabled = false;
+    signupBtn.textContent = role === 'organizador' ? 'Aceptar' : 'Inscribirse';
+  }
 }

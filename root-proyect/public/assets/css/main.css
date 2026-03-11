@@ -1181,6 +1181,9 @@ select {
   transition: background-color 0.2s;
   flex: 1;
 }
+.activity .activity-content .actions .btn-signup.enrolled {
+  background-color: var(--desactivate-color);
+}
 .activity .activity-content.desactivate {
   background-color: var(--desactivate-color);
   opacity: 0.55;

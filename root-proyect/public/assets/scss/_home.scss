@@ -148,6 +148,10 @@
       .btn-signup {
         @include m.btn-base(var(--brand-primary), var(--bg-surface));
         flex: 1;
+
+        &.enrolled {
+          background-color: var(--desactivate-color);
+        }
       }
     }
 
