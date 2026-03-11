@@ -10,7 +10,7 @@
 }
 
 .inactive-card {
-    background: var(--bg-muted);
+    background-color: var(--bg-surface);
     border-radius: 1.5rem;
     padding: 3rem 2.5rem;
     max-width: 520px;
@@ -108,11 +108,10 @@
 
 .btn-logout {
     background: var(--brand-primary);
-    color: #fff;
+    color: var(--bg-muted);
 }
 
 .btn-profile {
-    background: var(--bg-card, #eee);
-    color: var(--text-primary, #333);
-    border: 1px solid var(--border, #ddd);
+    background: var(--bg-main);
+    color: var(--brand-dark);
 }

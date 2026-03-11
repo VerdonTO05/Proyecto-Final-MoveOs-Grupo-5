@@ -2,6 +2,7 @@
 // Proteger la página - solo oferentes y participantes pueden crear actividades
 require_once __DIR__ . '/../middleware/auth.php';
 requireAnyRole(['organizador', 'participante']);
+requireActiveUser();
 
 $rol = $_SESSION['role'];
 $participante = ($rol === 'participante');
