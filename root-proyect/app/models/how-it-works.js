@@ -1,3 +1,4 @@
+//js refactorizado 12/03/2026
 /**
  * HTML principal del tutorial "Cómo funciona"
  * Contiene la estructura de la sección, pestañas de participante/organizador,
@@ -54,10 +55,6 @@ const videoHTML = `
 </div>
 `;
 
-/* =========================
-   INICIALIZACIÓN
-   ========================= */
-
 /**
  * Inicializa los eventos del tutorial al cargar la página
  */
@@ -67,39 +64,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!tutorialContainer) return;
 
-  // Evento para mostrar el tutorial al pulsar el botón
+  // Mostrar tutorial al pulsar el botón
   howBtn?.addEventListener("click", (e) => {
     e.preventDefault();
     showHowItWorks(tutorialContainer);
   });
 
-  // Evento para abrir el vídeo al pulsar el enlace
+  // Abrir vídeo al pulsar el enlace
   document.addEventListener("click", (e) => {
     if (e.target.id === "openVideo") {
       e.preventDefault();
-
-      const enlace = e.target;
-      const textoOriginal = enlace.textContent;
-
-      enlace.textContent = "Cargando...";
-      enlace.style.pointerEvents = "none"; //evita múltiples clicks
-
-      // Esperamos 3 segundos antes de abrir el vídeo
-      setTimeout(() => {
-        enlace.style.pointerEvents = "auto";
-        openVideo(tutorialContainer);
-      }, 3000);
+      openVideo(tutorialContainer);
     }
   });
-
 });
 
-/* =========================
-   TUTORIAL
-   ========================= */
-
 /**
- * Renderiza el HTML del tutorial en el contenedor y activa su lógica.
+ * Renderiza el HTML del tutorial en el contenedor y activa su lógica
  * @param {HTMLElement} container - Contenedor donde se muestra el tutorial
  */
 function showHowItWorks(container) {
@@ -123,10 +104,13 @@ function activateHowItWorks() {
 
   if (!card) return;
 
-  let mode = "participante"; // Modo inicial
-  let currentStep = 0; // Paso inicial
+  let mode = "participante";
+  let currentStep = 0;
 
-  // Devuelve el array de pasos según el modo actual
+  /**
+   * Devuelve los pasos según el modo actual
+   * @returns {Array<{title:string, subtitle:string, list:string[]}>}
+   */
   const getSteps = () =>
     mode === "participante" ? stepsParticipante : stepsOrganizadores;
 
@@ -136,8 +120,8 @@ function activateHowItWorks() {
       tabButtons.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
 
-      mode = btn.dataset.mode; // Actualiza el modo
-      currentStep = 0; // Reinicia al primer paso
+      mode = btn.dataset.mode;
+      currentStep = 0;
 
       updateSteps(stepButtons, currentStep);
       renderStep(card, getSteps()[currentStep]);
@@ -193,19 +177,13 @@ function renderStep(card, step) {
   `;
 }
 
-/* =========================
-   VIDEO
-   ========================= */
-
 /**
  * Abre el reproductor de vídeo del tutorial
  * @param {HTMLElement} container - Contenedor donde se mostrará el vídeo
  */
 function openVideo(container) {
-  // Inserta el HTML del vídeo en el contenedor
   container.innerHTML = `<div class="how-it-works">${videoHTML}</div>`;
 
-  // Elementos importantes del vídeo
   const video = container.querySelector("#hiwVideo");
   const playBtn = container.querySelector(".play");
   const progress = container.querySelector(".progress");
@@ -260,24 +238,20 @@ function openVideo(container) {
   });
 
   // Eventos para cerrar el vídeo
-  closeBtn?.addEventListener("click", closeVideo);           // Botón ✕
-  overlay?.addEventListener("click", closeVideo);           // Click fuera del vídeo
-  videoWrapper?.addEventListener("click", e => e.stopPropagation()); // Evita cerrar al pulsar dentro del vídeo
-  document.addEventListener("keydown", escClose);           // ESC
+  closeBtn?.addEventListener("click", closeVideo);
+  overlay?.addEventListener("click", closeVideo);
+  videoWrapper?.addEventListener("click", e => e.stopPropagation());
+  document.addEventListener("keydown", escClose);
 
   // Inicializa estilo de barras de rango
   updateRangeFill(progress);
   updateRangeFill(volume);
 }
 
-/* =========================
-   UTILS
-   ========================= */
-
 /**
  * Alterna reproducción/pausa del vídeo y actualiza el botón
- * @param {HTMLVideoElement} video 
- * @param {HTMLElement} button 
+ * @param {HTMLVideoElement} video - Elemento de vídeo
+ * @param {HTMLElement} button - Botón play/pause
  */
 function togglePlay(video, button) {
   if (video.paused) {
@@ -291,7 +265,7 @@ function togglePlay(video, button) {
 
 /**
  * Actualiza el estilo de relleno de un input range (progreso/volumen)
- * @param {HTMLInputElement} range 
+ * @param {HTMLInputElement} range - Input tipo range
  */
 function updateRangeFill(range) {
   if (!range) return;
@@ -309,8 +283,8 @@ function updateRangeFill(range) {
 
 /**
  * Convierte segundos a formato mm:ss
- * @param {number} seconds 
- * @returns {string} Tiempo formateado
+ * @param {number} seconds - Tiempo en segundos
+ * @returns {string} Tiempo formateado como "mm:ss"
  */
 function formatTime(seconds) {
   const min = Math.floor(seconds / 60);

@@ -18,16 +18,16 @@ export function formatDate(dateStr) {
 export function matchFilter(item, type, value) {
     if (!value) return true;
     switch (type) {
-        case "title":    return item.title?.toLowerCase().includes(value);
+        case "title": return item.title?.toLowerCase().includes(value);
         case "category": return item.category_name?.toLowerCase().includes(value);
-        case "date":     return item.date?.includes(value);
-        default:         return true;
+        case "date": return item.date?.includes(value);
+        default: return true;
     }
 }
 
 export function getFilterValues() {
     return {
-        type:  document.getElementById("filterType")?.value || "",
+        type: document.getElementById("filterType")?.value || "",
         value: document.getElementById("filterValue")?.value?.toLowerCase() || ""
     };
 }
@@ -35,7 +35,7 @@ export function getFilterValues() {
 export function bindFilterListeners(callback) {
     const filterInput = document.getElementById("filterInput");
     if (filterInput) {
-        filterInput.addEventListener("input",  callback);
+        filterInput.addEventListener("input", callback);
         filterInput.addEventListener("change", callback);
     }
 }
@@ -61,7 +61,7 @@ export function buildMetaHTML(pub) {
         : null;
     return `
         <div class="activity-meta">
-            ${date  ? `<span><i class="fas fa-calendar-alt"></i> ${date}</span>` : ""}
+            ${date ? `<span><i class="fas fa-calendar-alt"></i> ${date}</span>` : ""}
             ${pub.location ? `<span><i class="fas fa-map-marker-alt"></i> ${pub.location}</span>` : ""}
             ${price ? `<span><i class="fas fa-euro-sign"></i> ${price}</span>` : ""}
         </div>`;
@@ -71,11 +71,11 @@ export function buildFooterHTML(pub) {
     return `
         <div class="activity-footer">
             ${pub.offertant_name
-                ? `<span class="organizer"><i class="fas fa-user"></i> ${pub.offertant_name}</span>`
-                : ""}
+            ? `<span class="organizer"><i class="fas fa-user"></i> ${pub.offertant_name}</span>`
+            : ""}
             ${pub.current_registrations != null && pub.max_people != null
-                ? `<span class="participants"><i class="fas fa-users"></i> ${pub.current_registrations}/${pub.max_people}</span>`
-                : ""}
+            ? `<span class="participants"><i class="fas fa-users"></i> ${pub.current_registrations}/${pub.max_people}</span>`
+            : ""}
         </div>`;
 }
 
@@ -94,9 +94,9 @@ export function openDetailModal(activity, role = null) {
 
     const isOrg = role === 'organizador';
 
-    modal.querySelector(".modal-title").textContent        = activity.title;
-    modal.querySelector(".category").textContent           = activity.category_name || '';
-    modal.querySelector(".modal-image").innerHTML          =
+    modal.querySelector(".modal-title").textContent = activity.title;
+    modal.querySelector(".category").textContent = activity.category_name || '';
+    modal.querySelector(".modal-image").innerHTML =
         `<img src="${activity.image_url || 'assets/img/default-activity.jpg'}" alt="${activity.title}">`;
 
     modal.querySelector(".modal-description").innerHTML = `
@@ -155,8 +155,8 @@ export function showConfirm({ title, message }) {
             setTimeout(() => overlay.remove(), 250);
         };
 
-        modal.querySelector('.confirm').addEventListener('click', () => { resolve(true);  close(); });
-        modal.querySelector('.cancel').addEventListener('click',  () => { resolve(false); close(); });
+        modal.querySelector('.confirm').addEventListener('click', () => { resolve(true); close(); });
+        modal.querySelector('.cancel').addEventListener('click', () => { resolve(false); close(); });
     });
 }
 
@@ -164,34 +164,41 @@ export function showConfirm({ title, message }) {
 // Alerta tipo toast
 // ----------------------------
 export function showAlert(title, message, type = 'info', duration = 3000) {
-    const overlay = document.createElement('div');
-    overlay.classList.add('alert-overlay', type);
+    return new Promise((resolve) => {
 
-    const alertBox = document.createElement('div');
-    alertBox.classList.add('alert-box');
-    alertBox.innerHTML = `
-        <div class="alert-header">${title}</div>
-        <div class="alert-body">${message}</div>
-        <button class="alert-close">&times;</button>`;
+        const overlay = document.createElement('div');
+        overlay.classList.add('alert-overlay', type);
 
-    overlay.appendChild(alertBox);
-    document.body.appendChild(overlay);
+        const alertBox = document.createElement('div');
+        alertBox.classList.add('alert-box');
+        alertBox.innerHTML = `
+            <div class="alert-header">${title}</div>
+            <div class="alert-body">${message}</div>
+            <button class="alert-close">&times;</button>`;
 
-    const close = () => {
-        alertBox.style.animation = 'fadeOut 0.3s forwards';
-        overlay.classList.remove('active');
-        setTimeout(() => overlay.remove(), 300);
-    };
+        overlay.appendChild(alertBox);
+        document.body.appendChild(overlay);
 
-    alertBox.querySelector('.alert-close').addEventListener('click', close);
-    setTimeout(close, duration);
+        const close = () => {
+            alertBox.style.animation = 'fadeOut 0.3s forwards';
+            overlay.classList.remove('active');
 
-    requestAnimationFrame(() => {
-        overlay.classList.add('active');
-        alertBox.style.animation = 'fadeIn 0.3s forwards';
+            setTimeout(() => {
+                overlay.remove();
+                resolve(); // 👈 aquí termina la alerta
+            }, 300);
+        };
+
+        alertBox.querySelector('.alert-close').addEventListener('click', close);
+        setTimeout(close, duration);
+
+        requestAnimationFrame(() => {
+            overlay.classList.add('active');
+            alertBox.style.animation = 'fadeIn 0.3s forwards';
+        });
+
     });
 }
-
 // ----------------------------
 // Envío de formulario dinámico (POST)
 // ----------------------------
@@ -210,7 +217,7 @@ export function submitForm(action, id) {
 // Toggle de sección colapsable
 // ----------------------------
 export function bindToggleSection(btnId, sectionId, labelOpen, labelClose) {
-    const btn     = document.getElementById(btnId);
+    const btn = document.getElementById(btnId);
     const section = document.getElementById(sectionId);
     if (!btn || !section) return;
 
@@ -219,3 +226,28 @@ export function bindToggleSection(btnId, sectionId, labelOpen, labelClose) {
         btn.textContent = visible ? labelOpen : labelClose;
     });
 }
+
+export function renderError(selector, message) {
+    const container = document.querySelector(selector);
+    if (!container) return;
+
+    container.innerHTML = `
+        <p style="text-align:center;padding:2rem;color:var(--accent-danger);">
+            <i class="fas fa-exclamation-triangle"></i> ${message}
+        </p>
+    `;
+}
+
+export function removeElementWithAnimation(element, duration = 300, callback) {
+    if (!element) return;
+
+    element.style.transition = `opacity ${duration}ms, transform ${duration}ms`;
+    element.style.opacity = "0";
+    element.style.transform = "scale(0.9)";
+
+    setTimeout(() => {
+        element.remove();
+        callback?.();
+    }, duration);
+}
+

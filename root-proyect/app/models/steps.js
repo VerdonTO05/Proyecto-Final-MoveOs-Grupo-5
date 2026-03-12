@@ -1,3 +1,4 @@
+// js refactorizado 12/03/2026
 /**
  * @typedef {Object} Step
  * @property {string} icon - Clase del icono (actualmente no usado en la UI)

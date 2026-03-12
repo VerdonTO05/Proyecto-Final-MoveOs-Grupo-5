@@ -100,7 +100,7 @@
   max-width: 400px;
   width: 90%;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  animation: fadeIn 0.3s ease forwards;
+  animation-duration: 0.5s;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -113,6 +113,12 @@
 
   .alert-body {
     font-size: 0.9rem;
+  }
+
+  .alert-close{
+    position: absolute;  
+    top: 0.5rem;          
+    right: 0.5rem;
   }
 }
 
