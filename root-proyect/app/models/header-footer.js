@@ -1,11 +1,6 @@
-//js refactorizado 12/03/2026
-import { showConfirm, showAlert } from "../../public/assets/js/controllers/shared.js";
-
 /* =========================
    HEADER Y FOOTER HTML
    ========================= */
-
-/** HTML del header de la plataforma */
 const headerHTML = `
 <header>
   <nav>
@@ -54,7 +49,6 @@ const headerHTML = `
 </header>
 `;
 
-/** HTML del footer de la plataforma */
 const footerHTML = `
 <footer>
   <section>
@@ -84,24 +78,28 @@ const footerHTML = `
 </footer>
 `;
 
-/** Inicializa la interfaz: header, footer, tema, usuario, sidebar y baja de cuenta */
+/* =========================
+   INICIALIZADOR PRINCIPAL
+   ========================= */
 document.addEventListener("DOMContentLoaded", () => {
-  injectLayout();       
-  initThemeLogic();     
-  initUserLogic();      
-  initSidebarLogic();  
+  injectLayout();
+  initThemeLogic();
+  initUserLogic();
+  initSidebarLogic();
   initUnsubscribeLogic();
 });
 
-/** Inserta el header y footer en el DOM */
+/* =========================
+   LAYOUT
+   ========================= */
 function injectLayout() {
   document.getElementById('header')?.insertAdjacentHTML('afterbegin', headerHTML);
   document.getElementById('footer')?.insertAdjacentHTML('afterbegin', footerHTML);
 }
 
-/**
- * Inicializa el dropdown del usuario y el logout
- */
+/* =========================
+   USUARIO: DROPDOWN Y LOGOUT
+   ========================= */
 function initUserLogic() {
   const userBtn = document.getElementById('user-btn');
   const userDropdown = document.getElementById('user-dropdown');
@@ -111,15 +109,15 @@ function initUserLogic() {
   const user = window.CURRENT_USER || null;
   if (!userBtn || !userDropdown) return;
 
-  // Mostrar u ocultar el dropdown de usuario al hacer click
+  // Mostrar/ocultar dropdown
   userBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     if (!user) return window.location.href = 'index.php?accion=loginView';
-    if (displayUsername) displayUsername.innerText = user.name || 'Usuario';
+    displayUsername && (displayUsername.innerText = user.name || 'Usuario');
     toggleVisibility(userDropdown);
   });
 
-  // Logout: redirige a logout y oculta dropdown
+  // Logout
   logoutLink?.addEventListener('click', (e) => {
     e.preventDefault();
     hideElement(userDropdown);
@@ -127,28 +125,26 @@ function initUserLogic() {
   });
 }
 
-/**
- * Inicializa el toggle del tema claro/oscuro
- */
+/* =========================
+   TEMA CLARO / OSCURO
+   ========================= */
 function initThemeLogic() {
   const themeToggle = document.getElementById('theme-toggle');
   if (!themeToggle) return;
 
-  const isDark = localStorage.getItem('mode') === 'dark';
-  document.body.classList.toggle('dark-mode', isDark);
-  themeToggle.checked = isDark;
+  document.body.classList.toggle('dark-mode', localStorage.getItem('mode') === 'dark');
+  themeToggle.checked = document.body.classList.contains('dark-mode');
 
-  // Cambiar tema al alternar checkbox
   themeToggle.addEventListener('change', () => {
-    const dark = themeToggle.checked;
-    document.body.classList.toggle('dark-mode', dark);
-    localStorage.setItem('mode', dark ? 'dark' : 'light');
+    const isDark = themeToggle.checked;
+    document.body.classList.toggle('dark-mode', isDark);
+    localStorage.setItem('mode', isDark ? 'dark' : 'light');
   });
 }
 
-/**
- * Inicializa la lógica del sidebar del usuario
- */
+/* =========================
+   SIDEBAR USUARIO
+   ========================= */
 function initSidebarLogic() {
   const displayUsername = document.getElementById('display-username');
   const userDropdown = document.getElementById('user-dropdown');
@@ -156,22 +152,22 @@ function initSidebarLogic() {
   const closeBtn = sidebar?.querySelector('.closebtn');
   if (!sidebar) return;
 
-  // Abrir sidebar al hacer click en el nombre del usuario
+  // Abrir sidebar
   displayUsername?.addEventListener('click', () => sidebar.style.width = '250px');
 
-  // Cerrar sidebar al hacer click en la X
+  // Cerrar sidebar
   closeBtn?.addEventListener('click', () => sidebar.style.width = '0');
 
-  // Cerrar sidebar al hacer click fuera y ocultar dropdown
+  // Cerrar al hacer click fuera
   window.addEventListener('click', (e) => {
     if (!sidebar.contains(e.target) && e.target !== displayUsername) sidebar.style.width = '0';
     hideElement(userDropdown);
   });
 }
 
-/**
- * Inicializa la acción de dar de baja la cuenta del usuario
- */
+/* =========================
+   DAR DE BAJA (UNSUBSCRIBE)
+   ========================= */
 function initUnsubscribeLogic() {
   const unsubscribeLink = document.querySelector('a[href="index.php?accion=unsubscribe"]');
   if (!unsubscribeLink) return;
@@ -179,16 +175,14 @@ function initUnsubscribeLogic() {
   unsubscribeLink.addEventListener("click", async (e) => {
     e.preventDefault();
 
-    // Confirmación del usuario antes de borrar la cuenta
-    const confirmDelete = await showConfirm(
-      "Dar de baja su cuenta",
-      "Esta acción es irreversible.\nSe eliminará tu cuenta y todos tus datos.\n¿Deseas continuar?"
-    );
+    const confirmDelete = await showConfirm({
+      title: "Dar de baja su cuenta",
+      message: "Esta acción es irreversible.\nSe eliminará tu cuenta y todos tus datos.\n¿Deseas continuar?"
+    });
 
     if (!confirmDelete) return;
 
     try {
-      // Solicitud POST para eliminar la cuenta
       const res = await fetch("index.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -198,44 +192,120 @@ function initUnsubscribeLogic() {
       const data = await res.json();
 
       if (data.success) {
-        // Mostrar alerta de éxito y redirigir
-        showAlert(
-          "Cuenta eliminada",
-          "Tu cuenta se eliminó correctamente"
-        );
-        setTimeout(() => window.location.href = "index.php", 3000);
+        showAlert({
+          title: "Cuenta eliminada",
+          message: "Tu cuenta se eliminó correctamente"
+        });
+
+        setTimeout(() => {
+          window.location.href = "index.php";
+        }, 1200);
       } else {
-        // Mostrar error si falla
-        showAlert(
-          "Error",
-          data.message || "No se pudo eliminar la cuenta"
-        );
+        showAlert({
+          title: "Error",
+          message: data.message || "No se pudo eliminar la cuenta"
+        });
       }
     } catch (err) {
-      // Error en la petición
-      showAlert(
-        "Error",
-        "Error al eliminar la cuenta"
-      );
+      console.error(err);
+      showAlert({
+        title: "Error",
+        message: "Error al eliminar la cuenta"
+      });
     }
   });
 }
 
-/**
- * Alterna clases 'visible' e 'invisible' de un elemento
- * @param {HTMLElement} el - Elemento a mostrar/ocultar
- */
+/* =========================
+   HELPERS
+   ========================= */
 function toggleVisibility(el) {
   el.classList.toggle('visible');
   el.classList.toggle('invisible');
 }
 
-/**
- * Oculta un elemento añadiendo clase 'invisible' y quitando 'visible'
- * @param {HTMLElement} el - Elemento a ocultar
- */
 function hideElement(el) {
   if (!el) return;
   el.classList.remove('visible');
   el.classList.add('invisible');
 }
+
+/* =========================
+   MODALES DINÁMICOS (CONFIRM y ALERT)
+   ========================= */
+window.showConfirm = function(optionsOrTitle, message = "") {
+  const options = typeof optionsOrTitle === "string"
+    ? { title: optionsOrTitle, message }
+    : optionsOrTitle;
+
+  const { title = "Confirmar", message: msg = "", confirmText = "Aceptar", cancelText = "Cancelar" } = options;
+
+  // Crear modalContainer si no existe
+  let modalContainer = document.getElementById("modal-container");
+  if (!modalContainer) {
+    modalContainer = document.createElement("div");
+    modalContainer.id = "modal-container";
+    document.body.appendChild(modalContainer);
+  }
+
+  return new Promise((resolve) => {
+    const modal = document.createElement("div");
+    modal.className = "modal";
+
+    modal.innerHTML = `
+      <div class="modal-header">${title}</div>
+      <div class="modal-body">${msg}</div>
+      <div class="modal-actions">
+        <button class="cancel">${cancelText}</button>
+        <button class="confirm">${confirmText}</button>
+      </div>
+    `;
+
+    modalContainer.appendChild(modal);
+    modalContainer.classList.add("active");
+
+    const close = () => {
+      modal.style.animation = "fadeOut 0.25s forwards";
+      setTimeout(() => {
+        modal.remove();
+        modalContainer.classList.remove("active");
+      }, 250);
+    };
+
+    modal.querySelector(".cancel").addEventListener("click", () => { close(); resolve(false); });
+    modal.querySelector(".confirm").addEventListener("click", () => { close(); resolve(true); });
+  });
+};
+
+window.showAlert = function({ title = "Aviso", message = "", buttonText = "Aceptar" }) {
+  let modalContainer = document.getElementById("modal-container");
+  if (!modalContainer) {
+    modalContainer = document.createElement("div");
+    modalContainer.id = "modal-container";
+    document.body.appendChild(modalContainer);
+  }
+
+  const modal = document.createElement("div");
+  modal.className = "modal";
+
+  modal.innerHTML = `
+    <div class="modal-header">${title}</div>
+    <div class="modal-body">${message}</div>
+    <div class="modal-actions">
+      <button class="confirm">${buttonText}</button>
+    </div>
+  `;
+
+  modalContainer.appendChild(modal);
+  modalContainer.classList.add("active");
+
+  const close = () => {
+    modal.style.animation = "fadeOut 0.25s forwards";
+    setTimeout(() => {
+      modal.remove();
+      modalContainer.classList.remove("active");
+    }, 250);
+  };
+
+  modal.querySelector(".confirm").addEventListener("click", close);
+};
