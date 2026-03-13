@@ -190,7 +190,7 @@ footer {
     display: flex;
 }
 
-/* Sidebar de usuario */
+/* Sidebar del usuario   */
 .sidebar {
     display: flex;
     flex-direction: column;
@@ -199,33 +199,45 @@ footer {
     position: fixed;
     top: 0;
     right: 0;
-    background-color: var(--brand-primary);
+    background: linear-gradient(to bottom, var(--brand-primary), var(--brand-dark));
     overflow-x: hidden;
-    transition: 0.3s;
-    padding-top: 5rem;
+    transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    padding-top: 6rem;
     z-index: 9999;
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.4);
 }
 
 .sidebar a {
-    padding: 1.3rem;
-    padding-bottom: 1rem;
-    font-size: 16px;
+    padding: 1.2rem 2.5rem;
+    font-size: 1.1rem;
     color: var(--bg-main);
-    justify-content: center;
+    text-decoration: none;
+    display: block;
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+    letter-spacing: 0.5px;
 }
 
 .sidebar a:hover {
-    color: var(--bg-main);
-    background-color: var(--brand-dark);
+    color: #ffffff !important; 
+    background-color: var(--brand-dark); 
+    border-left: 4px solid #ffffff; 
+    padding-left: 3rem;
 }
 
 .sidebar .closebtn {
     position: absolute;
-    top: 20px;
+    top: 15px;
     right: 25px;
-    font-size: 36px;
+    font-size: 2.5rem;
     color: var(--bg-main);
     cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+}
+
+.sidebar .closebtn:hover {
+    transform: rotate(90deg) scale(1.1);
 }
 
 
