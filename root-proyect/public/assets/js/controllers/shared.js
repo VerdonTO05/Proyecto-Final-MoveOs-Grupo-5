@@ -94,6 +94,7 @@ export function openDetailModal(activity, role = null) {
 
     const isOrg = role === 'organizador';
 
+    // ── Contenido del modal ───────────────────────────────────────
     modal.querySelector(".modal-title").textContent = activity.title;
     modal.querySelector(".category").textContent = activity.category_name || '';
     modal.querySelector(".modal-image").innerHTML =
@@ -121,6 +122,37 @@ export function openDetailModal(activity, role = null) {
         <p><span class="title"><i class="fas fa-location-dot"></i> <strong>Ciudad de partida</strong></span> ${activity.departure_city || activity.location || 'No disponible'}</p>
         <p><span class="title"><i class="fas fa-paw"></i> <strong>${activity.pets_allowed ? 'Mascotas permitidas' : 'Mascotas no permitidas'}</strong></span></p>
         <p><span class="title"><i class="fas fa-tshirt"></i> <strong>Código de vestimenta</strong></span> ${activity.dress_code || 'No disponible'}</p>`;
+
+    // ── Tabs ─────────────────────────────────────────────────────
+    // Limpiar listeners anteriores clonando los botones de tab
+    modal.querySelectorAll('.modal-tabs .tab-btn').forEach(btn => {
+        const fresh = btn.cloneNode(true);
+        btn.replaceWith(fresh);
+    });
+
+    // Resetear al tab 'Detalles' al abrir
+    modal.querySelectorAll('.modal-tabs .tab-btn').forEach(b => b.classList.remove('active'));
+    const detailsTab = modal.querySelector('.tab-btn[data-tab="details"]');
+    if (detailsTab) detailsTab.classList.add('active');
+    const bodyEl = modal.querySelector('.modal-body');
+    if (bodyEl) bodyEl.style.display = '';
+
+    // Vincular listeners
+    modal.querySelectorAll('.modal-tabs .tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            modal.querySelectorAll('.modal-tabs .tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            if (btn.dataset.tab === 'chat') {
+                // Navegar a la página de chat grupal de esta actividad
+                if (activity.id) {
+                    window.location.href = `index.php?accion=chatActivity&activity_id=${activity.id}`;
+                }
+            }
+            // Si tab === 'details' no necesita nada, ya está visible
+        });
+    });
+    // ─────────────────────────────────────────────────────────────
 
     modal.style.display = "flex";
     modal.querySelector(".modal-close").onclick = () => modal.style.display = "none";

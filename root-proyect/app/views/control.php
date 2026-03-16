@@ -76,6 +76,18 @@ $user = getCurrentUser();
             </div>
         </section>
 
+        <!-- Acceso rápido al Chat Admin -->
+        <section style="padding: 0 1.5rem 1rem; display:flex; justify-content:flex-end;">
+            <a
+                href="index.php?accion=adminChat"
+                class="btn-chat"
+                aria-label="Ir al chat de usuarios"
+                style="font-size:1rem; padding:0.6rem 1.2rem;"
+            >
+                <i class="fas fa-headset"></i> Mensajes de usuarios
+            </a>
+        </section>
+
         <!-- Tabs -->
         <section class="tab-switch" role="tablist" aria-label="Opciones de vista de actividades">
             <button class="tab-btn control active" role="tab" aria-selected="true" tabindex="0">Actividades <span aria-hidden="true">...</span></button>

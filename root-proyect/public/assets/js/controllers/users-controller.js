@@ -126,7 +126,6 @@ function createUserCard(user) {
 
   btnEdit.addEventListener('click', () => {
     const currentDisplay = window.getComputedStyle(vacData).display;
-
     if (currentDisplay === 'none') {
       vacData.style.display = 'block';
       btnEdit.textContent = 'Ocultar datos';
@@ -135,6 +134,14 @@ function createUserCard(user) {
       btnEdit.textContent = 'Ver datos';
     }
   });
+
+  // Botón Chat — el admin inicia conversación con ese usuario
+  const btnMessage = card.querySelector('.btn-message');
+  if (btnMessage) {
+      btnMessage.addEventListener('click', () => {
+          window.location.href = `index.php?accion=adminChat&user_id=${user.id}`;
+      });
+  }
 
   return card;
 }

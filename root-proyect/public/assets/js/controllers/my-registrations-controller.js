@@ -388,6 +388,13 @@ function createActiveCard(pub) {
             <div class="actions">
                 <button class="btn-detail" data-id="${pub.id}">Editar</button>
                 <button class="btn-signup" data-id="${pub.id}">Eliminar</button>
+                <a
+                    href="index.php?accion=chatActivity&activity_id=${pub.id}"
+                    class="btn-chat"
+                    aria-label="Abrir chat de la actividad ${pub.title}"
+                >
+                    <i class="fas fa-comments"></i> Chat
+                </a>
             </div>
         </div>`;
 
@@ -402,6 +409,7 @@ function createActiveCard(pub) {
 
     return card;
 }
+
 
 // ----------------------------
 // Card terminada (solo visualización)

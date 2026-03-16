@@ -127,6 +127,29 @@ switch ($action) {
   case 'requestCode':
     require __DIR__ . '/../app/controllers/request-code-controller.php';
     break;
+
+  // ── Chat ────────────────────────────────────────────────────────────────
+  case 'getMessages':
+    require __DIR__ . '/../app/controllers/get-messages.php';
+    break;
+  case 'sendMessage':
+    require __DIR__ . '/../app/controllers/send-message.php';
+    break;
+  case 'getChatRooms':
+    require __DIR__ . '/../app/controllers/get-chat-rooms.php';
+    break;
+  case 'chatActivity':
+    require __DIR__ . '/../app/views/chat-activity.php';
+    break;
+  case 'adminChat':
+    require __DIR__ . '/../app/views/admin-chat.php';
+    break;
+  case 'userAdminChat':
+    require __DIR__ . '/../app/views/user-admin-chat.php';
+    break;
+  // ────────────────────────────────────────────────────────────────────────
+
+
   default:
     require __DIR__ . '/../app/views/landing.php';
     break;

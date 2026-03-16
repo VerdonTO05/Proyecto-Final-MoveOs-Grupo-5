@@ -41,6 +41,7 @@ const headerHTML = `
       <a href="index.php?accion=viewInfo">Ver datos usuario</a>
       <a href="index.php?accion=editUser">Editar datos</a>
       <a href="index.php?accion=forgot-password">Recuperar contraseña</a>
+      <a href="index.php?accion=userAdminChat" id="sidebarChatLink" style="display:none"><i class="fas fa-headset"></i> Chat con soporte</a>
       <a href="#">Redes sociales</a>
       <a href="#">Contáctanos</a>
       <a href="index.php?accion=unsubscribe">Dar de baja</a>
@@ -154,6 +155,13 @@ function initSidebarLogic() {
 
   // Abrir sidebar
   displayUsername?.addEventListener('click', () => sidebar.style.width = '250px');
+
+  // Mostrar link de chat solo para participantes y organizadores
+  const user = window.CURRENT_USER;
+  const chatLink = document.getElementById('sidebarChatLink');
+  if (chatLink && user && user.role !== 'administrador') {
+      chatLink.style.display = 'block';
+  }
 
   // Cerrar sidebar
   closeBtn?.addEventListener('click', () => sidebar.style.width = '0');
