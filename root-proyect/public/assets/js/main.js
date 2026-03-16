@@ -104,7 +104,7 @@ function renderHeaderByRole() {
       { texto: "Panel de control", href: "index.php?accion=controlPanel" },
       { texto: "Control de usuarios", href: "index.php?accion=users" },
       { texto: "Explorar Publicaciones", href: "index.php?accion=seeBoth" },
-      { texto: '<i class="fa-solid fa-bell"></i>', href: "index.php?accion=notificaciones", title: "Notificaciones"}
+      { texto: '<i class="fa-solid fa-bell"></i>', href: "index.php?accion=notificaciones", title: "Notificaciones" }
     ],
     participante: [
       { texto: "Explorar Actividades", href: "index.php?accion=seeActivities" },
