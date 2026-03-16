@@ -45,6 +45,10 @@ header {
             &:hover {
                 color: var(--brand-primary);
             }
+
+            i{
+                margin-left: 2rem;
+            }
         }
 
         >div {

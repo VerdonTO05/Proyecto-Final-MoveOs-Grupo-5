@@ -152,6 +152,9 @@ header nav a {
 header nav a:hover {
   color: var(--brand-primary);
 }
+header nav a i {
+  margin-left: 2rem;
+}
 header nav > div {
   display: flex;
   flex-wrap: wrap;

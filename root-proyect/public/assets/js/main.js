@@ -103,18 +103,22 @@ function renderHeaderByRole() {
     administrador: [
       { texto: "Panel de control", href: "index.php?accion=controlPanel" },
       { texto: "Control de usuarios", href: "index.php?accion=users" },
-      { texto: "Explorar Publicaciones", href: "index.php?accion=seeBoth" }
-
+      { texto: "Explorar Publicaciones", href: "index.php?accion=seeBoth" },
+      { texto: '<i class="fa-solid fa-bell"></i>', href: "index.php?accion=notificaciones", title: "Notificaciones"}
     ],
     participante: [
       { texto: "Explorar Actividades", href: "index.php?accion=seeActivities" },
       { texto: "Mis peticiones", href: "index.php?accion=seeMyActivities" },
-      { texto: "Actividades pendientes", href: "index.php?accion=seeRegistrations" }
+      { texto: "Actividades pendientes", href: "index.php?accion=seeRegistrations" },
+      { texto: '<i class="fa-solid fa-angles-up"></i>', href: "index.php?accion=createActivity", title: "Crear Publicación" },
+      { texto: '<i class="fa-solid fa-bell"></i>', href: "index.php?accion=notificaciones", title: "Notificaciones" }
     ],
     organizador: [
       { texto: "Explorar Peticiones", href: "index.php?accion=seeRequest" },
       { texto: "Mis actividades", href: "index.php?accion=seeMyActivities" },
-      { texto: "Peticiones pendientes", href: "index.php?accion=seeRegistrations" }
+      { texto: "Peticiones pendientes", href: "index.php?accion=seeRegistrations" },
+      { texto: '<i class="fa-solid fa-angles-up"></i>', href: "index.php?accion=createActivity", title: "Crear Publicación" },
+      { texto: '<i class="fa-solid fa-bell"></i>', href: "index.php?accion=notificaciones", title: "Notificaciones" }
     ]
   };
 
@@ -124,8 +128,13 @@ function renderHeaderByRole() {
   linksRol[rol].forEach(link => {
     const li = document.createElement('li');
     const a = document.createElement('a');
-    a.textContent = link.texto;
+    a.innerHTML = link.texto;
     a.href = link.href;
+
+    if (link.title) {
+      a.title = link.title;
+    }
+
     li.appendChild(a);
     header.appendChild(li);
   });
