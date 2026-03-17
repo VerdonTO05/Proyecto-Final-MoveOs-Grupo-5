@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const password = passwordInput.value.trim();
 
     if (!username || !password) {
-      alert("Completa todos los campos");
+      showAlert('¡Ojo!', 'Completa todos los campos', 'info');
       return;
     }
 
@@ -49,11 +49,37 @@ document.addEventListener("DOMContentLoaded", () => {
       if (response.ok && data.success) {
         window.location.href = data.redirect;
       } else {
-        alert(data.message || "Credenciales incorrectas");
+        showAlert('Error al iniciar sesión', 'Credenciales incorrectas', 'info');
       }
     } catch (error) {
-      console.error("Error:", error);
-      alert("Error al iniciar sesión");
+      showAlert('Error al iniciar sesión', 'Error en el servidor', 'error');
     }
   });
 });
+
+
+function showAlert(title, message, type = 'info', duration = 2500) {
+    const overlay = document.createElement('div');
+    overlay.classList.add('alert-overlay', type);
+
+    const alertBox = document.createElement('div');
+    alertBox.classList.add('alert-box');
+    alertBox.innerHTML = `
+        <div class="alert-header">${title}</div>
+        <div class="alert-body">${message}</div>
+    `;
+
+    overlay.appendChild(alertBox);
+    document.body.appendChild(overlay);
+
+    const closeAlert = () => {
+        alertBox.style.animation = 'fadeOut 0.3s forwards';
+        overlay.classList.remove('active');
+        setTimeout(() => document.body.removeChild(overlay), 300);
+    };
+    setTimeout(closeAlert, duration);
+    requestAnimationFrame(() => {
+        overlay.classList.add('active');
+        alertBox.style.animation = 'fadeIn 0.3s forwards';
+    });
+}
