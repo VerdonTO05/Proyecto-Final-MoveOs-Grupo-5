@@ -19,10 +19,11 @@ $user = getCurrentUser();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MOVEos - Descubre y comparte experiencias únicas</title>
-    <script src="../app/models/header-footer.js"></script>
-    <script src="../app/models/steps.js"></script>
-    <script src="../app/models/how-it-works.js"></script>
-    <script type="module" src="assets/js/controllers/landing-controller.js"></script>
+    <script src="assets/js/utils/header-footer.js"></script>
+    <script src="assets/js/utils/steps.js"></script>
+    <script src="assets/js/utils/how-it-works.js"></script>
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/controllers/landing-controller.js"></script>
     <script src="assets/js/theme-init.js"></script>
     <script src="assets/js/main.js"></script>
     <link rel="stylesheet" href="assets/css/main.css">
@@ -98,19 +99,19 @@ $user = getCurrentUser();
         <!-- Estadísticas -->
         <section>
             <div>
-                <h2>500+</h2>
+                <h2>50+</h2>
                 <p>Actividades</p>
             </div>
             <div>
-                <h2>2.5k+</h2>
+                <h2>200+</h2>
                 <p>Participantes</p>
             </div>
             <div>
-                <h2>150+</h2>
+                <h2>100+</h2>
                 <p>Organizadores</p>
             </div>
             <div>
-                <h2>4.8</h2>
+                <h2>4.7</h2>
                 <p>Valoración Media</p>
             </div>
         </section>

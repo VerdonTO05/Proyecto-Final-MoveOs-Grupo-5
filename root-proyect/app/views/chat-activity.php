@@ -63,7 +63,7 @@ if ($currentUser['role'] !== 'administrador') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat – <?= $activityTitle ?> | MOVEos</title>
 
-    <script src="../app/models/header-footer.js"></script>
+    <script src="assets/js/utils/header-footer.js"></script>
     <script src="assets/js/theme-init.js"></script>
     <script src="assets/js/main.js"></script>
     <link rel="stylesheet" href="assets/css/main.css">
