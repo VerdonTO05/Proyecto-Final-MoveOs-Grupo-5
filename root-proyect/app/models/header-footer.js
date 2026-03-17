@@ -41,7 +41,7 @@ const headerHTML = `
       <a href="index.php?accion=viewInfo">Ver datos usuario</a>
       <a href="index.php?accion=editUser">Editar datos</a>
       <a href="index.php?accion=forgot-password">Recuperar contraseña</a>
-      <a href="index.php?accion=userAdminChat" id="sidebarChatLink">Chat con soporte</a>
+      <a href="index.php?accion=chatHub" id="sidebarChatLink">Mis conversaciones</a>
       <a href="#">Redes sociales</a>
       <a href="index.php?accion=unsubscribe">Dar de baja</a>
     </div>
@@ -158,8 +158,9 @@ function initSidebarLogic() {
   // Mostrar link de chat solo para participantes y organizadores
   const user = window.CURRENT_USER;
   const chatLink = document.getElementById('sidebarChatLink');
-  if (chatLink && user && user.role !== 'administrador') {
-      chatLink.style.display = 'block';
+  
+  if (user && user.role !== 'administrador') {
+      if (chatLink) chatLink.style.display = 'block';
   }
 
   // Cerrar sidebar

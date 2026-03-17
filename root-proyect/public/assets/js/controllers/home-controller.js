@@ -476,14 +476,13 @@ async function handleSignup(btn, activity, role, card) {
   const signupBtn = card.querySelector(".btn-signup");
   signupBtn.disabled = true;
 
-  console.log(activity.enrolled_user_ids);
-
-  // Verifica si el usuario ya está inscrito
-  if (activity.enrolled_user_ids.includes(CURRENT_USER.id)) {
-
+  // Verifica si el usuario ya está inscrito (antes de llamar al servidor)
+  // enrolled_user_ids contiene ints (intval en PHP), CURRENT_USER.id es string → parseamos
+  if (activity.enrolled_user_ids?.includes(parseInt(CURRENT_USER.id))) {
     signupBtn.textContent = "Inscrito";
     signupBtn.disabled = true;
     signupBtn.classList.add("enrolled");
+    return; // No hace falta llamar al servidor
   }
 
   try {
@@ -523,7 +522,14 @@ async function handleSignup(btn, activity, role, card) {
         }
       }
     } else {
-      throw new Error(result.message || 'Error desconocido');
+      // Si el servidor dice ya inscrito, tratar como estado válido (no como error)
+      if (result.message === 'Ya estás inscrito en esta actividad') {
+        signupBtn.textContent = "Inscrito";
+        signupBtn.disabled = true;
+        signupBtn.classList.add("enrolled");
+      } else {
+        throw new Error(result.message || 'Error desconocido');
+      }
     }
   } catch (error) {
     console.error(error);

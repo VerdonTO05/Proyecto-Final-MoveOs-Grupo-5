@@ -129,6 +129,12 @@ switch ($action) {
     break;
 
   // ── Chat ────────────────────────────────────────────────────────────────
+  case 'chatHub':
+    require __DIR__ . '/../app/views/chat-hub.php';
+    break;
+  case 'getChatHub':
+    require __DIR__ . '/../app/controllers/get-chat-hub.php';
+    exit;
   case 'getMessages':
     require __DIR__ . '/../app/controllers/get-messages.php';
     break;

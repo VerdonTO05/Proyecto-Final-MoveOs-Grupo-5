@@ -7,7 +7,11 @@ if (session_status() === PHP_SESSION_NONE) {
 
 require_once '../models/Inscription.php';
 
-$data = json_decode(file_get_contents("php://input"), true);
+// index.php puede haber leído php://input; reutilizarlo si está disponible
+if (!isset($input) || empty($input)) {
+    $input = json_decode(file_get_contents('php://input'), true) ?? [];
+}
+$data = $input;
 
 if (!isset($_SESSION['user_id'])) {
   echo json_encode([

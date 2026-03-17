@@ -28,7 +28,10 @@ if (!isAuthenticated()) {
 }
 
 // --- Leer body JSON ---
-$input = json_decode(file_get_contents('php://input'), true) ?? [];
+// Evitar sobreescribir $input si ya fue parseado en index.php
+if (!isset($input) || empty($input)) {
+    $input = json_decode(file_get_contents('php://input'), true) ?? [];
+}
 
 $roomType      = $input['room_type'] ?? '';
 $roomId        = (int) ($input['room_id'] ?? 0);
@@ -85,6 +88,7 @@ try {
 
 } catch (Exception $e) {
     error_log('Error en send-message.php: ' . $e->getMessage());
-    echo json_encode(['success' => false, 'message' => 'Error al enviar el mensaje']);
+    // ENVIAR EL MENSAJE REAL DEL ERROR PARA DEPURACIÓN EN DESARROLLO
+    echo json_encode(['success' => false, 'message' => 'Error BD: ' . $e->getMessage()]);
 }
 ?>

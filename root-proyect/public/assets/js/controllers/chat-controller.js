@@ -29,14 +29,14 @@ let pollingTimer = null;
 
 /** Sala activa actual */
 let activeRoomType = window.CHAT_ROOM_TYPE ?? null;
-let activeRoomId   = window.CHAT_ROOM_ID   ?? null;
+let activeRoomId = window.CHAT_ROOM_ID ?? null;
 
 // ── Elementos del DOM ────────────────────────────────────────────────────────
 
 const messagesArea = document.getElementById('chatMessagesArea');
-const chatForm     = document.getElementById('chatForm');
-const chatInput    = document.getElementById('chatInput');
-const emptyState   = document.getElementById('chatEmptyState');
+const chatForm = document.getElementById('chatForm');
+const chatInput = document.getElementById('chatInput');
+const emptyState = document.getElementById('chatEmptyState');
 
 // ── Inicialización ───────────────────────────────────────────────────────────
 
@@ -68,8 +68,8 @@ function startPolling(roomType, roomId) {
     stopPolling();
 
     activeRoomType = roomType;
-    activeRoomId   = roomId;
-    lastMessageId  = 0;
+    activeRoomId = roomId;
+    lastMessageId = 0;
 
     // Primera carga inmediata
     fetchNewMessages();
@@ -96,14 +96,14 @@ async function fetchNewMessages() {
     if (!activeRoomId) return;
 
     const url = new URL('index.php', window.location.origin + window.location.pathname.replace('index.php', ''));
-    url.searchParams.set('accion',    'getMessages');
+    url.searchParams.set('accion', 'getMessages');
     url.searchParams.set('room_type', activeRoomType);
-    url.searchParams.set('room_id',   activeRoomId);
-    url.searchParams.set('after_id',  lastMessageId);
+    url.searchParams.set('room_id', activeRoomId);
+    url.searchParams.set('after_id', lastMessageId);
 
     try {
         const response = await fetch(url.toString());
-        const data     = await response.json();
+        const data = await response.json();
 
         if (!data.success) {
             console.error('[Chat] Error al obtener mensajes:', data.message);
@@ -136,16 +136,16 @@ async function handleSendMessage(event) {
     if (!text || !activeRoomId) return;
 
     // Deshabilitar input mientras se envía
-    chatInput.disabled  = true;
+    chatInput.disabled = true;
 
     try {
         const response = await fetch('index.php?accion=sendMessage', {
-            method:  'POST',
+            method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body:    JSON.stringify({
+            body: JSON.stringify({
                 room_type: activeRoomType,
-                room_id:   activeRoomId,
-                message:   text,
+                room_id: activeRoomId,
+                message: text,
             }),
         });
 
@@ -180,14 +180,14 @@ async function handleSendMessage(event) {
  */
 function renderMessages(messages) {
     const currentUserId = window.CURRENT_USER?.id;
-    const fragment      = document.createDocumentFragment();
+    const fragment = document.createDocumentFragment();
 
     messages.forEach(msg => {
         // Evitar duplicados si el mensaje ya está en el DOM
         if (document.getElementById(`chat-msg-${msg.id}`)) return;
 
-        const isOwn   = parseInt(msg.sender_id) === parseInt(currentUserId);
-        const bubble  = buildMessageBubble(msg, isOwn);
+        const isOwn = parseInt(msg.sender_id) === parseInt(currentUserId);
+        const bubble = buildMessageBubble(msg, isOwn);
         fragment.appendChild(bubble);
     });
 
@@ -204,19 +204,19 @@ function renderMessages(messages) {
  */
 function buildMessageBubble(msg, isOwn) {
     const wrapper = document.createElement('div');
-    wrapper.id        = `chat-msg-${msg.id}`;
+    wrapper.id = `chat-msg-${msg.id}`;
     wrapper.className = `chat-bubble ${isOwn ? 'chat-bubble--own' : 'chat-bubble--other'}`;
 
-    const senderEl  = document.createElement('span');
-    senderEl.className   = 'chat-bubble__sender';
+    const senderEl = document.createElement('span');
+    senderEl.className = 'chat-bubble__sender';
     senderEl.textContent = isOwn ? 'Tú' : msg.sender_name;
 
-    const textEl    = document.createElement('p');
-    textEl.className   = 'chat-bubble__text';
+    const textEl = document.createElement('p');
+    textEl.className = 'chat-bubble__text';
     textEl.textContent = msg.message;
 
-    const timeEl    = document.createElement('time');
-    timeEl.className   = 'chat-bubble__time';
+    const timeEl = document.createElement('time');
+    timeEl.className = 'chat-bubble__time';
     timeEl.textContent = formatTime(msg.created_at);
 
     wrapper.appendChild(senderEl);
@@ -284,7 +284,7 @@ async function initAdminMode() {
 async function loadAdminConversations() {
     try {
         const response = await fetch('index.php?accion=getChatRooms');
-        const data     = await response.json();
+        const data = await response.json();
 
         if (!data.success) {
             console.error('[Chat Admin] Error al cargar conversaciones:', data.message);
@@ -304,7 +304,7 @@ async function loadAdminConversations() {
  * @param {Array<{user_id, user_name, full_name, last_message, last_message_at}>} conversations
  */
 function renderConversationList(conversations) {
-    const list      = document.getElementById('chatUserList');
+    const list = document.getElementById('chatUserList');
     const emptyItem = document.getElementById('chatUserListEmpty');
 
     if (!list) return;
@@ -347,8 +347,8 @@ function renderConversationList(conversations) {
  */
 function buildConversationItem(conv) {
     const li = document.createElement('li');
-    li.className        = 'chat-user-item';
-    li.dataset.userId   = conv.user_id;
+    li.className = 'chat-user-item';
+    li.dataset.userId = conv.user_id;
     li.setAttribute('role', 'button');
     li.setAttribute('tabindex', '0');
     li.setAttribute('aria-label', `Chat con ${conv.full_name}`);
@@ -363,7 +363,7 @@ function buildConversationItem(conv) {
 
     // Seleccionar conversación al hacer clic o pulsar Enter
     const selectConversation = () => openAdminConversation(conv.user_id, conv.full_name);
-    li.addEventListener('click',   selectConversation);
+    li.addEventListener('click', selectConversation);
     li.addEventListener('keydown', (e) => { if (e.key === 'Enter') selectConversation(); });
 
     return li;
@@ -399,13 +399,13 @@ function openAdminConversation(userId, fullName) {
  */
 function showConversationPanel() {
     const noSelection = document.getElementById('chatNoSelection');
-    const header      = document.getElementById('chatConversationHeader');
-    const form        = document.getElementById('chatForm');
+    const header = document.getElementById('chatConversationHeader');
+    const form = document.getElementById('chatForm');
 
-    if (noSelection) noSelection.style.display    = 'none';
-    if (header)      header.classList.remove('chat-header--hidden');
+    if (noSelection) noSelection.style.display = 'none';
+    if (header) header.classList.remove('chat-header--hidden');
     if (messagesArea) messagesArea.classList.remove('chat-messages-area--hidden');
-    if (form)        form.classList.remove('chat-input-area--hidden');
+    if (form) form.classList.remove('chat-input-area--hidden');
 }
 
 // ── Utilidades ───────────────────────────────────────────────────────────────

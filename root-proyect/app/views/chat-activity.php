@@ -21,7 +21,7 @@ if ($activityId <= 0) {
 // ── Obtener nombre de la actividad para mostrarlo como título ────────────────
 require_once __DIR__ . '/../../config/database.php';
 $db   = (new Database())->getConnection();
-$stmt = $db->prepare("SELECT title FROM activities WHERE id = :id LIMIT 1");
+$stmt = $db->prepare("SELECT id, title, offertant_id FROM activities WHERE id = :id LIMIT 1");
 $stmt->execute(['id' => $activityId]);
 $activity = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -30,8 +30,32 @@ if (!$activity) {
     exit;
 }
 
-$currentUser     = getCurrentUser();
-$activityTitle   = htmlspecialchars($activity['title']);
+$currentUser   = getCurrentUser();
+$activityTitle = htmlspecialchars($activity['title']);
+
+// ── Verificar acceso a la sala ───────────────────────────────────────────────
+// El administrador siempre tiene acceso.
+// El organizador de la actividad tiene acceso.
+// Un participante solo si está inscrito.
+if ($currentUser['role'] !== 'administrador') {
+    $isOrganizer = (int) $currentUser['id'] === (int) $activity['offertant_id'];
+
+    if (!$isOrganizer) {
+        $stmtCheck = $db->prepare(
+            "SELECT 1 FROM registrations
+             WHERE activity_id = :aid AND participant_id = :uid LIMIT 1"
+        );
+        $stmtCheck->execute(['aid' => $activityId, 'uid' => $currentUser['id']]);
+        $isEnrolled = (bool) $stmtCheck->fetch();
+
+        if (!$isEnrolled) {
+            // No tiene acceso: redirigir con mensaje
+            $_SESSION['error'] = 'Debes estar inscrito en la actividad para acceder al chat.';
+            header('Location: index.php?accion=seeActivities');
+            exit;
+        }
+    }
+}
 ?>
 
 <head>

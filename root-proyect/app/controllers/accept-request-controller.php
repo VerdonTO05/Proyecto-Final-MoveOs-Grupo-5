@@ -16,7 +16,11 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-$data = json_decode(file_get_contents("php://input"), true);
+// index.php puede haber leído php://input; reutilizarlo si está disponible
+if (!isset($input) || empty($input)) {
+    $input = json_decode(file_get_contents('php://input'), true) ?? [];
+}
+$data = $input;
 
 $id_request = $data['id_activity'] ?? null;
 $organizer_id = $_SESSION['user_id'];

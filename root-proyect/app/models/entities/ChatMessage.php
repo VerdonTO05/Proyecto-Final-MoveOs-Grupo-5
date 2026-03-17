@@ -165,7 +165,8 @@ class ChatMessage
 
         if ($roomType === self::ROOM_ADMIN) {
             // Solo el propio usuario puede acceder a su sala admin
-            return $userId === $roomId;
+            // Usamos == en lugar de === porque $userId puede venir como string desde la sesión
+            return (int) $userId === (int) $roomId;
         }
 
         return false;
