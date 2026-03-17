@@ -14,6 +14,7 @@ $input = json_decode(file_get_contents('php://input'), true);
 $username = trim($input['username'] ?? '');
 $password = trim($input['password'] ?? '');
 
+// Si están vacíos los atributos
 if ($username === '' || $password === '') {
     echo json_encode([
         'success' => false,
@@ -27,7 +28,7 @@ try {
     $db = $database->getConnection();
 
     $userModel = new User($db);
-    $user = $userModel->loginByUsername($username, $password);
+    $user = $userModel->loginByUsername($username, $password); //Comprueba si existe el usuario
 
     if (!$user) {
         echo json_encode([
@@ -37,7 +38,7 @@ try {
         exit;
     }
 
-    // Guardar sesión
+    // Guarda los datos en sesión
     session_regenerate_id(true);
     $_SESSION['user_id'] = $user['id'];
     $_SESSION['username'] = $user['username'];
@@ -45,12 +46,8 @@ try {
     $_SESSION['email'] = $user['email'];
     $_SESSION['state'] = $user['state']; // 'activa' o 'inactiva'
 
-    $redirect = 'index.php?accion=seeActivities';
-
-    if ($user['role_name'] == 'administrador') {
-        $redirect = 'index.php?accion=seeBoth';
-    }
-
+    $user['role_name'] == 'administrador' ? $redirect = 'index.php?accion=seeBoth' : $redirect = 'index.php?accion=seeActivities';
+    
     echo json_encode([
         'success' => true,
         'redirect' => $redirect
