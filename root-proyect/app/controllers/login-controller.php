@@ -47,7 +47,7 @@ try {
 
     $redirect = 'index.php?accion=seeActivities';
 
-    if($user['role_name']=='administrador'){
+    if ($user['role_name'] == 'administrador') {
         $redirect = 'index.php?accion=seeBoth';
     }
 

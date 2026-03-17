@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <?php
+//Si el usuario está logueado redirigir a la ventana de inicio
 if (isset($_SESSION['user_id'])) {
     header("Location: index.php");
     exit;
@@ -17,8 +17,8 @@ if (isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="assets/js/theme-init.js"></script>
     <script src="assets/js/main.js"></script>
-    <script type="module" src="assets/js/controllers/login-controller.js"></script>
-
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/controllers/login-controller.js"></script>
 </head>
 
 <body>
@@ -39,6 +39,7 @@ if (isset($_SESSION['user_id'])) {
                 <p>Inicia sesión para continuar tu aventura</p>
             </header>
 
+            <!-- Switch formularios -->
             <div class="tab-switch" role="tablist">
                 <a href="#" class="tab-btn active" role="tab" aria-selected="true">Iniciar Sesión</a>
                 <a class="tab-btn" href="index.php?accion=register" role="tab" aria-selected="false">Registrarse</a>

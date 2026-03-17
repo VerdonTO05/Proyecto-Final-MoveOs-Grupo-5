@@ -29,7 +29,7 @@ class Database
             $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
         } catch (PDOException $e) {
-            die("Error de conexión: " . $e->getMessage());
+            throw new Exception("Error de conexión: " . $e->getMessage());
         }
 
         return $this->conn;
