@@ -317,7 +317,7 @@ main section:first-of-type {
     button {
         @include m.button-base;
         border: 1px solid var(--brand-primary);
-        background: var(--bg-surface);
+        background: var(--bg-main);
         font-weight: 600;
 
         &:first-child {

@@ -17,7 +17,7 @@ const headerHTML = `
 
     <ul id="list">
       <li><a href="index.php">Inicio</a></li>
-      <li id="how"><a href="#">Cómo Funciona</a></li>
+      <li id="how"><a href="index.php#how-tutorial">Cómo Funciona</a></li>
     </ul>
 
     <div class="icons">

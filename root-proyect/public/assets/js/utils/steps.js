@@ -20,8 +20,8 @@ const stepsParticipante = [
     list: [
       "Navega por actividades: excursiones, talleres, clases y eventos",
       "Todas las actividades están previamente revisadas y aprobadas",
-      "Usa filtros por categoría, ubicación, precio y fecha",
-      "Lee descripciones detalladas y revisa valoraciones"
+      "Usa filtros por categoría, nombre y fecha",
+      "Lee descripciones detalladas y chatea con el resto de participantes"
     ],
     next: "Siguiente",
     prev: null
@@ -32,9 +32,9 @@ const stepsParticipante = [
     subtitle: "¿No encuentras lo que buscas? Pide que se organice",
     list: [
       "Describe la actividad que te gustaría realizar",
-      "Los organizadores pueden ver tu petición y aceptarla",
       "Sigue el estado de tus peticiones desde tu perfil",
-      "Recibe notificación cuando un organizador acepte tu petición"
+      "Recibe notificación cuando un organizador acepte tu petición",
+      "Los organizadores pueden ver tu petición y aceptarla"
     ],
     next: "Siguiente",
     prev: "Anterior"
@@ -45,7 +45,7 @@ const stepsParticipante = [
     subtitle: "Reserva tu plaza de manera segura",
     list: [
       "Haz clic en \"Inscribirse\" en la actividad que te interese",
-      "Realiza el pago de forma segura y protegida",
+      "Contacta con el resto del grupo para conocer experiencias",
       "Recibe confirmación instantánea"
     ],
     next: "Siguiente",
@@ -77,7 +77,7 @@ const stepsOrganizadores = [
     subtitle: "Crea y publica actividades para compartir tu pasión",
     list: [
       "Completa el formulario con información detallada",
-      "Añade imágenes atractivas y especifica todos los detalles",
+      "Añade imagen atractiva y especifica todos los detalles",
       "Define categoría, fecha, ubicación, precio y capacidad",
       "Tu actividad pasará por revisión administrativa antes de publicarse"
     ],
@@ -92,7 +92,7 @@ const stepsOrganizadores = [
       "Nuestro equipo verifica la calidad del contenido",
       "Comprobamos cumplimiento de políticas y seguridad",
       "Proceso de revisión en menos de 24 horas",
-      "Una vez aprobada, aparece en 'Actividades publicadas' de tu perfil"
+      "Una vez aprobada, aparece en 'Mis actividades' de tu perfil"
     ],
     next: "Siguiente",
     prev: "Anterior"
@@ -105,7 +105,7 @@ const stepsOrganizadores = [
       "Accede a 'Explorar peticiones' para ver solicitudes de participantes",
       "Revisa peticiones de actividades que podrías organizar",
       "Acepta peticiones que se ajusten a tus capacidades",
-      "Gestiona peticiones aceptadas desde 'Peticiones aceptadas' en tu perfil"
+      "Gestiona peticiones aceptadas desde 'Peticiones pendientes' en tu perfil"
     ],
     next: "Siguiente",
     prev: "Anterior"

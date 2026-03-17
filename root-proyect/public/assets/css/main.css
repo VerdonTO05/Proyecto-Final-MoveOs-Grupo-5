@@ -396,7 +396,7 @@ main section:first-of-type button {
   cursor: pointer;
   font-weight: 500;
   border: 1px solid var(--brand-primary);
-  background: var(--bg-surface);
+  background: var(--bg-main);
   font-weight: 600;
 }
 main section:first-of-type button:first-child {
@@ -1464,6 +1464,7 @@ select {
 .how-it-works {
   background-color: var(--bg-surface);
   padding-bottom: 3rem;
+  border-bottom: 1px solid var(--border-color);
 }
 .how-it-works a {
   text-align: center;
