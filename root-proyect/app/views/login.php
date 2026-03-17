@@ -58,10 +58,13 @@ if (isset($_SESSION['user_id'])) {
                 <label for="password">Contraseña</label>
                 <div class="input-group">
                     <i class="fas fa-lock icon" aria-hidden="true"></i>
-                    <input type="password" id="password" name="password" placeholder="••••••••" required
-                        aria-required="true">
+                    <div class="div-password">
+                        <input type="password" id="password" name="password" placeholder="••••••••" required>
+                        <button type="button" id="toggle-password">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
-
                 <a href="index.php?accion=forgot-password" class="forgot-password" role="button" tabindex="0">¿Olvidaste
                     tu contraseña?</a>
 

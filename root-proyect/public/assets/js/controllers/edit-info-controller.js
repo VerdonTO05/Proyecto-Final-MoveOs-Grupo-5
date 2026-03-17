@@ -34,6 +34,26 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // --- Toggle ver/ocultar contraseña ---
+  const toggleButtons = document.querySelectorAll(".toggle-password");
+  toggleButtons.forEach((button) => {
+    const input = button.closest(".div-password").querySelector("input");
+    const icon = button.querySelector("i");
+
+    button.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (input.type === "password") {
+        input.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+      } else {
+        input.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+      }
+    });
+  });
+
   // Validación del formulario
   if (editForm) {
     editForm.addEventListener("submit", (event) => {

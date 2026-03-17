@@ -50,19 +50,22 @@ requireActiveUser();
                 <label for="fullname">Nombre Completo</label>
                 <div class="input-group">
                     <i class="fas fa-user icon" aria-hidden="true"></i>
-                    <input type="text" id="fullname" name="fullname" required aria-required="true" value="<?= htmlspecialchars($user['full_name']) ?? "" ?>">
+                    <input type="text" id="fullname" name="fullname" required aria-required="true"
+                        value="<?= htmlspecialchars($user['full_name']) ?? "" ?>">
                 </div>
 
                 <label for="username">Nombre de Usuario</label>
                 <div class="input-group">
                     <i class="fas fa-user icon" aria-hidden="true"></i>
-                    <input type="text" id="username" name="username" required aria-required="true" value="<?= htmlspecialchars($user['username']) ?? "" ?>">
+                    <input type="text" id="username" name="username" required aria-required="true"
+                        value="<?= htmlspecialchars($user['username']) ?? "" ?>">
                 </div>
 
                 <label for="email">Correo Electrónico</label>
                 <div class="input-group">
                     <i class="fas fa-envelope icon" aria-hidden="true"></i>
-                    <input type="email" id="email" name="email" required aria-required="true" value="<?= htmlspecialchars($user['email']) ?? "" ?>">
+                    <input type="email" id="email" name="email" required aria-required="true"
+                        value="<?= htmlspecialchars($user['email']) ?? "" ?>">
                 </div>
 
                 <label>
@@ -72,19 +75,26 @@ requireActiveUser();
 
                 <div id="passwordFields">
                     <label for="current_password">Contraseña actual</label>
-                    <div class="input-group">
+                    <div class="input-group div-password">
                         <input type="password" id="current_password" name="current_password" placeholder="••••••••">
+                        <button type="button" class="toggle-password" aria-label="Mostrar/Ocultar contraseña">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
                     </div>
+
                     <label for="new_password">Nueva contraseña</label>
-                    <div class="input-group">
+                    <div class="input-group div-password">
                         <input type="password" id="new_password" name="new_password" placeholder="••••••••">
+                        <button type="button" class="toggle-password" aria-label="Mostrar/Ocultar contraseña">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
                     </div>
                 </div>
 
                 <input type="submit" class="submit-btn" name="edit" value="Editar" aria-label="Editar">
 
                 <div class="links">
-                    <i class="fas fa-link" aria-hidden="true"></i> 
+                    <i class="fas fa-link" aria-hidden="true"></i>
                     <a href="index.php?accion=viewInfo" aria-label="Ver datos">Ver datos</a>
                 </div>
             </form>

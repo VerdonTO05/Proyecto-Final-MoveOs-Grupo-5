@@ -1,10 +1,30 @@
 document.addEventListener("DOMContentLoaded", () => {
   const registerForm = document.querySelector(".register-form");
- 
+
   // Validaciones simples
   const validateFullName = (name) => name.trim().split(' ').filter(p => p.length > 0).length >= 2;
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).toLowerCase());
   const validatePassword = (password) => password.length >= 8;
+
+  const passwordInput = document.getElementById("password");
+  const toggleButton = document.getElementById("toggle-password");
+
+  if (passwordInput && toggleButton) {
+    const icon = toggleButton.querySelector("i");
+
+    toggleButton.addEventListener("click", (e) => {
+      e.preventDefault(); // evita que el botón envíe el formulario
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+      } else {
+        passwordInput.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+      }
+    });
+  }
 
   if (registerForm) {
     registerForm.addEventListener("submit", async (event) => {

@@ -2,7 +2,7 @@
 <html lang="es">
 
 <?php
-if(isset($_SESSION['user_id'])){
+if (isset($_SESSION['user_id'])) {
     header("Location: index.php");
     exit;
 }
@@ -24,7 +24,8 @@ if(isset($_SESSION['user_id'])){
     <!-- Switch del tema -->
     <div class="icons">
         <label class="switch top-right">
-            <input type="checkbox" id="theme-toggle" role="swicth" aria-checked="false" aria-label="Cambiar tema claro/oscuro">
+            <input type="checkbox" id="theme-toggle" role="swicth" aria-checked="false"
+                aria-label="Cambiar tema claro/oscuro">
             <span class="slider"></span>
         </label>
     </div>
@@ -39,7 +40,8 @@ if(isset($_SESSION['user_id'])){
             </header>
 
             <div class="tab-switch" role="tablist">
-                <a class="tab-btn" href="index.php?accion=loginView" role="tab" aria-selected="false" tabindex="0">Iniciar sesión</a>
+                <a class="tab-btn" href="index.php?accion=loginView" role="tab" aria-selected="false"
+                    tabindex="0">Iniciar sesión</a>
                 <a href="#" class="tab-btn active" role="tab" aria-selected="true" tabindex="0">Registrarse</a>
             </div>
             <!-- Formulario -->
@@ -48,29 +50,36 @@ if(isset($_SESSION['user_id'])){
                 <label for="fullname">Nombre Completo *</label>
                 <div class="input-group">
                     <i class="fas fa-user icon" aria-hidden="true"></i>
-                    <input type="text" id="fullname" name="fullname" placeholder="Juan Pérez García" required aria-required="true">
+                    <input type="text" id="fullname" name="fullname" placeholder="Juan Pérez García" required
+                        aria-required="true">
                 </div>
 
                 <label for="username">Nombre de Usuario *</label>
                 <div class="input-group">
                     <i class="fas fa-user icon" aria-hidden="true"></i>
-                    <input type="text" id="username" name="username" placeholder="juanperez" required aria-required="true">
+                    <input type="text" id="username" name="username" placeholder="juanperez" required
+                        aria-required="true">
                 </div>
 
                 <label for="email">Correo Electrónico *</label>
                 <div class="input-group">
                     <i class="fas fa-envelope icon" aria-hidden="true"></i>
-                    <input type="email" id="email" name="email" placeholder="juan@email.com" required aria-required="true">
+                    <input type="email" id="email" name="email" placeholder="juan@email.com" required
+                        aria-required="true">
                 </div>
 
                 <label for="password">Contraseña *</label>
-                <div class="input-group">
-                    <input type="password" id="password" name="password" placeholder="••••••••" required aria-required="true" >
+                <div class="input-group div-password">
+                    <input type="password" id="password" name="password" placeholder="••••••••" required>
+                    <button type="button" id="toggle-password" aria-label="Mostrar/Ocultar contraseña">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
                 </div>
 
                 <fieldset class="user-type-group" role="radiogroup" aria-labelledby="user-type-label">
                     <div class="option">
-                        <input type="radio" id="participante" name="type" value="participante" required aria-required="true" role="radio">
+                        <input type="radio" id="participante" name="type" value="participante" required
+                            aria-required="true" role="radio">
                         <label for="participante" class="user-type-card">
                             <i class="fas fa-users icon" aria-hidden="true"></i>
                             <h3>Participante</h3>
