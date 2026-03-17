@@ -103,22 +103,19 @@ function renderHeaderByRole() {
     administrador: [
       { texto: "Panel de control", href: "index.php?accion=controlPanel" },
       { texto: "Control de usuarios", href: "index.php?accion=users" },
-      { texto: "Explorar Publicaciones", href: "index.php?accion=seeBoth" },
-      { texto: '<i class="fa-solid fa-bell"></i>', href: "index.php?accion=chatHub", title: "Mis Conversaciones" }
+      { texto: "Explorar Publicaciones", href: "index.php?accion=seeBoth" }
     ],
     participante: [
       { texto: "Explorar Actividades", href: "index.php?accion=seeActivities" },
       { texto: "Mis peticiones", href: "index.php?accion=seeMyActivities" },
       { texto: "Actividades pendientes", href: "index.php?accion=seeRegistrations" },
-      { texto: '<i class="fa-solid fa-angles-up"></i>', href: "index.php?accion=createActivity", title: "Crear Publicación" },
-      { texto: '<i class="fa-solid fa-bell"></i>', href: "index.php?accion=chatHub", title: "Mis Conversaciones" }
+      { texto: '<i class="fa-solid fa-angles-up"></i>', href: "index.php?accion=createActivity", title: "Crear Publicación" }
     ],
     organizador: [
       { texto: "Explorar Peticiones", href: "index.php?accion=seeRequest" },
       { texto: "Mis actividades", href: "index.php?accion=seeMyActivities" },
       { texto: "Peticiones pendientes", href: "index.php?accion=seeRegistrations" },
-      { texto: '<i class="fa-solid fa-angles-up"></i>', href: "index.php?accion=createActivity", title: "Crear Publicación" },
-      { texto: '<i class="fa-solid fa-bell"></i>', href: "index.php?accion=chatHub", title: "Mis Conversaciones" }
+      { texto: '<i class="fa-solid fa-angles-up"></i>', href: "index.php?accion=createActivity", title: "Crear Publicación" }
     ]
   };
 
