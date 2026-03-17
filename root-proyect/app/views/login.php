@@ -46,7 +46,7 @@ if (isset($_SESSION['user_id'])) {
             </div>
 
             <!-- Formulario -->
-            <form id="login-form" class="login-form">
+            <form id="login-form" class="login-form" autocomplete="off">
                 <input type="hidden" name="accion" value="login">
 
                 <label for="username">Nombre de Usuario</label>

@@ -11,10 +11,10 @@ $data  = json_decode($input, true);
 $fullname = trim($data['fullname'] ?? '');
 $username = trim($data['username'] ?? '');
 $email    = trim($data['email'] ?? '');
-$rol      = $data['rol'] ?? 'participante'; // Valor por defecto
+$rol      = $data['rol'] ?? ''; 
 $password = $data['password'] ?? '';
 
-if (empty($fullname) || empty($username) || empty($email) || empty($password)) {
+if (empty($fullname) || empty($username) || empty($email) || empty($rol) || empty($password)) {
     echo json_encode(['success' => false, 'message' => 'Todos los campos son obligatorios']);
     exit;
 }

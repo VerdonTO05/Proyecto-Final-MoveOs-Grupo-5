@@ -26,30 +26,6 @@ function init() {
 }
 
 /**
- * Alterna la visibilidad de la contraseña y cambia el icono.
- *
- * @param {HTMLInputElement} passwordInput - Campo de contraseña
- * @param {HTMLElement} toggleButton - Botón para mostrar/ocultar contraseña
- */
-function setupPasswordToggle(passwordInput, toggleButton) {
-  const icon = toggleButton.querySelector("i");
-
-  toggleButton.addEventListener("click", (e) => {
-    e.preventDefault();
-
-    if (passwordInput.type === "password") {
-      passwordInput.type = "text";
-      icon.classList.remove("fa-eye");
-      icon.classList.add("fa-eye-slash");
-    } else {
-      passwordInput.type = "password";
-      icon.classList.remove("fa-eye-slash");
-      icon.classList.add("fa-eye");
-    }
-  });
-}
-
-/**
  * Maneja el envío del formulario de login.
  * Valida los campos y envía la petición al servidor.
  *

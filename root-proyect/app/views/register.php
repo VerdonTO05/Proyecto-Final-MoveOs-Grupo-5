@@ -2,6 +2,7 @@
 <html lang="es">
 
 <?php
+// Si ya está registrado redirigir a la vista principal
 if (isset($_SESSION['user_id'])) {
     header("Location: index.php");
     exit;
@@ -17,6 +18,7 @@ if (isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="icon" type="image/ico" href="assets/img/ico/icono.svg" id="icon.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="assets/js/utils.js"></script>
     <script src="assets/js/controllers/register-controller.js"></script>
 </head>
 
@@ -30,7 +32,7 @@ if (isset($_SESSION['user_id'])) {
         </label>
     </div>
     <!-- Contenedor principal -->
-    <div class="first register">
+    <main class="first register">
         <div class="container">
             <button class="close-btn" type="button" aria-label="Cerrar formulario">&times;</button>
 
@@ -39,13 +41,14 @@ if (isset($_SESSION['user_id'])) {
                 <p>Crea una cuenta para comenzar tu aventura</p>
             </header>
 
+            <!-- Switch formularios -->
             <div class="tab-switch" role="tablist">
                 <a class="tab-btn" href="index.php?accion=loginView" role="tab" aria-selected="false"
                     tabindex="0">Iniciar sesión</a>
                 <a href="#" class="tab-btn active" role="tab" aria-selected="true" tabindex="0">Registrarse</a>
             </div>
             <!-- Formulario -->
-            <form id="register-form" class="register-form">
+            <form id="register-form" class="register-form" autocomplete="off">
 
                 <label for="fullname">Nombre Completo *</label>
                 <div class="input-group">
@@ -76,10 +79,10 @@ if (isset($_SESSION['user_id'])) {
                     </button>
                 </div>
 
+                <!-- Participante u organizador -->
                 <fieldset class="user-type-group" role="radiogroup" aria-labelledby="user-type-label">
                     <div class="option">
-                        <input type="radio" id="participante" name="type" value="participante" required
-                            aria-required="true" role="radio">
+                        <input type="radio" id="participante" name="type" value="participante" role="radio">
                         <label for="participante" class="user-type-card">
                             <i class="fas fa-users icon" aria-hidden="true"></i>
                             <h3>Participante</h3>
@@ -98,11 +101,9 @@ if (isset($_SESSION['user_id'])) {
                 </fieldset>
 
                 <input type="submit" class="submit-btn" name="registrarse" value="Registrarse" aria-label="Registrarse">
-
             </form>
-
         </div>
-    </div>
+    </main>
 </body>
 
 </html>
