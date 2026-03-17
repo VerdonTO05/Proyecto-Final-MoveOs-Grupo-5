@@ -22,7 +22,7 @@ const howHTML = `
 
   <section id="hiw-card" class="hiw-card"></section>
 
-  <a href="#" id="openVideo">Ver vídeo tutorial</a>
+  <a href="#" id="openVideo"><i class="fa-solid fa-video"></i> Ver vídeo tutorial</a>
 </main>
 `;
 
@@ -70,7 +70,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Evento para abrir el vídeo
   document.addEventListener("click", (e) => {
-    if (e.target.id === "openVideo") {
+    const videoBtn = e.target.closest("#openVideo");
+
+    if (videoBtn) {
       e.preventDefault();
       openVideo(tutorialContainer);
     }
@@ -188,7 +190,7 @@ function openVideo(container) {
   const volume = container.querySelector(".volume");
   const time = container.querySelector(".time");
   const closeBtn = container.querySelector(".close-video");
-  const overlay = document.querySelector("html");
+  const overlayDiv = container.querySelector(".hiw-video-overlay"); // ✅ overlay visual
   const videoWrapper = container.querySelector(".hiw-video-wrapper");
 
   if (!video) return;
@@ -225,14 +227,17 @@ function openVideo(container) {
   });
 
   closeBtn?.addEventListener("click", closeVideo);
-  overlay?.addEventListener("click", closeVideo);
-  videoWrapper?.addEventListener("click", e => e.stopPropagation());
+
+  // ✅ Solo cierra si el click es directamente en el fondo oscuro
+  overlayDiv?.addEventListener("click", (e) => {
+    if (e.target === overlayDiv) closeVideo();
+  });
+
   document.addEventListener("keydown", escClose);
 
   updateRangeFill(progress);
   updateRangeFill(volume);
 }
-
 /**
  * Pause / Play video
  * @param {*} video 

@@ -58,7 +58,8 @@ header {
 
             button {
                 @include m.button-base;
-
+                padding: 0.5rem 0.1rem;
+                
                 &:last-child {
                     color: var(--text-on-primary);
                 }

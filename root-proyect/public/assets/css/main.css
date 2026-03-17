@@ -165,6 +165,7 @@ header nav > div button {
   border-radius: 8px;
   cursor: pointer;
   font-weight: 500;
+  padding: 0.5rem 0.1rem;
 }
 header nav > div button:last-child {
   color: var(--text-on-primary);
@@ -1509,9 +1510,37 @@ select {
   background-color: var(--bg-surface);
   padding-bottom: 3rem;
   border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: center;
 }
 .how-it-works a {
-  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: var(--bg-main);
+  border: 1px solid var(--brand-primary);
+  border-radius: 2rem;
+  padding: 0.5rem 1.2rem;
+  color: var(--text-on-primary);
+  font-size: 1rem;
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+  width: 15%;
+  margin: 2rem auto;
+}
+.how-it-works a i {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.2rem;
+  height: 1.2rem;
+  background: var(--brand-primary);
+  border-radius: 50%;
+  color: var(--text-on-primary);
+  font-size: 10px;
+  flex-shrink: 0;
 }
 .how-it-works a:hover {
   color: var(--brand-dark);
@@ -1567,7 +1596,7 @@ select {
   /* Tarjeta principal */
 }
 .how-it-works .hiw-card {
-  width: 70%;
+  width: 60%;
   margin: 0 auto;
   padding: 0;
   background: none;
@@ -1578,8 +1607,8 @@ select {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  background: var(--bg-surface);
-  border: 2px solid var(--brand-primary);
+  background: var(--bg-main);
+  border: 1.5px solid var(--brand-primary);
   border-radius: 20px;
   padding: 1.5rem;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
@@ -1601,10 +1630,15 @@ select {
 .how-it-works {
   /* Lista */
 }
+.how-it-works .hiw-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
 .how-it-works .hiw-list li {
   display: flex;
-  align-items: start;
-  gap: 0.75rem;
+  align-items: center;
+  gap: 1rem;
 }
 .how-it-works .hiw-list div {
   flex-shrink: 0;
@@ -1616,7 +1650,6 @@ select {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 0.25rem;
 }
 .how-it-works .hiw-list div i {
   font-size: small;
