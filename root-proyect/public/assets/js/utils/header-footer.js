@@ -158,9 +158,9 @@ function initSidebarLogic() {
   // Mostrar link de chat solo para participantes y organizadores
   const user = window.CURRENT_USER;
   const chatLink = document.getElementById('sidebarChatLink');
-  
+
   if (user && user.role !== 'administrador') {
-      if (chatLink) chatLink.style.display = 'block';
+    if (chatLink) chatLink.style.display = 'block';
   }
 
   // Cerrar sidebar
@@ -238,82 +238,4 @@ function hideElement(el) {
   el.classList.add('invisible');
 }
 
-/* =========================
-   MODALES DINÁMICOS (CONFIRM y ALERT)
-   ========================= */
-window.showConfirm = function(optionsOrTitle, message = "") {
-  const options = typeof optionsOrTitle === "string"
-    ? { title: optionsOrTitle, message }
-    : optionsOrTitle;
 
-  const { title = "Confirmar", message: msg = "", confirmText = "Aceptar", cancelText = "Cancelar" } = options;
-
-  // Crear modalContainer si no existe
-  let modalContainer = document.getElementById("modal-container");
-  if (!modalContainer) {
-    modalContainer = document.createElement("div");
-    modalContainer.id = "modal-container";
-    document.body.appendChild(modalContainer);
-  }
-
-  return new Promise((resolve) => {
-    const modal = document.createElement("div");
-    modal.className = "modal";
-
-    modal.innerHTML = `
-      <div class="modal-header">${title}</div>
-      <div class="modal-body">${msg}</div>
-      <div class="modal-actions">
-        <button class="cancel">${cancelText}</button>
-        <button class="confirm">${confirmText}</button>
-      </div>
-    `;
-
-    modalContainer.appendChild(modal);
-    modalContainer.classList.add("active");
-
-    const close = () => {
-      modal.style.animation = "fadeOut 0.25s forwards";
-      setTimeout(() => {
-        modal.remove();
-        modalContainer.classList.remove("active");
-      }, 250);
-    };
-
-    modal.querySelector(".cancel").addEventListener("click", () => { close(); resolve(false); });
-    modal.querySelector(".confirm").addEventListener("click", () => { close(); resolve(true); });
-  });
-};
-
-window.showAlert = function({ title = "Aviso", message = "", buttonText = "Aceptar" }) {
-  let modalContainer = document.getElementById("modal-container");
-  if (!modalContainer) {
-    modalContainer = document.createElement("div");
-    modalContainer.id = "modal-container";
-    document.body.appendChild(modalContainer);
-  }
-
-  const modal = document.createElement("div");
-  modal.className = "modal";
-
-  modal.innerHTML = `
-    <div class="modal-header">${title}</div>
-    <div class="modal-body">${message}</div>
-    <div class="modal-actions">
-      <button class="confirm">${buttonText}</button>
-    </div>
-  `;
-
-  modalContainer.appendChild(modal);
-  modalContainer.classList.add("active");
-
-  const close = () => {
-    modal.style.animation = "fadeOut 0.25s forwards";
-    setTimeout(() => {
-      modal.remove();
-      modalContainer.classList.remove("active");
-    }, 250);
-  };
-
-  modal.querySelector(".confirm").addEventListener("click", close);
-};
