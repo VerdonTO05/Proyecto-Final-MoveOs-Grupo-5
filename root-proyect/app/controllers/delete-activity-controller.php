@@ -7,9 +7,26 @@ require_once __DIR__ . '/../models/entities/Activity.php';
 require_once __DIR__ . '/../models/entities/Request.php';
 require_once __DIR__ . '/../../config/database.php';
 
+header('Content-Type: application/json');
+
+// Verificar sesión
 if (!isset($_SESSION['user_id'])) {
-    $_SESSION['error'] = 'Debes iniciar sesión';
-    header('Location: index.php?accion=loginView');
+    echo json_encode([
+        'success' => false,
+        'message' => 'Debes iniciar sesión'
+    ]);
+    exit;
+}
+
+// Leer input JSON
+$input = json_decode(file_get_contents('php://input'), true) ?? [];
+$id = $input['id'] ?? null;
+
+if (!$id) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Publicación a eliminar no recibida'
+    ]);
     exit;
 }
 
@@ -21,15 +38,9 @@ try {
     $activityModel = new Activity($db);
     $requestModel = new Request($db);
 
-    $id = $_POST['id'] ?? null;
+    $role = $_SESSION['role'];
 
-    if (!$id) {
-        $_SESSION['error'] = 'Publicación a eliminar no recibida';
-        header('Location: index.php?accion=seeMyActivities');
-        exit;
-    }
-
-    if ($_SESSION['role'] === 'participante') {
+    if ($role === 'participante') {
         $publication = $requestModel->getRequestById($id);
         $typePublication = 'request';
     } else {
@@ -38,36 +49,45 @@ try {
     }
 
     if (!$publication) {
-        $_SESSION['error'] = 'Publicación no encontrada';
-        header('Location: index.php?accion=seeMyActivities');
+        echo json_encode([
+            'success' => false,
+            'message' => 'Publicación no encontrada'
+        ]);
         exit;
     }
 
-    // Comprobar propiedad 
-    if ($typePublication === 'activity') {
-        if ($publication['offertant_id'] != $_SESSION['user_id']) {
-            $_SESSION['error'] = 'Esta actividad no te pertenece';
-            header('Location: index.php?accion=seeMyActivities');
-            exit;
-        }
-    } else {
-        if ($publication['participant_id'] != $_SESSION['user_id']) {
-            $_SESSION['error'] = 'Esta petición no te pertenece';
-            header('Location: index.php?accion=seeMyActivities');
-            exit;
-        }
+    // Verificar propiedad
+    if ($typePublication === 'activity' && $publication['offertant_id'] != $_SESSION['user_id']) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Esta actividad no te pertenece'
+        ]);
+        exit;
+    } elseif ($typePublication === 'request' && $publication['participant_id'] != $_SESSION['user_id']) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Esta petición no te pertenece'
+        ]);
+        exit;
     }
 
+    // Eliminar publicación
     if ($typePublication === 'activity') {
         $activityModel->deleteActivity($id);
+        $msg = 'Actividad eliminada correctamente';
     } else {
         $requestModel->deleteRequest($id);
+        $msg = 'Petición eliminada correctamente';
     }
 
-    header('Location: index.php?accion=seeMyActivities');
-    exit;
+    echo json_encode([
+        'success' => true,
+        'message' => $msg
+    ]);
 
 } catch (Exception $e) {
-    http_response_code(500);
-    echo 'Error del servidor: ' . htmlspecialchars($e->getMessage());
+    echo json_encode([
+        'success' => false,
+        'message' => 'Error del servidor'
+    ]);
 }

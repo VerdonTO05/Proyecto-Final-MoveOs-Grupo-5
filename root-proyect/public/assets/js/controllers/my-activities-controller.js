@@ -91,8 +91,8 @@ function createActiveCard(pub) {
             ${buildMetaHTML(pub)}
             ${buildFooterHTML(pub)}
             <div class="actions">
-                <button class="btn-detail" data-id="${pub.id}">Editar</button>
-                <button class="btn-signup" data-id="${pub.id}">Eliminar</button>
+                <button class="btn-edit" data-id="${pub.id}">Editar</button>
+                <button class="btn-delete" data-id="${pub.id}">Eliminar</button>
                 ${pub.state === 'aprobada' ? `
                 <a
                     href="index.php?accion=chatActivity&activity_id=${pub.id}"
@@ -104,13 +104,58 @@ function createActiveCard(pub) {
             </div>
         </div>`;
 
-    card.querySelector(".btn-detail")?.addEventListener("click", function () {
+    const grid = document.getElementById('gridActivities');
+
+    card.querySelector(".btn-edit")?.addEventListener("click", function () {
         submitForm("editActivity", this.dataset.id);
     });
 
-    card.querySelector(".btn-signup")?.addEventListener("click", function () {
-        if (!confirm("¿Estás seguro de que quieres eliminar esta publicación?")) return;
-        submitForm("deleteActivity", this.dataset.id);
+    card.querySelector(".btn-delete")?.addEventListener("click", async function () {
+        const confirmed = await showConfirm('¿Estás seguro que quieres eliminar esta publicación?');
+        if (!confirmed) return;
+
+        try {
+            const response = await fetch('index.php', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest' 
+                },
+                body: JSON.stringify({
+                    accion: 'deleteActivity',
+                    id: this.dataset.id
+                })
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                showAlert('Eliminada', result.message, 'success');
+
+                // Animación y eliminación de la card
+                card.style.transition = 'opacity 0.3s, transform 0.3s';
+                card.style.opacity = '0';
+                card.style.transform = 'scale(0.9)';
+                setTimeout(() => {
+                    card.remove();
+
+                    // Si no quedan más cards, mostrar párrafo
+                    if (grid && grid.children.length === 0) {
+                        grid.innerHTML = `
+                            <p class="no-activities">
+                                Todavía no tienes ninguna actividad.
+                            </p>
+                            <p><a href="index.php?accion=createActivity">Crea una ahora</a></p>`;
+                    }
+                }, 300);
+
+            } else {
+                throw new Error(result.message || 'Error desconocido');
+            }
+
+        } catch (error) {
+            console.error(error);
+            showAlert('Error', 'No se pudo eliminar la publicación', 'error');
+        }
     });
 
     return card;
