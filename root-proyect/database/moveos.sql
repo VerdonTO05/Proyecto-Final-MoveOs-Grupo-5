@@ -63,7 +63,6 @@ CREATE TABLE password_reset_codes (
     ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Opcionales para mejorar rendimiento
 CREATE INDEX idx_reset_user ON password_reset_codes(user_id);
 CREATE INDEX idx_reset_code ON password_reset_codes(code);
 
@@ -294,3 +293,30 @@ END$$
 DELIMITER ;
 
 COMMIT;
+
+-- --------------------------------------------------------
+-- EVENT PARA FINALIZAR ACTIVIDADES Y REQUESTS
+-- --------------------------------------------------------
+
+-- Activar el scheduler si no está activo
+SET GLOBAL event_scheduler = ON;
+
+DELIMITER $$
+
+CREATE EVENT finalizar_actividades_requests
+ON SCHEDULE EVERY 1 DAY
+STARTS CURRENT_DATE + INTERVAL 1 DAY
+DO
+BEGIN
+    -- Actividades
+    UPDATE activities
+    SET is_finished = 1, state = 'finalizada'
+    WHERE date < CURDATE() AND is_finished = 0;
+
+    -- Requests
+    UPDATE requests
+    SET state = 'finalizada'
+    WHERE date < CURDATE() AND state != 'finalizada';
+END$$
+
+DELIMITER ;
