@@ -352,11 +352,6 @@
 // ============================================================
 // home-controller.js
 // ============================================================
-import {
-  matchFilter, getFilterValues, bindFilterListeners,
-  buildImageHTML, buildMetaHTML, buildFooterHTML, buildDetailsHTML,
-  openDetailModal, showConfirm, showAlert
-} from './shared.js';
 
 let publications = [];
 

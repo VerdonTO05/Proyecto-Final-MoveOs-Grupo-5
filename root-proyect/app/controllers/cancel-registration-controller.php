@@ -9,7 +9,7 @@ require_once __DIR__ . '/../../config/database.php';
 
 // Detectar si es AJAX (fetch)
 $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
-          strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+    strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 
 // Leer JSON si viene por fetch
 $input = json_decode(file_get_contents("php://input"), true);
@@ -35,7 +35,7 @@ try {
 
     // ── Obtener ID (JSON o POST) ─────────────────
     $id = $input['id'] ?? ($_POST['id'] ?? 0);
-    $id = (int)$id;
+    $id = (int) $id;
 
     if ($id <= 0) {
         throw new Exception('ID inválido');
@@ -46,7 +46,12 @@ try {
     // ── Lógica según rol ─────────────────────────
     if ($_SESSION['role'] === 'participante') {
         $registration = $registrationModel->getRegistrationByActivityAndParticipant($id, $_SESSION['user_id']);
-        $success = $registrationModel->deleteRegistration($registration);
+
+        if ($registration) {
+            $success = $registrationModel->deleteRegistration($registration['id']);
+        } else {
+            $success = false;
+        }
     } else {
         $success = $requestModel->unacceptRequest($id, $_SESSION['user_id']);
     }

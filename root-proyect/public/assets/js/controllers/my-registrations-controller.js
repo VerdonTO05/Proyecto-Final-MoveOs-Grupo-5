@@ -116,6 +116,7 @@ function createActiveCard(pub, role) {
                 })
             });
 
+            console.log('aqui');
             const result = await response.json();
 
             if (result.success) {
