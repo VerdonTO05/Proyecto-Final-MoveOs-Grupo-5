@@ -2273,12 +2273,16 @@ body {
 .alert-overlay {
   position: fixed;
   inset: 0;
-  display: none; /* oculto por defecto */
+  display: none;
+  /* oculto por defecto */
   justify-content: center;
-  align-items: flex-start; /* se puede ajustar para que aparezca abajo o arriba */
-  padding-top: 2rem; /* separa del top */
+  align-items: flex-start;
+  /* se puede ajustar para que aparezca abajo o arriba */
+  padding-top: 2rem;
+  /* separa del top */
   z-index: 10000;
-  pointer-events: none; /* evita bloquear clicks fuera del alert */
+  pointer-events: none;
+  /* evita bloquear clicks fuera del alert */
 }
 .alert-overlay.active {
   display: flex !important;
@@ -2347,6 +2351,20 @@ body {
     transform: translateY(-20px);
   }
 }
+.alert-box .alert-body {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  /* Aseguramos que listas se vean correctamente */
+}
+.alert-box .alert-body ul {
+  padding-left: 20px;
+  margin: 0;
+  list-style: disc;
+}
+.alert-box .alert-body li {
+  margin-bottom: 5px;
+}
+
 .c {
   margin: 0.5rem;
   position: relative;

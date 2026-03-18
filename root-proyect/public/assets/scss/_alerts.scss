@@ -61,6 +61,7 @@
     opacity: 0;
     transform: translateY(-20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -78,12 +79,16 @@
 .alert-overlay {
   position: fixed;
   inset: 0;
-  display: none; /* oculto por defecto */
+  display: none;
+  /* oculto por defecto */
   justify-content: center;
-  align-items: flex-start; /* se puede ajustar para que aparezca abajo o arriba */
-  padding-top: 2rem; /* separa del top */
+  align-items: flex-start;
+  /* se puede ajustar para que aparezca abajo o arriba */
+  padding-top: 2rem;
+  /* separa del top */
   z-index: 10000;
-  pointer-events: none; /* evita bloquear clicks fuera del alert */
+  pointer-events: none;
+  /* evita bloquear clicks fuera del alert */
 
   &.active {
     display: flex !important;
@@ -115,9 +120,9 @@
     font-size: 0.9rem;
   }
 
-  .alert-close{
-    position: absolute;  
-    top: 0.5rem;          
+  .alert-close {
+    position: absolute;
+    top: 0.5rem;
     right: 0.5rem;
   }
 }
@@ -126,12 +131,15 @@
 .alert-overlay.info .alert-box {
   border-left: 4px solid var(--brand-primary);
 }
+
 .alert-overlay.success .alert-box {
   border-left: 4px solid var(--c-green);
 }
+
 .alert-overlay.error .alert-box {
   border-left: 4px solid var(--c-red);
 }
+
 .alert-overlay.warning .alert-box {
   border-left: 4px solid var(--c-yellow);
 }
@@ -142,6 +150,7 @@
     opacity: 0;
     transform: translateY(-20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -152,5 +161,21 @@
   to {
     opacity: 0;
     transform: translateY(-20px);
+  }
+}
+
+.alert-box .alert-body {
+  font-size: 0.9rem;
+  line-height: 1.4;
+
+  /* Aseguramos que listas se vean correctamente */
+  ul {
+    padding-left: 20px;
+    margin: 0;
+    list-style: disc;
+  }
+
+  li {
+    margin-bottom: 5px;
   }
 }

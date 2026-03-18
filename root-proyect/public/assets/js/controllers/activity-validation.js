@@ -29,7 +29,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (errors.length > 0) {
             e.preventDefault(); // Detiene el envío
-            alert("Errores en el formulario:\n- " + errors.join("\n- "));
+
+            // Convertir array de errores en lista HTML
+            const errorHTML = `<ul>${errors.map(err => `<li>${err}</li>`).join('')}</ul>`;
+
+            showAlert(
+                "Errores en el formulario:",
+                `<ul>${errors.map(err => `<li>${err}</li>`).join('')}</ul>`,
+                "error",
+                5000
+            );
         }
     });
 

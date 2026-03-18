@@ -94,11 +94,8 @@ function createActiveCard(pub) {
                 <button class="btn-edit" data-id="${pub.id}">Editar</button>
                 <button class="btn-delete" data-id="${pub.id}">Eliminar</button>
                 ${pub.state === 'aprobada' ? `
-                <a
-                    href="index.php?accion=chatActivity&activity_id=${pub.id}"
-                    class="btn-chat"
-                    aria-label="Abrir chat de la actividad ${pub.title}"
-                >
+                <a href="index.php?accion=chatActivity&activity_id=${pub.id}"
+                    class="btn-chat" aria-label="Abrir chat de la actividad ${pub.title}">
                     <i class="fas fa-comments"></i> Chat
                 </a>` : ''}
             </div>
