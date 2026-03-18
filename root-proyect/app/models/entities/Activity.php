@@ -70,7 +70,9 @@ class Activity
                 FROM {$this->table_name} a
                 JOIN users u ON a.offertant_id = u.id
                 JOIN categories c ON a.category_id = c.id
-                ORDER BY a.created_at DESC";
+                WHERE a.date >= CURDATE() 
+                ORDER BY a.created_at DESC
+                ";
         $stmt = $this->conn->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

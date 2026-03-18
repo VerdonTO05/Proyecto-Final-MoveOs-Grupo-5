@@ -70,7 +70,9 @@ class Request
                 JOIN users u ON r.participant_id = u.id
                 LEFT JOIN users ru ON r.accepted_by = ru.id
                 JOIN categories c ON r.category_id = c.id
-                ORDER BY r.created_at DESC";
+                WHERE r.date >= CURDATE()
+                ORDER BY r.created_at DESC
+                ";
         $stmt = $this->conn->query($sql);
         return $stmt->fetchAll();
     }

@@ -26,7 +26,8 @@ $user = getCurrentUser();
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="icon" type="image/png" href="assets/img/ico/icono.svg" if="icon.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script type="module" src="assets/js/controllers/all-post-controller.js"></script>
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/controllers/all-post-controller.js"></script>
 </head>
 
 <body>
