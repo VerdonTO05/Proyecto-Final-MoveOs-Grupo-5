@@ -9,12 +9,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Validaciones simples
-  const validateFullName = (name) => name.trim().split(' ').filter(p => p.length > 0).length >= 2;
-  const validateUsername = (username) => username.trim().length > 0;
-  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).toLowerCase());
-  const validatePassword = (password) => password.length >= 8;
-
   // Campos de contraseña opcionales
   const changePasswordCheckbox = document.getElementById('changePassword');
   const passwordFields = document.getElementById('passwordFields');
@@ -56,45 +50,56 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Validación del formulario
   if (editForm) {
-    editForm.addEventListener("submit", (event) => {
-      // Evitar envío si hay errores
-      event.preventDefault();
+    if (editForm) {
+      editForm.addEventListener("submit", (event) => {
+        event.preventDefault();
 
-      const fullname = document.getElementById("fullname").value.trim();
-      const username = document.getElementById("username").value.trim();
-      const email = document.getElementById("email").value.trim();
+        const fullname = document.getElementById("fullname").value.trim();
+        const username = document.getElementById("username").value.trim();
+        const email = document.getElementById("email").value.trim();
 
-      // Validaciones generales
-      if (!validateFullName(fullname)) {
-        alert("Por favor, introduce nombre y apellido.");
-        return;
-      }
-      if (!validateUsername(username)) {
-        alert("El nombre de usuario es obligatorio.");
-        return;
-      }
-      if (!validateEmail(email)) {
-        alert("El formato del correo electrónico no es válido.");
-        return;
-      }
+        let errors = [];
 
-      // Validaciones de contraseña solo si el usuario quiere cambiarla
-      if (changePasswordCheckbox && changePasswordCheckbox.checked) {
-        if (!currentPassword.value) {
-          alert("Debes introducir tu contraseña actual.");
-          return;
+        // ===== VALIDACIONES GENERALES =====
+        if (!validateFullName(fullname)) {
+          errors.push("Por favor, introduce nombre y apellido.");
         }
-        if (!newPassword.value) {
-          alert("Debes introducir la nueva contraseña.");
-          return;
-        }
-        if (!validatePassword(newPassword.value)) {
-          alert("La nueva contraseña debe tener al menos 8 caracteres.");
-          return;
-        }
-      }
 
-      editForm.submit();
-    });
+        if (username.trim().length < 0) {
+          errors.push("El nombre de usuario es obligatorio.");
+        }
+
+        if (!validateEmail(email)) {
+          errors.push("El formato del correo electrónico no es válido.");
+        }
+
+        // ===== CONTRASEÑA (OPCIONAL) =====
+        if (changePasswordCheckbox && changePasswordCheckbox.checked) {
+          if (!currentPassword.value) {
+            errors.push("Debes introducir tu contraseña actual.");
+          }
+
+          if (!newPassword.value) {
+            errors.push("Debes introducir la nueva contraseña.");
+          }
+
+          if (newPassword.value && !validatePassword(newPassword.value)) {
+            errors.push("La nueva contraseña debe tener al menos 8 caracteres.");
+          }
+        }
+
+        // ===== MOSTRAR ERRORES =====
+        if (errors.length > 0) {
+          return showAlert(
+            "Errores en el formulario:",
+            `<ul>${errors.map(err => `<li>${err}</li>`).join('')}</ul>`,
+            "error"
+          );
+        }
+
+        // ===== ENVIAR SI TODO OK =====
+        editForm.submit();
+      });
+    }
   }
 });

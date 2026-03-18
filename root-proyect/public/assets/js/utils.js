@@ -260,3 +260,34 @@ window.formatDate = function(dateStr) {
         day: 'numeric', month: 'short', year: 'numeric'
     });
 }
+
+
+/**
+ * Valida que el nombre tenga al menos nombre y apellido
+ *
+ * @param {string} name
+ * @returns {boolean}
+ */
+window.validateFullName = function(name) {
+  return name.trim().split(" ").filter(p => p.length > 0).length >= 2;
+}
+
+/**
+ * Valida el formato del correo electrónico
+ *
+ * @param {string} email
+ * @returns {boolean}
+ */
+window.validateEmail = function(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.toLowerCase());
+}
+
+/**
+ * Valida la contraseña
+ *
+ * @param {string} password
+ * @returns {boolean}
+ */
+window.validatePassword = function(password) {
+  return password.length >= 8;
+}

@@ -41,27 +41,61 @@ async function handleRegisterSubmit(event) {
   const password = passwordInput.value;
   const rolInput = document.querySelector('input[name="type"]:checked');
 
-  if (!validateFullName(fullname)) { return showAlert("Información incompleta", "Por favor, introduce nombre y apellido.", "info");  }
-  if (!username) { return showAlert("Información incompleta", "El nombre de usuario es obligatorio.", "info");  }
-  if (!validateEmail(email)) { return showAlert("Información incompleta", "El formato del correo electrónico no es válido.", "info"); }
-  if (!validatePassword(password)) { return showAlert("Información incompleta", "La contraseña debe tener al menos 8 caracteres.", "info"); }
-  if (!rolInput) { return showAlert("Información incompleta", "Debes seleccionar un rol.", "info");  }
+  let errors = [];
 
+  // ===== VALIDACIONES =====
+  if (!validateFullName(fullname)) {
+    errors.push("Introduce nombre y apellido.");
+  }
+
+  if (!username) {
+    errors.push("El nombre de usuario es obligatorio.");
+  }
+
+  if (!validateEmail(email)) {
+    errors.push("El formato del correo electrónico no es válido.");
+  }
+
+  if (!validatePassword(password)) {
+    errors.push("La contraseña debe tener al menos 8 caracteres.");
+  }
+
+  if (!rolInput) {
+    errors.push("Debes seleccionar un rol.");
+  }
+
+  // ===== MOSTRAR ERRORES =====
+  if (errors.length > 0) {
+    return showAlert(
+      "Errores en el formulario:",
+      `<ul>${errors.map(err => `<li>${err}</li>`).join('')}</ul>`,
+      "error"
+    );
+  }
+
+  // ===== ENVÍO =====
   const rol = rolInput.value;
+
   try {
     const response = await fetch("index.php", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ accion: "registerUser", fullname, username, email, password, rol } )
+      body: JSON.stringify({
+        accion: "registerUser",
+        fullname,
+        username,
+        email,
+        password,
+        rol
+      })
     });
 
     const result = await response.json();
 
     if (response.ok && result.success) {
       showAlert("¡Registro exitoso!", `Bienvenido, ${username}.`, "success");
-
       window.location.href = "index.php?accion=seeActivities";
     } else {
       showAlert("Error en el registro", result.message, "error");
@@ -70,34 +104,4 @@ async function handleRegisterSubmit(event) {
   } catch (error) {
     showAlert("Error en el servidor", "No se pudo conectar con el servidor.", "error");
   }
-}
-
-/**
- * Valida que el nombre tenga al menos nombre y apellido
- *
- * @param {string} name
- * @returns {boolean}
- */
-function validateFullName(name) {
-  return name.trim().split(" ").filter(p => p.length > 0).length >= 2;
-}
-
-/**
- * Valida el formato del correo electrónico
- *
- * @param {string} email
- * @returns {boolean}
- */
-function validateEmail(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.toLowerCase());
-}
-
-/**
- * Valida la contraseña
- *
- * @param {string} password
- * @returns {boolean}
- */
-function validatePassword(password) {
-  return password.length >= 8;
 }
