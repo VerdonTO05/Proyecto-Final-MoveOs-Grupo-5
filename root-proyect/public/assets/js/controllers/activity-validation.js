@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const categoria = document.getElementById('category').value;
         const ubicacion = document.getElementById('ubicacion').value.trim();
         const fecha = document.getElementById('fecha').value;
+        const hora = document.getElementById('hora').value;
         const precio = document.getElementById('precio').value;
 
         // Validaciones

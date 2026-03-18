@@ -46,7 +46,7 @@ header {
                 color: var(--brand-primary);
             }
 
-            i{
+            i {
                 margin-left: 2rem;
             }
         }
@@ -59,7 +59,7 @@ header {
             button {
                 @include m.button-base;
                 padding: 0.5rem 0.1rem;
-                
+
                 &:last-child {
                     color: var(--text-on-primary);
                 }
@@ -270,20 +270,20 @@ footer {
     font-size: 1.1rem;
     color: var(--bg-main);
     text-decoration: none;
-    display: flex;         
-    align-items: center;   
-    gap: 0.5rem; 
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     transition: all 0.3s ease;
     border-left: 4px solid transparent;
     letter-spacing: 0.5px;
-    width: 100%;          
+    width: 100%;
     text-align: left;
 }
 
 .sidebar a:hover {
-    color: var(--bg-main) !important; 
-    background-color: var(--brand-dark); 
-    border-left: 4px solid var(--bg-main); 
+    color: var(--bg-main) !important;
+    background-color: var(--brand-dark);
+    border-left: 4px solid var(--bg-main);
     padding-left: 3rem;
 }
 
@@ -331,6 +331,7 @@ main {
     /* Apilar secciones verticalmente */
     background-color: var(--bg-surface);
     width: 100%;
+    flex: 1;
 }
 
 /* Primera sección */
@@ -454,7 +455,7 @@ main section {
     }
 }
 
-#btn-state{
+#btn-state {
     all: unset;
     position: absolute;
     top: 0.5rem;
