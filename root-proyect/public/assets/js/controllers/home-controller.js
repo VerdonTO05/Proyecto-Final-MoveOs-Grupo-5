@@ -503,7 +503,13 @@ async function handleSignup(btn, activity, role, card) {
         card.style.transition = 'opacity 0.3s, transform 0.3s';
         card.style.opacity = '0';
         card.style.transform = 'scale(0.9)';
-        setTimeout(() => card.remove(), 300);
+        setTimeout(() => {
+          card.remove();
+          const grid = document.getElementById('gridActivities');
+          if (grid && grid.querySelectorAll('.activity-card').length === 0) {
+            grid.innerHTML = '<p class="no-activities">No hay peticiones disponibles en este momento.</p>';
+          }
+        }, 300);
       } else {
         signupBtn.textContent = "Inscrito";
         signupBtn.disabled = true;

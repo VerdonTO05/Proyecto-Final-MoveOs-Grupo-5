@@ -8,6 +8,9 @@ let registrationsFinished = [];
 document.addEventListener("DOMContentLoaded", () => {
     const role = CURRENT_USER.role;
     const isOrg = role === 'organizador';
+
+    bindFilterListeners(() => applyFilters(role));
+
     loadRegistrations(role);
 
     bindToggleSection(
@@ -16,8 +19,6 @@ document.addEventListener("DOMContentLoaded", () => {
         isOrg ? "Ocultar peticiones terminadas" : "Ocultar inscripciones terminadas",
         isOrg ? "Ver peticiones terminadas" : "Ver inscripciones terminadas"
     );
-
-    bindFilterListeners(applyFilters(role));
 });
 
 // ----------------------------
