@@ -127,7 +127,9 @@ switch ($action) {
   case 'requestCode':
     require __DIR__ . '/../app/controllers/request-code-controller.php';
     break;
-
+  case 'cancelRegistration':
+    require __DIR__ . '/../app/controllers/cancel-registration-controller.php';
+    break;
   // ── Chat ────────────────────────────────────────────────────────────────
   case 'chatHub':
     require __DIR__ . '/../app/views/chat-hub.php';

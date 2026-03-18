@@ -260,6 +260,25 @@ class Request
         ]);
     }
 
+    public function unacceptRequest($request_id, $organizer_id)
+    {
+        $sql = "UPDATE {$this->table_name}
+            SET is_accepted = 0,
+                accepted_by = NULL
+            WHERE id = :request_id
+            AND accepted_by = :organizer_id";
+
+        $stmt = $this->conn->prepare($sql);
+
+        $stmt->execute([
+            'request_id' => $request_id,
+            'organizer_id' => $organizer_id
+        ]);
+
+        // Si no actualiza nada → no era suya
+        return $stmt->rowCount() > 0;
+    }
+
     public function getAcceptedRequestsByOrganizerId($organizer_id, $state)
     {
         $sql = "SELECT r.*, c.name AS category_name

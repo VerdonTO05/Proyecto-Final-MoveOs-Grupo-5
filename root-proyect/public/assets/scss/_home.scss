@@ -30,7 +30,6 @@
     border: 1px solid var(--border-color);
     border-radius: 10px;
     font-size: 1rem;
-    background-color: var(--bg-surface);
     color: var(--text-primary);
     box-sizing: border-box;
   }
@@ -38,7 +37,6 @@
   select {
     flex: 1;
     appearance: none;
-
   }
 }
 
@@ -232,6 +230,7 @@
   align-items: center;
   z-index: 1000;
   color: var(--text-primary);
+  overscroll-behavior: contain;
 
   .modal-content {
     background-color: var(--bg-main);

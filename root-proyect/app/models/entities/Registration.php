@@ -190,5 +190,26 @@ class Registration
         // current_registrations se decrementa automáticamente por trigger
         return $stmt->execute(['id' => $id]);
     }
+
+    /**
+     * Obtener la inscripción por ID de actividad y ID de participante
+     * @param int $activity_id ID de la actividad
+     * @param int $participant_id ID del participante
+     * @return array|false Datos de la inscripción o false si no existe
+     */
+    public function getRegistrationByActivityAndParticipant($activity_id, $participant_id)
+    {
+        $sql = "SELECT * 
+            FROM {$this->table_name} 
+            WHERE activity_id = :activity_id 
+              AND participant_id = :participant_id
+            LIMIT 1";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            'activity_id' => $activity_id,
+            'participant_id' => $participant_id
+        ]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
 ?>

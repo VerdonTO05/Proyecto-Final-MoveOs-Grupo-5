@@ -26,7 +26,8 @@ $user = getCurrentUser();
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="icon" type="image/png" href="assets/img/ico/icono.svg" if="icon.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script type="module" src="assets/js/controllers/my-registrations-controller.js"></script>
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/controllers/my-registrations-controller.js"></script>
 </head>
 
 <body>
@@ -72,7 +73,31 @@ $user = getCurrentUser();
                 aria-label="<?= $user['role'] == 'organizador' ? 'Listado de mis peticiones terminadas' : 'Listado de mis inscripciones terminadas' ?>">
             </div>
         </section>
+        <div id="activityModal" class="modalHome">
+            <div class="modal-content">
+                <span class="modal-close">&times;</span>
 
+                <!-- Cabecera con título y categoría -->
+                <div class="modal-header">
+                    <h2 class="modal-title"></h2>
+                    <span class="category"></span>
+                </div>
+
+                <!-- Tabs -->
+                <div class="modal-tabs">
+                    <button class="tab-btn active" data-tab="details">Detalles</button>
+                    <button class="tab-btn" data-tab="chat">Chat Grupal</button>
+                </div>
+
+                <!-- Cuerpo del modal -->
+                <div class="modal-body">
+                    <div class="modal-image"></div>
+                    <div class="modal-description"></div>
+                    <div class="modal-info"></div>
+                    <div class="modal-info-aditional"></div>
+                </div>
+            </div>
+        </div>
     </main>
     <div id="footer"></div>
     <div id="modal-container"></div>
