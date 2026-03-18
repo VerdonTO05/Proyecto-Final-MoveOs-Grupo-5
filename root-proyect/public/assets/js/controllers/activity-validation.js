@@ -5,20 +5,27 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', (e) => {
         let errors = [];
 
+        // ===== OBTENER VALORES =====
         const titulo = form.querySelector('[name="title"]')?.value.trim() || '';
         const descripcion = form.querySelector('[name="description"]')?.value.trim() || '';
         const categoria = form.querySelector('#category')?.value || '';
         const ubicacion = form.querySelector('[name="location"]')?.value.trim() || '';
         const fecha = form.querySelector('[name="date"]')?.value || '';
         const hora = form.querySelector('[name="time"]')?.value || '';
+
         const edad = form.querySelector('[name="min_age"]')?.value || '';
+        const edadNum = parseInt(edad) || 0;
+
         const max_people = form.querySelector('[name="max_people"]')?.value || '';
+        const maxPeopleNum = parseInt(max_people) || 0;
 
         const precioInput = form.querySelector('[name="price"]');
         const precio = precioInput ? parseFloat(precioInput.value) || 0 : 0;
 
         const imagenInput = document.getElementById('image_file');
         const imagen = imagenInput?.files[0];
+
+        const currentImage = form.querySelector('[name="current_image"]')?.value || '';
 
         // ===== VALIDACIONES =====
 
@@ -73,12 +80,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // EDAD
-        if (edad > 18) {
+        if (edadNum > 18) {
             errors.push("La edad mínima no puede ser mayor a 18 años.");
         }
 
-        // MAXIMO PERSONAS
-        if(max_people > 500){
+        // MÁXIMO PERSONAS
+        if (maxPeopleNum > 500) {
             errors.push("El máximo de participantes es 500.");
         }
 
@@ -91,10 +98,10 @@ document.addEventListener('DOMContentLoaded', () => {
             errors.push("El precio no puede ser mayor a 1000€.");
         }
 
-        // IMAGEN
-        if (!imagen) {
+        // IMAGEN (FIX IMPORTANTE)
+        if (!imagen && !currentImage) {
             errors.push("Debes subir una imagen.");
-        } else {
+        } else if (imagen) {
             const tiposValidos = ['image/jpeg', 'image/png'];
 
             if (!tiposValidos.includes(imagen.type)) {
@@ -114,23 +121,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 "Errores en el formulario:",
                 `<ul>${errors.map(err => `<li>${err}</li>`).join('')}</ul>`,
                 "error",
-                5000
+                4000
             );
         }
     });
 
-    // Transporte
+    // ===== TRANSPORTE (FIX INICIAL + CHANGE) =====
     const transportToggle = document.getElementById('transport_toggle');
-    if (transportToggle) {
+    const box = document.getElementById('departure_box');
+
+    if (transportToggle && box) {
+        // Estado inicial al cargar
+        box.style.display = transportToggle.checked ? 'block' : 'none';
+
+        // Cambio dinámico
         transportToggle.addEventListener('change', function () {
-            const box = document.getElementById('departure_box');
-            if (box) {
-                box.style.display = this.checked ? 'block' : 'none';
-            }
+            box.style.display = this.checked ? 'block' : 'none';
         });
     }
 
-    // Nombre del archivo
+    // ===== NOMBRE DEL ARCHIVO =====
     const imageInput = document.getElementById('image_file');
     if (imageInput) {
         imageInput.addEventListener('change', function () {
