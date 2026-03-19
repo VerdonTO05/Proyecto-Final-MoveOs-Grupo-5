@@ -72,8 +72,37 @@ try {
         ];
 
         if ($typePublication === 'activity') {
-            $data['price']        = $_POST['price'] ?: null;
-            $data['max_people']   = $_POST['max_people'] ?: null;
+            $data['price']      = $_POST['price'] ?: null;
+            $data['max_people'] = $_POST['max_people'] ?: null;
+        }
+
+        // Campos a comparar según el tipo
+        $fieldsToCompare = [
+            'title', 'description', 'category_id', 'location', 'date',
+            'time', 'language', 'min_age', 'dress_code', 'transport_included',
+            'departure_city', 'pets_allowed'
+        ];
+
+        if ($typePublication === 'activity') {
+            $fieldsToCompare[] = 'price';
+            $fieldsToCompare[] = 'max_people';
+        }
+
+        $hasChanges = false;
+        foreach ($fieldsToCompare as $f) {
+            if ((string)($data[$f] ?? '') !== (string)($publication[$f] ?? '')) {
+                $hasChanges = true;
+                break;
+            }
+        }
+
+        // Sin cambios → salir directamente
+        if (!$hasChanges) {
+            header('Location: index.php?accion=seeMyActivities');
+            exit;
+        }
+
+        if ($typePublication === 'activity') {
             $data['offertant_id'] = $_SESSION['user_id'];
 
             $result = $activityModel->updateActivity($data);
