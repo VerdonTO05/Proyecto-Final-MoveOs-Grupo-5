@@ -1,4 +1,5 @@
-window.showAlert = function (title, message, type = 'info', duration = 2500) {
+window.showAlert = function (title, message, type = 'info', duration = 3000) {
+  return new Promise((resolve) => {
     const overlay = document.createElement('div');
     overlay.classList.add('alert-overlay', type);
 
@@ -13,16 +14,23 @@ window.showAlert = function (title, message, type = 'info', duration = 2500) {
     document.body.appendChild(overlay);
 
     const closeAlert = () => {
-        alertBox.style.animation = 'fadeOut 0.3s forwards';
-        overlay.classList.remove('active');
-        setTimeout(() => document.body.removeChild(overlay), 300);
+      alertBox.style.animation = 'fadeOut 0.3s forwards';
+      overlay.classList.remove('active');
+
+      setTimeout(() => {
+        document.body.removeChild(overlay);
+        resolve(); // 👈 aquí se resuelve la promesa
+      }, 300);
     };
+
     setTimeout(closeAlert, duration);
+
     requestAnimationFrame(() => {
-        overlay.classList.add('active');
-        alertBox.style.animation = 'fadeIn 0.3s forwards';
+      overlay.classList.add('active');
+      alertBox.style.animation = 'fadeIn 0.3s forwards';
     });
-}
+  });
+};
 
 window.setupPasswordToggle = function (passwordInput, toggleButton) {
     const icon = toggleButton.querySelector("i");

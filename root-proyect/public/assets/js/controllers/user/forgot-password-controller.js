@@ -36,7 +36,7 @@ async function handleRequestCode(event) {
 
     // Validar email
     if (!email || !email.includes('@')) {
-        alert('Por favor, ingresa un correo electrónico válido.');
+        showAlert('Email inválido.','Por favor, ingresa un correo electrónico válido.', 'error');
         return;
     }
 
@@ -66,7 +66,7 @@ async function handleRequestCode(event) {
             document.getElementById('email-hidden').value = email;
 
             // Mostrar mensaje de éxito
-            alert(data.message);
+            showAlert('',data.message);
 
             // Cambiar al paso 2
             showStep2();
@@ -130,14 +130,14 @@ async function handleChangePassword(event) {
         const data = await response.json();
 
         if (data.success) {
-            alert('¡Contraseña cambiada exitosamente! Serás redirigido al inicio de sesión.');
+            await showAlert('¡Contraseña cambiada exitosamente!','Serás redirigido al inicio de sesión.','info', 2500);
             window.location.href = 'index.php?accion=loginView';
         } else {
-            alert(data.message || 'Error al cambiar la contraseña. Por favor, verifica tus datos.');
+            showAlert('Error al cambiar la contraseña. ','Por favor, verifica tus datos.','error', 2500);
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('Ocurrió un error al procesar tu solicitud. Por favor, intenta de nuevo.');
+        showAlert('Ocurrió un error al procesar tu solicitud.', 'Por favor, intenta de nuevo.','error', 2500);
     } finally {
         // Rehabilitar botón
         submitBtn.disabled = false;

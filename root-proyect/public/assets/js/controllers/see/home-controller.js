@@ -4,8 +4,14 @@
 
 let publications = [];
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   if (!window.CURRENT_USER) {
+    await showAlert(
+      'Acceso denegado',
+      'Debes iniciar sesión o registrarte para explorar.',
+      'warning',
+      2500
+    );
     window.location.href = "index.php?accion=loginView";
     return;
   }

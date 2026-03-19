@@ -85,7 +85,7 @@ switch ($action) {
     require __DIR__ . '/../app/controllers/get/get-my-registrations.php';
     break;
   case 'seeRequest':
-    require __DIR__ . '/../app/views/home.php';
+    require __DIR__ . '/../app/views/see/home.php';
     break;
   case 'seeRegistrations':
     require __DIR__ . '/../app/views/see/my-registrations.php';
