@@ -1,8 +1,6 @@
-<!-- EN PROCESO DE REAJUSTE, OBTENER LOS DATOS DEL USUARIO POR FECTH PARA PODER MOSTRARLOS EN LOS VALUE DE LOS INPUT -->
 <!DOCTYPE html>
 <html lang="es">
 <?php
-// Iniciar sesión si no está activa
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -11,6 +9,17 @@ require_once __DIR__ . '/../../middleware/auth.php';
 requireAuth();
 requireActiveUser();
 
+// Recuperar datos antiguos y limpiarlos de sesión
+$old = $_SESSION['form_old_data'] ?? [];
+unset($_SESSION['form_old_data']);
+
+function oldUser(string $key, $fallback = ''): string {
+    global $old, $user;
+    if (!empty($old) && isset($old[$key])) {
+        return htmlspecialchars($old[$key], ENT_QUOTES);
+    }
+    return htmlspecialchars($user[$key] ?? $fallback, ENT_QUOTES);
+}
 ?>
 
 <head>
@@ -18,24 +27,29 @@ requireActiveUser();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar información - MOVEos</title>
     <script src="assets/js/theme-init.js"></script>
-    <script src="assets/js/main.js"></script>
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="icon" type="image/ico" href="assets/img/ico/icono.svg" id="icon.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="assets/js/utils.js"></script>
-    <script src="assets/js/controllers/user/edit-info-controller.js"></script>
+    <script src="assets/js/main.js"></script>
 </head>
 
 <body>
-    <!-- Switch del tema -->
+    <?php if (!empty($_SESSION['form_errors'])): ?>
+    <script>
+        window.__PHP_FORM_ERRORS__ = <?= json_encode($_SESSION['form_errors']) ?>;
+    </script>
+    <?php unset($_SESSION['form_errors']); ?>
+    <?php endif; ?>
+
     <div class="icons">
         <label class="switch top-right">
-            <input type="checkbox" id="theme-toggle" role="swicth" aria-checked="false"
+            <input type="checkbox" id="theme-toggle" role="switch" aria-checked="false"
                 aria-label="Cambiar tema claro/oscuro">
             <span class="slider"></span>
         </label>
     </div>
-    <!-- Contenedor principal -->
+
     <div class="first register">
         <div class="container">
             <button class="close-btn" type="button" aria-label="Cerrar formulario">&times;</button>
@@ -45,32 +59,32 @@ requireActiveUser();
                 <p>Puedes modificar tu información aquí</p>
             </header>
 
-            <!-- Formulario -->
             <form id="edit-form" class="register-form" action="index.php?accion=editUser" method="post">
 
                 <label for="fullname">Nombre Completo</label>
                 <div class="input-group">
                     <i class="fas fa-user icon" aria-hidden="true"></i>
                     <input type="text" id="fullname" name="fullname" required aria-required="true"
-                        value="<?= htmlspecialchars($user['full_name']) ?? "" ?>">
+                        value="<?= oldUser('fullname', $user['full_name']) ?>">
                 </div>
 
                 <label for="username">Nombre de Usuario</label>
                 <div class="input-group">
                     <i class="fas fa-user icon" aria-hidden="true"></i>
                     <input type="text" id="username" name="username" required aria-required="true"
-                        value="<?= htmlspecialchars($user['username']) ?? "" ?>">
+                        value="<?= oldUser('username', $user['username']) ?>">
                 </div>
 
                 <label for="email">Correo Electrónico</label>
                 <div class="input-group">
                     <i class="fas fa-envelope icon" aria-hidden="true"></i>
                     <input type="email" id="email" name="email" required aria-required="true"
-                        value="<?= htmlspecialchars($user['email']) ?? "" ?>">
+                        value="<?= oldUser('email', $user['email']) ?>">
                 </div>
 
                 <label>
-                    <input type="checkbox" name="changePassword" id="changePassword">
+                    <input type="checkbox" name="changePassword" id="changePassword"
+                        <?= !empty($old['changePassword']) ? 'checked' : '' ?>>
                     Cambiar contraseña
                 </label>
 
@@ -99,9 +113,10 @@ requireActiveUser();
                     <a href="index.php?accion=viewInfo" aria-label="Ver datos">Ver datos</a>
                 </div>
             </form>
-
         </div>
     </div>
+
+    <script src="assets/js/controllers/user/edit-info-controller.js"></script>
 </body>
 
 </html>

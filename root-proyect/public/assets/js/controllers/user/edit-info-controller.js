@@ -1,4 +1,16 @@
 document.addEventListener("DOMContentLoaded", () => {
+
+  // ===== ERRORES DESDE PHP =====
+  const phpErrors = window.__PHP_FORM_ERRORS__ ?? [];
+  if (phpErrors.length > 0) {
+    showAlert(
+      "Errores en el formulario:",
+      `<ul>${phpErrors.map(err => `<li>${err}</li>`).join('')}</ul>`,
+      "error",
+      4000
+    );
+  }
+
   const editForm = document.getElementById("edit-form");
   const closeBtn = document.querySelector('.close-btn');
 
@@ -17,10 +29,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (changePasswordCheckbox && passwordFields) {
     passwordFields.style.display = 'none';
+
+    // Si volvemos con error y el checkbox estaba marcado, mostramos los campos
+    if (changePasswordCheckbox.checked) {
+      passwordFields.style.display = 'block';
+    }
+
     changePasswordCheckbox.addEventListener('change', () => {
       passwordFields.style.display = changePasswordCheckbox.checked ? 'block' : 'none';
 
-      // Limpiar campos si se desmarca
       if (!changePasswordCheckbox.checked) {
         currentPassword.value = '';
         newPassword.value = '';
@@ -28,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // --- Toggle ver/ocultar contraseña ---
+  // Toggle ver/ocultar contraseña
   const toggleButtons = document.querySelectorAll(".toggle-password");
   toggleButtons.forEach((button) => {
     const input = button.closest(".div-password").querySelector("input");
@@ -50,56 +67,52 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Validación del formulario
   if (editForm) {
-    if (editForm) {
-      editForm.addEventListener("submit", (event) => {
-        event.preventDefault();
+    editForm.addEventListener("submit", (event) => {
+      event.preventDefault();
 
-        const fullname = document.getElementById("fullname").value.trim();
-        const username = document.getElementById("username").value.trim();
-        const email = document.getElementById("email").value.trim();
+      const fullname = document.getElementById("fullname").value.trim();
+      const username = document.getElementById("username").value.trim();
+      const email    = document.getElementById("email").value.trim();
 
-        let errors = [];
+      let errors = [];
 
-        // ===== VALIDACIONES GENERALES =====
-        if (!validateFullName(fullname)) {
-          errors.push("Por favor, introduce nombre y apellido.");
+      if (!validateFullName(fullname)) {
+        errors.push("Por favor, introduce nombre y apellido.");
+      }
+
+      // Corregido: era < 0, nunca se cumplía
+      if (username.length < 3) {
+        errors.push("El nombre de usuario debe tener al menos 3 caracteres.");
+      }
+
+      if (!validateEmail(email)) {
+        errors.push("El formato del correo electrónico no es válido.");
+      }
+
+      if (changePasswordCheckbox && changePasswordCheckbox.checked) {
+        if (!currentPassword.value) {
+          errors.push("Debes introducir tu contraseña actual.");
         }
 
-        if (username.trim().length < 0) {
-          errors.push("El nombre de usuario es obligatorio.");
+        if (!newPassword.value) {
+          errors.push("Debes introducir la nueva contraseña.");
         }
 
-        if (!validateEmail(email)) {
-          errors.push("El formato del correo electrónico no es válido.");
+        if (newPassword.value && !validatePassword(newPassword.value)) {
+          errors.push("La nueva contraseña debe tener al menos 8 caracteres.");
         }
+      }
 
-        // ===== CONTRASEÑA (OPCIONAL) =====
-        if (changePasswordCheckbox && changePasswordCheckbox.checked) {
-          if (!currentPassword.value) {
-            errors.push("Debes introducir tu contraseña actual.");
-          }
+      if (errors.length > 0) {
+        return showAlert(
+          "Errores en el formulario:",
+          `<ul>${errors.map(err => `<li>${err}</li>`).join('')}</ul>`,
+          "error",
+          4000
+        );
+      }
 
-          if (!newPassword.value) {
-            errors.push("Debes introducir la nueva contraseña.");
-          }
-
-          if (newPassword.value && !validatePassword(newPassword.value)) {
-            errors.push("La nueva contraseña debe tener al menos 8 caracteres.");
-          }
-        }
-
-        // ===== MOSTRAR ERRORES =====
-        if (errors.length > 0) {
-          return showAlert(
-            "Errores en el formulario:",
-            `<ul>${errors.map(err => `<li>${err}</li>`).join('')}</ul>`,
-            "error"
-          );
-        }
-
-        // ===== ENVIAR SI TODO OK =====
-        editForm.submit();
-      });
-    }
+      editForm.submit();
+    });
   }
 });

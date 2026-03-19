@@ -139,17 +139,44 @@ class User
      * @param string|null $passwordHash Hash de la nueva contraseña (opcional). Si se pasa null, la contraseña no se modifica.
      * @return bool true si la actualización se realiza correctamente, false si falla.
      */
-    public function updateUser($id, $fullname, $username, $email, $passwordHash = null)
+    public function updateUser($id, $fullname, $username, $email, $passwordHash = null): bool|array
     {
-        if ($passwordHash) {
-            $sql = "UPDATE users SET full_name=?, username=?, email=?, password_hash=? WHERE id=?";
-            $stmt = $this->conn->prepare($sql);
-            return $stmt->execute([$fullname, $username, $email, $passwordHash, $id]);
-        } else {
-            $sql = "UPDATE users SET full_name=?, username=?, email=? WHERE id=?";
-            $stmt = $this->conn->prepare($sql);
-            return $stmt->execute([$fullname, $username, $email, $id]);
+        // Comprobar si el email ya existe en otro usuario
+        $checkEmailSql = "SELECT id FROM {$this->table_name} 
+                      WHERE email = :email AND id != :id LIMIT 1";
+        $stmt = $this->conn->prepare($checkEmailSql);
+        $stmt->execute(['email' => $email, 'id' => $id]);
+
+        if ($stmt->fetch()) {
+            return ['error' => 'email_taken'];
         }
+
+        // Comprobar si el username ya existe en otro usuario
+        $checkUsernameSql = "SELECT id FROM {$this->table_name} 
+                         WHERE username = :username AND id != :id LIMIT 1";
+        $stmt = $this->conn->prepare($checkUsernameSql);
+        $stmt->execute(['username' => $username, 'id' => $id]);
+
+        if ($stmt->fetch()) {
+            return ['error' => 'username_taken'];
+        }
+
+        // Actualizar con o sin contraseña
+        if ($passwordHash) {
+            $sql = "UPDATE {$this->table_name} 
+                 SET full_name = ?, username = ?, email = ?, password_hash = ? 
+                 WHERE id = ?";
+            $stmt = $this->conn->prepare($sql);
+            $ok = $stmt->execute([$fullname, $username, $email, $passwordHash, $id]);
+        } else {
+            $sql = "UPDATE {$this->table_name} 
+                 SET full_name = ?, username = ?, email = ? 
+                 WHERE id = ?";
+            $stmt = $this->conn->prepare($sql);
+            $ok = $stmt->execute([$fullname, $username, $email, $id]);
+        }
+
+        return $ok ? true : ['error' => 'update_failed'];
     }
 
 
