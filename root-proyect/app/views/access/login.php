@@ -18,7 +18,7 @@ if (isset($_SESSION['user_id'])) {
     <script src="assets/js/theme-init.js"></script>
     <script src="assets/js/main.js"></script>
     <script src="assets/js/utils.js"></script>
-    <script src="assets/js/controllers/login-controller.js"></script>
+    <script src="assets/js/controllers/access/login-controller.js"></script>
 </head>
 
 <body>

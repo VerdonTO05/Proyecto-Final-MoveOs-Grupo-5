@@ -7,7 +7,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // Proteger la página - solo administradores
-require_once __DIR__ . '/../middleware/auth.php';
+require_once __DIR__ . '/../../middleware/auth.php';
 requireRole('administrador');
 
 $user = getCurrentUser();
@@ -27,7 +27,7 @@ $user = getCurrentUser();
     <link rel="icon" type="image/png" href="assets/img/ico/icono.svg" if="icon.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="assets/js/utils.js"></script>
-    <script src="assets/js/controllers/all-post-controller.js"></script>
+    <script src="assets/js/controllers/control/all-post-controller.js"></script>
 </head>
 
 <body>

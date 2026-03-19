@@ -78,6 +78,6 @@ $roomId      = $currentUser['id'];
 
     <div id="footer"></div>
 
-    <script type="module" src="assets/js/controllers/chat-controller.js"></script>
+    <script type="module" src="assets/js/controllers/chat/chat-controller.js"></script>
 </body>
 </html>

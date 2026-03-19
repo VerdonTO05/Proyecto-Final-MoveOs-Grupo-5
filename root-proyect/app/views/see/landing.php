@@ -23,7 +23,7 @@ $user = getCurrentUser();
     <script src="assets/js/utils/steps.js"></script>
     <script src="assets/js/utils/how-it-works.js"></script>
     <script src="assets/js/utils.js"></script>
-    <script src="assets/js/controllers/landing-controller.js"></script>
+    <script src="assets/js/controllers/see/landing-controller.js"></script>
     <script src="assets/js/theme-init.js"></script>
     <script src="assets/js/main.js"></script>
     <link rel="stylesheet" href="assets/css/main.css">

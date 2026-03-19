@@ -23,7 +23,7 @@ requireActiveUser();
     <link rel="icon" type="image/ico" href="assets/img/ico/icono.svg" id="icon.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="assets/js/utils.js"></script>
-    <script src="assets/js/controllers/edit-info-controller.js"></script>
+    <script src="assets/js/controllers/user/edit-info-controller.js"></script>
 </head>
 
 <body>

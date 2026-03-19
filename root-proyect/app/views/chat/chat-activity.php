@@ -6,7 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-require_once __DIR__ . '/../middleware/auth.php';
+require_once __DIR__ . '/../../middleware/auth.php';
 requireActiveUser();
 requireAnyRole(['organizador', 'participante', 'administrador']);
 
@@ -122,6 +122,6 @@ if ($currentUser['role'] !== 'administrador') {
     <div id="footer"></div>
 
     <!-- Controlador de chat -->
-    <script type="module" src="assets/js/controllers/chat-controller.js"></script>
+    <script type="module" src="assets/js/controllers/chat/chat-controller.js"></script>
 </body>
 </html>
