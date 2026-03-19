@@ -20,7 +20,8 @@ try {
     $activityModel = new Activity($db);
     $requestModel  = new Request($db);
 
-    $id = $_POST['id'] ?? null;
+    // Leer id de GET o POST según el momento
+    $id = $_POST['id'] ?? $_GET['id'] ?? null;
 
     if (!$id) {
         $_SESSION['error'] = 'Información no recibida';
@@ -29,10 +30,10 @@ try {
     }
 
     if ($_SESSION['role'] === 'participante') {
-        $publication = $requestModel->getRequestById($id);
+        $publication     = $requestModel->getRequestById($id);
         $typePublication = 'request';
     } else {
-        $publication = $activityModel->getActivityById($id);
+        $publication     = $activityModel->getActivityById($id);
         $typePublication = 'activity';
     }
 
@@ -43,10 +44,7 @@ try {
     }
 
     $userId = $_SESSION['user_id'];
-
-    $field = ($typePublication === 'activity') 
-        ? 'offertant_id' 
-        : 'participant_id';
+    $field  = ($typePublication === 'activity') ? 'offertant_id' : 'participant_id';
 
     if ($publication[$field] != $userId) {
         $_SESSION['error'] = 'No tienes permiso para editar esta publicación';
@@ -54,36 +52,64 @@ try {
         exit;
     }
 
-    // Si se envia el formulario (update)
+    // Si se envía el formulario (update)
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['title'])) {
 
         $data = [
-            'id' => $id,
-            'title' => trim($_POST['title'] ?? ''),
-            'description' => trim($_POST['description'] ?? ''),
-            'category_id' => $_POST['category_id'] ?? null,
-            'location' => trim($_POST['location'] ?? ''),
-            'date' => $_POST['date'] ?? null,
-            'time' => $_POST['time'] ?? null,
-            'language' => trim($_POST['language'] ?? ''),
-            'min_age' => $_POST['min_age'] ?: null,
-            'dress_code' => trim($_POST['dress_code'] ?? ''),
+            'id'                 => $id,
+            'title'              => trim($_POST['title'] ?? ''),
+            'description'        => trim($_POST['description'] ?? ''),
+            'category_id'        => $_POST['category_id'] ?? null,
+            'location'           => trim($_POST['location'] ?? ''),
+            'date'               => $_POST['date'] ?? null,
+            'time'               => $_POST['time'] ?? null,
+            'language'           => trim($_POST['language'] ?? ''),
+            'min_age'            => $_POST['min_age'] ?: null,
+            'dress_code'         => trim($_POST['dress_code'] ?? ''),
             'transport_included' => isset($_POST['transport_included']) ? 1 : 0,
-            'departure_city' => trim($_POST['departure_city'] ?? ''),
-            'pets_allowed' => isset($_POST['pets_allowed']) ? 1 : 0,
+            'departure_city'     => trim($_POST['departure_city'] ?? ''),
+            'pets_allowed'       => isset($_POST['pets_allowed']) ? 1 : 0,
         ];
 
-        // Solo actividades tienen estos campos
         if ($typePublication === 'activity') {
-            $data['price'] = $_POST['price'] ?: null;
-            $data['max_people'] = $_POST['max_people'] ?: null;
+            $data['price']        = $_POST['price'] ?: null;
+            $data['max_people']   = $_POST['max_people'] ?: null;
+            $data['offertant_id'] = $_SESSION['user_id'];
 
-            $activityModel->updateActivity($data);
+            $result = $activityModel->updateActivity($data);
+
+            $errorMessages = [
+                'conflict_activity' => 'Ya tienes otra actividad ese día: "' . (is_array($result) ? ($result['title'] ?? '') : '') . '".',
+                'conflict_request'  => 'Ya tienes una petición aceptada ese día: "' . (is_array($result) ? ($result['title'] ?? '') : '') . '".',
+                'not_found'         => 'La actividad no existe o no se pudo actualizar.',
+                'exception'         => 'Error del servidor.',
+            ];
+
         } else {
-            $requestModel->updateRequest($data);
+            $data['participant_id'] = $_SESSION['user_id'];
+
+            $result = $requestModel->updateRequest($data);
+
+            $errorMessages = [
+                'conflict_request'  => 'Ya tienes otra petición ese día: "' . (is_array($result) ? ($result['title'] ?? '') : '') . '".',
+                'conflict_activity' => 'Ya tienes una inscripción en una actividad ese día: "' . (is_array($result) ? ($result['title'] ?? '') : '') . '".',
+                'not_found'         => 'La petición no existe o no se pudo actualizar.',
+                'exception'         => 'Error del servidor.',
+            ];
         }
 
-        header('Location: index.php?accion=seeMyActivities');
+        if ($result === true) {
+            header('Location: index.php?accion=seeMyActivities');
+            exit;
+        }
+
+        $msg = is_array($result) && isset($result['error'])
+            ? ($errorMessages[$result['error']] ?? 'Error al actualizar.')
+            : 'Error al actualizar.';
+
+        $_SESSION['form_errors']   = [$msg];
+        $_SESSION['form_old_data'] = $_POST;
+        header('Location: index.php?accion=editActivity&id=' . $id);
         exit;
     }
 

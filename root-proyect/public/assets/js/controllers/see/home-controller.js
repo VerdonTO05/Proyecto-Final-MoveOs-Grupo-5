@@ -188,8 +188,7 @@ async function handleSignup(btn, activity, role, card) {
       }
     }
   } catch (error) {
-    console.error(error);
-    showAlert('Error', 'Ocurrió un error al realizar la acción.', 'error');
+    showAlert('Error', error, 'error');
     signupBtn.disabled = false;
     signupBtn.textContent = role === 'organizador' ? 'Aceptar' : 'Inscribirse';
   }

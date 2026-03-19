@@ -1,11 +1,20 @@
 <?php
-// Proteger la página - solo oferentes y participantes pueden crear actividades
 require_once __DIR__ . '/../../middleware/auth.php';
 requireActiveUser();
 requireAnyRole(['organizador', 'participante']);
 
-$rol = $_SESSION['role'];
+$rol         = $_SESSION['role'];
 $participante = ($rol === 'participante');
+
+// Recuperar datos antiguos y limpiarlos de sesión
+$old = $_SESSION['form_old_data'] ?? [];
+unset($_SESSION['form_old_data']);
+
+// Helper para imprimir valores de forma segura
+function old(string $key, $default = ''): string {
+    global $old;
+    return htmlspecialchars($old[$key] ?? $default, ENT_QUOTES);
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -17,11 +26,17 @@ $participante = ($rol === 'participante');
     <link rel="icon" type="image/ico" href="assets/img/ico/icono.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="assets/js/utils.js"></script>
-    <script src="assets/js/controllers/posts/activity-validation.js"></script>
     <script src="assets/js/main.js"></script>
 </head>
 
 <body>
+    <?php if (!empty($_SESSION['form_errors'])): ?>
+    <script>
+        window.__PHP_FORM_ERRORS__ = <?= json_encode($_SESSION['form_errors']) ?>;
+    </script>
+    <?php unset($_SESSION['form_errors']); ?>
+    <?php endif; ?>
+
     <div class="icons">
         <label class="switch top-right">
             <input type="checkbox" id="theme-toggle" role="switch" aria-checked="false"
@@ -29,6 +44,7 @@ $participante = ($rol === 'participante');
             <span class="slider"></span>
         </label>
     </div>
+
     <div class="container c">
         <header class="header-form create">
             <?php if ($participante): ?>
@@ -41,9 +57,10 @@ $participante = ($rol === 'participante');
         </header>
 
         <div class="alert">
-            <p>La <?php $participante ? 'petición' : 'actividad' ?> ingresada quedará <strong>pendiente de revisión
+            <p>La <?= $participante ? 'petición' : 'actividad' ?> ingresada quedará <strong>pendiente de revisión
                     administrativa</strong> y será publicada una vez reciba la aprobación correspondiente.</p>
         </div>
+
         <form class="form-activity" id="form-create-activity" action="index.php" method="POST"
             enctype="multipart/form-data">
 
@@ -53,13 +70,13 @@ $participante = ($rol === 'participante');
             <!-- TÍTULO -->
             <div class="full">
                 <label>Título *</label>
-                <input type="text" name="title" required>
+                <input type="text" name="title" value="<?= old('title') ?>" required>
             </div>
 
             <!-- DESCRIPCIÓN -->
             <div class="full">
                 <label>Descripción *</label>
-                <textarea name="description" required></textarea>
+                <textarea name="description" required><?= old('description') ?></textarea>
             </div>
 
             <!-- CATEGORÍA -->
@@ -67,94 +84,93 @@ $participante = ($rol === 'participante');
                 <label for="category">Categoría *</label>
                 <select id="category" name="category_id" required aria-required="true">
                     <option value="">Selecciona...</option>
-                    <option value="1">Taller</option>
-                    <option value="2">Clase</option>
-                    <option value="3">Evento</option>
-                    <option value="4">Excursión</option>
-                    <option value="5">Formación técnica</option>
-                    <option value="6">Conferencia</option>
-                    <option value="7">Reunión</option>
-                    <option value="8">Experiencia</option>
-                    <option value="9">Tour</option>
-                    <option value="10">Competición</option>
-                    <option value="11">Evento social</option>
+                    <option value="1"  <?= old('category_id') == '1'  ? 'selected' : '' ?>>Taller</option>
+                    <option value="2"  <?= old('category_id') == '2'  ? 'selected' : '' ?>>Clase</option>
+                    <option value="3"  <?= old('category_id') == '3'  ? 'selected' : '' ?>>Evento</option>
+                    <option value="4"  <?= old('category_id') == '4'  ? 'selected' : '' ?>>Excursión</option>
+                    <option value="5"  <?= old('category_id') == '5'  ? 'selected' : '' ?>>Formación técnica</option>
+                    <option value="6"  <?= old('category_id') == '6'  ? 'selected' : '' ?>>Conferencia</option>
+                    <option value="7"  <?= old('category_id') == '7'  ? 'selected' : '' ?>>Reunión</option>
+                    <option value="8"  <?= old('category_id') == '8'  ? 'selected' : '' ?>>Experiencia</option>
+                    <option value="9"  <?= old('category_id') == '9'  ? 'selected' : '' ?>>Tour</option>
+                    <option value="10" <?= old('category_id') == '10' ? 'selected' : '' ?>>Competición</option>
+                    <option value="11" <?= old('category_id') == '11' ? 'selected' : '' ?>>Evento social</option>
                 </select>
             </div>
 
             <!-- UBICACIÓN -->
             <div>
                 <label>Ubicación *</label>
-                <input type="text" name="location" required>
+                <input type="text" name="location" value="<?= old('location') ?>" required>
             </div>
 
             <!-- FECHA -->
             <div>
                 <label>Fecha</label>
-                <input type="date" name="date">
+                <input type="date" name="date" value="<?= old('date') ?>">
             </div>
 
             <!-- HORA -->
             <div>
                 <label>Hora</label>
-                <input type="time" name="time">
+                <input type="time" name="time" value="<?= old('time') ?>">
             </div>
 
             <?php if (!$participante): ?>
-                <div>
-                    <label>Precio (€)</label>
-                    <input type="number" name="price" step="0.01" min="0">
-                </div>
+            <div>
+                <label>Precio (€)</label>
+                <input type="number" name="price" step="0.01" min="0" value="<?= old('price', '0') ?>">
+            </div>
 
-                <div>
-                    <label>Máximo de participantes</label>
-                    <input type="number" name="max_people" min="1">
-                </div>
+            <div>
+                <label>Máximo de participantes</label>
+                <input type="number" name="max_people" min="1" value="<?= old('max_people') ?>">
+            </div>
             <?php endif; ?>
 
             <!-- CAMPOS COMUNES -->
             <div>
                 <label for="idioma">Idioma</label>
                 <select id="idioma" name="language">
-                    <option value="Español">Español</option>
-                    <option value="Inglés">Inglés</option>
-                    <option value="Francés">Francés</option>
-                    <option value="Alemán">Alemán</option>
-                    <option value="Italiano">Italiano</option>
-                    <option value="Portugués">Portugués</option>
-                    <option value="Chino">Chino</option>
-                    <option value="Japonés">Japonés</option>
-                    <option value="Ruso">Ruso</option>
-                    <option value="Árabe">Árabe</option>
+                    <?php
+                    $idiomas = ['Español','Inglés','Francés','Alemán','Italiano','Portugués','Chino','Japonés','Ruso','Árabe'];
+                    foreach ($idiomas as $idioma):
+                        $selected = old('language', 'Español') === $idioma ? 'selected' : '';
+                    ?>
+                        <option value="<?= $idioma ?>" <?= $selected ?>><?= $idioma ?></option>
+                    <?php endforeach; ?>
                 </select>
             </div>
 
             <div>
                 <label>Edad mínima</label>
-                <input type="number" name="min_age" min="0">
+                <input type="number" name="min_age" min="0" value="<?= old('min_age') ?>">
             </div>
 
             <div>
                 <label>Código vestimenta</label>
-                <input type="text" name="dress_code">
+                <input type="text" name="dress_code" value="<?= old('dress_code') ?>">
             </div>
 
             <div class="checkbox-group full">
                 <label>
-                    <input type="checkbox" name="transport_included" id="transport_toggle" value="1" />
+                    <input type="checkbox" name="transport_included" id="transport_toggle" value="1"
+                        <?= isset($old['transport_included']) ? 'checked' : '' ?> />
                     Transporte incluido
                 </label>
                 <div id="departure_box" style="display:none; margin: 10px 0;">
-                    <input type="text" name="departure_city" placeholder="¿Desde dónde salen?">
+                    <input type="text" name="departure_city" placeholder="¿Desde dónde salen?"
+                        value="<?= old('departure_city') ?>">
                 </div>
                 <label>
-                    <input type="checkbox" name="pets_allowed" value="1" />
+                    <input type="checkbox" name="pets_allowed" value="1"
+                        <?= isset($old['pets_allowed']) ? 'checked' : '' ?> />
                     Mascotas permitidas
                 </label>
             </div>
 
             <div class="full">
                 <label>Imagen de la <?= $participante ? "Petición" : "Actividad" ?> *</label>
-
                 <div class="upload-box">
                     <input type="file" name="image_file" id="image_file" accept="image/png, image/jpeg" required />
                     <div class="upload-content">
@@ -164,21 +180,15 @@ $participante = ($rol === 'participante');
                 </div>
             </div>
 
-            <?php if ($participante): ?>
-                <input type="hidden" name="type" value="request">
-            <?php else: ?>
-                <input type="hidden" name="type" value="activity">
-            <?php endif; ?>
-
             <div class="actions">
-                <?php if ($participante): ?>
-                    <button type="submit" class="btn-submit">Publicar Petición</button>
-                <?php else: ?>
-                    <button type="submit" class="btn-submit">Publicar Actividad</button>
-                <?php endif; ?>
+                <button type="submit" class="btn-submit">
+                    <?= $participante ? 'Publicar Petición' : 'Publicar Actividad' ?>
+                </button>
             </div>
         </form>
     </div>
+
+    <script src="assets/js/controllers/posts/activity-validation.js"></script>
 </body>
 
 </html>

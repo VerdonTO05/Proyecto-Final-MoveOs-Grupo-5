@@ -118,6 +118,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  min-height: 100vh;
   font-family: "Inter", Arial, sans-serif;
   background-color: var(--bg-main);
   color: var(--text-primary);

@@ -109,11 +109,11 @@ class Registration
             ]);
 
             if ($stmt->rowCount() > 0) {
-                return false;
+                return ['error' => 'already_registered'];
             }
 
-            // Obtener datos de la actividad
-            $activitySql = "SELECT max_people, is_completed 
+            // Obtener datos de la actividad (incluyendo la fecha)
+            $activitySql = "SELECT max_people, is_completed, date 
                         FROM activities 
                         WHERE id = :activity_id";
 
@@ -122,11 +122,51 @@ class Registration
             $activity = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if (!$activity) {
-                return false;
+                return ['error' => 'activity_not_found'];
             }
 
             if ($activity['is_completed'] == 1) {
-                return false;
+                return ['error' => 'activity_completed'];
+            }
+
+            // Comprobar si el participante ya tiene otra inscripción en la misma fecha
+            $conflictActivitySql = "SELECT a.title 
+                                FROM {$this->table_name} r
+                                JOIN activities a ON a.id = r.activity_id
+                                WHERE r.participant_id = :participant_id
+                                AND a.date = :date
+                                AND r.activity_id != :activity_id
+                                LIMIT 1";
+
+            $stmt = $this->conn->prepare($conflictActivitySql);
+            $stmt->execute([
+                'participant_id' => $participant_id,
+                'date' => $activity['date'],
+                'activity_id' => $activity_id
+            ]);
+            $conflictActivity = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($conflictActivity) {
+                return ['error' => 'conflict_activity', 'title' => $conflictActivity['title']];
+            }
+
+            // Comprobar si el participante tiene alguna request en la misma fecha
+            $conflictRequestSql = "SELECT title 
+                               FROM requests 
+                               WHERE participant_id = :participant_id
+                               AND date = :date
+                               AND state != 'finalizada'
+                               LIMIT 1";
+
+            $stmt = $this->conn->prepare($conflictRequestSql);
+            $stmt->execute([
+                'participant_id' => $participant_id,
+                'date' => $activity['date']
+            ]);
+            $conflictRequest = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($conflictRequest) {
+                return ['error' => 'conflict_request', 'title' => $conflictRequest['title']];
             }
 
             // Contar inscripciones actuales
@@ -140,7 +180,7 @@ class Registration
 
             // Evitar overbooking
             if ($registrations >= $activity['max_people']) {
-                return false;
+                return ['error' => 'activity_full'];
             }
 
             // Insertar inscripción
@@ -153,14 +193,15 @@ class Registration
                 'participant_id' => $participant_id
             ]);
 
+            $newId = $this->conn->lastInsertId();
+
             // Volver a contar inscripciones
             $stmt = $this->conn->prepare($countSql);
             $stmt->execute(['activity_id' => $activity_id]);
             $registrations = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
 
-            //Si se llena la actividad → marcar completada
+            // Si se llena la actividad → marcar completada
             if ($registrations >= $activity['max_people']) {
-
                 $updateSql = "UPDATE activities 
                           SET is_completed = 1 
                           WHERE id = :activity_id";
@@ -169,15 +210,12 @@ class Registration
                 $stmt->execute(['activity_id' => $activity_id]);
             }
 
-            return $this->conn->lastInsertId();
+            return $newId;
 
         } catch (Exception $e) {
-
-            return false;
-
+            return ['error' => 'exception', 'message' => $e->getMessage()];
         }
     }
-
     /**
      * Eliminar una inscripción
      * @param int $id ID de la inscripción a eliminar

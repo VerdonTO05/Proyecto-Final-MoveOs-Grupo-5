@@ -142,47 +142,157 @@ class Request
      */
     public function createRequest($data)
     {
-        $sql = "INSERT INTO {$this->table_name} 
+        try {
+            $date = $data['date'] ?? null;
+            $participant_id = $data['participant_id'] ?? null;
+
+            // Comprobar si el participante ya tiene otra petición en esa fecha
+            $conflictRequestSql = "SELECT title FROM {$this->table_name}
+                               WHERE participant_id = :participant_id
+                               AND date = :date
+                               AND state != 'finalizada'
+                               LIMIT 1";
+
+            $stmt = $this->conn->prepare($conflictRequestSql);
+            $stmt->execute([
+                'participant_id' => $participant_id,
+                'date' => $date
+            ]);
+            $conflictRequest = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($conflictRequest) {
+                return ['error' => 'conflict_request', 'title' => $conflictRequest['title']];
+            }
+
+            // Comprobar si el participante tiene una inscripción en una actividad en esa fecha
+            $conflictActivitySql = "SELECT a.title 
+                                FROM registrations r
+                                JOIN activities a ON a.id = r.activity_id
+                                WHERE r.participant_id = :participant_id
+                                AND a.date = :date
+                                AND a.is_finished = 0
+                                LIMIT 1";
+
+            $stmt = $this->conn->prepare($conflictActivitySql);
+            $stmt->execute([
+                'participant_id' => $participant_id,
+                'date' => $date
+            ]);
+            $conflictActivity = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($conflictActivity) {
+                return ['error' => 'conflict_activity', 'title' => $conflictActivity['title']];
+            }
+
+            // Insertar la petición
+            $sql = "INSERT INTO {$this->table_name} 
                 (participant_id, category_id, title, description, date, time, location, current_registrations, organizer_email,
                  transport_included, departure_city, language, min_age, pets_allowed, dress_code, image_url, state)
                 VALUES 
                 (:participant_id, :category_id, :title, :description, :date, :time, :location, :current_registrations, :organizer_email,
                  :transport_included, :departure_city, :language, :min_age, :pets_allowed, :dress_code, :image_url, :state)";
 
-        $stmt = $this->conn->prepare($sql);
-        if ($stmt->execute($data)) {
-            return $this->conn->lastInsertId();
+            $stmt = $this->conn->prepare($sql);
+
+            if ($stmt->execute($data)) {
+                return $this->conn->lastInsertId();
+            }
+
+            return ['error' => 'insert_failed'];
+
+        } catch (PDOException $e) {
+            error_log("Error en createRequest: " . $e->getMessage());
+            return ['error' => 'exception', 'message' => $e->getMessage()];
         }
-        return false;
     }
 
     /**
      * Editar una petición existente
      * @param int $id ID de la petición
      * @param array $data Datos a actualizar (debe incluir todas las columnas que se actualizan)
-     * @return bool True si se actualizó correctamente, false si falla
+     * @return
      */
-    public function updateRequest($data)
+    public function updateRequest($data): bool|array
     {
-        $sql = "UPDATE requests SET
-                title = :title,
-                description = :description,
-                category_id = :category_id,
-                location = :location,
-                date = :date,
-                time = :time,
-                language = :language,
-                min_age = :min_age,
-                dress_code = :dress_code,
+        try {
+            $id = $data['id'] ?? null;
+            $date = $data['date'] ?? null;
+            $participant_id = $data['participant_id'] ?? null;
+
+            // Comprobar si el participante tiene otra petición propia en esa fecha (excluyendo la actual)
+            $conflictRequestSql = "SELECT title FROM {$this->table_name}
+                               WHERE participant_id = :participant_id
+                               AND date = :date
+                               AND id != :id
+                               AND state != 'finalizada'
+                               LIMIT 1";
+
+            $stmt = $this->conn->prepare($conflictRequestSql);
+            $stmt->execute([
+                'participant_id' => $participant_id,
+                'date' => $date,
+                'id' => $id
+            ]);
+            $conflictRequest = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($conflictRequest) {
+                return ['error' => 'conflict_request', 'title' => $conflictRequest['title']];
+            }
+
+            // Comprobar si el participante tiene una inscripción en una actividad en esa fecha
+            $conflictActivitySql = "SELECT a.title
+                                FROM registrations r
+                                JOIN activities a ON a.id = r.activity_id
+                                WHERE r.participant_id = :participant_id
+                                AND a.date = :date
+                                AND a.is_finished = 0
+                                LIMIT 1";
+
+            $stmt = $this->conn->prepare($conflictActivitySql);
+            $stmt->execute([
+                'participant_id' => $participant_id,
+                'date' => $date
+            ]);
+            $conflictActivity = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($conflictActivity) {
+                return ['error' => 'conflict_activity', 'title' => $conflictActivity['title']];
+            }
+
+            // Quitar participant_id antes de la query
+            $queryData = $data;
+            unset($queryData['participant_id']);
+
+            $sql = "UPDATE {$this->table_name} SET
+                title              = :title,
+                description        = :description,
+                category_id        = :category_id,
+                location           = :location,
+                date               = :date,
+                time               = :time,
+                language           = :language,
+                min_age            = :min_age,
+                dress_code         = :dress_code,
                 transport_included = :transport_included,
-                departure_city = :departure_city,
-                pets_allowed = :pets_allowed
+                departure_city     = :departure_city,
+                pets_allowed       = :pets_allowed
             WHERE id = :id";
 
-        $stmt = $this->conn->prepare($sql);
-        return $stmt->execute($data);
-    }
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute($queryData);
 
+            if ($stmt->rowCount() === 0) {
+                return ['error' => 'not_found'];
+            }
+
+            return true;
+
+        } catch (PDOException $e) {
+            error_log("Error en updateRequest: " . $e->getMessage());
+            return ['error' => 'exception', 'message' => $e->getMessage()];
+        }
+    }
+    
     /**
      * Eliminar una petición
      * @param int $id ID de la petición a eliminar
@@ -248,18 +358,79 @@ class Request
 
     public function acceptRequest($request_id, $organizer_id)
     {
-        $sql = "UPDATE {$this->table_name}
-            SET is_accepted = 1,
-                accepted_by = :organizer_id
-            WHERE id = :request_id
-            AND is_accepted = 0";
+        try {
+            // Obtener la fecha de la request
+            $dateSql = "SELECT date FROM {$this->table_name}
+                    WHERE id = :request_id AND is_accepted = 0";
 
-        $stmt = $this->conn->prepare($sql);
+            $stmt = $this->conn->prepare($dateSql);
+            $stmt->execute(['request_id' => $request_id]);
+            $request = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $stmt->execute([
-            'request_id' => $request_id,
-            'organizer_id' => $organizer_id
-        ]);
+            if (!$request) {
+                return ['error' => 'request_not_found'];
+            }
+
+            $date = $request['date'];
+
+            // Comprobar si el organizador ya aceptó otra request en esa fecha
+            $conflictRequestSql = "SELECT title FROM {$this->table_name}
+                               WHERE accepted_by = :organizer_id
+                               AND date = :date
+                               AND is_accepted = 1
+                               LIMIT 1";
+
+            $stmt = $this->conn->prepare($conflictRequestSql);
+            $stmt->execute([
+                'organizer_id' => $organizer_id,
+                'date' => $date
+            ]);
+            $conflictRequest = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($conflictRequest) {
+                return ['error' => 'conflict_request', 'title' => $conflictRequest['title']];
+            }
+
+            // Comprobar si el organizador tiene actividades propias en esa fecha
+            $conflictActivitySql = "SELECT title FROM activities
+                                WHERE offertant_id = :organizer_id
+                                AND date = :date
+                                AND is_finished = 0
+                                LIMIT 1";
+
+            $stmt = $this->conn->prepare($conflictActivitySql);
+            $stmt->execute([
+                'organizer_id' => $organizer_id,
+                'date' => $date
+            ]);
+            $conflictActivity = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($conflictActivity) {
+                return ['error' => 'conflict_activity', 'title' => $conflictActivity['title']];
+            }
+
+            // Aceptar la request
+            $sql = "UPDATE {$this->table_name}
+                SET is_accepted = 1,
+                    accepted_by = :organizer_id
+                WHERE id = :request_id
+                AND is_accepted = 0";
+
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([
+                'request_id' => $request_id,
+                'organizer_id' => $organizer_id
+            ]);
+
+            if ($stmt->rowCount() === 0) {
+                return ['error' => 'already_accepted'];
+            }
+
+            return true;
+
+        } catch (Exception $e) {
+            return ['error' => 'exception', 'message' => $e->getMessage()];
+        }
     }
 
     public function unacceptRequest($request_id, $organizer_id)

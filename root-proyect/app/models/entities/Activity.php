@@ -36,7 +36,49 @@ class Activity
      */
     public function createActivity($data)
     {
-        $sql = "INSERT INTO {$this->table_name} 
+        try {
+            $date = $data['date'] ?? null;
+            $offertant_id = $data['offertant_id'] ?? null;
+
+            // Comprobar si el ofertante tiene una petición aceptada en esa fecha
+            $conflictRequestSql = "SELECT title FROM requests
+                               WHERE accepted_by = :offertant_id
+                               AND date = :date
+                               AND is_accepted = 1
+                               AND state != 'finalizada'
+                               LIMIT 1";
+
+            $stmt = $this->conn->prepare($conflictRequestSql);
+            $stmt->execute([
+                'offertant_id' => $offertant_id,
+                'date' => $date
+            ]);
+            $conflictRequest = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($conflictRequest) {
+                return ['error' => 'conflict_request', 'title' => $conflictRequest['title']];
+            }
+
+            // Comprobar si el ofertante ya tiene otra actividad en esa fecha
+            $conflictActivitySql = "SELECT title FROM {$this->table_name}
+                                WHERE offertant_id = :offertant_id
+                                AND date = :date
+                                AND is_finished = 0
+                                LIMIT 1";
+
+            $stmt = $this->conn->prepare($conflictActivitySql);
+            $stmt->execute([
+                'offertant_id' => $offertant_id,
+                'date' => $date
+            ]);
+            $conflictActivity = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($conflictActivity) {
+                return ['error' => 'conflict_activity', 'title' => $conflictActivity['title']];
+            }
+
+            // Insertar la actividad
+            $sql = "INSERT INTO {$this->table_name} 
                 (offertant_id, category_id, title, description, date, time, price, max_people, 
                  current_registrations, organizer_email, location, transport_included, 
                  departure_city, language, min_age, pets_allowed, dress_code, image_url, state)
@@ -45,19 +87,18 @@ class Activity
                  :current_registrations, :organizer_email, :location, :transport_included, 
                  :departure_city, :language, :min_age, :pets_allowed, :dress_code, :image_url, :state)";
 
-        $stmt = $this->conn->prepare($sql);
+            $stmt = $this->conn->prepare($sql);
 
-        try {
             if ($stmt->execute($data)) {
-                // Retorna el ID de la nueva actividad
                 return $this->conn->lastInsertId();
             }
+
+            return ['error' => 'insert_failed'];
+
         } catch (PDOException $e) {
-            // Guardar error en logs para depuración
             error_log("Error en createActivity: " . $e->getMessage());
-            return false;
+            return ['error' => 'exception', 'message' => $e->getMessage()];
         }
-        return false;
     }
 
     /**
@@ -141,27 +182,86 @@ class Activity
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function updateActivity($data)
+    public function updateActivity($data): bool|array
     {
-        $sql = "UPDATE activities SET
-                title = :title,
-                description = :description,
-                category_id = :category_id,
-                location = :location,
-                date = :date,
-                time = :time,
-                price = :price,
-                max_people = :max_people,
-                language = :language,
-                min_age = :min_age,
-                dress_code = :dress_code,
+        try {
+            $id = $data['id'] ?? null;
+            $date = $data['date'] ?? null;
+            $offertant_id = $data['offertant_id'] ?? null;
+
+            // Comprobar si el ofertante tiene otra actividad en esa fecha (excluyendo la actual)
+            $conflictActivitySql = "SELECT title FROM activities
+                                WHERE offertant_id = :offertant_id
+                                AND date = :date
+                                AND id != :id
+                                AND is_finished = 0
+                                LIMIT 1";
+
+            $stmt = $this->conn->prepare($conflictActivitySql);
+            $stmt->execute([
+                'offertant_id' => $offertant_id,
+                'date' => $date,
+                'id' => $id
+            ]);
+            $conflictActivity = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($conflictActivity) {
+                return ['error' => 'conflict_activity', 'title' => $conflictActivity['title']];
+            }
+
+            // Comprobar si el ofertante tiene una request aceptada en esa fecha
+            $conflictRequestSql = "SELECT title FROM requests
+                               WHERE accepted_by = :offertant_id
+                               AND date = :date
+                               AND is_accepted = 1
+                               AND state != 'finalizada'
+                               LIMIT 1";
+
+            $stmt = $this->conn->prepare($conflictRequestSql);
+            $stmt->execute([
+                'offertant_id' => $offertant_id,
+                'date' => $date
+            ]);
+            $conflictRequest = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($conflictRequest) {
+                return ['error' => 'conflict_request', 'title' => $conflictRequest['title']];
+            }
+
+            // Quitar offertant_id antes de la query
+            $queryData = $data;
+            unset($queryData['offertant_id']);
+
+            $sql = "UPDATE activities SET
+                title              = :title,
+                description        = :description,
+                category_id        = :category_id,
+                location           = :location,
+                date               = :date,
+                time               = :time,
+                price              = :price,
+                max_people         = :max_people,
+                language           = :language,
+                min_age            = :min_age,
+                dress_code         = :dress_code,
                 transport_included = :transport_included,
-                departure_city = :departure_city,
-                pets_allowed = :pets_allowed
+                departure_city     = :departure_city,
+                pets_allowed       = :pets_allowed
             WHERE id = :id";
 
-        $stmt = $this->conn->prepare($sql);
-        return $stmt->execute($data);
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute($queryData);
+
+            if ($stmt->rowCount() === 0) {
+                return ['error' => 'not_found'];
+            }
+
+            return true;
+
+        } catch (PDOException $e) {
+            error_log("Error en updateActivity: " . $e->getMessage());
+            return ['error' => 'exception', 'message' => $e->getMessage()];
+        }
     }
 
     /**
