@@ -2,11 +2,11 @@
 // my-activities-controller.js
 // ============================================================
 
-let activitiesActive   = [];
+let activitiesActive = [];
 let activitiesFinished = [];
 
 document.addEventListener("DOMContentLoaded", () => {
-    loadActivities();
+    loadActivities(CURRENT_USER.role);
 
     bindToggleSection(
         "toggleFinished",
@@ -21,16 +21,16 @@ document.addEventListener("DOMContentLoaded", () => {
 // ----------------------------
 // Carga de datos
 // ----------------------------
-async function loadActivities() {
+async function loadActivities(role) {
     const grid = document.getElementById('gridActivities');
     if (!grid) return;
 
     try {
         const result = await fetch('index.php?accion=getMyActivities').then(r => r.json());
         if (result.success) {
-            activitiesActive   = result.data.active   || [];
+            activitiesActive = result.data.active || [];
             activitiesFinished = result.data.finished || [];
-            render(activitiesActive, activitiesFinished);
+            render(activitiesActive, activitiesFinished,role);
         }
     } catch (error) {
         console.error('Error al cargar publicaciones:', error);
@@ -41,15 +41,15 @@ async function loadActivities() {
 // ----------------------------
 // Render
 // ----------------------------
-function render(active, finished) {
-    const grid  = document.getElementById('gridActivities');
+function render(active, finished,role) {
+    const grid = document.getElementById('gridActivities');
     const gridF = document.getElementById('gridActivitiesFinished');
 
     grid.innerHTML = active.length === 0
         ? `<p class="no-activities">Todavía no tienes ninguna actividad.</p>
            <p><a href="index.php?accion=createActivity">Crea una ahora</a></p>`
         : '';
-    active.forEach(a => grid.appendChild(createActiveCard(a)));
+    active.forEach(a => grid.appendChild(createActiveCard(a,role)));
 
     gridF.innerHTML = finished.length === 0
         ? '<p class="no-activities">Todavía no tienes ninguna actividad propia terminada.</p>'
@@ -64,7 +64,7 @@ function applyFilters() {
     const { type, value } = getFilterValues();
     if (!type) return;
     render(
-        activitiesActive.filter(a   => matchFilter(a, type, value)),
+        activitiesActive.filter(a => matchFilter(a, type, value)),
         activitiesFinished.filter(a => matchFilter(a, type, value))
     );
 }
@@ -72,7 +72,7 @@ function applyFilters() {
 // ----------------------------
 // Card activa (con acciones editar/eliminar)
 // ----------------------------
-function createActiveCard(pub) {
+function createActiveCard(pub,role) {
     const card = document.createElement("article");
     card.className = "activity activity-card";
 
@@ -81,27 +81,27 @@ function createActiveCard(pub) {
         <div class="activity-content">
             ${pub.category_name ? `<span class="category">${pub.category_name}</span>` : ""}
             ${pub.state === 'pendiente'
-             ? `<button id="btn-state" class="state"><i class="fas fa-hourglass-half"></i></button>`
+            ? `<button id="btn-state" class="state"><i class="fas fa-hourglass-half"></i></button>`
             : pub.state === 'rechazada'
-                 ? `<span class="state"><i class="fas fa-times"></i></span>`
-                 : `<span class="state"><i class="fas fa-check-double"></i></span>`}
+                ? `<span class="state"><i class="fas fa-times"></i></span>`
+                : `<span class="state"><i class="fas fa-check-double"></i></span>`}
             <h3>${pub.title}</h3>
             <p class="description">${pub.description}</p>
             ${buildDetailsHTML(pub)}
             ${buildMetaHTML(pub)}
             ${buildFooterHTML(pub)}
             <div class="actions">
+                <button class="btn-detail" data-id="${pub.id}">Ver detalles</button>
                 <button class="btn-edit" data-id="${pub.id}">Editar</button>
                 <button class="btn-delete" data-id="${pub.id}">Eliminar</button>
-                ${pub.state === 'aprobada' ? `
-                <a href="index.php?accion=chatActivity&activity_id=${pub.id}"
-                    class="btn-chat" aria-label="Abrir chat de la actividad ${pub.title}">
-                    <i class="fas fa-comments"></i> Chat
-                </a>` : ''}
             </div>
         </div>`;
 
     const grid = document.getElementById('gridActivities');
+
+    card.querySelector(".btn-detail")?.addEventListener("click", () => {
+        openDetailModal(pub, role, CURRENT_USER);
+    });
 
     card.querySelector(".btn-edit")?.addEventListener("click", function () {
         submitForm("editActivity", this.dataset.id);
@@ -114,9 +114,9 @@ function createActiveCard(pub) {
         try {
             const response = await fetch('index.php', {
                 method: 'POST',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest' 
+                    'X-Requested-With': 'XMLHttpRequest'
                 },
                 body: JSON.stringify({
                     accion: 'deleteActivity',

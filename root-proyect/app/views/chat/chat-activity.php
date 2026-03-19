@@ -19,7 +19,7 @@ if ($activityId <= 0) {
 }
 
 // ── Obtener nombre de la actividad para mostrarlo como título ────────────────
-require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../../config/database.php';
 $db   = (new Database())->getConnection();
 $stmt = $db->prepare("SELECT id, title, offertant_id FROM activities WHERE id = :id LIMIT 1");
 $stmt->execute(['id' => $activityId]);
@@ -69,6 +69,8 @@ if ($currentUser['role'] !== 'administrador') {
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="icon" type="image/png" href="assets/img/ico/icono.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/controllers/chat/chat-controller.js"></script>
 </head>
 
 <body>
@@ -122,6 +124,6 @@ if ($currentUser['role'] !== 'administrador') {
     <div id="footer"></div>
 
     <!-- Controlador de chat -->
-    <script type="module" src="assets/js/controllers/chat/chat-controller.js"></script>
+    
 </body>
 </html>
