@@ -1,9 +1,9 @@
 <?php
 header('Content-Type: application/json');
 
-require_once __DIR__ . '/../../config/database.php';
-require_once __DIR__ . '/../models/entities/Activity.php';
-require_once __DIR__ . '/../models/entities/Request.php';
+require_once __DIR__ . '/../../../config/database.php';
+require_once __DIR__ . '/../../models/entities/Activity.php';
+require_once __DIR__ . '/../../models/entities/Request.php';
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();

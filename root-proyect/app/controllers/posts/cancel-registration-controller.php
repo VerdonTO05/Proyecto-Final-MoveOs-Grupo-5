@@ -3,9 +3,9 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-require_once __DIR__ . '/../models/entities/Registration.php';
-require_once __DIR__ . '/../models/entities/Request.php';
-require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../models/entities/Registration.php';
+require_once __DIR__ . '/../../models/entities/Request.php';
+require_once __DIR__ . '/../../../config/database.php';
 
 // Detectar si es AJAX (fetch)
 $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&

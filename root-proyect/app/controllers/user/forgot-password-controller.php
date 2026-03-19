@@ -63,7 +63,7 @@ try {
     }
 
     // Conectar a la base de datos
-    require_once __DIR__ . '/../../config/database.php';
+    require_once __DIR__ . '/../../../config/database.php';
     $database = new Database();
     $pdo = $database->getConnection();
 

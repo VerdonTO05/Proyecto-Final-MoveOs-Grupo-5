@@ -3,9 +3,9 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-require_once __DIR__ . '/../models/entities/Activity.php';
-require_once __DIR__ . '/../models/entities/Request.php';
-require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../models/entities/Activity.php';
+require_once __DIR__ . '/../../models/entities/Request.php';
+require_once __DIR__ . '/../../../config/database.php';
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: index.php?accion=loginView');
@@ -88,7 +88,7 @@ try {
     }
 
     // Mostrar vista
-    require __DIR__ . '/../views/edit-activity.php';
+    require __DIR__ . '/../../views/edit-activity.php';
 
 } catch (Exception $e) {
     http_response_code(500);

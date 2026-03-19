@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
-require_once '../models/Inscription.php';
+require_once '../../models/Inscription.php';
 
 // index.php puede haber leído php://input; reutilizarlo si está disponible
 if (!isset($input) || empty($input)) {

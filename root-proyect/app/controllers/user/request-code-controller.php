@@ -41,7 +41,7 @@ try {
     }
 
     // Conexión a la BD
-    require_once __DIR__ . '/../../config/database.php';
+    require_once __DIR__ . '/../../../config/database.php';
     $database = new Database();
     $pdo = $database->getConnection();
 
