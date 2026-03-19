@@ -27,7 +27,7 @@ try {
     }
 
     // Mostrar la vista
-    require __DIR__ . '/../../views/see-info.php';
+    require __DIR__ . '/../../views/user/see-info.php';
 
 } catch (Exception $e) {
     http_response_code(500);

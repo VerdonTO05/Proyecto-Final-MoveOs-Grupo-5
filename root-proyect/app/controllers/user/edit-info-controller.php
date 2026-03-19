@@ -66,7 +66,7 @@ try {
     }
 
     // Si es GET, solo mostrar vista
-    require __DIR__ . '/../../views/edit-info.php';
+    require __DIR__ . '/../../views/user/edit-info.php';
 
 } catch (Exception $e) {
     http_response_code(500);

@@ -20,10 +20,10 @@ $action = $input['accion'] ?? $_POST['accion'] ?? $_GET['accion'] ?? 'index';
 
 switch ($action) {
   case 'register':
-    require __DIR__ . '/../app/views/register.php';
+    require __DIR__ . '/../app/views/access/register.php';
     break;
   case 'loginView':
-    require __DIR__ . '/../app/views/login.php';
+    require __DIR__ . '/../app/views/access/login.php';
     break;
   case 'login':
     require __DIR__ . '/../app/controllers/access/login-controller.php';
@@ -44,7 +44,7 @@ switch ($action) {
     require __DIR__ . '/../app/controllers/access/unsubscribe-controller.php';
     break;
   case 'createActivity':
-    require __DIR__ . '/../app/views/create-activity.php';
+    require __DIR__ . '/../app/views/posts/create-activity.php';
     break;
   case 'create':
     require __DIR__ . '/../app/controllers/posts/activity-controller.php';
@@ -56,7 +56,7 @@ switch ($action) {
     require __DIR__ . '/../app/controllers/posts/delete-activity-controller.php';
     break;
   case 'seeMyActivities':
-    require __DIR__ . '/../app/views/my-activities.php';
+    require __DIR__ . '/../app/views/see/my-activities.php';
     break;
   case 'acceptRequest':
     require __DIR__ . '/../app/controllers/posts/accept-request-controller.php';
@@ -67,7 +67,7 @@ switch ($action) {
     // Inscribirse
     break;
   case 'seeActivities':
-    require __DIR__ . '/../app/views/home.php';
+    require __DIR__ . '/../app/views/see/home.php';
     break;
   case 'getAprove':
     require __DIR__ . '/../app/controllers/get/get-aprove.php';
@@ -88,7 +88,7 @@ switch ($action) {
     require __DIR__ . '/../app/views/home.php';
     break;
   case 'seeRegistrations':
-    require __DIR__ . '/../app/views/my-registrations.php';
+    require __DIR__ . '/../app/views/see/my-registrations.php';
     break;
   case 'approveActivity':
     require __DIR__ . '/../app/controllers/control/approve-activity.php';
@@ -100,16 +100,16 @@ switch ($action) {
     require __DIR__ . '/../app/controllers/get/get-pending-activities.php';
     break;
   case 'controlPanel':
-    require __DIR__ . '/../app/views/control.php';
+    require __DIR__ . '/../app/views/control/control.php';
     break;
   case 'seeBoth':
-    require __DIR__ . '/../app/views/all-posts.php';
+    require __DIR__ . '/../app/views/control/all-posts.php';
     break;
   case 'users':
-    require __DIR__ . '/../app/views/users.php';
+    require __DIR__ . '/../app/views/control/users.php';
     break;
   case 'inactiveUser':
-    require __DIR__ . '/../app/views/inactive-user.php';
+    require __DIR__ . '/../app/views/user/inactive-user.php';
     break;
   case 'getUsers':
     require __DIR__ . '/../app/controllers/get/get-users-controller.php';
@@ -119,7 +119,7 @@ switch ($action) {
     require __DIR__ . '/../app/controllers/get/get-users-controller.php';
     break;
   case 'forgot-password':
-    require __DIR__ . '/../app/views/forgot-password.php';
+    require __DIR__ . '/../app/views/user/forgot-password.php';
     break;
   case 'changePassword':
     require __DIR__ . '/../app/controllers/user/forgot-password-controller.php';
@@ -132,7 +132,7 @@ switch ($action) {
     break;
   // ── Chat ────────────────────────────────────────────────────────────────
   case 'chatHub':
-    require __DIR__ . '/../app/views/chat-hub.php';
+    require __DIR__ . '/../app/views/chat/chat-hub.php';
     break;
   case 'getChatHub':
     require __DIR__ . '/../app/controllers/chat/get-chat-hub.php';
@@ -147,19 +147,19 @@ switch ($action) {
     require __DIR__ . '/../app/controllers/chat/get-chat-rooms.php';
     break;
   case 'chatActivity':
-    require __DIR__ . '/../app/views/chat-activity.php';
+    require __DIR__ . '/../app/views/chat/chat-activity.php';
     break;
   case 'adminChat':
-    require __DIR__ . '/../app/views/admin-chat.php';
+    require __DIR__ . '/../app/views/chat/admin-chat.php';
     break;
   case 'userAdminChat':
-    require __DIR__ . '/../app/views/user-admin-chat.php';
+    require __DIR__ . '/../app/views/chat/user-admin-chat.php';
     break;
   // ────────────────────────────────────────────────────────────────────────
 
 
   default:
-    require __DIR__ . '/../app/views/landing.php';
+    require __DIR__ . '/../app/views/see/landing.php';
     break;
 }
 

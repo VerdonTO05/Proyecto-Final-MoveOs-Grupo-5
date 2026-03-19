@@ -88,7 +88,7 @@ try {
     }
 
     // Mostrar vista
-    require __DIR__ . '/../../views/edit-activity.php';
+    require __DIR__ . '/../../views/posts/edit-activity.php';
 
 } catch (Exception $e) {
     http_response_code(500);

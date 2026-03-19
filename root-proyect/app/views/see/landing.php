@@ -6,7 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-require_once __DIR__ . '/../middleware/auth.php';
+require_once __DIR__ . '/../../middleware/auth.php';
 
 $role = $_SESSION['role'] ?? null;
 $user = getCurrentUser();

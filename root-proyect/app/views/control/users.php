@@ -6,7 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 // Proteger la página - solo administradores
-require_once __DIR__ . '/../middleware/auth.php';
+require_once __DIR__ . '/../../middleware/auth.php';
 requireRole('administrador');
 $role = $_SESSION['role'] ?? null;
 $user = getCurrentUser();

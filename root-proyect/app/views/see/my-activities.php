@@ -7,7 +7,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // Proteger la página - solo administradores
-require_once __DIR__ . '/../middleware/auth.php';
+require_once __DIR__ . '/../../middleware/auth.php';
 requireActiveUser();
 requireAnyRole(['organizador', 'participante']);
 
