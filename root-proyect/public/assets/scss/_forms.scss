@@ -5,12 +5,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    padding: 3rem 0;
+    background-color: var(--bg-surface);
+    padding: 2rem 1rem;
+    box-sizing: border-box;
 }
 
 /* Contenedor del formulario */
 .container {
+    width: 100%;
+    max-width: 480px;
     position: relative;
     @include m.card-base();
 
@@ -272,6 +275,10 @@ select {
             pointer-events: none;
         }
     }
+}
+
+.forgot-password-form{
+    padding: 1rem;
 }
 
 /* Responsive */

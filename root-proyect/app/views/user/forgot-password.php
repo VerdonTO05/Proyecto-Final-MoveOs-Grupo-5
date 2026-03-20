@@ -32,12 +32,6 @@
                 <h1>Recuperar contraseña</h1>
                 <p id="header-description">Ingresa tu correo electrónico para recibir un código de verificación</p>
             </header>
-
-            <div class="tab-switch" role="tablist">
-                <a href="#" class="tab-btn active" role="tab" aria-selected="true" style="text-align: center;">Recuperar
-                    Contraseña</a>
-            </div>
-
             <!-- Paso 1: Solicitar código -->
             <form id="request-code-form" class="forgot-password-form">
                 <input type="hidden" name="accion" value="requestCode">

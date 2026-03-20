@@ -13,7 +13,7 @@ requireActiveUser();
 ?>
 
 <script>
-  window.CURRENT_USER = <?= json_encode($user ?? null); ?>;
+    window.CURRENT_USER = <?= json_encode($user ?? null); ?>;
 </script>
 
 
@@ -38,7 +38,7 @@ requireActiveUser();
         </label>
     </div>
     <!-- Contenedor principal -->
-    <div class="first register">
+    <main class="first register">
         <div class="container">
             <button class="close-btn" type="button" aria-label="Cerrar formulario">&times;</button>
 
@@ -73,12 +73,12 @@ requireActiveUser();
                 </div>
 
                 <div class="links">
-                    <i class="fas fa-link" aria-hidden="true"></i> 
+                    <i class="fas fa-link" aria-hidden="true"></i>
                     <a href="index.php?accion=editUser" aria-label="Editar">Editar</a>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 </body>
 
 </html>

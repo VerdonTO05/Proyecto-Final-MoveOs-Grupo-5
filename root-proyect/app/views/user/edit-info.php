@@ -13,7 +13,8 @@ requireActiveUser();
 $old = $_SESSION['form_old_data'] ?? [];
 unset($_SESSION['form_old_data']);
 
-function oldUser(string $key, $fallback = ''): string {
+function oldUser(string $key, $fallback = ''): string
+{
     global $old, $user;
     if (!empty($old) && isset($old[$key])) {
         return htmlspecialchars($old[$key], ENT_QUOTES);
@@ -36,10 +37,10 @@ function oldUser(string $key, $fallback = ''): string {
 
 <body>
     <?php if (!empty($_SESSION['form_errors'])): ?>
-    <script>
-        window.__PHP_FORM_ERRORS__ = <?= json_encode($_SESSION['form_errors']) ?>;
-    </script>
-    <?php unset($_SESSION['form_errors']); ?>
+        <script>
+            window.__PHP_FORM_ERRORS__ = <?= json_encode($_SESSION['form_errors']) ?>;
+        </script>
+        <?php unset($_SESSION['form_errors']); ?>
     <?php endif; ?>
 
     <div class="icons">
@@ -50,7 +51,7 @@ function oldUser(string $key, $fallback = ''): string {
         </label>
     </div>
 
-    <div class="first register">
+    <main class="first register">
         <div class="container">
             <button class="close-btn" type="button" aria-label="Cerrar formulario">&times;</button>
 
@@ -83,8 +84,7 @@ function oldUser(string $key, $fallback = ''): string {
                 </div>
 
                 <label>
-                    <input type="checkbox" name="changePassword" id="changePassword"
-                        <?= !empty($old['changePassword']) ? 'checked' : '' ?>>
+                    <input type="checkbox" name="changePassword" id="changePassword" <?= !empty($old['changePassword']) ? 'checked' : '' ?>>
                     Cambiar contraseña
                 </label>
 
@@ -114,7 +114,7 @@ function oldUser(string $key, $fallback = ''): string {
                 </div>
             </form>
         </div>
-    </div>
+    </main>
 
     <script src="assets/js/controllers/user/edit-info-controller.js"></script>
 </body>
