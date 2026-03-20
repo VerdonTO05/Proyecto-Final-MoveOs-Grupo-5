@@ -31,8 +31,8 @@ if (!isAuthenticated()) {
 
 // --- Leer y validar parámetros GET ---
 $roomType = $_GET['room_type'] ?? '';
-$roomId   = (int) ($_GET['room_id']  ?? 0);
-$afterId  = (int) ($_GET['after_id'] ?? 0);
+$roomId = (int) ($_GET['room_id'] ?? 0);
+$afterId = (int) ($_GET['after_id'] ?? 0);
 
 $validRoomTypes = [ChatMessage::ROOM_ACTIVITY, ChatMessage::ROOM_ADMIN];
 
@@ -42,12 +42,13 @@ if (!in_array($roomType, $validRoomTypes) || $roomId <= 0) {
 }
 
 // --- Conexión a la base de datos ---
-$db          = (new Database())->getConnection();
+$db = (new Database())->getConnection();
 $chatMessage = new ChatMessage($db);
 
-// --- Verificar permisos de acceso a la sala ---
-$userId = (int) $_SESSION['user_id'];
-$role   = $_SESSION['role'];
+// --- Datos del usuario actual (consistente con getCurrentUser()) ---
+$currentUser = getCurrentUser();
+$userId = (int) $currentUser['id'];
+$role = $currentUser['role'];
 
 if (!$chatMessage->canAccessRoom($userId, $role, $roomType, $roomId)) {
     echo json_encode(['success' => false, 'message' => 'No tienes acceso a esta sala']);
@@ -57,12 +58,12 @@ if (!$chatMessage->canAccessRoom($userId, $role, $roomType, $roomId)) {
 // --- Obtener mensajes nuevos ---
 try {
     $messages = $chatMessage->getMessages($roomType, $roomId, $afterId);
-    $lastId   = !empty($messages) ? (int) end($messages)['id'] : $afterId;
+    $lastId = !empty($messages) ? (int) end($messages)['id'] : $afterId;
 
     echo json_encode([
-        'success'  => true,
+        'success' => true,
         'messages' => $messages,
-        'last_id'  => $lastId,
+        'last_id' => $lastId,
     ]);
 
 } catch (Exception $e) {

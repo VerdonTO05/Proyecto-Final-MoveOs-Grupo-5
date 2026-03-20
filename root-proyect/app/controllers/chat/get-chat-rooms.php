@@ -41,6 +41,9 @@ try {
 
 } catch (Exception $e) {
     error_log('Error en get-chat-rooms.php: ' . $e->getMessage());
-    echo json_encode(['success' => false, 'message' => 'Error al obtener las conversaciones']);
+    echo json_encode([
+    'success' => false,
+    'message' => $e->getMessage()
+]);
 }
 ?>

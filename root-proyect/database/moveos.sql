@@ -106,12 +106,12 @@ CREATE TABLE audit_logs (
 
 -- --------------------------------------------------------
 -- Table: activities
--- CAMBIO: offertant_id ahora permite NULL y usa ON DELETE SET NULL
+-- offertant_id permite NULL y usa ON DELETE SET NULL
 -- --------------------------------------------------------
 
 CREATE TABLE activities (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  offertant_id INT NULL,                         -- ← permite NULL
+  offertant_id INT NULL,
   category_id INT NOT NULL,
   title VARCHAR(200) NOT NULL,
   description TEXT,
@@ -136,7 +136,7 @@ CREATE TABLE activities (
   CONSTRAINT activities_ibfk_1
     FOREIGN KEY (offertant_id)
     REFERENCES users(id)
-    ON DELETE SET NULL,                          -- ← SET NULL en vez de CASCADE
+    ON DELETE SET NULL,
   CONSTRAINT activities_ibfk_2
     FOREIGN KEY (category_id)
     REFERENCES categories(id)
@@ -144,8 +144,6 @@ CREATE TABLE activities (
 
 -- --------------------------------------------------------
 -- Table: registrations
--- Sin cambios: ON DELETE CASCADE en participant_id ya borra
--- las inscripciones del usuario automáticamente
 -- --------------------------------------------------------
 
 CREATE TABLE registrations (
@@ -166,7 +164,7 @@ CREATE TABLE registrations (
 
 -- --------------------------------------------------------
 -- Table: requests
--- CAMBIO: accepted_by usa ON DELETE SET NULL en vez de CASCADE
+-- accepted_by usa ON DELETE SET NULL
 -- --------------------------------------------------------
 
 CREATE TABLE requests (
@@ -188,7 +186,7 @@ CREATE TABLE requests (
   dress_code VARCHAR(100),
   image_url VARCHAR(255),
   is_accepted TINYINT(1) DEFAULT 0,
-  accepted_by INT DEFAULT NULL,                  -- ← explícitamente nullable
+  accepted_by INT DEFAULT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   state VARCHAR(32) NOT NULL DEFAULT 'pendiente',
   CONSTRAINT requests_ibfk_1
@@ -198,11 +196,34 @@ CREATE TABLE requests (
   CONSTRAINT requests_ibfk_2
     FOREIGN KEY (accepted_by)
     REFERENCES users(id)
-    ON DELETE SET NULL,                          -- ← SET NULL en vez de CASCADE
+    ON DELETE SET NULL,
   CONSTRAINT requests_ibfk_3
     FOREIGN KEY (category_id)
     REFERENCES categories(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+-- Table: chat_messages
+-- room_type: 'activity' → sala grupal (room_id = activity_id)
+--            'admin'    → conversación privada (room_id = user_id del participante)
+-- sender_id usa ON DELETE CASCADE: si el usuario se borra, sus mensajes también
+-- --------------------------------------------------------
+
+CREATE TABLE chat_messages (
+  id        INT AUTO_INCREMENT PRIMARY KEY,
+  room_type ENUM('activity', 'admin') NOT NULL,
+  room_id   INT      DEFAULT NULL,
+  sender_id INT      NOT NULL,
+  message   TEXT     NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT chat_messages_ibfk_1
+    FOREIGN KEY (sender_id)
+    REFERENCES users(id)
+    ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE INDEX idx_chat_room    ON chat_messages (room_type, room_id);
+CREATE INDEX idx_chat_created ON chat_messages (created_at);
 
 -- --------------------------------------------------------
 -- Insert users de ejemplo
@@ -298,33 +319,23 @@ DELIMITER ;
 
 -- --------------------------------------------------------
 -- PROCEDIMIENTO: deactivate_user
--- Lógica de baja de usuario:
---   1. Finaliza sus actividades propias
---   2. Finaliza sus requests propias
---   3. Elimina el usuario:
---      - Sus inscripciones se borran (CASCADE en registrations.participant_id)
---      - offertant_id en activities queda NULL (SET NULL)
---      - accepted_by en requests queda NULL (SET NULL)
 -- --------------------------------------------------------
 
 DELIMITER $$
 
 CREATE PROCEDURE deactivate_user(IN p_user_id INT)
 BEGIN
-  -- 1. Finalizar actividades propias que aún no estén finalizadas
   UPDATE activities
   SET is_finished = 1,
       state       = 'finalizada'
   WHERE offertant_id = p_user_id
     AND is_finished  = 0;
 
-  -- 2. Finalizar requests propias que aún no estén finalizadas
   UPDATE requests
   SET state = 'finalizada'
   WHERE participant_id = p_user_id
     AND state         != 'finalizada';
 
-  -- 3. Eliminar el usuario (las FK hacen el resto automáticamente)
   DELETE FROM users WHERE id = p_user_id;
 END$$
 

@@ -471,6 +471,11 @@ main section:first-of-type button:hover {
   height: calc(40vh - 1rem);
 }
 
+.grid-activities p a {
+  color: var(--c-yellow);
+  text-decoration: underline;
+}
+
 /* Características y demás secciones */
 main section {
   display: flex;
