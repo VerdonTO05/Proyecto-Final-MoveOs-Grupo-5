@@ -29,6 +29,7 @@ $user = getCurrentUser();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="assets/js/utils.js"></script>
     <script src="assets/js/controllers/see/my-activities-controller.js"></script>
+    <script src="assets/js/controllers/chat/chat-controller.js"></script>
 </head>
 
 <body>

@@ -121,8 +121,6 @@ if ($currentUser['role'] !== 'administrador') {
 
     </main>
 
-    <div id="footer"></div>
-
     <!-- Controlador de chat -->
     
 </body>

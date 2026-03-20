@@ -127,6 +127,7 @@ function initUserLogic() {
     e.stopPropagation();
     if (!user) return window.location.href = 'index.php?accion=loginView';
     displayUsername && (displayUsername.innerText = user.name || 'Usuario');
+    hideElement(document.getElementById('chat-dropdown'));
     toggleVisibility(userDropdown);
   });
 
@@ -150,6 +151,7 @@ function initChatLogic() {
     e.stopPropagation();
     if (!user) return window.location.href = 'index.php?accion=loginView';
 
+    hideElement(document.getElementById('user-dropdown'));
     toggleVisibility(chatDropdown);
 
     // Si ya se cargó, no recargar
@@ -334,4 +336,11 @@ function hideElement(el) {
   el.classList.add('invisible');
 }
 
-
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}

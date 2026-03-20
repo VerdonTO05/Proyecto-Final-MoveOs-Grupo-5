@@ -76,8 +76,6 @@ $roomId      = $currentUser['id'];
 
     </main>
 
-    <div id="footer"></div>
-
     <script type="module" src="assets/js/controllers/chat/chat-controller.js"></script>
 </body>
 </html>

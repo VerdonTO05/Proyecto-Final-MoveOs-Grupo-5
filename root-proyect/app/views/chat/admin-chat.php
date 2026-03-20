@@ -107,8 +107,6 @@ $preselectUserId  = (int) ($_GET['user_id'] ?? 0);
         </div>
     </main>
 
-    <div id="footer"></div>
-
     <!-- Controlador de chat admin -->
     <script type="module" src="assets/js/controllers/chat/chat-controller.js"></script>
 </body>
