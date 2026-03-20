@@ -40,7 +40,7 @@ $preselectUserId  = (int) ($_GET['user_id'] ?? 0);
 
     <div id="header"></div>
 
-    <main class="main-content container-home chat-page" aria-labelledby="admin-chat-title">
+    <main class="main-content chat-page" aria-labelledby="admin-chat-title">
 
         <h1 id="admin-chat-title" class="chat-admin-title">
             <i class="fas fa-headset"></i> Mensajes de usuarios
