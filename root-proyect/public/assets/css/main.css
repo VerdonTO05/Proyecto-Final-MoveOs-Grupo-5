@@ -612,8 +612,6 @@ main section {
 
 /* Contenedor del formulario */
 .container {
-  width: 100%;
-  max-width: 480px;
   position: relative;
   background-color: var(--bg-surface);
   border: 1px solid var(--border-color);

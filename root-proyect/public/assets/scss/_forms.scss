@@ -12,8 +12,6 @@
 
 /* Contenedor del formulario */
 .container {
-    width: 100%;
-    max-width: 480px;
     position: relative;
     @include m.card-base();
 
