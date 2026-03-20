@@ -355,30 +355,31 @@ window.validatePassword = function (password) {
 
 window.buildChatHTML = function (activityTitle) {
     return `
-        <div class="chat-header">
-            <div class="chat-header-info">
-                <h1 id="chat-title"><i class="fas fa-users"></i> ${activityTitle}</h1>
-                <span class="chat-subtitle">Chat grupal de la actividad</span>
+        <div class="chat-page">
+            <div class="chat-header">
+                <div class="chat-header-info">
+                    <h1 id="chat-title">
+                        <i class="fas fa-users"></i> ${activityTitle}
+                    </h1>
+                    <span class="chat-subtitle">Chat grupal de la actividad</span>
+                </div>
             </div>
+
+            <div class="chat-messages-area" id="chatMessagesArea">
+                <p class="chat-empty-state" id="chatEmptyState">
+                    <i class="fas fa-comment-dots"></i>
+                    Sé el primero en escribir algo...
+                </p>
+            </div>
+
+            <form class="chat-input-area" id="chatForm">
+                <input type="text" id="chatInput" class="chat-input"
+                    placeholder="Escribe un mensaje..." required>
+
+                <button type="submit" class="chat-send-btn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
         </div>
-        <div class="chat-messages-area" id="chatMessagesArea" aria-live="polite" aria-label="Mensajes del chat">
-            <p class="chat-empty-state" id="chatEmptyState">
-                <i class="fas fa-comment-dots"></i> Sé el primero en escribir algo...
-            </p>
-        </div>
-        <form class="chat-input-area" id="chatForm" aria-label="Enviar mensaje" autocomplete="off">
-            <input
-                type="text"
-                id="chatInput"
-                class="chat-input"
-                placeholder="Escribe un mensaje..."
-                maxlength="1000"
-                aria-label="Texto del mensaje"
-                required
-            >
-            <button type="submit" class="chat-send-btn" id="chatSendBtn" aria-label="Enviar">
-                <i class="fas fa-paper-plane"></i>
-            </button>
-        </form>
     `;
 }

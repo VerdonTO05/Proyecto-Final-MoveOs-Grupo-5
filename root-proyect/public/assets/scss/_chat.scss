@@ -4,11 +4,12 @@
 
 // ── Página de chat ──────────────────────────────────────────
 
+
+
 .chat-page {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 80px);
-  padding: 1rem;
+  height: 100%;
   overflow: hidden;
 }
 
@@ -60,6 +61,7 @@
 
 .chat-messages-area {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
   padding: 1.2rem 3rem;
   display: flex;
@@ -71,6 +73,11 @@
   &--hidden {
     display: none !important;
   }
+}
+
+.chat-header,
+.chat-input-area {
+  flex-shrink: 0; // evita que se deformen
 }
 
 .chat-empty-state {
@@ -372,6 +379,7 @@
   flex-direction: column;
   overflow: hidden;
   background: var(--bg-main);
+  min-height: 0;
 
   // El header de conversación activa
   .chat-header {
@@ -476,11 +484,11 @@
 }
 
 .chat-card__header {
+  flex: 1;
   display: flex;
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  border-bottom: 1px solid var(--border-color);
   background: var(--bg-main);
 }
 
@@ -492,7 +500,7 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: var(--brand-primary);
+  background: var(--bg-main);
   color: #fff;
   display: flex;
   align-items: center;

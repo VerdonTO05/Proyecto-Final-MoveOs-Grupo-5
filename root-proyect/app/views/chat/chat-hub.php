@@ -80,7 +80,7 @@ if ($currentUser['role'] === 'administrador') {
                     const supportHTML = `
                         <a href="index.php?accion=userAdminChat" class="chat-card chat-card--support">
                             <div class="chat-card__header">
-                                <div class="chat-card__icon"><i class="fas fa-headset"></i></div>
+                                <div class="chat-card__icon"><img src="assets/img/perfilAdmin.png" alt="Admin"></div>
                                 <div>
                                     <h2 class="chat-card__title">Soporte MOVEos</h2>
                                     <span class="chat-card__type">Chat con administración</span>

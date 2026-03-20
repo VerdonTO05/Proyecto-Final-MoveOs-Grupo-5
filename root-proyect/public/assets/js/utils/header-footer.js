@@ -154,8 +154,13 @@ function initChatLogic() {
     hideElement(document.getElementById('user-dropdown'));
     toggleVisibility(chatDropdown);
 
-    // Si ya se cargó, no recargar
-    if (chatHubContainer.dataset.loaded) return;
+    // 👇 Mostrar loading SIEMPRE
+    chatHubContainer.innerHTML = `
+      <div class="chat-hub-loading">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>Cargando conversaciones...</p>
+      </div>
+    `;
 
     try {
       const response = await fetch('index.php?accion=getChatHub');
@@ -173,15 +178,11 @@ function initChatLogic() {
         supportDiv.className = "chat-card chat-card--support";
         supportDiv.innerHTML = `
           <div class="chat-card__header">
-            <div class="chat-card__icon"><i class="fas fa-headset"></i></div>
+            <div class="chat-card__icon"><img src="assets/img/perfilAdmin.png" alt="Admin"></div>
             <div>
               <h2 class="chat-card__title">Soporte MOVEos</h2>
               <span class="chat-card__type">Chat con administración</span>
             </div>
-          </div>
-          <div class="chat-card__body">
-            <p class="chat-card__preview">${escapeHtml(data.support_room.last_message)}</p>
-            ${data.support_room.updated_at ? `<span class="chat-card__time"><i class="far fa-clock"></i> ${formatTime(data.support_room.updated_at)}</span>` : ''}
           </div>
         `;
         fragment.appendChild(supportDiv);
@@ -193,9 +194,11 @@ function initChatLogic() {
           const chatDiv = document.createElement('a');
           chatDiv.href = `index.php?accion=chatActivity&activity_id=${act.room_id}`;
           chatDiv.className = "chat-card";
+
           const imgHtml = act.image_url
             ? `<img src="${act.image_url}" class="chat-card__img" alt="${escapeHtml(act.title)}" onerror="this.src='assets/img/default-activity.jpg'">`
             : `<div class="chat-card__icon"><i class="fas fa-users"></i></div>`;
+
           chatDiv.innerHTML = `
             <div class="chat-card__header">
               ${imgHtml}
@@ -204,21 +207,20 @@ function initChatLogic() {
                 <span class="chat-card__type">Grupo de Actividad</span>
               </div>
             </div>
-            <div class="chat-card__body">
-              <p class="chat-card__preview">${escapeHtml(act.last_message)}</p>
-              ${act.updated_at ? `<span class="chat-card__time"><i class="far fa-clock"></i> ${formatTime(act.updated_at)}</span>` : ''}
-            </div>
           `;
           fragment.appendChild(chatDiv);
         });
       }
 
       chatHubContainer.appendChild(fragment);
-      chatHubContainer.dataset.loaded = true; // marcar como cargado
 
     } catch (err) {
       console.error(err);
-      chatHubContainer.innerHTML = `<p style="color:red; padding:1rem;">No se pudieron cargar los chats.</p>`;
+      chatHubContainer.innerHTML = `
+        <p style="color:red; padding:1rem;">
+          No se pudieron cargar los chats.
+        </p>
+      `;
     }
   });
 }

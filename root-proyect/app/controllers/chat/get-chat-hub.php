@@ -60,37 +60,37 @@ try {
     $supportLast = $stmtSupport->fetch(PDO::FETCH_ASSOC);
 
     $supportRoom = [
-        'room_type'    => 'admin',
-        'room_id'      => $userId,
+        'room_type' => 'admin',
+        'room_id' => $userId,
         'last_message' => $supportLast ? $supportLast['last_message'] : 'Comunícate con nuestro equipo.',
-        'updated_at'   => $supportLast ? $supportLast['updated_at'] : null
+        'updated_at' => $supportLast ? $supportLast['updated_at'] : null
     ];
 
     // 2. Obtener actividades donde participa u organiza, con el último mensaje
     $sqlActivities = "
         SELECT 
-            a.id AS room_id,
-            a.title,
-            a.image_url,
-            latest.message AS last_message,
-            latest.created_at AS updated_at
-        FROM activities a
-        LEFT JOIN registrations r ON r.activity_id = a.id AND r.participant_id = :uid1
-        LEFT JOIN (
-            SELECT room_id, message, created_at
-            FROM chat_messages m1
-            WHERE room_type = 'activity' AND id = (
-                SELECT MAX(id) FROM chat_messages m2 
-                WHERE m2.room_type = 'activity' AND m2.room_id = m1.room_id
-            )
-        ) latest ON latest.room_id = a.id
-        WHERE a.offertant_id = :uid2 OR r.participant_id IS NOT NULL
-        ORDER BY COALESCE(latest.created_at, a.created_at) DESC
+    a.id AS room_id,
+    a.title,
+    a.image_url,
+    latest.message AS last_message,
+    COALESCE(latest.created_at, a.created_at) AS updated_at
+FROM activities a
+LEFT JOIN registrations r ON r.activity_id = a.id AND r.participant_id = :uid1
+LEFT JOIN (
+    SELECT room_id, message, created_at
+    FROM chat_messages m1
+    WHERE room_type = 'activity' AND id = (
+        SELECT MAX(id) FROM chat_messages m2 
+        WHERE m2.room_type = 'activity' AND m2.room_id = m1.room_id
+    )
+) latest ON latest.room_id = a.id
+WHERE a.offertant_id = :uid2 OR r.participant_id IS NOT NULL
+ORDER BY COALESCE(latest.created_at, a.created_at) DESC
     ";
 
     $stmtAct = $db->prepare($sqlActivities);
     $stmtAct->execute(['uid1' => $userId, 'uid2' => $userId]);
-    
+
     $activities = $stmtAct->fetchAll(PDO::FETCH_ASSOC);
 
     // Formatear correctamente el array
@@ -102,10 +102,10 @@ try {
     }
 
     echo json_encode([
-        'success'      => true,
-        'is_admin'     => false,
+        'success' => true,
+        'is_admin' => false,
         'support_room' => $supportRoom,
-        'activities'   => $activities
+        'activities' => $activities
     ]);
 
 } catch (Exception $e) {

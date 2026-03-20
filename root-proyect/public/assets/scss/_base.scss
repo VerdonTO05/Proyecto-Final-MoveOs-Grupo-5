@@ -228,11 +228,16 @@ footer {
 
 #chat-dropdown a,
 #display-chat {
+    height: 7rem;
     text-align: center;
     text-decoration: none;
     color: var(--text-primary);
     font-size: 0.95rem;
     transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+a .chat-card{
+    height: 7rem;
 }
 
 //hover
