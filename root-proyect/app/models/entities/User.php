@@ -94,7 +94,6 @@ class User
         $stmt->execute(['username' => $username]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Verificar contraseña con password_hash
         if ($user && password_verify($password, $user['password_hash'])) {
             return $user;
         }
@@ -117,9 +116,8 @@ class User
                 (full_name, email, username, password_hash, role_id)
                 VALUES (:full_name, :email, :username, :password_hash, :role_id)";
 
-        // Encriptar la contraseña
         $data['password_hash'] = password_hash($data['password'], PASSWORD_BCRYPT);
-        unset($data['password']); // eliminar la clave original por seguridad
+        unset($data['password']);
 
         $stmt = $this->conn->prepare($sql);
         if ($stmt->execute($data)) {
@@ -136,14 +134,14 @@ class User
      * @param string $fullname Nombre completo del usuario.
      * @param string $username Nombre de usuario.
      * @param string $email Correo electrónico del usuario.
-     * @param string|null $passwordHash Hash de la nueva contraseña (opcional). Si se pasa null, la contraseña no se modifica.
-     * @return bool true si la actualización se realiza correctamente, false si falla.
+     * @param string|null $passwordHash Hash de la nueva contraseña (opcional).
+     * @return bool|array true si se actualiza correctamente, array con 'error' si falla.
      */
     public function updateUser($id, $fullname, $username, $email, $passwordHash = null): bool|array
     {
         // Comprobar si el email ya existe en otro usuario
         $checkEmailSql = "SELECT id FROM {$this->table_name} 
-                      WHERE email = :email AND id != :id LIMIT 1";
+                          WHERE email = :email AND id != :id LIMIT 1";
         $stmt = $this->conn->prepare($checkEmailSql);
         $stmt->execute(['email' => $email, 'id' => $id]);
 
@@ -153,7 +151,7 @@ class User
 
         // Comprobar si el username ya existe en otro usuario
         $checkUsernameSql = "SELECT id FROM {$this->table_name} 
-                         WHERE username = :username AND id != :id LIMIT 1";
+                             WHERE username = :username AND id != :id LIMIT 1";
         $stmt = $this->conn->prepare($checkUsernameSql);
         $stmt->execute(['username' => $username, 'id' => $id]);
 
@@ -164,21 +162,20 @@ class User
         // Actualizar con o sin contraseña
         if ($passwordHash) {
             $sql = "UPDATE {$this->table_name} 
-                 SET full_name = ?, username = ?, email = ?, password_hash = ? 
-                 WHERE id = ?";
+                    SET full_name = ?, username = ?, email = ?, password_hash = ? 
+                    WHERE id = ?";
             $stmt = $this->conn->prepare($sql);
             $ok = $stmt->execute([$fullname, $username, $email, $passwordHash, $id]);
         } else {
             $sql = "UPDATE {$this->table_name} 
-                 SET full_name = ?, username = ?, email = ? 
-                 WHERE id = ?";
+                    SET full_name = ?, username = ?, email = ? 
+                    WHERE id = ?";
             $stmt = $this->conn->prepare($sql);
             $ok = $stmt->execute([$fullname, $username, $email, $id]);
         }
 
         return $ok ? true : ['error' => 'update_failed'];
     }
-
 
     /**
      * Cambiar el estado de un usuario (activa/inactiva)
@@ -194,16 +191,23 @@ class User
     }
 
     /**
-     * Eliminar un usuario por ID (hard delete)
-     * @param int $id ID del usuario
-     * @return bool true si se elimina, false si falla
+     * Dar de baja a un usuario conservando su historial de actividades y requests.
+     *
+     * Llama al procedimiento almacenado deactivate_user que:
+     *   - Marca sus actividades propias como finalizadas (is_finished = 1, state = 'finalizada')
+     *   - Marca sus requests propias como finalizadas (state = 'finalizada')
+     *   - Elimina el usuario, con los siguientes efectos en cascada:
+     *       · Sus inscripciones se eliminan automáticamente (ON DELETE CASCADE)
+     *       · offertant_id en sus actividades queda a NULL (ON DELETE SET NULL)
+     *       · accepted_by en requests que había aceptado queda a NULL (ON DELETE SET NULL)
+     *
+     * @param int $id ID del usuario a eliminar
+     * @return bool true si se ejecuta correctamente, false si falla
      */
-    public function deleteById($id)
+    public function deactivateUser(int $id): bool
     {
-        $sql = "DELETE FROM {$this->table_name} WHERE id = :id";
-        $stmt = $this->conn->prepare($sql);
+        $stmt = $this->conn->prepare("CALL deactivate_user(:id)");
         return $stmt->execute(['id' => $id]);
     }
-
 }
 ?>

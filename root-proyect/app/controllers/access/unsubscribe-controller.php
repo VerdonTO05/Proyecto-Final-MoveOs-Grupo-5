@@ -23,7 +23,7 @@ try {
     $db = (new Database())->getConnection();
     $userModel = new User($db);
 
-    if ($userModel->deleteById($userId)) {
+    if ($userModel->deactivateUser($userId)) {
 
         // Cerrar sesión completamente
         session_unset();

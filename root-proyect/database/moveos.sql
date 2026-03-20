@@ -106,11 +106,12 @@ CREATE TABLE audit_logs (
 
 -- --------------------------------------------------------
 -- Table: activities
+-- CAMBIO: offertant_id ahora permite NULL y usa ON DELETE SET NULL
 -- --------------------------------------------------------
 
 CREATE TABLE activities (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  offertant_id INT NOT NULL,
+  offertant_id INT NULL,                         -- ← permite NULL
   category_id INT NOT NULL,
   title VARCHAR(200) NOT NULL,
   description TEXT,
@@ -135,7 +136,7 @@ CREATE TABLE activities (
   CONSTRAINT activities_ibfk_1
     FOREIGN KEY (offertant_id)
     REFERENCES users(id)
-    ON DELETE CASCADE,
+    ON DELETE SET NULL,                          -- ← SET NULL en vez de CASCADE
   CONSTRAINT activities_ibfk_2
     FOREIGN KEY (category_id)
     REFERENCES categories(id)
@@ -143,6 +144,8 @@ CREATE TABLE activities (
 
 -- --------------------------------------------------------
 -- Table: registrations
+-- Sin cambios: ON DELETE CASCADE en participant_id ya borra
+-- las inscripciones del usuario automáticamente
 -- --------------------------------------------------------
 
 CREATE TABLE registrations (
@@ -163,6 +166,7 @@ CREATE TABLE registrations (
 
 -- --------------------------------------------------------
 -- Table: requests
+-- CAMBIO: accepted_by usa ON DELETE SET NULL en vez de CASCADE
 -- --------------------------------------------------------
 
 CREATE TABLE requests (
@@ -184,7 +188,7 @@ CREATE TABLE requests (
   dress_code VARCHAR(100),
   image_url VARCHAR(255),
   is_accepted TINYINT(1) DEFAULT 0,
-  accepted_by INT,
+  accepted_by INT DEFAULT NULL,                  -- ← explícitamente nullable
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   state VARCHAR(32) NOT NULL DEFAULT 'pendiente',
   CONSTRAINT requests_ibfk_1
@@ -194,7 +198,7 @@ CREATE TABLE requests (
   CONSTRAINT requests_ibfk_2
     FOREIGN KEY (accepted_by)
     REFERENCES users(id)
-    ON DELETE CASCADE,
+    ON DELETE SET NULL,                          -- ← SET NULL en vez de CASCADE
   CONSTRAINT requests_ibfk_3
     FOREIGN KEY (category_id)
     REFERENCES categories(id)
@@ -204,11 +208,11 @@ CREATE TABLE requests (
 -- Insert users de ejemplo
 -- --------------------------------------------------------
 
-INSERT INTO `users` (`id`, `full_name`, `email`, `username`, `password_hash`, `state` ,`role_id`, `created_at`) VALUES
-(1, 'Irene Osuna', 'irene@gmail.com', 'ireneosuna', '$2y$10$b5ViZkLR4zFSXlVaawLEMOXAh7HyCMdMN39ANbItbDJlLqoC1CNve', 'activa',2, '2026-01-26 17:29:15'),
-(2, 'Manuel Verdon', 'manuel@gmail.com', 'manuelverdon', '$2y$10$MNF.N94OmKc9D0YQ4rK2XewgRBVjNXGoaRSym8R53XdLtk9lZM6ki', 'activa' ,2, '2026-01-26 17:29:51'),
-(3, 'Alejandro Montesinos', 'alejandro@gmail.com', 'alejandrom', '$2y$10$TfJ05ZNAR6VcI5OF/ZdmsOJ3KH4xua03MtJvn9fFiY6nYQOkwCfeu', 'activa' ,1, '2026-01-26 17:30:28'),
-(4, 'Admin 1', 'admin@gmail.com', 'admin', '$2y$10$khd15J.3JvRGtkKn4A3z7O1u4SmzyJVT37ZEWGzLFnjRR45ZkUeau', 'activa' ,3, '2026-01-26 17:32:00');
+INSERT INTO `users` (`id`, `full_name`, `email`, `username`, `password_hash`, `state`, `role_id`, `created_at`) VALUES
+(1, 'Irene Osuna',          'irene@gmail.com',     'ireneosuna',    '$2y$10$b5ViZkLR4zFSXlVaawLEMOXAh7HyCMdMN39ANbItbDJlLqoC1CNve', 'activa', 2, '2026-01-26 17:29:15'),
+(2, 'Manuel Verdon',        'manuel@gmail.com',    'manuelverdon',  '$2y$10$MNF.N94OmKc9D0YQ4rK2XewgRBVjNXGoaRSym8R53XdLtk9lZM6ki', 'activa', 2, '2026-01-26 17:29:51'),
+(3, 'Alejandro Montesinos', 'alejandro@gmail.com', 'alejandrom',    '$2y$10$TfJ05ZNAR6VcI5OF/ZdmsOJ3KH4xua03MtJvn9fFiY6nYQOkwCfeu', 'activa', 1, '2026-01-26 17:30:28'),
+(4, 'Admin 1',              'admin@gmail.com',     'admin',         '$2y$10$khd15J.3JvRGtkKn4A3z7O1u4SmzyJVT37ZEWGzLFnjRR45ZkUeau', 'activa', 3, '2026-01-26 17:32:00');
 
 -- --------------------------------------------------------
 -- TRIGGERS
@@ -292,13 +296,46 @@ END$$
 
 DELIMITER ;
 
+-- --------------------------------------------------------
+-- PROCEDIMIENTO: deactivate_user
+-- Lógica de baja de usuario:
+--   1. Finaliza sus actividades propias
+--   2. Finaliza sus requests propias
+--   3. Elimina el usuario:
+--      - Sus inscripciones se borran (CASCADE en registrations.participant_id)
+--      - offertant_id en activities queda NULL (SET NULL)
+--      - accepted_by en requests queda NULL (SET NULL)
+-- --------------------------------------------------------
+
+DELIMITER $$
+
+CREATE PROCEDURE deactivate_user(IN p_user_id INT)
+BEGIN
+  -- 1. Finalizar actividades propias que aún no estén finalizadas
+  UPDATE activities
+  SET is_finished = 1,
+      state       = 'finalizada'
+  WHERE offertant_id = p_user_id
+    AND is_finished  = 0;
+
+  -- 2. Finalizar requests propias que aún no estén finalizadas
+  UPDATE requests
+  SET state = 'finalizada'
+  WHERE participant_id = p_user_id
+    AND state         != 'finalizada';
+
+  -- 3. Eliminar el usuario (las FK hacen el resto automáticamente)
+  DELETE FROM users WHERE id = p_user_id;
+END$$
+
+DELIMITER ;
+
 COMMIT;
 
 -- --------------------------------------------------------
 -- EVENT PARA FINALIZAR ACTIVIDADES Y REQUESTS
 -- --------------------------------------------------------
 
--- Activar el scheduler si no está activo
 SET GLOBAL event_scheduler = ON;
 
 DELIMITER $$
@@ -308,15 +345,13 @@ ON SCHEDULE EVERY 1 DAY
 STARTS CURRENT_DATE + INTERVAL 1 DAY
 DO
 BEGIN
-    -- Actividades
-    UPDATE activities
-    SET is_finished = 1, state = 'finalizada'
-    WHERE date < CURDATE() AND is_finished = 0;
+  UPDATE activities
+  SET is_finished = 1, state = 'finalizada'
+  WHERE date < CURDATE() AND is_finished = 0;
 
-    -- Requests
-    UPDATE requests
-    SET state = 'finalizada'
-    WHERE date < CURDATE() AND state != 'finalizada';
+  UPDATE requests
+  SET state = 'finalizada'
+  WHERE date < CURDATE() AND state != 'finalizada';
 END$$
 
 DELIMITER ;

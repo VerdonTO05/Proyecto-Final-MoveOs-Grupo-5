@@ -1,51 +1,89 @@
 <?php
+/**
+ * Controlador para aprobar actividades o peticiones.
+ *
+ * Solo accesible por administradores. Recibe el ID y el tipo del elemento
+ * a aprobar ('activity' o petición) y actualiza su estado a 'aprobada'
+ * en la base de datos.
+ */
+
+// Establecer el tipo de respuesta como JSON
 header('Content-Type: application/json');
+
+// Cargar la conexión a la base de datos y los modelos necesarios
 require_once __DIR__ . '/../../../config/database.php';
 require_once __DIR__ . '/../../models/entities/Activity.php';
 require_once __DIR__ . '/../../models/entities/Request.php';
 
-// Iniciar sesión si no está activa
+// Iniciar sesión solo si no hay una activa
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Verificar que sea administrador
+// Verificar que el usuario autenticado tiene rol de administrador
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'administrador') {
     echo json_encode(['success' => false, 'message' => 'No autorizado']);
     exit;
 }
 
+// Rechazar cualquier método HTTP que no sea POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['success' => false, 'message' => 'Método no permitido']);
     exit;
 }
 
+// Leer y decodificar el cuerpo de la petición JSON
 $data = json_decode(file_get_contents('php://input'), true);
-$activityId = $data['id'] ?? null;
-$type = $data['type'] ?? null;
 
+// Obtener el ID del elemento y el tipo ('activity' o petición)
+$activityId = $data['id']   ?? null;
+$type       = $data['type'] ?? null;
+
+// Validar que se haya proporcionado un ID
 if (!$activityId) {
     echo json_encode(['success' => false, 'message' => 'ID no proporcionado']);
     exit;
 }
 
-$database = new Database();
-$db = $database->getConnection();
-$activity = new Activity($db);
-$request = new Request($db);
+try {
+    // Instanciar la conexión y los modelos
+    $database = new Database();
+    $db       = $database->getConnection();
+    $activity = new Activity($db);
+    $request  = new Request($db);
 
-if ($type == 'activity') {
-    if ($activity->updateState($activityId, 'aprobada')) {
-        echo json_encode(['success' => true, 'message' => 'Actividad aprobada']);
+    // Actualizar el estado según el tipo recibido
+    if ($type == 'activity') {
+        // Aprobar una actividad
+        if ($activity->updateState($activityId, 'aprobada')) {
+            echo json_encode(['success' => true,  'message' => 'Actividad aprobada']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Error al aprobar actividad']);
+        }
     } else {
-        echo json_encode(['success' => false, 'message' => 'Error al aprobar actividad']);
+        // Aprobar una petición
+        if ($request->updateState($activityId, 'aprobada')) {
+            echo json_encode(['success' => true,  'message' => 'Petición aprobada']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Error al aprobar petición']);
+        }
     }
-} else {
-    if ($request->updateState($activityId, 'aprobada')) {
-        echo json_encode(['success' => true, 'message' => 'Petición aprobada']);
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Error al aprobar petición']);
-    }
+
+} catch (PDOException $e) {
+    // Error específico de base de datos: registrar internamente sin exponer detalles
+    error_log('[PDOException] approveController: ' . $e->getMessage());
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Error de base de datos. Inténtalo más tarde.'
+    ]);
+} catch (Exception $e) {
+    // Error genérico inesperado: registrar internamente sin exponer detalles
+    error_log('[Exception] approveController: ' . $e->getMessage());
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Error inesperado. Inténtalo más tarde.'
+    ]);
 }
-
 ?>
