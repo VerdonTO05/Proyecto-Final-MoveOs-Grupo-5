@@ -69,6 +69,15 @@ try {
         $_SESSION['role'] = $rolName;
         $_SESSION['email'] = $email;
 
+        // Enviar email de bienvenida (no bloquea el registro si falla)
+        try {
+            require_once __DIR__ . '/../../services/EmailService.php';
+            $emailService = new EmailService();
+            $emailService->sendWelcome($email, $fullname);
+        } catch (Exception $e) {
+            error_log("Error enviando email de bienvenida: " . $e->getMessage());
+        }
+
         echo json_encode([
             'success' => true,
             'message' => 'Usuario registrado con éxito',
