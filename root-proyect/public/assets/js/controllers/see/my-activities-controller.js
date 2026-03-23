@@ -100,7 +100,7 @@ function createActiveCard(pub,role) {
     const grid = document.getElementById('gridActivities');
 
     card.querySelector(".btn-detail")?.addEventListener("click", () => {
-        openDetailModal(pub, role, CURRENT_USER);
+        openDetailModal(pub, role, CURRENT_USER, { showChat: true });
     });
 
     card.querySelector(".btn-edit")?.addEventListener("click", function () {

@@ -155,7 +155,8 @@ class Registration
                                FROM requests 
                                WHERE participant_id = :participant_id
                                AND date = :date
-                               AND state != 'finalizada'
+                               AND state NOT IN ('finalizada', 'rechazada')
+                               AND is_accepted = 0
                                LIMIT 1";
 
             $stmt = $this->conn->prepare($conflictRequestSql);
@@ -178,8 +179,8 @@ class Registration
             $stmt->execute(['activity_id' => $activity_id]);
             $registrations = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
 
-            // Evitar overbooking
-            if ($registrations >= $activity['max_people']) {
+            // Evitar overbooking (si max_people es NULL, la capacidad es ilimitada)
+            if ($activity['max_people'] !== null && $registrations >= $activity['max_people']) {
                 return ['error' => 'activity_full'];
             }
 
@@ -201,7 +202,7 @@ class Registration
             $registrations = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
 
             // Si se llena la actividad → marcar completada
-            if ($registrations >= $activity['max_people']) {
+            if ($activity['max_people'] !== null && $registrations >= $activity['max_people']) {
                 $updateSql = "UPDATE activities 
                           SET is_completed = 1 
                           WHERE id = :activity_id";

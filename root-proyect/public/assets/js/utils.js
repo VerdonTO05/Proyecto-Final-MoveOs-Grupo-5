@@ -93,7 +93,9 @@ window.showConfirm = function (optionsOrTitle, message = "") {
     });
 };
 
-window.openDetailModal = function (activity, role = null, currentUser) {
+window.openDetailModal = function (activity, role = null, currentUser, options = {}) {
+
+    const showChat = options.showChat ?? false;
 
     // ── Eliminar modal previo siempre para evitar listeners duplicados ──
     const existing = document.getElementById("activityModal");
@@ -111,7 +113,7 @@ window.openDetailModal = function (activity, role = null, currentUser) {
             </div>
             <div class="modal-tabs">
                 <button class="tab-btn active" data-tab="details">Detalles</button>
-                <button class="tab-btn" data-tab="chat">Chat Grupal</button>
+                ${showChat ? '<button class="tab-btn" data-tab="chat">Chat Grupal</button>' : ''}
             </div>
             <div class="modal-body">
                 <div class="modal-image"></div>

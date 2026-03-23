@@ -42,6 +42,12 @@ try {
     } else {
         // El resto de roles ve las actividades aprobadas
         $data = $activity->getActivitiesByState('aprobada');
+
+        // Filtrar actividades en las que el usuario ya está inscrito
+        $userId = intval($_SESSION['user_id']);
+        $data = array_values(array_filter($data, function ($act) use ($userId) {
+            return !in_array($userId, $act['enrolled_user_ids'] ?? []);
+        }));
     }
 
     echo json_encode([

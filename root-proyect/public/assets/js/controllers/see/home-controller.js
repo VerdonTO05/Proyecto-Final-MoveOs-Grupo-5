@@ -168,16 +168,21 @@ async function handleSignup(btn, activity, role, card) {
           }
         }, 300);
       } else {
-        signupBtn.textContent = "Inscrito";
-        signupBtn.disabled = true;
-        signupBtn.classList.add("enrolled");
+        // Participante: eliminar la tarjeta del grid (ya puede verse en "Mis actividades")
+        card.style.transition = 'opacity 0.3s, transform 0.3s';
+        card.style.opacity = '0';
+        card.style.transform = 'scale(0.9)';
 
-        const participantsSpan = card.querySelector(".participants");
-        if (participantsSpan) {
-          activity.current_registrations = (activity.current_registrations || 0) + 1;
-          participantsSpan.innerHTML =
-            `<i class="fas fa-users"></i> ${activity.current_registrations}/${activity.max_people}`;
-        }
+        // Quitar del array local para que los filtros no la vuelvan a mostrar
+        publications = publications.filter(p => p.id !== activity.id);
+
+        setTimeout(() => {
+          card.remove();
+          const grid = document.getElementById('gridActivities');
+          if (grid && grid.querySelectorAll('.activity-card').length === 0) {
+            grid.innerHTML = '<p class="no-activities">No hay actividades disponibles en este momento.</p>';
+          }
+        }, 300);
       }
     } else {
       // Si el servidor dice ya inscrito, tratar como estado válido (no como error)

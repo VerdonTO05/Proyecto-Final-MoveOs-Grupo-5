@@ -97,7 +97,7 @@ function createActiveCard(pub, role) {
     const grid = document.getElementById('gridRegistrations');
 
     card.querySelector(".btn-detail")?.addEventListener("click", function () {
-        openDetailModal(pub, role);
+        openDetailModal(pub, role, CURRENT_USER, { showChat: true });
     });
 
     card.querySelector(".btn-signup")?.addEventListener("click", async function () {
