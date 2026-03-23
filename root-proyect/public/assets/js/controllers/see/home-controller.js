@@ -141,7 +141,9 @@ async function handleSignup(btn, activity, role, card) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         accion: role === 'organizador' ? 'acceptRequest' : 'signupActivity',
-        id_activity: activity.id
+        ...(role === 'organizador'
+          ? { id_request: activity.id }
+          : { id_activity: activity.id })
       })
     });
 
