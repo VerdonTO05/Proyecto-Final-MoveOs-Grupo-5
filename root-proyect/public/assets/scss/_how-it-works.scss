@@ -29,7 +29,8 @@
             justify-content: center;
             width: 1.2rem;
             height: 1.2rem;
-            background: var(--brand-primary);;
+            background: var(--brand-primary);
+            ;
             border-radius: 50%;
             color: var(--text-on-primary);
             font-size: 10px;
@@ -93,7 +94,8 @@
 
     /* Tarjeta principal */
     .hiw-card {
-        width: 60%;
+        width: 100%;
+        max-width: 720px;
         margin: 0 auto;
         padding: 0;
         background: none;
@@ -302,7 +304,29 @@
     .hiw-video-wrapper .video-controls .volume {
         max-width: 80px;
     }
+}
 
+/* =============================
+   RESPONSIVE - how-it-works
+   ============================= */
 
+/* Tablet (≤ 1024px) */
+@media (max-width: 1024px) {
+  .how-it-works .hiw-card {
+    max-width: 620px;
+    padding: 0 1rem;   /* margen lateral en tablet */
+  }
+}
 
+@media (max-width: 768px) {
+  .how-it-works .hiw-card {
+    max-width: 100%;
+    padding: 0 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .how-it-works .hiw-card {
+    padding: 0 0.8rem;
+  }
 }
