@@ -49,4 +49,36 @@ class EmailService {
             return false;
         }
     }
+
+    /**
+     * Enviar email de bienvenida al registrarse
+     */
+    public function sendWelcome($toEmail, $toName) {
+        try {
+            $this->mailer->clearAddresses();
+            $this->mailer->addAddress($toEmail, $toName);
+            $this->mailer->isHTML(true);
+            $this->mailer->Subject = '¡Bienvenido a MOVEos!';
+            $this->mailer->Body = "
+                <div style='font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 2rem; background: #f9f9f9; border-radius: 12px;'>
+                    <h1 style='color: #8C1E32; text-align: center;'>¡Bienvenido a MOVEos!</h1>
+                    <p>Hola <b>$toName</b>,</p>
+                    <p>Tu cuenta se ha creado correctamente. Ya puedes explorar actividades, inscribirte y conectar con otros usuarios.</p>
+                    <p style='text-align: center; margin-top: 1.5rem;'>
+                        <a href='http://localhost/Proyecto_MOVEos/Proyecto-Final-MoveOs-Grupo-5/root-proyect/public/index.php'
+                           style='background: #8C1E32; color: #fff; padding: 10px 24px; border-radius: 8px; text-decoration: none; font-weight: bold;'>
+                           Ir a MOVEos
+                        </a>
+                    </p>
+                    <p style='font-size: 0.85rem; color: #888; margin-top: 2rem; text-align: center;'>© 2025 MOVEos. Todos los derechos reservados.</p>
+                </div>
+            ";
+            $this->mailer->AltBody = "Hola $toName, bienvenido a MOVEos. Tu cuenta se ha creado correctamente.";
+
+            return $this->mailer->send();
+        } catch (Exception $e) {
+            error_log("Error enviando email de bienvenida: " . $e->getMessage());
+            return false;
+        }
+    }
 }
