@@ -97,7 +97,7 @@ $user = getCurrentUser();
         </section>
 
         <!-- Estadísticas -->
-        <section>
+        <section aria-label="Estadísticas de la plataforma">
             <div>
                 <h2>50+</h2>
                 <p>Actividades</p>

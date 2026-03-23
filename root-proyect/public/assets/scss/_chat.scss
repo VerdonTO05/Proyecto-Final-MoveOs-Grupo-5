@@ -664,12 +664,33 @@ main.chat-page {
 
 .chat-menu-container:has(#chat-dropdown.visible) #chat-btn i {
   color: var(--c-yellow);
-  background-color: var(--bg-muted);
+  // background-color: var(--bg-muted);
 }
 
-.user-menu-container:has(#user-dropdown.visible) #user-btn i {
-  color: var(--c-yellow);
-  background-color: var(--bg-muted);
+.user-menu-container:has(#user-dropdown.visible) #user-btn {
+  border: 2px solid var(--c-yellow);
+}
+
+#user-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  overflow: hidden;
+  cursor: pointer;
+  background: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 50%;
 }
 
 // ── Responsive ──────────────────────────────────────────────────

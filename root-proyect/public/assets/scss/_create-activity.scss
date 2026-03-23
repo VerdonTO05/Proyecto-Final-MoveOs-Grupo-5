@@ -112,8 +112,35 @@ input[type="checkbox"] {
   width: 30%;
 }
 
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: none;
+  border: 1.5px solid var(--border-color);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  transition: background-color 0.2s, color 0.2s;
+
+  &:hover {
+    background: var(--brand-primary);
+    color: var(--text-on-primary);
+    border-color: var(--brand-primary);
+  }
+}
+
 @media (max-width: 576px),
 (max-height: 700px) {
+
+  .container{
+    max-height: none !important;
+  }
+
   .form-activity {
     grid-template-columns: 1fr !important; // fuerza una columna única
     gap: 1.5rem;

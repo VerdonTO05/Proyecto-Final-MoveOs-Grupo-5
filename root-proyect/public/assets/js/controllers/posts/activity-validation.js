@@ -1,5 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    back_btn = document.querySelector('.back-btn').addEventListener('click', ()=>{
+        history.back();
+    });
+
     // ===== ERRORES DESDE PHP =====
     const phpErrors = window.__PHP_FORM_ERRORS__ ?? [];
     if (phpErrors.length > 0) {

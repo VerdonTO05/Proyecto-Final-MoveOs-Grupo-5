@@ -166,7 +166,7 @@ function renderStep(card, step) {
             ${step.list.map(item => `
               <li>
                 <div><i class="fa-solid fa-star"></i></div>
-                <span>${item}</span>
+                <p>${item}</p>
               </li>
             `).join("")}
           </ul>

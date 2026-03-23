@@ -3,7 +3,7 @@ require_once __DIR__ . '/../../middleware/auth.php';
 requireActiveUser();
 requireAnyRole(['organizador', 'participante']);
 
-$rol         = $_SESSION['role'];
+$rol = $_SESSION['role'];
 $participante = ($rol === 'participante');
 
 // Recuperar datos antiguos y limpiarlos de sesión
@@ -11,7 +11,8 @@ $old = $_SESSION['form_old_data'] ?? [];
 unset($_SESSION['form_old_data']);
 
 // Helper para imprimir valores de forma segura
-function old(string $key, $default = ''): string {
+function old(string $key, $default = ''): string
+{
     global $old;
     return htmlspecialchars($old[$key] ?? $default, ENT_QUOTES);
 }
@@ -31,10 +32,10 @@ function old(string $key, $default = ''): string {
 
 <body>
     <?php if (!empty($_SESSION['form_errors'])): ?>
-    <script>
-        window.__PHP_FORM_ERRORS__ = <?= json_encode($_SESSION['form_errors']) ?>;
-    </script>
-    <?php unset($_SESSION['form_errors']); ?>
+        <script>
+            window.__PHP_FORM_ERRORS__ = <?= json_encode($_SESSION['form_errors']) ?>;
+        </script>
+        <?php unset($_SESSION['form_errors']); ?>
     <?php endif; ?>
 
     <div class="icons">
@@ -46,6 +47,10 @@ function old(string $key, $default = ''): string {
     </div>
 
     <div class="container c">
+        <button type="button" class="back-btn" aria-label="Volver atrás">
+            <i class="fas fa-arrow-left" aria-hidden="true"></i>
+        </button>
+
         <header class="header-form create">
             <?php if ($participante): ?>
                 <h1>Publicar Nueva Petición</h1>
@@ -84,15 +89,15 @@ function old(string $key, $default = ''): string {
                 <label for="category">Categoría *</label>
                 <select id="category" name="category_id" required aria-required="true">
                     <option value="">Selecciona...</option>
-                    <option value="1"  <?= old('category_id') == '1'  ? 'selected' : '' ?>>Taller</option>
-                    <option value="2"  <?= old('category_id') == '2'  ? 'selected' : '' ?>>Clase</option>
-                    <option value="3"  <?= old('category_id') == '3'  ? 'selected' : '' ?>>Evento</option>
-                    <option value="4"  <?= old('category_id') == '4'  ? 'selected' : '' ?>>Excursión</option>
-                    <option value="5"  <?= old('category_id') == '5'  ? 'selected' : '' ?>>Formación técnica</option>
-                    <option value="6"  <?= old('category_id') == '6'  ? 'selected' : '' ?>>Conferencia</option>
-                    <option value="7"  <?= old('category_id') == '7'  ? 'selected' : '' ?>>Reunión</option>
-                    <option value="8"  <?= old('category_id') == '8'  ? 'selected' : '' ?>>Experiencia</option>
-                    <option value="9"  <?= old('category_id') == '9'  ? 'selected' : '' ?>>Tour</option>
+                    <option value="1" <?= old('category_id') == '1' ? 'selected' : '' ?>>Taller</option>
+                    <option value="2" <?= old('category_id') == '2' ? 'selected' : '' ?>>Clase</option>
+                    <option value="3" <?= old('category_id') == '3' ? 'selected' : '' ?>>Evento</option>
+                    <option value="4" <?= old('category_id') == '4' ? 'selected' : '' ?>>Excursión</option>
+                    <option value="5" <?= old('category_id') == '5' ? 'selected' : '' ?>>Formación técnica</option>
+                    <option value="6" <?= old('category_id') == '6' ? 'selected' : '' ?>>Conferencia</option>
+                    <option value="7" <?= old('category_id') == '7' ? 'selected' : '' ?>>Reunión</option>
+                    <option value="8" <?= old('category_id') == '8' ? 'selected' : '' ?>>Experiencia</option>
+                    <option value="9" <?= old('category_id') == '9' ? 'selected' : '' ?>>Tour</option>
                     <option value="10" <?= old('category_id') == '10' ? 'selected' : '' ?>>Competición</option>
                     <option value="11" <?= old('category_id') == '11' ? 'selected' : '' ?>>Evento social</option>
                 </select>
@@ -117,15 +122,15 @@ function old(string $key, $default = ''): string {
             </div>
 
             <?php if (!$participante): ?>
-            <div>
-                <label>Precio (€)</label>
-                <input type="number" name="price" step="0.01" min="0" value="<?= old('price', '0') ?>">
-            </div>
+                <div>
+                    <label>Precio (€)</label>
+                    <input type="number" name="price" step="0.01" min="0" value="<?= old('price', '0') ?>">
+                </div>
 
-            <div>
-                <label>Máximo de participantes</label>
-                <input type="number" name="max_people" min="1" value="<?= old('max_people') ?>">
-            </div>
+                <div>
+                    <label>Máximo de participantes</label>
+                    <input type="number" name="max_people" min="1" value="<?= old('max_people') ?>">
+                </div>
             <?php endif; ?>
 
             <!-- CAMPOS COMUNES -->
@@ -133,10 +138,10 @@ function old(string $key, $default = ''): string {
                 <label for="idioma">Idioma</label>
                 <select id="idioma" name="language">
                     <?php
-                    $idiomas = ['Español','Inglés','Francés','Alemán','Italiano','Portugués','Chino','Japonés','Ruso','Árabe'];
+                    $idiomas = ['Español', 'Inglés', 'Francés', 'Alemán', 'Italiano', 'Portugués', 'Chino', 'Japonés', 'Ruso', 'Árabe'];
                     foreach ($idiomas as $idioma):
                         $selected = old('language', 'Español') === $idioma ? 'selected' : '';
-                    ?>
+                        ?>
                         <option value="<?= $idioma ?>" <?= $selected ?>><?= $idioma ?></option>
                     <?php endforeach; ?>
                 </select>
@@ -163,8 +168,7 @@ function old(string $key, $default = ''): string {
                         value="<?= old('departure_city') ?>">
                 </div>
                 <label>
-                    <input type="checkbox" name="pets_allowed" value="1"
-                        <?= isset($old['pets_allowed']) ? 'checked' : '' ?> />
+                    <input type="checkbox" name="pets_allowed" value="1" <?= isset($old['pets_allowed']) ? 'checked' : '' ?> />
                     Mascotas permitidas
                 </label>
             </div>

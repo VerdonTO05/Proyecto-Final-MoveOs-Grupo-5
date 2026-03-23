@@ -3,7 +3,7 @@ require_once __DIR__ . '/../../middleware/auth.php';
 requireAnyRole(['organizador', 'participante']);
 requireActiveUser();
 
-$rol          = $_SESSION['role'];
+$rol = $_SESSION['role'];
 $participante = ($rol === 'participante');
 
 // Recuperar datos antiguos y limpiarlos de sesión
@@ -11,7 +11,8 @@ $old = $_SESSION['form_old_data'] ?? [];
 unset($_SESSION['form_old_data']);
 
 // Si hay old data la usamos, si no los datos de la publicación
-function old(string $key, $fallback = ''): string {
+function old(string $key, $fallback = ''): string
+{
     global $old, $publication;
     if (!empty($old) && isset($old[$key])) {
         return htmlspecialchars($old[$key], ENT_QUOTES);
@@ -34,10 +35,10 @@ function old(string $key, $fallback = ''): string {
 
 <body>
     <?php if (!empty($_SESSION['form_errors'])): ?>
-    <script>
-        window.__PHP_FORM_ERRORS__ = <?= json_encode($_SESSION['form_errors']) ?>;
-    </script>
-    <?php unset($_SESSION['form_errors']); ?>
+        <script>
+            window.__PHP_FORM_ERRORS__ = <?= json_encode($_SESSION['form_errors']) ?>;
+        </script>
+        <?php unset($_SESSION['form_errors']); ?>
     <?php endif; ?>
 
     <div class="icons">
@@ -49,6 +50,9 @@ function old(string $key, $fallback = ''): string {
     </div>
 
     <div class="container c">
+        <button type="button" class="back-btn" aria-label="Volver atrás">
+            <i class="fas fa-arrow-left" aria-hidden="true"></i>
+        </button>
         <header class="header-form create">
             <?php if ($participante): ?>
                 <h1>Editar Petición</h1>
@@ -73,23 +77,30 @@ function old(string $key, $fallback = ''): string {
 
             <div class="full">
                 <label>Título de la <?= $participante ? "Petición" : "Actividad" ?> *</label>
-                <input type="text" name="title" placeholder="Ej: Yoga al aire libre"
-                    required aria-required="true" value="<?= old('title') ?>" />
+                <input type="text" name="title" placeholder="Ej: Yoga al aire libre" required aria-required="true"
+                    value="<?= old('title') ?>" />
             </div>
 
             <div class="full">
                 <label>Descripción *</label>
-                <textarea name="description" placeholder="Describe los detalles..."
-                    required aria-required="true"><?= old('description') ?></textarea>
+                <textarea name="description" placeholder="Describe los detalles..." required
+                    aria-required="true"><?= old('description') ?></textarea>
             </div>
 
             <div>
                 <?php
                 $categories = [
-                    1 => 'Taller',       2 => 'Clase',      3 => 'Evento',
-                    4 => 'Excursión',    5 => 'Formación técnica', 6 => 'Conferencia',
-                    7 => 'Reunión',      8 => 'Experiencia', 9 => 'Tour',
-                    10 => 'Competición', 11 => 'Evento social'
+                    1 => 'Taller',
+                    2 => 'Clase',
+                    3 => 'Evento',
+                    4 => 'Excursión',
+                    5 => 'Formación técnica',
+                    6 => 'Conferencia',
+                    7 => 'Reunión',
+                    8 => 'Experiencia',
+                    9 => 'Tour',
+                    10 => 'Competición',
+                    11 => 'Evento social'
                 ];
                 $selectedCategory = !empty($old) ? ($old['category_id'] ?? '') : ($publication['category_id'] ?? '');
                 ?>
@@ -106,8 +117,8 @@ function old(string $key, $fallback = ''): string {
 
             <div>
                 <label>Ubicación *</label>
-                <input type="text" name="location" placeholder="Dirección o ciudad"
-                    required aria-required="true" value="<?= old('location') ?>" />
+                <input type="text" name="location" placeholder="Dirección o ciudad" required aria-required="true"
+                    value="<?= old('location') ?>" />
             </div>
 
             <div>
@@ -121,20 +132,20 @@ function old(string $key, $fallback = ''): string {
             </div>
 
             <?php if (!$participante): ?>
-            <div>
-                <label>Precio (€)</label>
-                <input type="number" name="price" step="1" min="0" value="<?= old('price') ?>" />
-            </div>
+                <div>
+                    <label>Precio (€)</label>
+                    <input type="number" name="price" step="1" min="0" value="<?= old('price') ?>" />
+                </div>
 
-            <div>
-                <label>Cantidad de usuarios</label>
-                <input type="number" name="max_people" min="1" value="<?= old('max_people') ?>" />
-            </div>
+                <div>
+                    <label>Cantidad de usuarios</label>
+                    <input type="number" name="max_people" min="1" value="<?= old('max_people') ?>" />
+                </div>
             <?php endif; ?>
 
             <div>
                 <?php
-                $languages        = ['Español','Inglés','Francés','Alemán','Italiano','Portugués','Chino','Japonés','Ruso','Árabe'];
+                $languages = ['Español', 'Inglés', 'Francés', 'Alemán', 'Italiano', 'Portugués', 'Chino', 'Japonés', 'Ruso', 'Árabe'];
                 $selectedLanguage = !empty($old) ? ($old['language'] ?? '') : ($publication['language'] ?? '');
                 ?>
                 <label for="idioma">Idioma</label>
@@ -154,8 +165,7 @@ function old(string $key, $fallback = ''): string {
 
             <div>
                 <label>Código de Vestimenta</label>
-                <input type="text" name="dress_code" placeholder="Ej: Ropa cómoda"
-                    value="<?= old('dress_code') ?>" />
+                <input type="text" name="dress_code" placeholder="Ej: Ropa cómoda" value="<?= old('dress_code') ?>" />
             </div>
 
             <?php
@@ -177,8 +187,7 @@ function old(string $key, $fallback = ''): string {
                         value="<?= old('departure_city') ?>">
                 </div>
                 <label>
-                    <input type="checkbox" name="pets_allowed" value="1"
-                        <?= $petsChecked ? 'checked' : '' ?> />
+                    <input type="checkbox" name="pets_allowed" value="1" <?= $petsChecked ? 'checked' : '' ?> />
                     Mascotas permitidas
                 </label>
             </div>

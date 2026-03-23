@@ -912,7 +912,6 @@ select {
   }
   .container {
     max-height: calc(100vh - 7rem);
-    overflow-y: auto;
     border-radius: 1rem;
   }
   .header-form h1 {
@@ -1186,6 +1185,7 @@ select {
   display: flex;
   flex-direction: column;
   height: 100%;
+  min-width: 370px;
   position: relative;
   background-color: var(--bg-surface);
   border-radius: 20px;
@@ -1230,7 +1230,7 @@ select {
   /* ---------- Contenido ---------- */
 }
 .activity .activity-content {
-  min-width: 0;
+  min-width: 370px;
   flex: 1;
   padding: 1.2rem;
   display: flex;
@@ -1268,6 +1268,10 @@ select {
 .activity .activity-content .actions {
   display: flex;
   gap: 0.5rem;
+}
+.activity .activity-content .actions button,
+.activity .activity-content .actions a {
+  flex: 1;
 }
 .activity .activity-content .actions .btn-detail {
   background-color: var(--bg-surface);
@@ -1515,11 +1519,9 @@ select {
   .activity {
     border-radius: 16px;
   }
-  .activity .activity-image {
-    height: 160px;
-  }
   .activity .activity-content {
     padding: 1rem;
+    padding-top: 0rem;
   }
   .activity .activity-content .actions {
     flex-direction: column;
@@ -1552,7 +1554,8 @@ select {
   text-decoration: none;
   font-weight: 500;
   cursor: pointer;
-  width: 15%;
+  width: auto;
+  min-width: 180px;
   margin: 2rem auto;
 }
 .how-it-works a i {
@@ -1596,6 +1599,7 @@ select {
   justify-content: center;
   margin-bottom: 0 !important;
   padding-bottom: 1rem !important;
+  padding-top: 1rem !important;
 }
 .how-it-works .hiw-steps .step-number {
   width: 45px;
@@ -1621,7 +1625,9 @@ select {
   /* Tarjeta principal */
 }
 .how-it-works .hiw-card {
-  width: 60%;
+  width: 100%;
+  max-width: 720px;
+  min-width: 320px;
   margin: 0 auto;
   padding: 0;
   background: none;
@@ -1665,6 +1671,9 @@ select {
   align-items: center;
   gap: 1rem;
 }
+.how-it-works .hiw-list li p {
+  text-align: start;
+}
 .how-it-works .hiw-list div {
   flex-shrink: 0;
   width: 26px;
@@ -1689,6 +1698,7 @@ select {
   gap: 1rem;
   margin-top: 1rem;
   background-color: var(--bg-surface);
+  flex-wrap: wrap;
 }
 .how-it-works .tab-switch .tab-btn {
   padding: 12px 18px;
@@ -1817,6 +1827,35 @@ select {
   max-width: 80px;
 }
 
+/* =============================
+   RESPONSIVE - how-it-works
+   ============================= */
+/* Tablet (≤ 1024px) */
+@media (max-width: 1024px) {
+  .how-it-works .hiw-card {
+    max-width: 620px;
+    padding: 0 1rem;
+    /* margen lateral en tablet */
+  }
+}
+@media (max-width: 768px) {
+  .how-it-works .hiw-card {
+    max-width: 100%;
+    padding: 0 1.2rem;
+  }
+}
+@media (max-width: 480px) {
+  .how-it-works .hiw-card {
+    padding: 0 0.8rem;
+    box-sizing: border-box;
+  }
+  .how-it-works .tab-switch {
+    flex-direction: column;
+  }
+  .how-it-works .tab-switch .tab-btn {
+    width: 100%;
+  }
+}
 /* =========================
    Slogan
 ========================= */
@@ -2498,7 +2537,31 @@ input[type=checkbox] {
   width: 30%;
 }
 
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: none;
+  border: 1.5px solid var(--border-color);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  transition: background-color 0.2s, color 0.2s;
+}
+.back-btn:hover {
+  background: var(--brand-primary);
+  color: var(--text-on-primary);
+  border-color: var(--brand-primary);
+}
+
 @media (max-width: 576px), (max-height: 700px) {
+  .container {
+    max-height: none !important;
+  }
   .form-activity {
     grid-template-columns: 1fr !important;
     gap: 1.5rem;
@@ -3228,73 +3291,32 @@ main.chat-page {
 
 .chat-menu-container:has(#chat-dropdown.visible) #chat-btn i {
   color: var(--c-yellow);
-  background-color: var(--bg-muted);
 }
 
-.user-menu-container:has(#user-dropdown.visible) #user-btn .nav-avatar {
-  box-shadow: 0 0 0 2px var(--c-yellow);
+.user-menu-container:has(#user-dropdown.visible) #user-btn {
+  border: 2px solid var(--c-yellow);
 }
 
-/* ── Avatar navbar ─────────────────────────────────── */
-.nav-avatar {
+#user-btn {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid var(--border-color);
-  transition: box-shadow 0.2s, border-color 0.2s;
-  vertical-align: middle;
-}
-.nav-avatar:hover {
-  border-color: var(--brand-primary);
-}
-
-/* ── Avatar perfil (ver/editar datos) ──────────────── */
-.profile-avatar-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-.profile-avatar-wrapper {
-  position: relative;
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  cursor: pointer;
+  border: none;
+  padding: 0;
   overflow: hidden;
-}
-.profile-avatar-wrapper img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 3px solid var(--brand-primary);
-  transition: filter 0.2s;
-}
-.profile-avatar-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  background: none;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.nav-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
   border-radius: 50%;
-  opacity: 0;
-  transition: opacity 0.2s;
-  color: #fff;
-  font-size: 1.3rem;
-}
-.profile-avatar-wrapper:hover .profile-avatar-overlay {
-  opacity: 1;
-}
-.profile-avatar-wrapper:hover img {
-  filter: brightness(0.8);
-}
-.profile-avatar-hint {
-  margin-top: 0.5rem;
-  font-size: 0.82rem;
-  color: var(--text-secondary);
 }
 
 @media (max-width: 700px) {
