@@ -127,6 +127,9 @@ switch ($action) {
   case 'requestCode':
     require __DIR__ . '/../app/controllers/user/request-code-controller.php';
     break;
+  case 'uploadAvatar':
+    require __DIR__ . '/../app/controllers/user/upload-avatar-controller.php';
+    break;
   case 'cancelRegistration':
     require __DIR__ . '/../app/controllers/posts/cancel-registration-controller.php';
     break;

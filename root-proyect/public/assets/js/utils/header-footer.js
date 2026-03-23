@@ -40,7 +40,7 @@ const headerHTML = `
       </div>
 
       <div class="user-menu-container">
-        <button id="user-btn"><i class="fas fa-user"></i></button>
+        <button id="user-btn"><img id="nav-avatar" class="nav-avatar" src="assets/img/default-avatar.png" alt="Avatar"></button>
         <div id="user-dropdown" class="invisible">
           <span id="display-username"></span>
           <a href="#" id="logout-link">Cerrar sesión</a>
@@ -130,6 +130,12 @@ function initUserLogic() {
     hideElement(document.getElementById('chat-dropdown'));
     toggleVisibility(userDropdown);
   });
+
+  // Actualizar avatar del navbar con la imagen del usuario
+  const navAvatar = document.getElementById('nav-avatar');
+  if (navAvatar && user && user.profile_image) {
+    navAvatar.src = user.profile_image + '?t=' + Date.now();
+  }
 
   // Logout
   logoutLink?.addEventListener('click', (e) => {

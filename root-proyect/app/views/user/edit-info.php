@@ -62,6 +62,20 @@ function oldUser(string $key, $fallback = ''): string
 
             <form id="edit-form" class="register-form" action="index.php?accion=editUser" method="post">
 
+                <!-- Avatar editable -->
+                <div class="profile-avatar-section">
+                    <div class="profile-avatar-wrapper" id="avatarWrapper" title="Cambiar foto de perfil">
+                        <img id="profileAvatar"
+                             src="<?= !empty($user['profile_image']) ? htmlspecialchars($user['profile_image']) . '?t=' . time() : 'assets/img/default-avatar.png' ?>"
+                             alt="Foto de perfil">
+                        <div class="profile-avatar-overlay">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                    </div>
+                    <span class="profile-avatar-hint">Haz clic para cambiar la foto</span>
+                    <input type="file" id="avatarInput" accept="image/jpeg,image/png,image/webp" hidden>
+                </div>
+
                 <label for="fullname">Nombre Completo</label>
                 <div class="input-group">
                     <i class="fas fa-user icon" aria-hidden="true"></i>

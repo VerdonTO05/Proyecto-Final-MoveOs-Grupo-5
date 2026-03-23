@@ -21,6 +21,58 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // ===== AVATAR UPLOAD =====
+  const avatarWrapper = document.getElementById('avatarWrapper');
+  const avatarInput   = document.getElementById('avatarInput');
+  const profileAvatar = document.getElementById('profileAvatar');
+
+  if (avatarWrapper && avatarInput) {
+    // Clic en el avatar abre el selector de archivos
+    avatarWrapper.addEventListener('click', () => avatarInput.click());
+
+    avatarInput.addEventListener('change', async () => {
+      const file = avatarInput.files[0];
+      if (!file) return;
+
+      // Validar tamaño (2 MB)
+      if (file.size > 2 * 1024 * 1024) {
+        showAlert('Error', 'La imagen no puede superar los 2 MB.', 'error');
+        return;
+      }
+
+      // Previsualizar la imagen inmediatamente
+      const reader = new FileReader();
+      reader.onload = (e) => { profileAvatar.src = e.target.result; };
+      reader.readAsDataURL(file);
+
+      // Subir vía AJAX
+      const formData = new FormData();
+      formData.append('avatar', file);
+
+      try {
+        const response = await fetch('index.php?accion=uploadAvatar', {
+          method: 'POST',
+          body: formData
+        });
+        const result = await response.json();
+
+        if (result.success) {
+          showAlert('¡Listo!', result.message, 'success');
+          // Actualizar también el avatar del navbar
+          const navAvatar = document.getElementById('nav-avatar');
+          if (navAvatar) {
+            navAvatar.src = result.image_url + '?t=' + Date.now();
+          }
+        } else {
+          showAlert('Error', result.message, 'error');
+        }
+      } catch (err) {
+        console.error(err);
+        showAlert('Error', 'No se pudo subir la imagen.', 'error');
+      }
+    });
+  }
+
   // Campos de contraseña opcionales
   const changePasswordCheckbox = document.getElementById('changePassword');
   const passwordFields = document.getElementById('passwordFields');

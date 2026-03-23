@@ -43,6 +43,12 @@ requireActiveUser();
             <button class="close-btn" type="button" aria-label="Cerrar formulario">&times;</button>
 
             <header class="header-form">
+                <div class="profile-avatar-section">
+                    <div class="profile-avatar-wrapper" style="cursor: default;">
+                        <img src="<?= !empty($user['profile_image']) ? htmlspecialchars($user['profile_image']) . '?t=' . time() : 'assets/img/default-avatar.png' ?>"
+                             alt="Foto de perfil">
+                    </div>
+                </div>
                 <h1>Ver datos</h1>
                 <p>Puedes visualizar tu información aquí</p>
             </header>

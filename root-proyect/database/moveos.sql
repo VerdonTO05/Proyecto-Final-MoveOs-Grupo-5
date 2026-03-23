@@ -39,6 +39,7 @@ CREATE TABLE users (
   username VARCHAR(100) NOT NULL UNIQUE,
   password_hash VARCHAR(255) NOT NULL,
   state VARCHAR(255) NOT NULL DEFAULT 'activa',
+  profile_image VARCHAR(255) DEFAULT NULL,
   role_id INT NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT users_ibfk_1

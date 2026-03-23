@@ -46,7 +46,7 @@ class User
      */
     public function getUsers()
     {
-        $sql = "SELECT u.id, u.full_name, u.email, u.username, u.state, r.name AS role, u.created_at
+        $sql = "SELECT u.id, u.full_name, u.email, u.username, u.state, u.profile_image, r.name AS role, u.created_at
                 FROM {$this->table_name} u
                 JOIN roles r ON u.role_id = r.id
                 ORDER BY u.full_name ASC";
@@ -62,7 +62,7 @@ class User
      */
     public function getUserById($id)
     {
-        $sql = "SELECT u.id, u.full_name, u.email, u.username, u.password_hash, r.name AS role, u.created_at
+        $sql = "SELECT u.id, u.full_name, u.email, u.username, u.password_hash, u.profile_image, r.name AS role, u.created_at
                 FROM {$this->table_name} u
                 JOIN roles r ON u.role_id = r.id
                 WHERE u.id = :id";
@@ -175,6 +175,19 @@ class User
         }
 
         return $ok ? true : ['error' => 'update_failed'];
+    }
+
+    /**
+     * Actualizar la imagen de perfil del usuario
+     * @param int $id ID del usuario
+     * @param string|null $path Ruta relativa de la imagen (null para eliminar)
+     * @return bool true si se actualiza correctamente
+     */
+    public function updateProfileImage($id, $path)
+    {
+        $sql = "UPDATE {$this->table_name} SET profile_image = :path WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute(['path' => $path, 'id' => $id]);
     }
 
     /**

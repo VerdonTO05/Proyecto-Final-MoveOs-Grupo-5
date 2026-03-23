@@ -100,7 +100,8 @@ function getCurrentUser()
         'id' => $_SESSION['user_id'] ?? null,
         'name' => $_SESSION['username'] ?? null,
         'email' => $_SESSION['email'] ?? null,
-        'role' => $_SESSION['role'] ?? null
+        'role' => $_SESSION['role'] ?? null,
+        'profile_image' => $_SESSION['profile_image'] ?? null
     ];
 }
 

@@ -63,6 +63,7 @@ try {
     $_SESSION['role'] = $user['role_name'];
     $_SESSION['email'] = $user['email'];
     $_SESSION['state'] = $user['state']; // Valores esperados: 'activa' o 'inactiva'
+    $_SESSION['profile_image'] = $user['profile_image'] ?? null;
 
     // Determinar la URL de redirección según el rol del usuario
     $redirect = $user['role_name'] === 'administrador'
