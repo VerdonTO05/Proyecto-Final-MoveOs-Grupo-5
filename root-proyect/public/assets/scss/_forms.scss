@@ -279,6 +279,72 @@ select {
     padding: 1rem;
 }
 
+.profile-avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+
+  .profile-avatar-wrapper {
+    position: relative;
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+
+      .profile-avatar-overlay {
+        opacity: 1;
+      }
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .profile-avatar-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+
+      i {
+        color: var(--bg-main);
+        font-size: 1.5rem;
+        background: rgba(255, 255, 255, 0.15);
+        padding: 0.6rem;
+        border-radius: 50%;
+        backdrop-filter: blur(4px);
+      }
+    }
+  }
+
+  .profile-avatar-hint {
+    font-size: 0.85rem;
+    color: var(--brand-primary);
+    text-align: center;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: var(--brand-dark);
+    }
+  }
+}
+
 /* Responsive */
 @media (max-width: 576px),
 (max-height: 700px) {
