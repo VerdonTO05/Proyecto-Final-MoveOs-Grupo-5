@@ -2502,6 +2502,18 @@ body {
   grid-template-columns: repeat(2, 1fr);
   gap: 1.2rem;
 }
+.form-activity label:has(+ input[required])::after,
+.form-activity label:has(+ textarea[required])::after,
+.form-activity label:has(+ select[required])::after {
+  content: " *";
+  color: var(--c-yellow);
+  font-weight: bold;
+}
+.form-activity .full:has(input[type=file][required]) > label::after {
+  content: " *";
+  color: var(--c-yellow);
+  font-weight: bold;
+}
 
 .full {
   grid-column: 1/-1;

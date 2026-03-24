@@ -25,6 +25,23 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1.2rem;
+
+  label:has(+ input[required]),
+  label:has(+ textarea[required]),
+  label:has(+ select[required]) {
+    
+    &::after {
+      content: " *";
+      color: var(--c-yellow);
+      font-weight: bold;
+    }
+  }
+
+  .full:has(input[type="file"][required]) > label::after {
+    content: " *";
+    color: var(--c-yellow);
+    font-weight: bold;
+  }
 }
 
 .full {

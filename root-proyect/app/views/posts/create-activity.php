@@ -74,19 +74,20 @@ function old(string $key, $default = ''): string
 
             <!-- TÍTULO -->
             <div class="full">
-                <label>Título *</label>
-                <input type="text" name="title" value="<?= old('title') ?>" required>
+                <label>Título</label>
+                <input type="text" name="title" placeholder="Introduce un título" value="<?= old('title') ?>" required>
             </div>
 
             <!-- DESCRIPCIÓN -->
             <div class="full">
-                <label>Descripción *</label>
-                <textarea name="description" required><?= old('description') ?></textarea>
+                <label>Descripción</label>
+                <textarea name="description" placeholder="Describe detalladamente"
+                    required><?= old('description') ?></textarea>
             </div>
 
             <!-- CATEGORÍA -->
             <div>
-                <label for="category">Categoría *</label>
+                <label for="category">Categoría</label>
                 <select id="category" name="category_id" required aria-required="true">
                     <option value="">Selecciona...</option>
                     <option value="1" <?= old('category_id') == '1' ? 'selected' : '' ?>>Taller</option>
@@ -105,20 +106,21 @@ function old(string $key, $default = ''): string
 
             <!-- UBICACIÓN -->
             <div>
-                <label>Ubicación *</label>
-                <input type="text" name="location" value="<?= old('location') ?>" required>
+                <label>Ubicación</label>
+                <input type="text" name="location" placeholder="Sevilla" value="<?= old('location') ?>" required>
             </div>
 
             <!-- FECHA -->
             <div>
                 <label>Fecha</label>
-                <input type="date" name="date" value="<?= old('date') ?>">
+                <input type="date" name="date" min="<?= date('Y-m-d') ?>"
+                    value="<?= old('date', date('Y-m-d', strtotime('+1 day'))) ?>" required>
             </div>
 
             <!-- HORA -->
             <div>
                 <label>Hora</label>
-                <input type="time" name="time" value="<?= old('time') ?>">
+                <input type="time" name="time" min="08:00" max="23:00" value="<?= old('time', '09:00') ?>" required>
             </div>
 
             <?php if (!$participante): ?>
@@ -129,7 +131,7 @@ function old(string $key, $default = ''): string
 
                 <div>
                     <label>Máximo de participantes</label>
-                    <input type="number" name="max_people" min="1" value="<?= old('max_people') ?>">
+                    <input type="number" name="max_people" min="1" value="<?= old('max_people', '10') ?>" required>
                 </div>
             <?php endif; ?>
 
@@ -149,12 +151,12 @@ function old(string $key, $default = ''): string
 
             <div>
                 <label>Edad mínima</label>
-                <input type="number" name="min_age" min="0" value="<?= old('min_age') ?>">
+                <input type="number" name="min_age" min="0" value="<?= old('min_age', '18') ?>">
             </div>
 
             <div>
                 <label>Código vestimenta</label>
-                <input type="text" name="dress_code" value="<?= old('dress_code') ?>">
+                <input type="text" name="dress_code" value="<?= old('dress_code', 'Casual') ?>">
             </div>
 
             <div class="checkbox-group full">
@@ -163,7 +165,7 @@ function old(string $key, $default = ''): string
                         <?= isset($old['transport_included']) ? 'checked' : '' ?> />
                     Transporte incluido
                 </label>
-                <div id="departure_box" style="display:none; margin: 10px 0;">
+                <div id="departure_box">
                     <input type="text" name="departure_city" placeholder="¿Desde dónde salen?"
                         value="<?= old('departure_city') ?>">
                 </div>
@@ -174,7 +176,7 @@ function old(string $key, $default = ''): string
             </div>
 
             <div class="full">
-                <label>Imagen de la <?= $participante ? "Petición" : "Actividad" ?> *</label>
+                <label>Imagen de la <?= $participante ? "Petición" : "Actividad" ?></label>
                 <div class="upload-box">
                     <input type="file" name="image_file" id="image_file" accept="image/png, image/jpeg" required />
                     <div class="upload-content">
