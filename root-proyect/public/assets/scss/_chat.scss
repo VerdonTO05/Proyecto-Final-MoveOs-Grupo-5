@@ -438,7 +438,8 @@ main.chat-page {
   overflow: hidden;
   background: var(--bg-main);
   min-height: 0;
-  width: 0; // fuerza al flex item a ceder espacio correctamente
+  width: 0; 
+  padding: 0rem !important;
 
   // Header de conversación activa — ocupa todo el ancho
   .chat-header {

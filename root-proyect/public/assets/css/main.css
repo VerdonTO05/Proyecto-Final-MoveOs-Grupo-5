@@ -3279,6 +3279,7 @@ main.chat-page {
   background: var(--bg-main);
   min-height: 0;
   width: 0;
+  padding: 0rem !important;
 }
 .chat-conversation-panel .chat-header {
   width: 100%;
