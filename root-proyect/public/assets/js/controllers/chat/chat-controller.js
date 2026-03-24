@@ -185,9 +185,14 @@ function buildMessageBubble(msg, isOwn) {
     timeEl.className   = 'chat-bubble__time';
     timeEl.textContent = formatTime(msg.created_at);
 
+    // ← nuevo contenedor
+    const bodyEl = document.createElement('div');
+    bodyEl.className = 'chat-bubble__body';
+    bodyEl.appendChild(textEl);
+    bodyEl.appendChild(timeEl);
+
     wrapper.appendChild(senderEl);
-    wrapper.appendChild(textEl);
-    wrapper.appendChild(timeEl);
+    wrapper.appendChild(bodyEl); // ← body en lugar de text+time sueltos
 
     return wrapper;
 }

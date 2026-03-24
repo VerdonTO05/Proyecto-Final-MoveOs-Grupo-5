@@ -1565,7 +1565,7 @@ select {
   max-width: 600px;
   max-height: 90%;
   overflow-y: auto;
-  padding: 1rem;
+  padding-top: 1rem;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -1577,15 +1577,16 @@ select {
   cursor: pointer;
   font-size: 1.5rem;
 }
-.modalHome .modal-content .modal-header {
+.modalHome .modal-content .modal-header-activity {
   margin-bottom: 1rem;
   color: var(--text-primary);
+  padding: 1rem;
 }
-.modalHome .modal-content .modal-header h2 {
+.modalHome .modal-content .modal-header-activity h2 {
   font-size: 1.3rem;
   padding-bottom: 1rem;
 }
-.modalHome .modal-content .modal-header .category {
+.modalHome .modal-content .modal-header-activity .category {
   background-color: var(--alert);
   border: solid 1px var(--c-yellow);
   border-radius: 2rem;
@@ -1595,7 +1596,7 @@ select {
   display: flex;
   background-color: var(--bg-main);
   border-radius: 2rem;
-  padding: 0.3rem;
+  padding: 0.5rem;
   margin-bottom: 1.5rem;
 }
 .modalHome .modal-content .modal-tabs .tab-btn {
@@ -1625,14 +1626,12 @@ select {
   width: 100%;
   max-height: 300px;
   object-fit: cover;
-  border-radius: 8px;
   margin-bottom: 1rem;
 }
 .modalHome .modal-content .modal-body .modal-description {
   margin-bottom: 1rem;
   background: var(--bg-surface);
   padding: 1rem;
-  border-radius: 10px;
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
@@ -1640,7 +1639,6 @@ select {
 .modalHome .modal-content .modal-body .modal-info-aditional {
   background: var(--bg-surface);
   padding: 1rem;
-  border-radius: 10px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.5rem;
@@ -2900,6 +2898,7 @@ input[type=checkbox] {
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+  padding: 0rem !important;
 }
 
 .chat-header {
@@ -3022,16 +3021,31 @@ input[type=checkbox] {
   opacity: 0.75;
   margin-bottom: 0.2rem;
 }
+.chat-bubble__body {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
 .chat-bubble__text {
   font-size: 0.95rem;
   word-break: break-word;
   margin: 0;
+  flex: 1;
 }
 .chat-bubble__time {
   font-size: 0.68rem;
   opacity: 0.6;
-  align-self: flex-end;
-  margin-top: 0.25rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.chat-bubble--own .chat-bubble__text {
+  color: var(--text-on-primary) !important;
+}
+
+.chat-bubble--other .chat-bubble__text {
+  color: var(--text-primary) !important;
 }
 
 .chat-input-area {
@@ -3084,7 +3098,7 @@ input[type=checkbox] {
   height: 42px;
   border: none;
   border-radius: 50% !important;
-  background: var(--brand-primary);
+  background-color: var(--brand-primary) !important;
   color: #fff;
   font-size: 1rem;
   cursor: pointer;
@@ -3092,7 +3106,7 @@ input[type=checkbox] {
   flex-shrink: 0;
 }
 .chat-send-btn:hover {
-  background: var(--brand-dark);
+  background-color: var(--brand-dark) !important;
 }
 .chat-send-btn:active {
   transform: scale(0.93);
@@ -3223,6 +3237,9 @@ input[type=checkbox] {
 }
 .chat-user-item:hover {
   background: var(--bg-muted);
+}
+.chat-user-item:hover .chat-user-item__name {
+  color: var(--bg-surface);
 }
 .chat-user-item--active {
   background: rgba(140, 30, 50, 0.08);
@@ -3371,6 +3388,7 @@ main.chat-page {
   text-decoration: none;
   color: var(--text-primary);
   transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  text-align: start !important;
 }
 
 .chat-card:hover {
@@ -3426,6 +3444,7 @@ main.chat-page {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-align: start !important;
 }
 
 .chat-card__type {
@@ -3434,6 +3453,7 @@ main.chat-page {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: var(--text-secondary);
+  text-align: start !important;
 }
 
 .chat-card--support .chat-card__type {
@@ -3516,6 +3536,11 @@ main.chat-page {
   object-fit: cover;
   display: block;
   border-radius: 50%;
+}
+
+#chat-dropdown {
+  max-height: 18rem;
+  overflow-y: auto;
 }
 
 @media (max-width: 700px) {

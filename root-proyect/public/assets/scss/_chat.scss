@@ -9,6 +9,7 @@
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+  padding: 0rem !important;
 }
 
 // ── Cabecera del chat ─────────────────────────────────────────
@@ -117,14 +118,13 @@
 
 .chat-bubble {
   display: flex;
-  flex-direction: column;
+  flex-direction: column; // ← columna para que el sender quede arriba
   max-width: 65%;
   padding: 0.6rem 0.9rem;
   border-radius: 14px;
   line-height: 1.45;
   animation: bubbleIn 0.2s ease-out;
 
-  // Mensaje propio — alineado a la derecha
   &--own {
     align-self: flex-end;
     background: var(--brand-primary);
@@ -132,7 +132,6 @@
     border-bottom-right-radius: 4px;
   }
 
-  // Mensaje ajeno — alineado a la izquierda
   &--other {
     align-self: flex-start;
     background: var(--bg-surface);
@@ -148,20 +147,36 @@
     margin-bottom: 0.2rem;
   }
 
+  // Fila interna: texto a la izquierda, hora pegada abajo a la derecha
+  &__body {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 0.5rem;
+  }
+
   &__text {
     font-size: 0.95rem;
     word-break: break-word;
     margin: 0;
+    flex: 1; // ocupa el espacio sobrante
   }
 
   &__time {
     font-size: 0.68rem;
     opacity: 0.6;
-    align-self: flex-end;
-    margin-top: 0.25rem;
+    white-space: nowrap;
+    flex-shrink: 0; // nunca se comprime
   }
 }
 
+.chat-bubble--own .chat-bubble__text {
+  color: var(--text-on-primary) !important;
+}
+
+.chat-bubble--other .chat-bubble__text {
+  color: var(--text-primary) !important;
+}
 // ── Input de envío ──────────────────────────────────────────────
 
 .chat-input-area {
@@ -219,7 +234,7 @@
   height: 42px;
   border: none;
   border-radius: 50% !important;
-  background: var(--brand-primary);
+  background-color: var(--brand-primary) !important;
   color: #fff;
   font-size: 1rem;
   cursor: pointer;
@@ -227,7 +242,7 @@
   flex-shrink: 0;
 
   &:hover {
-    background: var(--brand-dark);
+    background-color: var(--brand-dark) !important;
   }
 
   &:active {
@@ -373,6 +388,10 @@
 
   &:hover {
     background: var(--bg-muted);
+
+    .chat-user-item__name {
+      color: var(--bg-surface);
+    }
   }
 
   &--active {
@@ -545,6 +564,7 @@ main.chat-page {
   text-decoration: none;
   color: var(--text-primary);
   transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  text-align: start !important;
 }
 
 .chat-card:hover {
@@ -600,6 +620,7 @@ main.chat-page {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-align: start !important;
 }
 
 .chat-card__type {
@@ -608,6 +629,7 @@ main.chat-page {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: var(--text-secondary);
+  text-align: start !important;
 }
 
 .chat-card--support .chat-card__type {
@@ -665,7 +687,6 @@ main.chat-page {
 
 .chat-menu-container:has(#chat-dropdown.visible) #chat-btn i {
   color: var(--c-yellow);
-  // background-color: var(--bg-muted);
 }
 
 .user-menu-container:has(#user-dropdown.visible) #user-btn {
@@ -692,6 +713,11 @@ main.chat-page {
   object-fit: cover;
   display: block;
   border-radius: 50%;
+}
+
+#chat-dropdown{
+  max-height: 18rem;
+  overflow-y: auto;
 }
 
 // ── Responsive ──────────────────────────────────────────────────
