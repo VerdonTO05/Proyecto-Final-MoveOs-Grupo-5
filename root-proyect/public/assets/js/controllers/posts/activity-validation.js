@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!fecha) errors.push("La fecha es obligatoria.");
         if (!hora) errors.push("La hora es obligatoria.");
-        
+
         // FECHA (hoy → +2 años)
         if (fecha) {
             const hoy = new Date();
@@ -140,6 +140,34 @@ document.addEventListener('DOMContentLoaded', () => {
             const fileName = this.files[0] ? this.files[0].name : "Haz clic para subir una imagen";
             const label = document.getElementById('file-name');
             if (label) label.innerText = fileName;
+        });
+    }
+
+    // ===== LIGHTBOX IMAGEN ACTUAL =====
+    const previewImg = document.querySelector('.current-image-preview img');
+    if (previewImg) {
+        previewImg.parentElement.addEventListener('click', () => {
+            const lightbox = document.createElement('div');
+            lightbox.className = 'lightbox-overlay';
+            lightbox.innerHTML = `
+            <div class="lightbox-content">
+                <button class="lightbox-close" aria-label="Cerrar">
+                    <i class="fas fa-times"></i>
+                </button>
+                <img src="${previewImg.src}" alt="Vista previa ampliada">
+            </div>
+        `;
+            document.body.appendChild(lightbox);
+            requestAnimationFrame(() => lightbox.classList.add('active'));
+
+            const close = () => {
+                lightbox.classList.remove('active');
+                lightbox.addEventListener('transitionend', () => lightbox.remove(), { once: true });
+            };
+
+            lightbox.querySelector('.lightbox-close').addEventListener('click', close);
+            lightbox.addEventListener('click', (e) => { if (e.target === lightbox) close(); });
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); }, { once: true });
         });
     }
 });

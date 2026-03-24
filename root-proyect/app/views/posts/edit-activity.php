@@ -76,13 +76,13 @@ function old(string $key, $fallback = ''): string
             <input type="hidden" name="type" value="<?= $participante ? 'request' : 'activity' ?>">
 
             <div class="full">
-                <label>Título de la <?= $participante ? "Petición" : "Actividad" ?> *</label>
+                <label>Título de la <?= $participante ? "Petición" : "Actividad" ?></label>
                 <input type="text" name="title" placeholder="Ej: Yoga al aire libre" required aria-required="true"
                     value="<?= old('title') ?>" />
             </div>
 
             <div class="full">
-                <label>Descripción *</label>
+                <label>Descripción</label>
                 <textarea name="description" placeholder="Describe los detalles..." required
                     aria-required="true"><?= old('description') ?></textarea>
             </div>
@@ -104,7 +104,7 @@ function old(string $key, $fallback = ''): string
                 ];
                 $selectedCategory = !empty($old) ? ($old['category_id'] ?? '') : ($publication['category_id'] ?? '');
                 ?>
-                <label for="category">Categoría *</label>
+                <label for="category">Categoría</label>
                 <select id="category" name="category_id" required aria-required="true">
                     <option value="">Selecciona...</option>
                     <?php foreach ($categories as $catId => $name): ?>
@@ -116,19 +116,19 @@ function old(string $key, $fallback = ''): string
             </div>
 
             <div>
-                <label>Ubicación *</label>
+                <label>Ubicación</label>
                 <input type="text" name="location" placeholder="Dirección o ciudad" required aria-required="true"
                     value="<?= old('location') ?>" />
             </div>
 
             <div>
                 <label>Fecha</label>
-                <input type="date" name="date" value="<?= old('date') ?>" />
+                <input type="date" name="date" value="<?= old('date') ?>" required/>
             </div>
 
             <div>
                 <label>Hora</label>
-                <input type="time" name="time" value="<?= old('time') ?>" />
+                <input type="time" name="time" value="<?= old('time') ?>" required/>
             </div>
 
             <?php if (!$participante): ?>
@@ -193,13 +193,22 @@ function old(string $key, $fallback = ''): string
             </div>
 
             <div class="full">
-                <label>Imagen de la <?= $participante ? "Petición" : "Actividad" ?> *</label>
+                <label>Imagen de la <?= $participante ? "Petición" : "Actividad" ?></label>
 
                 <?php if (!empty($publication['image_url'])): ?>
-                    <div class="current-image">
-                        <p>Imagen actual:</p>
-                        <img src="<?= htmlspecialchars($publication['image_url']) ?>" alt="Imagen actual"
-                            style="max-width:200px; display:block; margin-bottom:10px;">
+                    <div class="current-image-card">
+                        <div class="current-image-preview">
+                            <img src="<?= htmlspecialchars($publication['image_url']) ?>"
+                                alt="Imagen actual de la actividad">
+                            <div class="current-image-overlay">
+                                <i class="fas fa-eye"></i>
+                                <span>Vista previa</span>
+                            </div>
+                        </div>
+                        <p class="current-image-hint">
+                            <i class="fas fa-info-circle"></i>
+                            Sube una nueva imagen para reemplazarla, o deja el campo vacío para mantener ésta.
+                        </p>
                     </div>
                 <?php endif; ?>
 
