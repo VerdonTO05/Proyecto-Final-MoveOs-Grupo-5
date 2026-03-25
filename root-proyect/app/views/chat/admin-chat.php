@@ -10,9 +10,9 @@ require_once __DIR__ . '/../../middleware/auth.php';
 requireActiveUser();
 requireRole('administrador'); // Solo administradores
 
-$currentUser      = getCurrentUser();
+$currentUser = getCurrentUser();
 // Opcionalmente se puede pre-seleccionar un usuario al llegar desde la lista de usuarios
-$preselectUserId  = (int) ($_GET['user_id'] ?? 0);
+$preselectUserId = (int) ($_GET['user_id'] ?? 0);
 ?>
 
 <head>
@@ -31,10 +31,10 @@ $preselectUserId  = (int) ($_GET['user_id'] ?? 0);
 <body>
     <!-- Datos de sesión disponibles para el script JS -->
     <script>
-        window.CURRENT_USER           = <?= json_encode($currentUser) ?>;
-        window.CHAT_ADMIN_MODE        = true;
-        window.CHAT_ROOM_TYPE         = 'admin';
-        window.CHAT_ROOM_ID           = null;
+        window.CURRENT_USER = <?= json_encode($currentUser) ?>;
+        window.CHAT_ADMIN_MODE = true;
+        window.CHAT_ROOM_TYPE = 'admin';
+        window.CHAT_ROOM_ID = null;
         window.CHAT_PRESELECT_USER_ID = <?= $preselectUserId ?: 'null' ?>;
     </script>
 
@@ -48,7 +48,7 @@ $preselectUserId  = (int) ($_GET['user_id'] ?? 0);
 
         <div class="chat-admin-layout">
 
-            <!-- ── Columna izquierda: lista de usuarios ── -->
+            <!--Columna izquierda: lista de usuarios-->
             <aside class="chat-user-list-panel" aria-label="Lista de usuarios">
                 <div class="chat-user-list-header">
                     <span>Usuarios</span>
@@ -62,7 +62,7 @@ $preselectUserId  = (int) ($_GET['user_id'] ?? 0);
                 </ul>
             </aside>
 
-            <!-- ── Columna derecha: mensajes de la conversación activa ── -->
+            <!--Columna derecha: mensajes de la conversación activa-->
             <section class="chat-conversation-panel" aria-label="Conversación activa">
 
                 <!-- Estado inicial: ningún usuario seleccionado -->
@@ -79,30 +79,21 @@ $preselectUserId  = (int) ($_GET['user_id'] ?? 0);
                 </div>
 
                 <!-- Área de mensajes -->
-                <div class="chat-messages-area chat-messages-area--hidden" id="chatMessagesArea"
-                    aria-live="polite" aria-label="Mensajes">
+                <div class="chat-messages-area chat-messages-area--hidden" id="chatMessagesArea" aria-live="polite"
+                    aria-label="Mensajes">
                     <p class="chat-empty-state" id="chatEmptyState">
                         <i class="fas fa-comment-dots"></i> No hay mensajes aún...
                     </p>
                 </div>
 
                 <!-- Input de envío -->
-                <form class="chat-input-area chat-input-area--hidden" id="chatForm"
-                    aria-label="Enviar mensaje" autocomplete="off">
-                    <input
-                        type="text"
-                        id="chatInput"
-                        class="chat-input"
-                        placeholder="Escribe un mensaje al usuario..."
-                        maxlength="1000"
-                        aria-label="Texto del mensaje"
-                        required
-                    >
-                    <button type="submit" class="chat-send-btn" id="chatSendBtn" aria-label="Enviar">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
+                <form class="chat-input-area chat-input-area--hidden" id="chatForm" aria-label="Enviar mensaje"
+                    autocomplete="off">
+                    <input type="text" id="chatInput" class="chat-input" placeholder="Escribe un mensaje al usuario..."
+                        maxlength="1000" aria-label="Texto del mensaje" required>
+                    <button type="submit" class="chat-send-btn" id="chatSendBtn" aria-label="Enviar"><i
+                            class="fas fa-paper-plane"></i></button>
                 </form>
-
             </section>
         </div>
     </main>
@@ -110,4 +101,5 @@ $preselectUserId  = (int) ($_GET['user_id'] ?? 0);
     <!-- Controlador de chat admin -->
     <script type="module" src="assets/js/controllers/chat/chat-controller.js"></script>
 </body>
+
 </html>

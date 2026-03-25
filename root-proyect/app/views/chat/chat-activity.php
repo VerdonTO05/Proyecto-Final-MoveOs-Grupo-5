@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
 <?php
-// ── Seguridad ────────────────────────────────────────────────────────────────
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -10,7 +9,6 @@ require_once __DIR__ . '/../../middleware/auth.php';
 requireActiveUser();
 requireAnyRole(['organizador', 'participante', 'administrador']);
 
-// ── Parámetros de la sala ────────────────────────────────────────────────────
 $activityId = (int) ($_GET['activity_id'] ?? 0);
 
 if ($activityId <= 0) {
@@ -18,10 +16,9 @@ if ($activityId <= 0) {
     exit;
 }
 
-// ── Obtener nombre de la actividad para mostrarlo como título ────────────────
 require_once __DIR__ . '/../../../config/database.php';
-$db   = (new Database())->getConnection();
-$stmt = $db->prepare("SELECT id, title, offertant_id FROM activities WHERE id = :id LIMIT 1");
+$db = (new Database())->getConnection();
+$stmt = $db->prepare("SELECT id, title, offertant_id FROM activities WHERE id = :id AND state != 'finalizada' LIMIT 1");
 $stmt->execute(['id' => $activityId]);
 $activity = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -30,13 +27,10 @@ if (!$activity) {
     exit;
 }
 
-$currentUser   = getCurrentUser();
+$currentUser = getCurrentUser();
 $activityTitle = htmlspecialchars($activity['title']);
 
-// ── Verificar acceso a la sala ───────────────────────────────────────────────
-// El administrador siempre tiene acceso.
-// El organizador de la actividad tiene acceso.
-// Un participante solo si está inscrito.
+//Verificar acceso a la sala
 if ($currentUser['role'] !== 'administrador') {
     $isOrganizer = (int) $currentUser['id'] === (int) $activity['offertant_id'];
 
@@ -75,9 +69,9 @@ if ($currentUser['role'] !== 'administrador') {
 <body>
     <!-- Datos de sesión disponibles para el script JS -->
     <script>
-        window.CURRENT_USER    = <?= json_encode($currentUser) ?>;
-        window.CHAT_ROOM_TYPE  = 'activity';
-        window.CHAT_ROOM_ID    = <?= $activityId ?>;
+        window.CURRENT_USER = <?= json_encode($currentUser) ?>;
+        window.CHAT_ROOM_TYPE = 'activity';
+        window.CHAT_ROOM_ID = <?= $activityId ?>;
     </script>
 
     <div id="header"></div>
@@ -97,30 +91,18 @@ if ($currentUser['role'] !== 'administrador') {
 
         <!-- Área de mensajes -->
         <div class="chat-messages-area" id="chatMessagesArea" aria-live="polite" aria-label="Mensajes del chat">
-            <p class="chat-empty-state" id="chatEmptyState">
-                <i class="fas fa-comment-dots"></i> Sé el primero en escribir algo...
-            </p>
+            <p class="chat-empty-state" id="chatEmptyState"><i class="fas fa-comment-dots"></i> Sé el primero en
+                escribir algo...</p>
         </div>
 
         <!-- Input de envío -->
         <form class="chat-input-area" id="chatForm" aria-label="Enviar mensaje" autocomplete="off">
-            <input
-                type="text"
-                id="chatInput"
-                class="chat-input"
-                placeholder="Escribe un mensaje..."
-                maxlength="1000"
-                aria-label="Texto del mensaje"
-                required
-            >
-            <button type="submit" class="chat-send-btn" id="chatSendBtn" aria-label="Enviar">
-                <i class="fas fa-paper-plane"></i>
-            </button>
+            <input type="text" id="chatInput" class="chat-input" placeholder="Escribe un mensaje..." maxlength="1000"
+                aria-label="Texto del mensaje" required>
+            <button type="submit" class="chat-send-btn" id="chatSendBtn" aria-label="Enviar"><i
+                    class="fas fa-paper-plane"></i></button>
         </form>
-
     </main>
-
-    <!-- Controlador de chat -->
-    
 </body>
+
 </html>

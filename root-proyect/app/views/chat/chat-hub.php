@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
 <?php
-// ── Seguridad ────────────────────────────────────────────────────────────────
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }

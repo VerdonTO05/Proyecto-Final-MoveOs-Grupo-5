@@ -12,7 +12,7 @@ requireAnyRole(['participante', 'organizador']);
 
 $currentUser = getCurrentUser();
 // La sala admin = room_id es el propio user_id del participante
-$roomId      = $currentUser['id'];
+$roomId = $currentUser['id'];
 ?>
 
 <head>
@@ -30,9 +30,9 @@ $roomId      = $currentUser['id'];
 
 <body>
     <script>
-        window.CURRENT_USER   = <?= json_encode($currentUser) ?>;
+        window.CURRENT_USER = <?= json_encode($currentUser) ?>;
         window.CHAT_ROOM_TYPE = 'admin';
-        window.CHAT_ROOM_ID   = <?= $roomId ?>;
+        window.CHAT_ROOM_ID = <?= $roomId ?>;
     </script>
 
     <div id="header"></div>
@@ -51,25 +51,17 @@ $roomId      = $currentUser['id'];
         </div>
 
         <!-- Área de mensajes -->
-        <div class="chat-messages-area" id="chatMessagesArea"
-             aria-live="polite" aria-label="Mensajes con el administrador">
+        <div class="chat-messages-area" id="chatMessagesArea" aria-live="polite"
+            aria-label="Mensajes con el administrador">
             <p class="chat-empty-state" id="chatEmptyState">
                 <i class="fas fa-comment-dots"></i> Escribe el primer mensaje al administrador...
             </p>
         </div>
 
         <!-- Input de envío -->
-        <form class="chat-input-area" id="chatForm"
-              aria-label="Enviar mensaje" autocomplete="off">
-            <input
-                type="text"
-                id="chatInput"
-                class="chat-input"
-                placeholder="Escribe un mensaje..."
-                maxlength="1000"
-                aria-label="Texto del mensaje"
-                required
-            >
+        <form class="chat-input-area" id="chatForm" aria-label="Enviar mensaje" autocomplete="off">
+            <input type="text" id="chatInput" class="chat-input" placeholder="Escribe un mensaje..." maxlength="1000"
+                aria-label="Texto del mensaje" required>
             <button type="submit" class="chat-send-btn" id="chatSendBtn" aria-label="Enviar">
                 <i class="fas fa-paper-plane"></i>
             </button>
@@ -79,4 +71,5 @@ $roomId      = $currentUser['id'];
 
     <script type="module" src="assets/js/controllers/chat/chat-controller.js"></script>
 </body>
+
 </html>

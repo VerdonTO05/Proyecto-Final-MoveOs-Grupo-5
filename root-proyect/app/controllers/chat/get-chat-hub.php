@@ -85,6 +85,7 @@ LEFT JOIN (
     )
 ) latest ON latest.room_id = a.id
 WHERE a.offertant_id = :uid2 OR r.participant_id IS NOT NULL
+AND a.state != 'finalizada'
 ORDER BY COALESCE(latest.created_at, a.created_at) DESC
     ";
 

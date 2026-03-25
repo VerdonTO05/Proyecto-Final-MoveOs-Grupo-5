@@ -25,8 +25,7 @@ if (isset($_SESSION['user_id'])) {
     <!-- Switch del tema -->
     <div class="icons">
         <label class="switch top-right">
-            <input type="checkbox" id="theme-toggle" role="switch" aria-checked="false"
-                aria-label="Cambiar tema claro/oscuro">
+            <input type="checkbox" id="theme-toggle" role="switch" aria-checked="false" aria-label="Cambiar tema claro/oscuro">
             <span class="slider"></span>
         </label>
     </div>
@@ -52,8 +51,7 @@ if (isset($_SESSION['user_id'])) {
                 <label for="username">Nombre de Usuario</label>
                 <div class="input-group">
                     <i class="fas fa-user icon" aria-hidden="true"></i>
-                    <input type="text" id="username" name="username" placeholder="tu_usuario" required
-                        aria-required="true">
+                    <input type="text" id="username" name="username" placeholder="tu_usuario" required aria-required="true">
                 </div>
 
                 <label for="password">Contraseña</label>
@@ -66,9 +64,7 @@ if (isset($_SESSION['user_id'])) {
                         </button>
                     </div>
                 </div>
-                <a href="index.php?accion=forgot-password" class="forgot-password" role="button" tabindex="0">¿Olvidaste
-                    tu contraseña?</a>
-
+                <a href="index.php?accion=forgot-password" class="forgot-password" role="button" tabindex="0">¿Olvidaste tu contraseña?</a>
                 <input type="submit" class="submit-btn" name="login" value="Iniciar Sesión" aria-label="Iniciar sesión">
             </form>
         </div>
