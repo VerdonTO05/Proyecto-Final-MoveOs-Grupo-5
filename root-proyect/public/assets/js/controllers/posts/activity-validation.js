@@ -131,9 +131,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 "success",
                 1800
             );
-
-            // opcional: reset o redirección
-            // form.reset();
             window.location.href = "?accion=seeMyActivities";
 
         })
