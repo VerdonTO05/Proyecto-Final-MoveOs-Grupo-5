@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: controllers/see/landing-controller.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: controllers/see/landing-controller.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>document.addEventListener("DOMContentLoaded", () => {
+  /** 
+   * Información del usuario actual obtenida desde la variable global.
+   * @type {Object|null}
+   * @property {string} role - Rol del usuario
+   */
+  const currentUser = window.CURRENT_USER;
+
+  const buttonExplore = document.getElementById("button-explore");
+  const buttonPost = document.getElementById("button-post");
+
+  // Configuración del botón "Explorar"
+  handleButtonClick(
+    buttonExplore,
+    currentUser,
+    null,
+    "index.php?accion=loginView",
+    (role) => role !== 'administrador' ? "index.php?accion=seeActivities" : "index.php?accion=seeBoth"
+  );
+
+  // Configuración del botón "Crear publicación"
+  handleButtonClick(
+    buttonPost,
+    currentUser,
+    "index.php?accion=createActivity",
+    "index.php?accion=loginView"
+  );
+});
+
+/**
+ * Maneja la acción de un botón con redirección y muestra alerta si el usuario no está identificado.
+ *
+ * @param {HTMLElement|null} button - Botón que dispara la acción
+ * @param {Object|null} currentUser - Usuario actual
+ * @param {string|null} redirectIfLoggedIn - URL a redirigir si hay usuario
+ * @param {string|null} redirectIfNotLoggedIn - URL a redirigir si NO hay usuario
+ * @param {function(string): string} [roleRedirect] - Función opcional que recibe el rol del usuario y devuelve la URL de redirección
+ */
+const handleButtonClick = (button, currentUser, redirectIfLoggedIn, redirectIfNotLoggedIn, roleRedirect) => {
+  if (!button) return;
+
+  button.addEventListener("click", async (event) => {
+    event.preventDefault();
+
+    if (!currentUser) {
+      // Si no hay usuario, mostrar alerta y redirigir al login
+      await showAlert(
+        'Acceso denegado',
+        'Debes iniciar sesión o registrarte para explorar.',
+        'warning',
+        2500
+      );
+      window.location.href = redirectIfNotLoggedIn;
+    } else {
+      // Si hay usuario, decidir la URL según rol o redirección fija
+      const targetUrl = roleRedirect ? roleRedirect(currentUser.role) : redirectIfLoggedIn;
+      window.location.href = targetUrl;
+    }
+  });
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#activateHowItWorks">activateHowItWorks</a></li><li><a href="global.html#controlPanelData">controlPanelData</a></li><li><a href="global.html#createActivityControlCard">createActivityControlCard</a></li><li><a href="global.html#formatTime">formatTime</a></li><li><a href="global.html#handleActivityAction">handleActivityAction</a></li><li><a href="global.html#handleButtonClick">handleButtonClick</a></li><li><a href="global.html#handleLoginSubmit">handleLoginSubmit</a></li><li><a href="global.html#handleRegisterSubmit">handleRegisterSubmit</a></li><li><a href="global.html#howHTML">howHTML</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initTabs">initTabs</a></li><li><a href="global.html#initThemeLogic">initThemeLogic</a></li><li><a href="global.html#loadControlPanel">loadControlPanel</a></li><li><a href="global.html#openVideo">openVideo</a></li><li><a href="global.html#postAction">postAction</a></li><li><a href="global.html#removeActivityCard">removeActivityCard</a></li><li><a href="global.html#renderError">renderError</a></li><li><a href="global.html#renderHeaderByRole">renderHeaderByRole</a></li><li><a href="global.html#renderItems">renderItems</a></li><li><a href="global.html#renderStep">renderStep</a></li><li><a href="global.html#showAlert">showAlert</a></li><li><a href="global.html#showConfirm">showConfirm</a></li><li><a href="global.html#showHowItWorks">showHowItWorks</a></li><li><a href="global.html#stepsOrganizadores">stepsOrganizadores</a></li><li><a href="global.html#stepsParticipante">stepsParticipante</a></li><li><a href="global.html#togglePlay">togglePlay</a></li><li><a href="global.html#updateAfterAction">updateAfterAction</a></li><li><a href="global.html#updateRangeFill">updateRangeFill</a></li><li><a href="global.html#updateStats">updateStats</a></li><li><a href="global.html#updateSteps">updateSteps</a></li><li><a href="global.html#updateTabCounts">updateTabCounts</a></li><li><a href="global.html#videoHTML">videoHTML</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Mon Apr 06 2026 22:39:04 GMT+0200 (hora de verano de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

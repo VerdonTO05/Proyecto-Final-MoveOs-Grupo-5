@@ -1,0 +1,13 @@
+{
+  "source": {
+    "include": ["public/assets/js"],
+    "includePattern": ".+\\.js$",
+    "excludePattern": "(node_modules|docs)",
+    "recurse": true
+  },
+  "opts": {
+    "destination": "public/docs",
+    "recurse": true,
+    "template": "default"
+  }
+}

@@ -59,4 +59,6 @@ return [
   'chatActivity' => __DIR__ . '/../app/views/chat/chat-activity.php',
   'adminChat' => __DIR__ . '/../app/views/chat/admin-chat.php',
   'userAdminChat' => __DIR__ . '/../app/views/chat/user-admin-chat.php',
-];
+
+  'docs' => __DIR__ . '/../public/docs/index.html',
+  ];

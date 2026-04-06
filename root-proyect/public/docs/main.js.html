@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: main.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: main.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>document.addEventListener('DOMContentLoaded', () => {
+  initThemeLogic();
+  renderHeaderByRole();
+
+  const closeBtn = document.querySelector(".close-btn");
+
+  if (closeBtn) {
+    closeBtn.addEventListener("click", () => {
+      window.location.href = "index.php";
+    });
+  }
+
+  //Filtro de publicaciones
+  const filterType = document.getElementById("filterType");
+  const filterInput = document.getElementById("filterInput");
+
+  if (filterType &amp;&amp; filterInput) {
+    filterType.addEventListener("change", () => {
+      let html = "";
+      switch (filterType.value) {
+        case "title":
+          html = `&lt;input type="text" id="filterValue" placeholder="Buscar por título">`;
+          break;
+        case "date":
+          html = `&lt;input type="date" id="filterValue">`;
+          break;
+        case "category":
+          html = `
+          &lt;select id="filterValue" name="category_id" required aria-required="true">
+            &lt;option value="">Selecciona...&lt;/option>
+            &lt;option value="Taller">Taller&lt;/option>
+            &lt;option value="Clase">Clase&lt;/option>
+            &lt;option value="Evento">Evento&lt;/option>
+            &lt;option value="Excursión">Excursión&lt;/option>
+            &lt;option value="Formación técnica">Formación técnica&lt;/option>
+            &lt;option value="Conferencia">Conferencia&lt;/option>
+            &lt;option value="Reunión">Reunión&lt;/option>
+            &lt;option value="Experiencia">Experiencia&lt;/option>
+            &lt;option value="Tour">Tour&lt;/option>
+            &lt;option value="Competición">Competición&lt;/option>
+            &lt;option value="Evento social">Evento social&lt;/option>
+          &lt;/select>`;
+          break;
+      }
+      filterInput.innerHTML = html;
+    });
+  }
+});
+
+document.addEventListener("click", (e) => {
+  const toggle = e.target.closest(".menu-toggle");
+  if (!toggle) return;
+
+  const nav = document.querySelector("header nav");
+  if (!nav) return;
+
+  nav.classList.toggle("open");
+  toggle.innerHTML = nav.classList.contains("open")
+    ? '&lt;i class="fa-solid fa-xmark">&lt;/i>'
+    : '&lt;i class="fa-solid fa-bars">&lt;/i>';
+});
+
+
+/**
+ * Inicializar tema claro/oscuro
+ */
+function initThemeLogic() {
+  const html = document.documentElement;
+  const toggleSwitch = document.getElementById('theme-toggle');
+  const darkModeEnabled = localStorage.getItem('mode') === 'dark';
+
+  html.classList.toggle('dark-mode', darkModeEnabled);
+  html.classList.toggle('light-mode', !darkModeEnabled);
+
+  if (toggleSwitch) {
+    toggleSwitch.checked = darkModeEnabled;
+    toggleSwitch.setAttribute('aria-checked', darkModeEnabled);
+
+    toggleSwitch.addEventListener('change', () => {
+      const isDark = toggleSwitch.checked;
+      html.classList.toggle('dark-mode', isDark);
+      html.classList.toggle('light-mode', !isDark);
+      localStorage.setItem('mode', isDark ? 'dark' : 'light');
+
+      toggleSwitch.setAttribute('aria-checked', isDark);
+    });
+  }
+}
+
+/**
+ * Renderiza el header dinámicamente según rol
+ */
+function renderHeaderByRole() {
+  const header = document.getElementById('list');
+  if (!header) return;
+
+  const user = window.CURRENT_USER;
+  if (!user || !user.role) return;
+
+  const rol = user.role;
+
+  const linksRol = {
+    administrador: [
+      { texto: "Explorar Publicaciones", href: "index.php?accion=seeBoth" },
+      { texto: "Panel de control", href: "index.php?accion=controlPanel" },
+      { texto: "Control de usuarios", href: "index.php?accion=users" }, 
+    ],
+    participante: [
+      { texto: "Explorar Actividades", href: "index.php?accion=seeActivities" },
+      { texto: "Mis peticiones", href: "index.php?accion=seeMyActivities" },
+      { texto: "Actividades pendientes", href: "index.php?accion=seeRegistrations" },
+      { texto: '&lt;i class="fa-solid fa-angles-up">&lt;/i>', href: "index.php?accion=createActivity", title: "Crear Publicación" }
+    ],
+    organizador: [
+      { texto: "Explorar Peticiones", href: "index.php?accion=seeRequest" },
+      { texto: "Mis actividades", href: "index.php?accion=seeMyActivities" },
+      { texto: "Peticiones pendientes", href: "index.php?accion=seeRegistrations" },
+      { texto: '&lt;i class="fa-solid fa-angles-up">&lt;/i>', href: "index.php?accion=createActivity", title: "Crear Publicación" }
+    ]
+  };
+
+  if (!linksRol[rol]) return;
+
+  // Agregar links dinámicos
+  linksRol[rol].forEach(link => {
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.innerHTML = link.texto;
+    a.href = link.href;
+
+    if (link.title) {
+      a.title = link.title;
+    }
+
+    li.appendChild(a);
+    header.appendChild(li);
+  });
+
+}
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#activateHowItWorks">activateHowItWorks</a></li><li><a href="global.html#controlPanelData">controlPanelData</a></li><li><a href="global.html#createActivityControlCard">createActivityControlCard</a></li><li><a href="global.html#formatTime">formatTime</a></li><li><a href="global.html#handleActivityAction">handleActivityAction</a></li><li><a href="global.html#handleButtonClick">handleButtonClick</a></li><li><a href="global.html#handleLoginSubmit">handleLoginSubmit</a></li><li><a href="global.html#handleRegisterSubmit">handleRegisterSubmit</a></li><li><a href="global.html#howHTML">howHTML</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initTabs">initTabs</a></li><li><a href="global.html#initThemeLogic">initThemeLogic</a></li><li><a href="global.html#loadControlPanel">loadControlPanel</a></li><li><a href="global.html#openVideo">openVideo</a></li><li><a href="global.html#postAction">postAction</a></li><li><a href="global.html#removeActivityCard">removeActivityCard</a></li><li><a href="global.html#renderError">renderError</a></li><li><a href="global.html#renderHeaderByRole">renderHeaderByRole</a></li><li><a href="global.html#renderItems">renderItems</a></li><li><a href="global.html#renderStep">renderStep</a></li><li><a href="global.html#showAlert">showAlert</a></li><li><a href="global.html#showConfirm">showConfirm</a></li><li><a href="global.html#showHowItWorks">showHowItWorks</a></li><li><a href="global.html#stepsOrganizadores">stepsOrganizadores</a></li><li><a href="global.html#stepsParticipante">stepsParticipante</a></li><li><a href="global.html#togglePlay">togglePlay</a></li><li><a href="global.html#updateAfterAction">updateAfterAction</a></li><li><a href="global.html#updateRangeFill">updateRangeFill</a></li><li><a href="global.html#updateStats">updateStats</a></li><li><a href="global.html#updateSteps">updateSteps</a></li><li><a href="global.html#updateTabCounts">updateTabCounts</a></li><li><a href="global.html#videoHTML">videoHTML</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Mon Apr 06 2026 22:39:04 GMT+0200 (hora de verano de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: utils/steps.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: utils/steps.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @typedef {Object} Step
+ * @property {string} icon - Clase del icono (actualmente no usado en la UI)
+ * @property {string} title - Título del paso del tutorial
+ * @property {string} subtitle - Subtítulo o descripción breve del paso
+ * @property {string[]} list - Lista de instrucciones o información del paso
+ * @property {string|null} next - Texto del botón "Siguiente", null si no aplica
+ * @property {string|null} prev - Texto del botón "Anterior", null si no aplica
+ */
+
+/**
+ * Pasos del tutorial para participantes
+ * @type {Step[]}
+ */
+const stepsParticipante = [
+  {
+    icon: "fas fa-search",
+    title: "Explora Actividades",
+    subtitle: "Descubre actividades revisadas y aprobadas por nuestro equipo",
+    list: [
+      "Navega por actividades: excursiones, talleres, clases y eventos",
+      "Todas las actividades están previamente revisadas y aprobadas",
+      "Usa filtros por categoría, nombre y fecha",
+      "Lee descripciones detalladas y chatea con el resto de participantes"
+    ],
+    next: "Siguiente",
+    prev: null
+  },
+  {
+    icon: "fas fa-edit",
+    title: "Publica una Petición",
+    subtitle: "¿No encuentras lo que buscas? Pide que se organice",
+    list: [
+      "Describe la actividad que te gustaría realizar",
+      "Sigue el estado de tus peticiones desde tu perfil",
+      "Recibe notificación cuando un organizador acepte tu petición",
+      "Los organizadores pueden ver tu petición y aceptarla"
+    ],
+    next: "Siguiente",
+    prev: "Anterior"
+  },
+  {
+    icon: "fas fa-credit-card",
+    title: "Inscríbete y Paga",
+    subtitle: "Reserva tu plaza de manera segura",
+    list: [
+      "Haz clic en \"Inscribirse\" en la actividad que te interese",
+      "Contacta con el resto del grupo para conocer experiencias",
+      "Recibe confirmación instantánea"
+    ],
+    next: "Siguiente",
+    prev: "Anterior"
+  },
+  {
+    icon: "fas fa-star",
+    title: "Participa y Valora",
+    subtitle: "Vive la experiencia y comparte tu opinión",
+    list: [
+      "Recibe recordatorios antes de la actividad",
+      "Accede a la información de contacto del organizador",
+      "Conoce a otros participantes con intereses similares",
+      "Valora tu experiencia para ayudar a la comunidad"
+    ],
+    next: "Finalizar",
+    prev: "Anterior"
+  }
+];
+
+/**
+ * Pasos del tutorial para organizadores
+ * @type {Step[]}
+ */
+const stepsOrganizadores = [
+  {
+    icon: "fas fa-file",
+    title: "Publica tu Actividad",
+    subtitle: "Crea y publica actividades para compartir tu pasión",
+    list: [
+      "Completa el formulario con información detallada",
+      "Añade imagen atractiva y especifica todos los detalles",
+      "Define categoría, fecha, ubicación, precio y capacidad",
+      "Tu actividad pasará por revisión administrativa antes de publicarse"
+    ],
+    next: "Siguiente",
+    prev: null
+  },
+  {
+    icon: "fas fa-file-check",
+    title: "Revisión y Aprobación",
+    subtitle: "Garantizamos calidad revisando cada actividad",
+    list: [
+      "Nuestro equipo verifica la calidad del contenido",
+      "Comprobamos cumplimiento de políticas y seguridad",
+      "Proceso de revisión en menos de 24 horas",
+      "Una vez aprobada, aparece en 'Mis actividades' de tu perfil"
+    ],
+    next: "Siguiente",
+    prev: "Anterior"
+  },
+  {
+    icon: "fas fa-star-of-david",
+    title: "Explora Peticiones",
+    subtitle: "Descubre qué actividades buscan los participantes",
+    list: [
+      "Accede a 'Explorar peticiones' para ver solicitudes de participantes",
+      "Revisa peticiones de actividades que podrías organizar",
+      "Acepta peticiones que se ajusten a tus capacidades",
+      "Gestiona peticiones aceptadas desde 'Peticiones pendientes' en tu perfil"
+    ],
+    next: "Siguiente",
+    prev: "Anterior"
+  },
+  {
+    icon: "fas fa-cog",
+    title: "Gestiona y Realiza",
+    subtitle: "Administra inscripciones y ofrece experiencias únicas",
+    list: [
+      "Recibe notificaciones de nuevas inscripciones",
+      "Visualiza y gestiona participantes desde tu panel",
+      "Comunícate con los inscritos antes y durante la actividad",
+      "Recibe valoraciones y construye tu reputación"
+    ],
+    next: "Finalizar",
+    prev: "Anterior"
+  }
+];
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#activateHowItWorks">activateHowItWorks</a></li><li><a href="global.html#controlPanelData">controlPanelData</a></li><li><a href="global.html#createActivityControlCard">createActivityControlCard</a></li><li><a href="global.html#formatTime">formatTime</a></li><li><a href="global.html#handleActivityAction">handleActivityAction</a></li><li><a href="global.html#handleButtonClick">handleButtonClick</a></li><li><a href="global.html#handleLoginSubmit">handleLoginSubmit</a></li><li><a href="global.html#handleRegisterSubmit">handleRegisterSubmit</a></li><li><a href="global.html#howHTML">howHTML</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initTabs">initTabs</a></li><li><a href="global.html#initThemeLogic">initThemeLogic</a></li><li><a href="global.html#loadControlPanel">loadControlPanel</a></li><li><a href="global.html#openVideo">openVideo</a></li><li><a href="global.html#postAction">postAction</a></li><li><a href="global.html#removeActivityCard">removeActivityCard</a></li><li><a href="global.html#renderError">renderError</a></li><li><a href="global.html#renderHeaderByRole">renderHeaderByRole</a></li><li><a href="global.html#renderItems">renderItems</a></li><li><a href="global.html#renderStep">renderStep</a></li><li><a href="global.html#showAlert">showAlert</a></li><li><a href="global.html#showConfirm">showConfirm</a></li><li><a href="global.html#showHowItWorks">showHowItWorks</a></li><li><a href="global.html#stepsOrganizadores">stepsOrganizadores</a></li><li><a href="global.html#stepsParticipante">stepsParticipante</a></li><li><a href="global.html#togglePlay">togglePlay</a></li><li><a href="global.html#updateAfterAction">updateAfterAction</a></li><li><a href="global.html#updateRangeFill">updateRangeFill</a></li><li><a href="global.html#updateStats">updateStats</a></li><li><a href="global.html#updateSteps">updateSteps</a></li><li><a href="global.html#updateTabCounts">updateTabCounts</a></li><li><a href="global.html#videoHTML">videoHTML</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Mon Apr 06 2026 22:39:04 GMT+0200 (hora de verano de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

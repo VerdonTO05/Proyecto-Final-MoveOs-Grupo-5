@@ -18,6 +18,7 @@ const headerHTML = `
     <ul id="list">
       <li><a href="index.php">Inicio</a></li>
       <li id="how"><a href="index.php#how-tutorial">Cómo Funciona</a></li>
+      <li><a href="index.php?accion=docs" target="_blank"><i class="fas fa-file-alt"></i></a></li>
     </ul>
 
     <div class="icons">

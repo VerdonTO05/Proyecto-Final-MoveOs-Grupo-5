@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: utils/how-it-works.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: utils/how-it-works.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * HTML de la estructura del tutorial
+ */
+const howHTML = `
+&lt;main class="how-it-works">
+  &lt;section class="hiw-header">
+    &lt;h1>¿Cómo Funciona MOVEos?&lt;/h1>
+    &lt;p>Una plataforma simple e intuitiva para participar o crear actividades increíbles&lt;/p>
+
+    &lt;div class="tab-switch">
+      &lt;button class="tab-btn active" data-mode="participante">Soy Participante&lt;/button>
+      &lt;button class="tab-btn" data-mode="organizador">Soy Organizador&lt;/button>
+    &lt;/div>
+  &lt;/section>
+
+  &lt;section class="hiw-steps">
+    &lt;button class="step-number active">1&lt;/button>
+    &lt;button class="step-number">2&lt;/button>
+    &lt;button class="step-number">3&lt;/button>
+    &lt;button class="step-number">4&lt;/button>
+  &lt;/section>
+
+  &lt;section id="hiw-card" class="hiw-card">&lt;/section>
+
+  &lt;a href="#" id="openVideo">&lt;i class="fa-solid fa-video">&lt;/i> Ver vídeo tutorial&lt;/a>
+&lt;/main>
+`;
+
+/**
+ * HTML del video tutorial
+ */
+const videoHTML = `
+&lt;div class="hiw-video-overlay">
+  &lt;div class="hiw-video-wrapper">
+    &lt;button class="close-video">&lt;i class="fas fa-times">&lt;/i>&lt;/button>
+    &lt;video id="hiwVideo" src="assets/video/video.mp4">&lt;/video>
+
+    &lt;div class="video-controls">
+      &lt;button class="play">&lt;i class="fas fa-play">&lt;/i>&lt;/button>
+      &lt;input type="range" class="progress" value="0" min="0" max="100">
+      &lt;input type="range" class="volume" value="100" min="0" max="100" title="Volumen">
+      &lt;span class="time">0:00&lt;/span>
+    &lt;/div>
+  &lt;/div>
+&lt;/div>
+`;
+
+/**
+ * Inicialización
+ */
+document.addEventListener("DOMContentLoaded", () => {
+  const tutorialContainer = document.getElementById("tutorial-container");
+
+  if (!tutorialContainer) return;
+
+  const howBtn = document.getElementById("how");
+
+  // Click en el enlace desde index.php
+  howBtn?.addEventListener("click", (e) => {
+    e.preventDefault();
+    showHowItWorks(tutorialContainer);
+  });
+
+  // Detectar hash en URL para abrir tutorial automáticamente
+  if (window.location.hash === "#how-tutorial") {
+    showHowItWorks(tutorialContainer);
+    // Limpiar hash para que no se repita
+    history.replaceState(null, null, "index.php");
+  }
+
+  // Evento para abrir el vídeo
+  document.addEventListener("click", (e) => {
+    const videoBtn = e.target.closest("#openVideo");
+
+    if (videoBtn) {
+      e.preventDefault();
+      openVideo(tutorialContainer);
+    }
+  });
+});
+
+/**
+ * Función que renderiza el tutorial 
+ * @param {*} container Contenedor donde se insertará la información
+ */
+function showHowItWorks(container) {
+  container.innerHTML = howHTML;
+  requestAnimationFrame(() => {
+    container.scrollIntoView({ behavior: "smooth", block: "end" });
+    activateHowItWorks();
+  });
+}
+
+/**
+ * Inicializa la lógica interactiva del tutorial "Cómo funciona".
+ * 
+ * Esta función activa:
+ * 1. La selección de modo (participante u organizador) mediante las pestañas.
+ * 2. La navegación entre los pasos del tutorial al pulsar los botones numerados.
+ * 3. La renderización inicial del primer paso del tutorial.
+ * 
+ * No recibe parámetros y no retorna ningún valor. Todos los cambios se aplican
+ * directamente sobre los elementos del DOM dentro del contenedor del tutorial.
+ * 
+ * @returns {void} - No retorna ningún valor. 
+ */
+function activateHowItWorks() {
+  const tabButtons = document.querySelectorAll(".tab-btn");
+  const stepButtons = document.querySelectorAll(".step-number");
+  const card = document.getElementById("hiw-card");
+
+  if (!card) return;
+
+  let mode = "participante";
+  let currentStep = 0;
+
+  const getSteps = () => (mode === "participante" ? stepsParticipante : stepsOrganizadores);
+
+  tabButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      tabButtons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      mode = btn.dataset.mode;
+      currentStep = 0;
+
+      updateSteps(stepButtons, currentStep);
+      renderStep(card, getSteps()[currentStep]);
+    });
+  });
+
+  stepButtons.forEach((btn, index) => {
+    btn.addEventListener("click", () => {
+      currentStep = index;
+      updateSteps(stepButtons, currentStep);
+      renderStep(card, getSteps()[currentStep]);
+    });
+  });
+
+  renderStep(card, stepsParticipante[0]);
+}
+
+/**
+ * Actualiza el paso del tutorial
+ * @param {*} buttons 
+ * @param {*} activeIndex 
+ */
+function updateSteps(buttons, activeIndex) {
+  buttons.forEach(b => b.classList.remove("active"));
+  buttons[activeIndex]?.classList.add("active");
+}
+
+/**
+ * Renderiza la información de cada paso
+ * @param {*} card 
+ * @param {*} step 
+ */
+function renderStep(card, step) {
+  card.innerHTML = `
+    &lt;div class="hiw-card">
+      &lt;div class="hiw-card-content">
+        &lt;div style="flex:1">
+          &lt;h2>${step.title}&lt;/h2>
+          &lt;p class="subtitle">${step.subtitle}&lt;/p>
+          &lt;ul class="hiw-list">
+            ${step.list.map(item => `
+              &lt;li>
+                &lt;div>&lt;i class="fa-solid fa-star">&lt;/i>&lt;/div>
+                &lt;p>${item}&lt;/p>
+              &lt;/li>
+            `).join("")}
+          &lt;/ul>
+        &lt;/div>
+      &lt;/div>
+    &lt;/div>
+  `;
+}
+
+/**
+ * Abre el video tutorial, ocultando el tutorial dinámico
+ * @param {*} container 
+ * @returns 
+ */
+function openVideo(container) {
+  container.innerHTML = `&lt;div class="how-it-works">${videoHTML}&lt;/div>`;
+
+  const video = container.querySelector("#hiwVideo");
+  const playBtn = container.querySelector(".play");
+  const progress = container.querySelector(".progress");
+  const volume = container.querySelector(".volume");
+  const time = container.querySelector(".time");
+  const closeBtn = container.querySelector(".close-video");
+  const overlayDiv = container.querySelector(".hiw-video-overlay"); // ✅ overlay visual
+  const videoWrapper = container.querySelector(".hiw-video-wrapper");
+
+  if (!video) return;
+
+  const closeVideo = () => {
+    video.pause();
+    container.innerHTML = howHTML;
+    activateHowItWorks();
+    document.removeEventListener("keydown", escClose);
+  };
+
+  const escClose = (e) => {
+    if (e.key === "Escape") closeVideo();
+  };
+
+  playBtn?.addEventListener("click", () => togglePlay(video, playBtn));
+
+  video.addEventListener("timeupdate", () => {
+    if (isNaN(video.duration)) return;
+    const percent = (video.currentTime / video.duration) * 100;
+    progress.value = percent;
+    updateRangeFill(progress);
+    time.textContent = formatTime(video.currentTime);
+  });
+
+  progress?.addEventListener("input", () => {
+    video.currentTime = (progress.value / 100) * video.duration;
+    updateRangeFill(progress);
+  });
+
+  volume?.addEventListener("input", () => {
+    video.volume = volume.value / 100;
+    updateRangeFill(volume);
+  });
+
+  closeBtn?.addEventListener("click", closeVideo);
+
+  // ✅ Solo cierra si el click es directamente en el fondo oscuro
+  overlayDiv?.addEventListener("click", (e) => {
+    if (e.target === overlayDiv) closeVideo();
+  });
+
+  document.addEventListener("keydown", escClose);
+
+  updateRangeFill(progress);
+  updateRangeFill(volume);
+}
+/**
+ * Pause / Play video
+ * @param {*} video 
+ * @param {*} button 
+ */
+function togglePlay(video, button) {
+  if (video.paused) {
+    video.play();
+    button.textContent = "⏸";
+  } else {
+    video.pause();
+    button.textContent = "▶";
+  }
+}
+
+/**
+ * Actualiza la barra de progreso o volumen
+ * @param {*} range 
+ * @returns 
+ */
+function updateRangeFill(range) {
+  if (!range) return;
+  const value = range.value;
+  range.style.background = `
+    linear-gradient(
+      to right,
+      var(--brand-primary) 0%,
+      var(--brand-primary) ${value}%,
+      var(--border-color) ${value}%,
+      var(--border-color) 100%
+    )`;
+}
+
+/**
+ * Formatea el tiempo, minutos y segundos
+ * @param {*} seconds 
+ * @returns 
+ */
+function formatTime(seconds) {
+  const min = Math.floor(seconds / 60);
+  const sec = Math.floor(seconds % 60).toString().padStart(2, "0");
+  return `${min}:${sec}`;
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#activateHowItWorks">activateHowItWorks</a></li><li><a href="global.html#controlPanelData">controlPanelData</a></li><li><a href="global.html#createActivityControlCard">createActivityControlCard</a></li><li><a href="global.html#formatTime">formatTime</a></li><li><a href="global.html#handleActivityAction">handleActivityAction</a></li><li><a href="global.html#handleButtonClick">handleButtonClick</a></li><li><a href="global.html#handleLoginSubmit">handleLoginSubmit</a></li><li><a href="global.html#handleRegisterSubmit">handleRegisterSubmit</a></li><li><a href="global.html#howHTML">howHTML</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initTabs">initTabs</a></li><li><a href="global.html#initThemeLogic">initThemeLogic</a></li><li><a href="global.html#loadControlPanel">loadControlPanel</a></li><li><a href="global.html#openVideo">openVideo</a></li><li><a href="global.html#postAction">postAction</a></li><li><a href="global.html#removeActivityCard">removeActivityCard</a></li><li><a href="global.html#renderError">renderError</a></li><li><a href="global.html#renderHeaderByRole">renderHeaderByRole</a></li><li><a href="global.html#renderItems">renderItems</a></li><li><a href="global.html#renderStep">renderStep</a></li><li><a href="global.html#showAlert">showAlert</a></li><li><a href="global.html#showConfirm">showConfirm</a></li><li><a href="global.html#showHowItWorks">showHowItWorks</a></li><li><a href="global.html#stepsOrganizadores">stepsOrganizadores</a></li><li><a href="global.html#stepsParticipante">stepsParticipante</a></li><li><a href="global.html#togglePlay">togglePlay</a></li><li><a href="global.html#updateAfterAction">updateAfterAction</a></li><li><a href="global.html#updateRangeFill">updateRangeFill</a></li><li><a href="global.html#updateStats">updateStats</a></li><li><a href="global.html#updateSteps">updateSteps</a></li><li><a href="global.html#updateTabCounts">updateTabCounts</a></li><li><a href="global.html#videoHTML">videoHTML</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Mon Apr 06 2026 22:39:04 GMT+0200 (hora de verano de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
