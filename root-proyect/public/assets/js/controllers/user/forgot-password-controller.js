@@ -2,6 +2,29 @@
  * Controlador para el formulario de recuperación de contraseña con código de verificación
  */
 
+// Alerta visual local (módulo ES6 no accede a funciones globales de otros scripts)
+function showAlert(title, message, type = 'info', duration = 2000) {
+    return new Promise(resolve => {
+        const existing = document.getElementById('custom-alert');
+        if (existing) existing.remove();
+
+        const colors = { info: '#3b82f6', error: '#ef4444', success: '#22c55e' };
+        const alert = document.createElement('div');
+        alert.id = 'custom-alert';
+        alert.style.cssText = `
+            position:fixed; top:1.5rem; left:50%; transform:translateX(-50%);
+            background:${colors[type] ?? colors.info}; color:#fff;
+            padding:0.85rem 1.5rem; border-radius:10px; z-index:9999;
+            box-shadow:0 4px 20px rgba(0,0,0,.25); text-align:center;
+            max-width:90vw; font-family:inherit; font-size:0.95rem;
+        `;
+        alert.innerHTML = title ? `<strong>${title}</strong><br>${message}` : message;
+        document.body.appendChild(alert);
+
+        setTimeout(() => { alert.remove(); resolve(); }, duration);
+    });
+}
+
 // Función para alternar visibilidad de contraseña
 function setupPasswordToggle() {
     const toggleButtons = document.querySelectorAll('.toggle-password');
@@ -133,7 +156,7 @@ async function handleChangePassword(event) {
             await showAlert('¡Contraseña cambiada exitosamente!','Serás redirigido al inicio de sesión.','info', 2500);
             window.location.href = 'index.php?accion=loginView';
         } else {
-            showAlert('Error al cambiar la contraseña. ','Por favor, verifica tus datos.','error', 2500);
+            showAlert('', data.message, 'error', 2500);
         }
     } catch (error) {
         console.error('Error:', error);

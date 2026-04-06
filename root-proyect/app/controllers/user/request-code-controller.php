@@ -77,7 +77,7 @@ try {
         SELECT COUNT(*) 
         FROM password_reset_codes 
         WHERE user_id = ? 
-        AND created_at > DATE_SUB(NOW(), INTERVAL 2 MINUTE)
+        AND created_at > DATE_SUB(NOW(), INTERVAL 30 SECOND)
     ");
     $limitStmt->execute([$user['id']]);
 
@@ -111,7 +111,7 @@ try {
     $insertStmt->execute([$user['id'], $verificationCode, $expiresAt]);
 
     // Enviar el código por email usando PHPMailer
-    require_once __DIR__ . '/../services/EmailService.php';
+    require_once __DIR__ . '/../../services/EmailService.php';
     $emailService = new EmailService();
     $emailSent = $emailService->sendVerificationCode($email, $user['full_name'], $verificationCode);
 

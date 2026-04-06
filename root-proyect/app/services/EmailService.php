@@ -23,6 +23,8 @@ class EmailService {
             $this->mailer->Port       = $config['port'];
 
             $this->mailer->setFrom($config['from_email'], $config['from_name']);
+            $this->mailer->CharSet = 'UTF-8';
+            $this->mailer->Encoding = 'base64';
         } catch (Exception $e) {
             error_log("Error inicializando PHPMailer: " . $e->getMessage());
         }
