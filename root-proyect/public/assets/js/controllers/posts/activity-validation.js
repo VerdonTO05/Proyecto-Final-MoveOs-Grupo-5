@@ -1,24 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    back_btn = document.querySelector('.back-btn').addEventListener('click', () => {
+    document.querySelector('.back-btn')?.addEventListener('click', () => {
         history.back();
     });
-
-    // ===== ERRORES DESDE PHP =====
-    const phpErrors = window.__PHP_FORM_ERRORS__ ?? [];
-    if (phpErrors.length > 0) {
-        showAlert(
-            "Errores en el formulario:",
-            `<ul>${phpErrors.map(err => `<li>${err}</li>`).join('')}</ul>`,
-            "error",
-            4000
-        );
-    }
 
     const form = document.querySelector('.form-activity');
     if (!form) return;
 
     form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
         let errors = [];
 
         // ===== OBTENER VALORES =====
@@ -45,34 +36,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const imagen = imagenInput?.files[0];
         const currentImage = form.querySelector('[name="current_image"]')?.value || '';
 
-        // ===== VALIDACIONES =====
+        // ===== VALIDACIONES FRONT =====
 
-        // TÍTULO
-        if (!titulo) {
-            errors.push("El título no puede estar vacío.");
-        } else if (titulo.length < 5) {
-            errors.push("El título debe tener al menos 5 caracteres.");
-        } else if (titulo.length > 50) {
-            errors.push("El título debe tener menos de 50 caracteres.");
-        }
+        if (!titulo) errors.push("El título no puede estar vacío.");
+        else if (titulo.length < 5) errors.push("El título debe tener al menos 5 caracteres.");
+        else if (titulo.length > 50) errors.push("El título debe tener menos de 50 caracteres.");
 
-        // DESCRIPCIÓN
-        if (!descripcion) {
-            errors.push("La descripción no puede estar vacía.");
-        } else if (descripcion.length < 15) {
-            errors.push("La descripción es demasiado breve.");
-        }
+        if (!descripcion) errors.push("La descripción no puede estar vacía.");
+        else if (descripcion.length < 15) errors.push("La descripción es demasiado breve.");
 
-        // CATEGORÍA
         if (!categoria) errors.push("Debes seleccionar una categoría.");
-
-        // UBICACIÓN
         if (!ubicacion) errors.push("La ubicación es obligatoria.");
-
         if (!fecha) errors.push("La fecha es obligatoria.");
         if (!hora) errors.push("La hora es obligatoria.");
 
-        // FECHA (hoy → +2 años)
         if (fecha) {
             const hoy = new Date();
             const fechaInput = new Date(fecha);
@@ -84,7 +61,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (fechaInput > maxFecha) errors.push("La fecha no puede ser superior a 2 años.");
         }
 
-        // HORA (08:00 → 23:00)
         if (hora) {
             const [h, m] = hora.split(':').map(Number);
             if (h < 8 || h > 23 || (h === 23 && m > 0)) {
@@ -92,16 +68,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // EDAD
         if (edadNum > 18) errors.push("La edad mínima no puede ser mayor a 18 años.");
-
-        // MÁXIMO PERSONAS
         if (maxPeopleNum > 500) errors.push("El máximo de participantes es 500.");
-
-        // PRECIO
         if (precio > 1000) errors.push("El precio no puede ser mayor a 1000€.");
 
-        // IMAGEN
         if (!imagen && !currentImage) {
             errors.push("Debes subir una imagen.");
         } else if (imagen) {
@@ -110,16 +80,72 @@ document.addEventListener('DOMContentLoaded', () => {
             if (imagen.size > 5 * 1024 * 1024) errors.push("La imagen no puede superar 5MB.");
         }
 
-        // ===== MOSTRAR ERRORES =====
+        // ===== MOSTRAR ERRORES FRONT =====
         if (errors.length > 0) {
-            e.preventDefault();
             showAlert(
                 "Errores en el formulario:",
                 `<ul>${errors.map(err => `<li>${err}</li>`).join('')}</ul>`,
                 "error",
                 4000
             );
+            return;
         }
+
+        // ===== ENVÍO AL BACKEND =====
+        const formData = new FormData(form);
+
+        fetch(form.action, {
+            method: "POST",
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+
+            if (!data.success) {
+
+                // ===== ERRORES DE VALIDACIÓN PHP =====
+                if (data.errors && data.errors.length > 0) {
+                    showAlert(
+                        data.message || "Errores en el formulario:",
+                        `<ul>${data.errors.map(err => `<li>${err}</li>`).join('')}</ul>`,
+                        "error",
+                        4000
+                    );
+                    return;
+                }
+
+                // ===== ERROR GENERAL =====
+                showAlert(
+                    "Error",
+                    data.message || "Ha ocurrido un error",
+                    "error",
+                    4000
+                );
+                return;
+            }
+
+            // ===== ÉXITO =====
+            showAlert(
+                "Éxito",
+                data.message,
+                "success",
+                1800
+            );
+
+            // opcional: reset o redirección
+            // form.reset();
+            window.location.href = "?accion=seeMyActivities";
+
+        })
+        .catch(error => {
+            console.error(error);
+            showAlert(
+                "Error",
+                "No se pudo conectar con el servidor",
+                "error",
+                4000
+            );
+        });
     });
 
     // ===== TRANSPORTE =====
@@ -150,13 +176,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const lightbox = document.createElement('div');
             lightbox.className = 'lightbox-overlay';
             lightbox.innerHTML = `
-            <div class="lightbox-content">
-                <button class="lightbox-close" aria-label="Cerrar">
-                    <i class="fas fa-times"></i>
-                </button>
-                <img src="${previewImg.src}" alt="Vista previa ampliada">
-            </div>
-        `;
+                <div class="lightbox-content">
+                    <button class="lightbox-close" aria-label="Cerrar">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <img src="${previewImg.src}" alt="Vista previa ampliada">
+                </div>
+            `;
             document.body.appendChild(lightbox);
             requestAnimationFrame(() => lightbox.classList.add('active'));
 
