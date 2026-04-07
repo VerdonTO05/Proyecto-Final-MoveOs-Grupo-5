@@ -17,14 +17,14 @@ let activeRoomId = window.CHAT_ROOM_ID ?? null;
 // ── Getters dinámicos (el DOM puede recrearse en el modal) ───────────────────
 
 const getMessagesArea = () => document.getElementById('chatMessagesArea');
-const getChatForm     = () => document.getElementById('chatForm');
-const getChatInput    = () => document.getElementById('chatInput');
-const getEmptyState   = () => document.getElementById('chatEmptyState');
+const getChatForm = () => document.getElementById('chatForm');
+const getChatInput = () => document.getElementById('chatInput');
+const getEmptyState = () => document.getElementById('chatEmptyState');
 
 // ── Inicialización ───────────────────────────────────────────────────────────
 
 function init() {
-    const form  = getChatForm();
+    const form = getChatForm();
     const input = getChatInput();
 
     if (!form || !input) {
@@ -33,7 +33,7 @@ function init() {
 
     // Actualizar sala activa por si cambió (caso modal)
     activeRoomType = window.CHAT_ROOM_TYPE ?? activeRoomType;
-    activeRoomId   = window.CHAT_ROOM_ID   ?? activeRoomId;
+    activeRoomId = window.CHAT_ROOM_ID ?? activeRoomId;
 
     if (window.CHAT_ADMIN_MODE) {
         initAdminMode();
@@ -60,8 +60,8 @@ function startPolling(roomType, roomId) {
     stopPolling();
 
     activeRoomType = roomType;
-    activeRoomId   = roomId;
-    lastMessageId  = 0;
+    activeRoomId = roomId;
+    lastMessageId = 0;
 
     fetchNewMessages();
     pollingTimer = setInterval(fetchNewMessages, POLLING_INTERVAL_MS);
@@ -78,14 +78,14 @@ async function fetchNewMessages() {
     if (!activeRoomId) return;
 
     const url = new URL('index.php', window.location.origin + window.location.pathname.replace('index.php', ''));
-    url.searchParams.set('accion',    'getMessages');
+    url.searchParams.set('accion', 'getMessages');
     url.searchParams.set('room_type', activeRoomType);
-    url.searchParams.set('room_id',   activeRoomId);
-    url.searchParams.set('after_id',  lastMessageId);
+    url.searchParams.set('room_id', activeRoomId);
+    url.searchParams.set('after_id', lastMessageId);
 
     try {
         const response = await fetch(url.toString());
-        const data     = await response.json();
+        const data = await response.json();
 
         if (!data.success) {
             return;
@@ -117,12 +117,12 @@ async function handleSendMessage(event) {
 
     try {
         const response = await fetch('index.php?accion=sendMessage', {
-            method:  'POST',
+            method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body:    JSON.stringify({
+            body: JSON.stringify({
                 room_type: activeRoomType,
-                room_id:   activeRoomId,
-                message:   text,
+                room_id: activeRoomId,
+                message: text,
             }),
         });
 
@@ -152,7 +152,7 @@ function renderMessages(messages) {
     if (!area) return;
 
     const currentUserId = window.CURRENT_USER?.id;
-    const fragment      = document.createDocumentFragment();
+    const fragment = document.createDocumentFragment();
 
     messages.forEach(msg => {
         if (document.getElementById(`chat-msg-${msg.id}`)) return;
@@ -167,19 +167,19 @@ function renderMessages(messages) {
 
 function buildMessageBubble(msg, isOwn) {
     const wrapper = document.createElement('div');
-    wrapper.id        = `chat-msg-${msg.id}`;
+    wrapper.id = `chat-msg-${msg.id}`;
     wrapper.className = `chat-bubble ${isOwn ? 'chat-bubble--own' : 'chat-bubble--other'}`;
 
     const senderEl = document.createElement('span');
-    senderEl.className   = 'chat-bubble__sender';
+    senderEl.className = 'chat-bubble__sender';
     senderEl.textContent = isOwn ? 'Tú' : msg.sender_name;
 
     const textEl = document.createElement('p');
-    textEl.className   = 'chat-bubble__text';
+    textEl.className = 'chat-bubble__text';
     textEl.textContent = msg.message;
 
     const timeEl = document.createElement('time');
-    timeEl.className   = 'chat-bubble__time';
+    timeEl.className = 'chat-bubble__time';
     timeEl.textContent = formatTime(msg.created_at);
 
     // ← nuevo contenedor
@@ -233,7 +233,7 @@ async function initAdminMode() {
 async function loadAdminConversations() {
     try {
         const response = await fetch('index.php?accion=getChatRooms');
-        const data     = await response.json();
+        const data = await response.json();
 
         if (!data.success) {
             showAlert('Error', 'No se pudo cargar las conversaciones correctamente.', 'error');
@@ -248,7 +248,7 @@ async function loadAdminConversations() {
 }
 
 function renderConversationList(conversations) {
-    const list      = document.getElementById('chatUserList');
+    const list = document.getElementById('chatUserList');
     const emptyItem = document.getElementById('chatUserListEmpty');
 
     if (!list) return;
@@ -283,8 +283,8 @@ function buildConversationItem(conv) {
     const li = document.createElement('li');
     li.className = 'chat-user-item';
     li.dataset.userId = conv.user_id;
-    li.setAttribute('role',       'button');
-    li.setAttribute('tabindex',   '0');
+    li.setAttribute('role', 'button');
+    li.setAttribute('tabindex', '0');
     li.setAttribute('aria-label', `Chat con ${conv.full_name}`);
 
     li.innerHTML = `
@@ -320,23 +320,23 @@ function openAdminConversation(userId, fullName) {
 
 function showConversationPanel() {
     const noSelection = document.getElementById('chatNoSelection');
-    const header      = document.getElementById('chatConversationHeader');
-    const form        = getChatForm();
-    const area        = getMessagesArea();
+    const header = document.getElementById('chatConversationHeader');
+    const form = getChatForm();
+    const area = getMessagesArea();
 
-    if (noSelection) noSelection.style.display  = 'none';
-    if (header)      header.classList.remove('chat-header--hidden');
-    if (area)        area.classList.remove('chat-messages-area--hidden');
-    if (form)        form.classList.remove('chat-input-area--hidden');
+    if (noSelection) noSelection.style.display = 'none';
+    if (header) header.classList.remove('chat-header--hidden');
+    if (area) area.classList.remove('chat-messages-area--hidden');
+    if (form) form.classList.remove('chat-input-area--hidden');
 }
 
 // ── Utilidades ───────────────────────────────────────────────────────────────
 
 function escapeHtml(str) {
     return String(str)
-        .replace(/&/g,  '&amp;')
-        .replace(/</g,  '&lt;')
-        .replace(/>/g,  '&gt;')
-        .replace(/"/g,  '&quot;')
-        .replace(/'/g,  '&#039;');
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
 }

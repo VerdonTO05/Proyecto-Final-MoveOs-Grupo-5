@@ -174,3 +174,36 @@ function createFinishedCard(pub) {
 
     return card;
 }
+
+// ── SSE: actualización en tiempo real ────────────────────────────────────────
+
+// let activitiesEventSource = null;
+
+// function connectActivitiesSSE() {
+//     const base = window.location.pathname.replace('index.php', '');
+//     const url  = new URL('index.php', window.location.origin + base);
+//     url.searchParams.set('accion', 'activitiesSSE');
+
+//     activitiesEventSource = new EventSource(url.toString());
+
+//     activitiesEventSource.onmessage = (event) => {
+//         const data = JSON.parse(event.data);
+
+//         if (data.reconnect) {
+//             activitiesEventSource.close();
+//             connectActivitiesSSE();
+//             return;
+//         }
+
+//         if (data.reload) {
+//             loadActivities(CURRENT_USER.role);
+//         }
+//     };
+
+//     activitiesEventSource.onerror = () => {
+//         activitiesEventSource.close();
+//         setTimeout(connectActivitiesSSE, 2000);
+//     };
+// }
+
+// connectActivitiesSSE();
