@@ -43,7 +43,7 @@ async function handleRegisterSubmit(event) {
 
   let errors = [];
 
-  // ===== VALIDACIONES =====
+  // Validaciones
   if (!validateFullName(fullname)) {
     errors.push("Introduce nombre y apellido.");
   }
@@ -64,7 +64,7 @@ async function handleRegisterSubmit(event) {
     errors.push("Debes seleccionar un rol.");
   }
 
-  // ===== MOSTRAR ERRORES =====
+  // Muestra los errores
   if (errors.length > 0) {
     return showAlert(
       "Errores en el formulario:",
@@ -73,7 +73,7 @@ async function handleRegisterSubmit(event) {
     );
   }
 
-  // ===== ENVÍO =====
+  // Envia la información
   const rol = rolInput.value;
 
   try {
@@ -95,7 +95,7 @@ async function handleRegisterSubmit(event) {
     const result = await response.json();
 
     if (response.ok && result.success) {
-      showAlert("¡Registro exitoso!", `Bienvenido, ${username}.`, "success");
+      showAlert("¡Registro exitoso!", `Bienvenido, ${username}.`, "success"); 
       window.location.href = "index.php?accion=seeActivities";
     } else {
       showAlert("Error en el registro", result.message, "error");

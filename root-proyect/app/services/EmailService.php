@@ -13,17 +13,16 @@ class EmailService {
         $config = require __DIR__ . '/../../config/email-config.php';
 
         try {
-            // Configuración SMTP
             $this->mailer->isSMTP();
             $this->mailer->Host       = $config['host'];
             $this->mailer->SMTPAuth   = true;
             $this->mailer->Username   = $config['username'];
             $this->mailer->Password   = $config['password'];
-            $this->mailer->SMTPSecure = $config['encryption']; // 'tls' o 'ssl'
+            $this->mailer->SMTPSecure = $config['encryption'];
             $this->mailer->Port       = $config['port'];
 
             $this->mailer->setFrom($config['from_email'], $config['from_name']);
-            $this->mailer->CharSet = 'UTF-8';
+            $this->mailer->CharSet  = 'UTF-8';
             $this->mailer->Encoding = 'base64';
         } catch (Exception $e) {
             error_log("Error inicializando PHPMailer: " . $e->getMessage());
@@ -32,16 +31,24 @@ class EmailService {
 
     public function sendVerificationCode($toEmail, $toName, $code) {
         try {
-            $this->mailer->clearAddresses(); // Limpiar direcciones previas para evitar duplicados
+            $this->mailer->clearAddresses();
             $this->mailer->addAddress($toEmail, $toName);
             $this->mailer->isHTML(true);
             $this->mailer->Subject = 'Código de recuperación de contraseña';
-            $this->mailer->Body    = "
-                <p>Hola <b>$toName</b>,</p>
-                <p>Tu código de verificación para recuperar tu contraseña es:</p>
-                <h2>$code</h2>
-                <p>Este código expirará en 15 minutos.</p>
-                <p>Si no solicitaste este código, ignora este mensaje.</p>
+            $this->mailer->Body = "
+                <div style='font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 2rem; background: #f9f9f9; border-radius: 12px;'>
+                    <h1 style='color: #8C1E32; text-align: center;'>Recuperar contraseña</h1>
+                    <p>Hola <b>$toName</b>,</p>
+                    <p>Tu código de verificación para recuperar tu contraseña es:</p>
+                    <div style='text-align: center; margin: 1.5rem 0;'>
+                        <span style='font-size: 2rem; font-weight: bold; letter-spacing: 8px; color: #8C1E32; background: #fff; padding: 12px 24px; border-radius: 8px; border: 2px solid #8C1E32; display: inline-block;'>
+                            $code
+                        </span>
+                    </div>
+                    <p style='color: #555;'>Este código expirará en <b>15 minutos</b>.</p>
+                    <p style='color: #555;'>Si no solicitaste este código, ignora este mensaje.</p>
+                    <p style='font-size: 0.85rem; color: #888; margin-top: 2rem; text-align: center;'>© 2025 MOVEos. Todos los derechos reservados.</p>
+                </div>
             ";
             $this->mailer->AltBody = "Hola $toName, tu código de verificación es $code. Expira en 15 minutos.";
 
@@ -52,9 +59,6 @@ class EmailService {
         }
     }
 
-    /**
-     * Enviar email de bienvenida al registrarse
-     */
     public function sendWelcome($toEmail, $toName) {
         try {
             $this->mailer->clearAddresses();
@@ -67,7 +71,7 @@ class EmailService {
                     <p>Hola <b>$toName</b>,</p>
                     <p>Tu cuenta se ha creado correctamente. Ya puedes explorar actividades, inscribirte y conectar con otros usuarios.</p>
                     <p style='text-align: center; margin-top: 1.5rem;'>
-                        <a href='http://localhost/Proyecto_MOVEos/Proyecto-Final-MoveOs-Grupo-5/root-proyect/public/index.php'
+                        <a href='http://localhost/Proyecto_Irene/Proyecto-Final-MoveOs-Grupo-5/root-proyect/public/index.php'
                            style='background: #8C1E32; color: #fff; padding: 10px 24px; border-radius: 8px; text-decoration: none; font-weight: bold;'>
                            Ir a MOVEos
                         </a>
