@@ -60,5 +60,5 @@ return [
   'adminChat' => __DIR__ . '/../app/views/chat/admin-chat.php',
   'userAdminChat' => __DIR__ . '/../app/views/chat/user-admin-chat.php',
 
-  'docs' => __DIR__ . '/../public/docs/index.html',
-  ];
+  'docs' => dirname($_SERVER['SCRIPT_NAME']) . '/docs/index.html',
+];
