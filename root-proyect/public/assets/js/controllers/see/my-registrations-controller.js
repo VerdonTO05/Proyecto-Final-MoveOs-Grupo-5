@@ -36,7 +36,6 @@ async function loadRegistrations(role) {
             render(registrationsActive, registrationsFinished, role);
         }
     } catch (error) {
-        console.error('Error al cargar inscripciones:', error);
         grid.innerHTML = '<p class="error">Error al cargar inscripciones.</p>';
     }
 }
@@ -144,7 +143,6 @@ function createActiveCard(pub, role) {
             }
 
         } catch (error) {
-            console.error(error);
             showAlert('Error', 'No se pudo cancelar la actividad', 'error');
         }
     });

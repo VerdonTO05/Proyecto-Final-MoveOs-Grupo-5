@@ -49,7 +49,6 @@ async function loadActivities(type = 'activities') {
             renderItems(activities, activity => createActivityCard(activity, type));
         }
     } catch (error) {
-        console.error('Error al cargar actividades:', error);
         grid.innerHTML = '<p class="error">Error al cargar las actividades.</p>';
     }
 }
@@ -67,7 +66,6 @@ async function loadRequests(type = 'requests') {
             grid.innerHTML = '<p class="no-activities">No hay peticiones disponibles en este momento.</p>';
         }
     } catch (error) {
-        console.error('Error al cargar peticiones:', error);
         grid.innerHTML = '<p class="error">Error al cargar las peticiones.</p>';
     }
 }
@@ -194,7 +192,6 @@ function createActivityCard(activity, type) {
                 throw new Error(result.message || 'Error desconocido');
             }
         } catch (error) {
-            console.error(error);
             showAlert('Error', 'No se pudo procesar la acción', 'error');
         }
     }

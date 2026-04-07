@@ -67,7 +67,6 @@ document.addEventListener("DOMContentLoaded", () => {
           showAlert('Error', result.message, 'error');
         }
       } catch (err) {
-        console.error(err);
         showAlert('Error', 'No se pudo subir la imagen.', 'error');
       }
     });

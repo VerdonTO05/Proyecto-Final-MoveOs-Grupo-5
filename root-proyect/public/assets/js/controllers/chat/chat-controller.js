@@ -28,7 +28,6 @@ function init() {
     const input = getChatInput();
 
     if (!form || !input) {
-        console.error('[Chat] Elementos del DOM no encontrados al inicializar');
         return;
     }
 
@@ -89,7 +88,6 @@ async function fetchNewMessages() {
         const data     = await response.json();
 
         if (!data.success) {
-            console.error('[Chat] Error al obtener mensajes:', data.message);
             return;
         }
 
@@ -100,7 +98,7 @@ async function fetchNewMessages() {
         }
 
     } catch (error) {
-        console.error('[Chat] Error de red en fetchNewMessages:', error);
+        showAlert('Error de red', 'Se ha producido un error', 'error');
     }
 }
 
@@ -136,12 +134,11 @@ async function handleSendMessage(event) {
             hideEmptyState();
             input.value = '';
         } else {
-            console.error('[Chat] Error al enviar mensaje:', data.message);
-            alert('No se pudo enviar el mensaje. Inténtalo de nuevo.');
+            showAlert('Error', 'No se pudo enviar el mensaje. Inténtalo de nuevo.', 'error');
         }
 
     } catch (error) {
-        console.error('[Chat] Error de red al enviar:', error);
+        showAlert('Error de red', 'Se ha producido un error', 'error');
     } finally {
         input.disabled = false;
         input.focus();
@@ -239,14 +236,14 @@ async function loadAdminConversations() {
         const data     = await response.json();
 
         if (!data.success) {
-            console.error('[Chat Admin] Error al cargar conversaciones:', data.message);
+            showAlert('Error', 'No se pudo cargar las conversaciones correctamente.', 'error');
             return;
         }
 
         renderConversationList(data.conversations);
 
     } catch (error) {
-        console.error('[Chat Admin] Error de red:', error);
+        showAlert('Error de red', 'Se ha producido un error', 'error');
     }
 }
 

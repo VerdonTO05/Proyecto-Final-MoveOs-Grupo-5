@@ -34,7 +34,6 @@ async function loadPublications(role) {
       render(publications, role);
     }
   } catch (error) {
-    console.error('Error al cargar publicaciones:', error);
     grid.innerHTML = '<p class="error">Error al cargar las actividades.</p>';
   }
 }

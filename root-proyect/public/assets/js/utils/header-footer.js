@@ -222,9 +222,8 @@ function initChatLogic() {
       chatHubContainer.appendChild(fragment);
 
     } catch (err) {
-      console.error(err);
       chatHubContainer.innerHTML = `
-        <p style="color:red; padding:1rem;">
+        <p class="no-activities">
           No se pudieron cargar los chats.
         </p>
       `;
@@ -322,7 +321,6 @@ function initUnsubscribeLogic() {
         });
       }
     } catch (err) {
-      console.error(err);
       showAlert({
         title: "Error",
         message: "Error al eliminar la cuenta"

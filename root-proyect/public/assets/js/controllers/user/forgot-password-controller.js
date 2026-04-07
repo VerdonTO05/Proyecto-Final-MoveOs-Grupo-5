@@ -2,29 +2,6 @@
  * Controlador para el formulario de recuperación de contraseña con código de verificación
  */
 
-// Alerta visual local (módulo ES6 no accede a funciones globales de otros scripts)
-function showAlert(title, message, type = 'info', duration = 2000) {
-    return new Promise(resolve => {
-        const existing = document.getElementById('custom-alert');
-        if (existing) existing.remove();
-
-        const colors = { info: '#3b82f6', error: '#ef4444', success: '#22c55e' };
-        const alert = document.createElement('div');
-        alert.id = 'custom-alert';
-        alert.style.cssText = `
-            position:fixed; top:1.5rem; left:50%; transform:translateX(-50%);
-            background:${colors[type] ?? colors.info}; color:#fff;
-            padding:0.85rem 1.5rem; border-radius:10px; z-index:9999;
-            box-shadow:0 4px 20px rgba(0,0,0,.25); text-align:center;
-            max-width:90vw; font-family:inherit; font-size:0.95rem;
-        `;
-        alert.innerHTML = title ? `<strong>${title}</strong><br>${message}` : message;
-        document.body.appendChild(alert);
-
-        setTimeout(() => { alert.remove(); resolve(); }, duration);
-    });
-}
-
 // Función para alternar visibilidad de contraseña
 function setupPasswordToggle() {
     const toggleButtons = document.querySelectorAll('.toggle-password');
@@ -50,12 +27,9 @@ function setupPasswordToggle() {
 // Función para manejar la solicitud de código
 async function handleRequestCode(event) {
     event.preventDefault();
-    console.log('handleRequestCode called');
 
     const email = document.getElementById('email').value;
     const submitBtn = event.target.querySelector('.submit-btn');
-
-    console.log('Email:', email);
 
     // Validar email
     if (!email || !email.includes('@')) {
@@ -72,17 +46,12 @@ async function handleRequestCode(event) {
         formData.append('accion', 'requestCode');
         formData.append('email', email);
 
-        console.log('Sending request...');
-
         const response = await fetch('index.php', {
             method: 'POST',
             body: formData
         });
 
-        console.log('Response received:', response.status);
-
         const data = await response.json();
-        console.log('Response data:', data);
 
         if (data.success) {
             // Guardar el email para el siguiente paso
@@ -94,11 +63,10 @@ async function handleRequestCode(event) {
             // Cambiar al paso 2
             showStep2();
         } else {
-            alert(data.message || 'Error al solicitar el código. Por favor, intenta de nuevo.');
+            showAlert('Error', data.message || 'Error al solicitar el código. Por favor, intenta de nuevo.', 'error');
         }
     } catch (error) {
-        console.error('Error:', error);
-        alert('Ocurrió un error al procesar tu solicitud. Por favor, intenta de nuevo.');
+        showAlert('Error', 'Ocurrió un error al procesar tu solicitud. Por favor, intenta de nuevo.', 'error');
     } finally {
         // Rehabilitar botón
         submitBtn.disabled = false;
@@ -118,19 +86,19 @@ async function handleChangePassword(event) {
 
     // Validar que las contraseñas nuevas coincidan
     if (newPassword !== confirmPassword) {
-        alert('Las contraseñas nuevas no coinciden. Por favor, verifica e intenta de nuevo.');
+        showAlert('Las contraseñas nuevas no coinciden.', 'Por favor, verifica e intenta de nuevo.');
         return;
     }
 
     // Validar longitud mínima de la contraseña
-    if (newPassword.length < 6) {
-        alert('La nueva contraseña debe tener al menos 6 caracteres.');
+    if (newPassword.length < 8) {
+        showAlert('Info','La nueva contraseña debe tener al menos 8 caracteres.');
         return;
     }
 
     // Validar código de 6 dígitos
     if (!/^\d{6}$/.test(verificationCode)) {
-        alert('El código de verificación debe tener 6 dígitos numéricos.');
+        showAlert('Info','El código de verificación debe tener 6 dígitos numéricos.');
         return;
     }
 
@@ -159,7 +127,6 @@ async function handleChangePassword(event) {
             showAlert('', data.message, 'error', 2500);
         }
     } catch (error) {
-        console.error('Error:', error);
         showAlert('Ocurrió un error al procesar tu solicitud.', 'Por favor, intenta de nuevo.','error', 2500);
     } finally {
         // Rehabilitar botón

@@ -33,7 +33,6 @@ async function loadActivities(role) {
             render(activitiesActive, activitiesFinished,role);
         }
     } catch (error) {
-        console.error('Error al cargar publicaciones:', error);
         grid.innerHTML = '<p class="error">Error al cargar tus actividades.</p>';
     }
 }
@@ -150,7 +149,6 @@ function createActiveCard(pub,role) {
             }
 
         } catch (error) {
-            console.error(error);
             showAlert('Error', 'No se pudo eliminar la publicación', 'error');
         }
     });

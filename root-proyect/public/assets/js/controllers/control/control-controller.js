@@ -83,8 +83,6 @@ async function handleActivityAction(button, action, resultAction) {
             showAlert("Error", result.message, "error");
         }
     } catch (error) {
-        console.error("Error:", error);
-
         showAlert(
             "Error",
             isApprove
