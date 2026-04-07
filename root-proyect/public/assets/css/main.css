@@ -157,9 +157,7 @@ header nav a {
 }
 header nav a:hover {
   color: var(--brand-primary);
-}
-header nav a i {
-  margin-left: 2rem;
+  border-bottom: 1px solid var(--brand-dark);
 }
 header nav > div {
   display: flex;
@@ -175,6 +173,10 @@ header nav > div button {
 }
 header nav > div button:last-child {
   color: var(--text-on-primary);
+}
+
+.logo-container a:hover {
+  border-bottom: none;
 }
 
 /* Footer */
@@ -221,27 +223,6 @@ footer p {
   padding-top: 1rem;
 }
 
-/* Icons */
-.icons {
-  display: flex;
-  align-items: center;
-  gap: 1.8em;
-}
-.icons i {
-  font-size: 1rem;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
-  padding: 1em;
-  border-radius: 6px;
-  min-width: 44px;
-  min-height: 44px;
-}
-.icons i:hover {
-  background-color: var(--bg-muted);
-  color: var(--text-secondary);
-}
-
 .user-menu-container {
   position: relative;
   display: flex;
@@ -277,8 +258,8 @@ footer p {
 
 #user-dropdown a:hover,
 #display-username:hover {
-  background-color: var(--bg-muted);
-  color: var(--brand-primary);
+  background-color: var(--brand-primary);
+  color: var(--bg-main);
   cursor: pointer;
 }
 
@@ -372,6 +353,7 @@ a .chat-card {
   background-color: var(--brand-dark);
   border-left: 4px solid var(--bg-main);
   padding-left: 3rem;
+  border-bottom: none;
 }
 
 .sidebar .closebtn {
@@ -2011,6 +1993,10 @@ select {
   max-width: 80px;
 }
 
+.docs {
+  margin: 0;
+}
+
 /* =============================
    RESPONSIVE - how-it-works
    ============================= */
@@ -2144,8 +2130,7 @@ main section:nth-of-type(3) p {
   border-radius: 6px;
 }
 .icons i:hover {
-  background-color: var(--bg-muted);
-  color: var(--text-secondary);
+  color: var(--brand-primary);
 }
 
 /* =========================

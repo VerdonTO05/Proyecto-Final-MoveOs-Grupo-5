@@ -45,10 +45,7 @@ header {
 
             &:hover {
                 color: var(--brand-primary);
-            }
-
-            i {
-                margin-left: 2rem;
+                border-bottom: 1px solid var(--brand-dark);
             }
         }
 
@@ -67,6 +64,14 @@ header {
             }
         }
 
+    }
+}
+
+.logo-container {
+    a {
+        &:hover {
+            border-bottom: none;
+        }
     }
 }
 
@@ -123,29 +128,6 @@ footer {
     }
 }
 
-/* Icons */
-.icons {
-    display: flex;
-    align-items: center;
-    gap: 1.8em;
-
-    i {
-        font-size: 1rem;
-        color: var(--text-secondary);
-        cursor: pointer;
-        transition: background-color 0.3s, color 0.3s;
-        padding: 1em;
-        border-radius: 6px;
-        min-width: 44px;
-        min-height: 44px;
-
-        &:hover {
-            background-color: var(--bg-muted);
-            color: var(--text-secondary);
-        }
-    }
-}
-
 .user-menu-container {
     position: relative;
     display: flex;
@@ -187,8 +169,8 @@ footer {
 //hover
 #user-dropdown a:hover,
 #display-username:hover {
-    background-color: var(--bg-muted);
-    color: var(--brand-primary);
+    background-color: var(--brand-primary);
+    color: var(--bg-main);
     cursor: pointer;
 }
 
@@ -236,7 +218,7 @@ footer {
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-a .chat-card{
+a .chat-card {
     height: 7rem;
 }
 
@@ -290,6 +272,7 @@ a .chat-card{
     background-color: var(--brand-dark);
     border-left: 4px solid var(--bg-main);
     padding-left: 3rem;
+    border-bottom: none;
 }
 
 .sidebar .closebtn {
