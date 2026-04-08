@@ -13,8 +13,9 @@ let lastMessageId = 0;
 let pollingTimer = null;
 let activeRoomType = window.CHAT_ROOM_TYPE ?? null;
 let activeRoomId = window.CHAT_ROOM_ID ?? null;
+let isFirstLoad = true; // 🔥 NUEVO
 
-// ── Getters dinámicos (el DOM puede recrearse en el modal) ───────────────────
+// ── Getters dinámicos ────────────────────────────────────────────────────────
 
 const getMessagesArea = () => document.getElementById('chatMessagesArea');
 const getChatForm = () => document.getElementById('chatForm');
@@ -27,11 +28,8 @@ function init() {
     const form = getChatForm();
     const input = getChatInput();
 
-    if (!form || !input) {
-        return;
-    }
+    if (!form || !input) return;
 
-    // Actualizar sala activa por si cambió (caso modal)
     activeRoomType = window.CHAT_ROOM_TYPE ?? activeRoomType;
     activeRoomId = window.CHAT_ROOM_ID ?? activeRoomId;
 
@@ -45,7 +43,6 @@ function init() {
     window.addEventListener('beforeunload', stopPolling);
 }
 
-// Soporte doble: carga normal con página y carga dinámica desde modal
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
 } else {
@@ -62,6 +59,7 @@ function startPolling(roomType, roomId) {
     activeRoomType = roomType;
     activeRoomId = roomId;
     lastMessageId = 0;
+    isFirstLoad = true; // 🔥 IMPORTANTE
 
     fetchNewMessages();
     pollingTimer = setInterval(fetchNewMessages, POLLING_INTERVAL_MS);
@@ -87,9 +85,7 @@ async function fetchNewMessages() {
         const response = await fetch(url.toString());
         const data = await response.json();
 
-        if (!data.success) {
-            return;
-        }
+        if (!data.success) return;
 
         if (data.messages.length > 0) {
             renderMessages(data.messages);
@@ -130,6 +126,10 @@ async function handleSendMessage(event) {
 
         if (data.success) {
             renderMessages([data.message]);
+
+            // 🔥 FORZAMOS scroll al enviar mensaje propio
+            scrollToBottomIfNeeded(true);
+
             lastMessageId = data.message.id;
             hideEmptyState();
             input.value = '';
@@ -162,6 +162,15 @@ function renderMessages(messages) {
     });
 
     area.appendChild(fragment);
+
+    // 🔥 PRIMERA CARGA → SIEMPRE ABAJO
+    if (isFirstLoad) {
+        scrollToBottomIfNeeded(true);
+        isFirstLoad = false;
+        return;
+    }
+
+    // resto → comportamiento inteligente
     scrollToBottomIfNeeded();
 }
 
@@ -182,14 +191,13 @@ function buildMessageBubble(msg, isOwn) {
     timeEl.className = 'chat-bubble__time';
     timeEl.textContent = formatTime(msg.created_at);
 
-    // ← nuevo contenedor
     const bodyEl = document.createElement('div');
     bodyEl.className = 'chat-bubble__body';
     bodyEl.appendChild(textEl);
     bodyEl.appendChild(timeEl);
 
     wrapper.appendChild(senderEl);
-    wrapper.appendChild(bodyEl); // ← body en lugar de text+time sueltos
+    wrapper.appendChild(bodyEl);
 
     return wrapper;
 }
@@ -199,11 +207,19 @@ function formatTime(dateStr) {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
-function scrollToBottomIfNeeded() {
+// ── SCROLL ───────────────────────────────────────────────────────────────────
+
+function scrollToBottomIfNeeded(force = false) {
     const area = getMessagesArea();
     if (!area) return;
 
+    if (force) {
+        area.scrollTop = area.scrollHeight;
+        return;
+    }
+
     const distanceFromBottom = area.scrollHeight - area.scrollTop - area.clientHeight;
+
     if (distanceFromBottom <= SCROLL_THRESHOLD_PX) {
         area.scrollTop = area.scrollHeight;
     }
@@ -313,6 +329,8 @@ function openAdminConversation(userId, fullName) {
 
     const area = getMessagesArea();
     if (area) area.innerHTML = '';
+
+    isFirstLoad = true; // 🔥 RESET
 
     showConversationPanel();
     startPolling('admin', userId);

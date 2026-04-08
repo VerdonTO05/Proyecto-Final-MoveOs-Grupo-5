@@ -65,7 +65,7 @@ try {
     }
 
     // --- Acción por defecto: listar todos los usuarios ---
-    $users = $user->getUsers();
+    $users = $user->getUsers($_SESSION['user_id']);
 
     echo json_encode([
         'success' => true,

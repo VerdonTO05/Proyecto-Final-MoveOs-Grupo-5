@@ -387,8 +387,6 @@
   position: relative;
 
   &:hover {
-    background: var(--bg-muted);
-
     .chat-user-item__name {
       color: var(--bg-surface);
     }

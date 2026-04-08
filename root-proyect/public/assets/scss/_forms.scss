@@ -60,11 +60,11 @@
         font-size: 1.125rem;
         transition: all 0.3s ease;
         text-align: center;
+        box-shadow: 0 0.125rem 0.3rem rgba(0, 0, 0, 0.1);
 
         &.active {
             background-color: var(--bg-surface);
             color: var(--text-primary);
-            box-shadow: 0 0.125rem 0.3rem rgba(0, 0, 0, 0.1);
         }
     }
 }
@@ -80,11 +80,11 @@
         transition: all 0.3s ease;
         border: 1px solid;
         border-color: var(--border-color);
+        box-shadow: 0 0.125rem 0.3rem rgba(0, 0, 0, 0.1);
 
         &.active {
             background-color: var(--bg-surface);
-            color: var(--text-primary);
-            box-shadow: 0 0.125rem 0.3rem rgba(0, 0, 0, 0.1);
+            color: var(--text-primary); 
         }
     }
 }
