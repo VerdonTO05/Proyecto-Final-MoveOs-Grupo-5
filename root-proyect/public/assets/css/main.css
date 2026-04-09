@@ -89,7 +89,7 @@ button {
 
 .dark-mode {
   --bg-main: #1a1214;
-  --bg-surface: #291b1e;
+  --bg-surface: #2a1b1e;
   --bg-muted: #f0f0f0;
   --text-primary: #f0f0f0;
   --text-secondary: #b8a5a8;
@@ -661,17 +661,20 @@ main section {
   font-size: 1.125rem;
   transition: all 0.3s ease;
   text-align: center;
+  box-shadow: 0 0.125rem 0.3rem rgba(0, 0, 0, 0.1);
 }
 .tab-switch .tab-btn.active {
   background-color: var(--bg-surface);
   color: var(--text-primary);
-  box-shadow: 0 0.125rem 0.3rem rgba(0, 0, 0, 0.1);
 }
 
 .tab-switch-home {
   display: flex;
   background-color: var(--bg-surface);
   padding: 0.3rem;
+  justify-content: center;
+  gap: 0.5rem;
+  padding-top: 1rem;
 }
 .tab-switch-home .tab-btn {
   background-color: var(--bg-main);
@@ -689,11 +692,12 @@ main section {
   transition: all 0.3s ease;
   border: 1px solid;
   border-color: var(--border-color);
+  box-shadow: 0 0.125rem 0.3rem rgba(0, 0, 0, 0.1);
+  margin: 0;
 }
 .tab-switch-home .tab-btn.active {
-  background-color: var(--bg-surface);
-  color: var(--text-primary);
-  box-shadow: 0 0.125rem 0.3rem rgba(0, 0, 0, 0.1);
+  background-color: var(--brand-primary);
+  color: var(--bg-main);
 }
 
 /* Formularios */
@@ -1314,7 +1318,6 @@ select {
 ========================= */
 .container-home {
   background-color: var(--bg-surface);
-  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
   width: 100%;
   max-width: 100%;
   position: relative;
@@ -2332,18 +2335,22 @@ body {
   border-radius: 18px;
   overflow: hidden;
   border: 1px solid var(--border-color);
+  max-height: 400px;
 }
 
-.activity-control img {
-  max-width: 30%;
-  object-fit: cover;
+.activity-image {
+  width: 30%;
+}
+
+.activity-image img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
 }
 
 .activity-info {
-  padding: 20px;
   flex: 1;
+  padding: 20px;
 }
 
 .tags {
@@ -2394,9 +2401,10 @@ body {
 }
 
 /* ================= ACTIONS ================= */
-.actions {
+.actions-control {
   display: flex;
   gap: 15px;
+  margin-top: auto;
 }
 
 .btn {
@@ -3219,9 +3227,6 @@ input[type=checkbox] {
   border-bottom: 1px solid var(--border-color);
   transition: background-color 0.15s;
   position: relative;
-}
-.chat-user-item:hover {
-  background: var(--bg-muted);
 }
 .chat-user-item:hover .chat-user-item__name {
   color: var(--bg-surface);

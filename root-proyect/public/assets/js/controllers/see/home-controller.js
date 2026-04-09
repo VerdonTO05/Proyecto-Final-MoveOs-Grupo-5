@@ -91,7 +91,7 @@ function createCard(activity, role) {
 
   const signupBtn = card.querySelector(".btn-signup");
 
-  // ✅ Deshabilitar si el usuario ya está inscrito
+  // Deshabilitar si el usuario ya está inscrito
   if (role !== 'organizador' && activity.enrolled_user_ids?.includes(CURRENT_USER.id)) {
     signupBtn.textContent = "Inscrito";
     signupBtn.disabled = true;

@@ -297,7 +297,9 @@ function createActivityControlCard(activity, type = 'activity') {
     const organizerName = activity.offertant_name || activity.participant_name || 'Desconocido';
 
     section.innerHTML = `
-        <img src="${imageUrl}" alt="Actividad" onerror="this.src='https://images.unsplash.com/photo-1507525428034-b723cf961d3e'">
+        <div class="activity-image">
+            <img src="${imageUrl}" alt="Actividad" onerror="this.src='https://images.unsplash.com/photo-1507525428034-b723cf961d3e'">
+        </div>
         <div class="activity-info">
             <div class="tags">
                 <span class="tag blue"><i class="fas ${icon}"></i> ${activity.category_name}</span>
@@ -310,9 +312,9 @@ function createActivityControlCard(activity, type = 'activity') {
                 <span><i class="fas fa-calendar-alt"></i> ${formattedDate}</span>
                 <span><i class="fas fa-map-marker-alt"></i> ${activity.location}</span>
                 ${activity.max_people ? `<span><i class="fas fa-users"></i> ${activity.current_registrations || 0}/${activity.max_people}</span>` : ''}
-                ${activity.price ? `<span><i class="fas fa-euro-sign"></i> ${activity.price}€</span>` : ''}
+                ${activity.price ? `<span><i class="fas fa-euro-sign"></i> ${activity.price == 0? 'Gratis' : activity.price + '€'}</span>` : ''}
             </div>
-            <div class="actions">
+            <div class="actions-control">
                 <button data-id="${activity.id}" data-type="${type}" class="btn approve btn-approve">
                     <i class="fas fa-check"></i> Aprobar
                 </button>

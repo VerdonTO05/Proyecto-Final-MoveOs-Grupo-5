@@ -1,35 +1,35 @@
 window.showAlert = function (title, message, type = 'info', duration = 3000) {
-  return new Promise((resolve) => {
-    const overlay = document.createElement('div');
-    overlay.classList.add('alert-overlay', type);
+    return new Promise((resolve) => {
+        const overlay = document.createElement('div');
+        overlay.classList.add('alert-overlay', type);
 
-    const alertBox = document.createElement('div');
-    alertBox.classList.add('alert-box');
-    alertBox.innerHTML = `
+        const alertBox = document.createElement('div');
+        alertBox.classList.add('alert-box');
+        alertBox.innerHTML = `
         <div class="alert-header">${title}</div>
         <div class="alert-body">${message}</div>
     `;
 
-    overlay.appendChild(alertBox);
-    document.body.appendChild(overlay);
+        overlay.appendChild(alertBox);
+        document.body.appendChild(overlay);
 
-    const closeAlert = () => {
-      alertBox.style.animation = 'fadeOut 0.3s forwards';
-      overlay.classList.remove('active');
+        const closeAlert = () => {
+            alertBox.style.animation = 'fadeOut 0.3s forwards';
+            overlay.classList.remove('active');
 
-      setTimeout(() => {
-        document.body.removeChild(overlay);
-        resolve(); // 👈 aquí se resuelve la promesa
-      }, 300);
-    };
+            setTimeout(() => {
+                document.body.removeChild(overlay);
+                resolve(); // 👈 aquí se resuelve la promesa
+            }, 300);
+        };
 
-    setTimeout(closeAlert, duration);
+        setTimeout(closeAlert, duration);
 
-    requestAnimationFrame(() => {
-      overlay.classList.add('active');
-      alertBox.style.animation = 'fadeIn 0.3s forwards';
+        requestAnimationFrame(() => {
+            overlay.classList.add('active');
+            alertBox.style.animation = 'fadeIn 0.3s forwards';
+        });
     });
-  });
 };
 
 window.setupPasswordToggle = function (passwordInput, toggleButton) {
@@ -125,7 +125,7 @@ window.openDetailModal = function (activity, role = null, currentUser, options =
     `;
     document.body.appendChild(modal);
 
-    const isOrg    = role === 'organizador';
+    const isOrg = role === 'organizador';
     const modalBody = modal.querySelector('.modal-body');
 
     // ── Renderizar detalles ──────────────────────────────────────────────
@@ -137,9 +137,9 @@ window.openDetailModal = function (activity, role = null, currentUser, options =
             <div class="modal-info-aditional"></div>
         `;
 
-        modal.querySelector(".modal-title").textContent    = activity.title || '';
-        modal.querySelector(".category").textContent       = activity.category_name || '';
-        modal.querySelector(".modal-image").innerHTML      = `<img src="${activity.image_url || 'assets/img/default-activity.jpg'}" alt="${activity.title}">`;
+        modal.querySelector(".modal-title").textContent = activity.title || '';
+        modal.querySelector(".category").textContent = activity.category_name || '';
+        modal.querySelector(".modal-image").innerHTML = `<img src="${activity.image_url || 'assets/img/default-activity.jpg'}" alt="${activity.title}">`;
         modal.querySelector(".modal-description").innerHTML = `<h3><i class="fas fa-circle-info"></i> Descripción</h3><p>${activity.description || 'Sin descripción.'}</p>`;
         modal.querySelector(".modal-info").innerHTML = `
             <h3>Información Principal</h3>
@@ -147,7 +147,7 @@ window.openDetailModal = function (activity, role = null, currentUser, options =
             <p><span class="title"><i class="fas fa-clock"></i> <strong>Hora</strong></span> ${activity.time || 'No disponible'}</p>
             <p><span class="title"><i class="fas fa-location-dot"></i> <strong>Ubicación</strong></span> ${activity.location || 'No disponible'}</p>
             <p><span class="title"><i class="fas fa-stopwatch"></i> <strong>Duración</strong></span> ${activity.duration || 'No disponible'}</p>
-            ${!isOrg ? `<p><span class="title"><i class="fas fa-users"></i> <strong>Participantes</strong></span> ${activity.current_registrations || 0}/${activity.max_people || '-'}</p>` : ''}
+            ${!isOrg && activity.current_registrations != 0 ? `<p><span class="title"><i class="fas fa-users"></i> <strong>Participantes</strong></span> ${activity.current_registrations || 0}/${activity.max_people || '-'}</p>` : ''}
             ${!isOrg ? `<p><span class="title"><i class="fas fa-euro-sign"></i> <strong>Precio</strong></span> ${activity.price || 'Gratis'}</p>` : ''}
             <p><span class="title"><i class="fas fa-user"></i> <strong>${!isOrg ? 'Organizador' : 'Participante'}</strong></span> ${activity.offertant_name || activity.organizer_email || 'No disponible'}</p>
         `;
@@ -166,9 +166,9 @@ window.openDetailModal = function (activity, role = null, currentUser, options =
     function renderChat() {
         modalBody.innerHTML = window.buildChatHTML(activity.title);
 
-        window.CURRENT_USER    = currentUser;
-        window.CHAT_ROOM_TYPE  = 'activity';
-        window.CHAT_ROOM_ID    = activity.id;
+        window.CURRENT_USER = currentUser;
+        window.CHAT_ROOM_TYPE = 'activity';
+        window.CHAT_ROOM_ID = activity.id;
         window.CHAT_ADMIN_MODE = false;
 
         if (window.initChatController) {
@@ -208,20 +208,20 @@ window.initModalDetails = function (activity, role = null) {
     const modal = document.getElementById("activityModal");
     if (!modal) return;
 
-    const titleEl    = modal.querySelector(".modal-title");
+    const titleEl = modal.querySelector(".modal-title");
     const categoryEl = modal.querySelector(".category");
-    const imageEl    = modal.querySelector(".modal-image");
-    const descEl     = modal.querySelector(".modal-description");
-    const infoEl     = modal.querySelector(".modal-info");
-    const infoAddEl  = modal.querySelector(".modal-info-aditional");
+    const imageEl = modal.querySelector(".modal-image");
+    const descEl = modal.querySelector(".modal-description");
+    const infoEl = modal.querySelector(".modal-info");
+    const infoAddEl = modal.querySelector(".modal-info-aditional");
 
     if (!titleEl || !categoryEl || !imageEl || !descEl || !infoEl || !infoAddEl) return;
 
     const isOrg = role === 'organizador';
 
-    titleEl.textContent    = activity.title || '';
+    titleEl.textContent = activity.title || '';
     categoryEl.textContent = activity.category_name || '';
-    imageEl.innerHTML      = `<img src="${activity.image_url || 'assets/img/default-activity.jpg'}" alt="${activity.title}">`;
+    imageEl.innerHTML = `<img src="${activity.image_url || 'assets/img/default-activity.jpg'}" alt="${activity.title}">`;
 
     descEl.innerHTML = `
         <h3><i class="fas fa-circle-info"></i> Descripción</h3>
@@ -250,16 +250,16 @@ window.initModalDetails = function (activity, role = null) {
 window.matchFilter = function (item, type, value) {
     if (!value) return true;
     switch (type) {
-        case "title":    return item.title?.toLowerCase().includes(value);
+        case "title": return item.title?.toLowerCase().includes(value);
         case "category": return item.category_name?.toLowerCase().includes(value);
-        case "date":     return item.date?.includes(value);
-        default:         return true;
+        case "date": return item.date?.includes(value);
+        default: return true;
     }
 }
 
 window.getFilterValues = function () {
     return {
-        type:  document.getElementById("filterType")?.value || "",
+        type: document.getElementById("filterType")?.value || "",
         value: document.getElementById("filterValue")?.value?.toLowerCase() || ""
     };
 }
@@ -267,7 +267,7 @@ window.getFilterValues = function () {
 window.bindFilterListeners = function (callback) {
     const filterInput = document.getElementById("filterInput");
     if (filterInput) {
-        filterInput.addEventListener("input",  callback);
+        filterInput.addEventListener("input", callback);
         filterInput.addEventListener("change", callback);
     }
 }
@@ -284,15 +284,15 @@ window.buildImageHTML = function (pub) {
 }
 
 window.buildMetaHTML = function (pub) {
-    const date  = window.formatDate(pub.date);
+    const date = window.formatDate(pub.date);
     const price = pub.price != null
         ? (pub.price == 0 ? "Gratis" : `${pub.price}€`)
         : null;
     return `
         <div class="activity-meta">
-            ${date         ? `<span><i class="fas fa-calendar-alt"></i> ${date}</span>`           : ""}
+            ${date ? `<span><i class="fas fa-calendar-alt"></i> ${date}</span>` : ""}
             ${pub.location ? `<span><i class="fas fa-map-marker-alt"></i> ${pub.location}</span>` : ""}
-            ${price        ? `<span><i class="fas fa-euro-sign"></i> ${price}</span>`              : ""}
+            ${price ? `<span><i class="fas fa-euro-sign"></i> ${price}</span>` : ""}
         </div>`;
 }
 
@@ -300,11 +300,11 @@ window.buildFooterHTML = function (pub) {
     return `
         <div class="activity-footer">
             ${pub.offertant_name
-                ? `<span class="organizer"><i class="fas fa-user"></i> ${pub.offertant_name}</span>`
-                : ""}
+            ? `<span class="organizer"><i class="fas fa-user"></i> ${pub.offertant_name}</span>`
+            : ""}
             ${pub.current_registrations != null && pub.max_people != null
-                ? `<span class="participants"><i class="fas fa-users"></i> ${pub.current_registrations}/${pub.max_people}</span>`
-                : ""}
+            ? `<span class="participants"><i class="fas fa-users"></i> ${pub.current_registrations}/${pub.max_people}</span>`
+            : ""}
         </div>`;
 }
 
@@ -315,7 +315,7 @@ window.buildDetailsHTML = function (pub) {
 }
 
 window.bindToggleSection = function (btnId, sectionId, labelOpen, labelClose) {
-    const btn     = document.getElementById(btnId);
+    const btn = document.getElementById(btnId);
     const section = document.getElementById(sectionId);
     if (!btn || !section) return;
 
@@ -326,9 +326,9 @@ window.bindToggleSection = function (btnId, sectionId, labelOpen, labelClose) {
 }
 
 window.submitForm = function (action, id) {
-    const form     = document.createElement("form");
-    form.method    = "POST";
-    form.action    = "index.php";
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = "index.php";
     form.innerHTML = `
         <input type="hidden" name="accion" value="${action}">
         <input type="hidden" name="id"     value="${id}">`;
