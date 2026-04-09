@@ -93,6 +93,68 @@ window.showConfirm = function (optionsOrTitle, message = "") {
     });
 };
 
+window.showPromptConfirm = function (optionsOrTitle, message = "") {
+    const options = typeof optionsOrTitle === "string"
+        ? { title: optionsOrTitle, message }
+        : optionsOrTitle;
+
+    const {
+        title = "Confirmar",
+        message: msg = "",
+        placeholder = "Escribe un mensaje...",
+        confirmText = "Aceptar",
+        cancelText = "Cancelar"
+    } = options;
+
+    let modalContainer = document.getElementById("modal-container");
+    if (!modalContainer) {
+        modalContainer = document.createElement("div");
+        modalContainer.id = "modal-container";
+        document.body.appendChild(modalContainer);
+    }
+
+    return new Promise((resolve) => {
+        const modal = document.createElement("div");
+        modal.className = "modal";
+
+        modal.innerHTML = `
+      <div class="modal-header">${title}</div>
+      <div class="modal-body">
+        ${msg ? `<p>${msg}</p>` : ''}
+        <textarea class="modal-input" placeholder="${placeholder}" rows="4"
+          style="width:100%; margin-top:0.75rem; padding:0.6rem; border-radius:8px;
+                 border:1px solid var(--border-color); font-size:0.95rem;
+                 background:var(--bg-surface); color:var(--text-primary);
+                 resize:vertical; box-sizing:border-box;"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="cancel">${cancelText}</button>
+        <button class="confirm">${confirmText}</button>
+      </div>
+    `;
+
+        modalContainer.appendChild(modal);
+        modalContainer.classList.add("active");
+
+        const textarea = modal.querySelector(".modal-input");
+        textarea.focus();
+
+        const close = () => {
+            modal.style.animation = "fadeOut 0.25s forwards";
+            setTimeout(() => {
+                modal.remove();
+                modalContainer.classList.remove("active");
+            }, 250);
+        };
+
+        modal.querySelector(".cancel").addEventListener("click", () => { close(); resolve(null); });
+        modal.querySelector(".confirm").addEventListener("click", () => {
+            close();
+            resolve(textarea.value.trim());
+        });
+    });
+};
+
 window.openDetailModal = function (activity, role = null, currentUser, options = {}) {
 
     const showChat = options.showChat ?? false;

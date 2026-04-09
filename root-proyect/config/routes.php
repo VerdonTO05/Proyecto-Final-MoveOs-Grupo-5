@@ -43,6 +43,7 @@ return [
 
   'getUsers' => __DIR__ . '/../app/controllers/get/get-users-controller.php',
   'toggleUser' => __DIR__ . '/../app/controllers/get/get-users-controller.php',
+  'notifyUser' => __DIR__ . '/../app/controllers/get/get-users-controller.php',
 
   'forgot-password' => __DIR__ . '/../app/views/user/forgot-password.php',
   'changePassword' => __DIR__ . '/../app/controllers/user/forgot-password-controller.php',
@@ -62,4 +63,5 @@ return [
 
   'docs' => dirname($_SERVER['SCRIPT_NAME']) . '/docs/index.html',
   'activitiesSSE' => __DIR__ . '/../app/controllers/get/get-activities-sse.php',
+
 ];

@@ -36,13 +36,44 @@ $userId = (int) $currentUser['id'];
 $role = $currentUser['role'];
 
 // El administrador usa un panel distinto (adminChat), este Hub es principal para participantes y organizadores
+// El administrador usa un panel distinto (adminChat), este Hub es principal para participantes y organizadores
 if ($role === 'administrador') {
-    echo json_encode([
-        'success' => true,
-        'support_room' => null,
-        'activities' => [],
-        'is_admin' => true
-    ]);
+    try {
+        $db = (new Database())->getConnection();
+
+        // Traer usuarios que tienen mensajes en salas 'admin', ordenados por último mensaje
+        $stmt = $db->prepare("
+            SELECT 
+                u.id        AS user_id,
+                u.full_name,
+                u.username,
+                u.profile_image,
+                cm.message  AS last_message,
+                cm.created_at AS updated_at
+            FROM users u
+            JOIN chat_messages cm ON cm.room_type = 'admin' 
+                AND cm.room_id = u.id
+                AND cm.id = (
+                    SELECT MAX(id) FROM chat_messages
+                    WHERE room_type = 'admin' AND room_id = u.id
+                )
+            ORDER BY cm.created_at DESC
+        ");
+        $stmt->execute();
+        $conversations = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        echo json_encode([
+            'success' => true,
+            'is_admin' => true,
+            'support_room' => null,
+            'activities' => [],
+            'user_conversations' => $conversations
+        ]);
+
+    } catch (Exception $e) {
+        error_log('Error en get-chat-hub.php (admin): ' . $e->getMessage());
+        echo json_encode(['success' => false, 'message' => 'Error al cargar las conversaciones']);
+    }
     exit;
 }
 

@@ -13,7 +13,7 @@ let lastMessageId = 0;
 let pollingTimer = null;
 let activeRoomType = window.CHAT_ROOM_TYPE ?? null;
 let activeRoomId = window.CHAT_ROOM_ID ?? null;
-let isFirstLoad = true; // 🔥 NUEVO
+let isFirstLoad = true; 
 
 // ── Getters dinámicos ────────────────────────────────────────────────────────
 

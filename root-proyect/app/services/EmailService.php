@@ -4,32 +4,35 @@ use PHPMailer\PHPMailer\Exception;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
-class EmailService {
+class EmailService
+{
 
     private $mailer;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->mailer = new PHPMailer(true);
         $config = require __DIR__ . '/../../config/email-config.php';
 
         try {
             $this->mailer->isSMTP();
-            $this->mailer->Host       = $config['host'];
-            $this->mailer->SMTPAuth   = true;
-            $this->mailer->Username   = $config['username'];
-            $this->mailer->Password   = $config['password'];
+            $this->mailer->Host = $config['host'];
+            $this->mailer->SMTPAuth = true;
+            $this->mailer->Username = $config['username'];
+            $this->mailer->Password = $config['password'];
             $this->mailer->SMTPSecure = $config['encryption'];
-            $this->mailer->Port       = $config['port'];
+            $this->mailer->Port = $config['port'];
 
             $this->mailer->setFrom($config['from_email'], $config['from_name']);
-            $this->mailer->CharSet  = 'UTF-8';
+            $this->mailer->CharSet = 'UTF-8';
             $this->mailer->Encoding = 'base64';
         } catch (Exception $e) {
             error_log("Error inicializando PHPMailer: " . $e->getMessage());
         }
     }
 
-    public function sendVerificationCode($toEmail, $toName, $code) {
+    public function sendVerificationCode($toEmail, $toName, $code)
+    {
         try {
             $this->mailer->clearAddresses();
             $this->mailer->addAddress($toEmail, $toName);
@@ -59,7 +62,8 @@ class EmailService {
         }
     }
 
-    public function sendWelcome($toEmail, $toName) {
+    public function sendWelcome($toEmail, $toName)
+    {
         try {
             $this->mailer->clearAddresses();
             $this->mailer->addAddress($toEmail, $toName);
@@ -84,6 +88,42 @@ class EmailService {
             return $this->mailer->send();
         } catch (Exception $e) {
             error_log("Error enviando email de bienvenida: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function sendStateChange($toEmail, $toName, $newState, $adminMessage)
+    {
+        try {
+            $this->mailer->clearAddresses();
+            $this->mailer->addAddress($toEmail, $toName);
+            $this->mailer->isHTML(true);
+
+            $accion = $newState === 'activa' ? 'activada' : 'desactivada';
+            $color = $newState === 'activa' ? '#2e7d32' : '#8C1E32';
+
+            $this->mailer->Subject = "Tu cuenta ha sido {$accion}";
+            $this->mailer->Body = "
+            <div style='font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto;
+                        padding: 2rem; background: #f9f9f9; border-radius: 12px;'>
+                <h1 style='color: {$color}; text-align: center;'>Cuenta {$accion}</h1>
+                <p>Hola <b>{$toName}</b>,</p>
+                <p>Tu cuenta en MOVEos ha sido <b>{$accion}</b> por un administrador.</p>
+                " . ($adminMessage ? "
+                <div style='background:#fff; border-left: 4px solid {$color};
+                            padding: 1rem; border-radius: 6px; margin: 1rem 0;'>
+                    <p style='margin:0; color:#333;'>{$adminMessage}</p>
+                </div>" : "") . "
+                <p style='font-size: 0.85rem; color: #888; margin-top: 2rem; text-align: center;'>
+                    © 2025 MOVEos. Todos los derechos reservados.
+                </p>
+            </div>
+        ";
+            $this->mailer->AltBody = "Hola {$toName}, tu cuenta ha sido {$accion}. {$adminMessage}";
+
+            return $this->mailer->send();
+        } catch (Exception $e) {
+            error_log("Error enviando email de estado: " . $e->getMessage());
             return false;
         }
     }

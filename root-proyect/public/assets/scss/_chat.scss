@@ -177,6 +177,7 @@
 .chat-bubble--other .chat-bubble__text {
   color: var(--text-primary) !important;
 }
+
 // ── Input de envío ──────────────────────────────────────────────
 
 .chat-input-area {
@@ -387,8 +388,10 @@
   position: relative;
 
   &:hover {
+    background-color: var(--brand-dark);
+
     .chat-user-item__name {
-      color: var(--bg-surface);
+      color: var(--bg-main);
     }
   }
 
@@ -455,7 +458,7 @@ main.chat-page {
   overflow: hidden;
   background: var(--bg-main);
   min-height: 0;
-  width: 0; 
+  width: 0;
   padding: 0rem !important;
 
   // Header de conversación activa — ocupa todo el ancho
@@ -713,7 +716,7 @@ main.chat-page {
   border-radius: 50%;
 }
 
-#chat-dropdown{
+#chat-dropdown {
   max-height: 18rem;
   overflow-y: auto;
 }

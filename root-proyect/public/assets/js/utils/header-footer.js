@@ -161,7 +161,6 @@ function initChatLogic() {
     hideElement(document.getElementById('user-dropdown'));
     toggleVisibility(chatDropdown);
 
-    // 👇 Mostrar loading SIEMPRE
     chatHubContainer.innerHTML = `
       <div class="chat-hub-loading">
         <i class="fas fa-spinner fa-spin"></i>
@@ -178,8 +177,8 @@ function initChatLogic() {
       chatHubContainer.innerHTML = '';
       const fragment = document.createDocumentFragment();
 
-      // Chat soporte
-      if (data.support_room) {
+      // Chat soporte (solo para no administradores)
+      if (data.support_room && !data.is_admin) {
         const supportDiv = document.createElement('a');
         supportDiv.href = "index.php?accion=userAdminChat";
         supportDiv.className = "chat-card chat-card--support";
@@ -195,8 +194,8 @@ function initChatLogic() {
         fragment.appendChild(supportDiv);
       }
 
-      // Chats de actividades
-      if (data.activities?.length) {
+      // Chats de actividades (para no administradores)
+      if (!data.is_admin && data.activities?.length) {
         data.activities.forEach(act => {
           const chatDiv = document.createElement('a');
           chatDiv.href = `index.php?accion=chatActivity&activity_id=${act.room_id}`;
@@ -217,6 +216,47 @@ function initChatLogic() {
           `;
           fragment.appendChild(chatDiv);
         });
+      }
+
+      // Conversaciones con usuarios (solo administrador)
+      if (data.is_admin) {
+        if (data.user_conversations?.length) {
+          data.user_conversations.forEach(conv => {
+            const convDiv = document.createElement('a');
+            convDiv.href = `index.php?accion=userAdminChat&user_id=${conv.user_id}`;
+            convDiv.className = "chat-card";
+
+            const imgHtml = conv.profile_image
+              ? `<img src="${conv.profile_image}" class="chat-card__img"
+                     alt="${escapeHtml(conv.full_name)}"
+                     onerror="this.src='assets/img/perfilAdmin.png'">`
+              : `<div class="chat-card__icon"><i class="fas fa-user"></i></div>`;
+
+            convDiv.innerHTML = `
+              <div class="chat-card__header">
+                ${imgHtml}
+                <div style="min-width:0">
+                  <h2 class="chat-card__title">${escapeHtml(conv.full_name)}</h2>
+                  <span class="chat-card__type">@${escapeHtml(conv.username)}</span>
+                </div>
+              </div>
+            `;
+            fragment.appendChild(convDiv);
+          });
+        } else {
+          const empty = document.createElement('p');
+          empty.className = 'no-activities';
+          empty.textContent = 'No hay conversaciones aún.';
+          fragment.appendChild(empty);
+        }
+      }
+
+      // Mensaje si no hay nada para no administradores
+      if (!data.is_admin && !data.activities?.length && !data.support_room) {
+        const empty = document.createElement('p');
+        empty.className = 'no-activities';
+        empty.textContent = 'No hay conversaciones aún.';
+        fragment.appendChild(empty);
       }
 
       chatHubContainer.appendChild(fragment);

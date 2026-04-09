@@ -45,14 +45,22 @@ function createUserCard(user) {
 
   card.innerHTML = `
     <header class="user-header">
-      <div class="username-role">
-        <h2 class="username">${user.username}</h2>
-        <span class="role">${user.role}</span>
-      </div>
-      <button class="btn-toggle">
-        ${isActive ? 'Desactivar' : 'Activar'}
-      </button>
-    </header>
+    <div class="username-role">
+  <div class="user-avatar-wrapper">
+    ${user.profile_image
+      ? `<img src="${user.profile_image}" alt="${user.username}" onerror="this.parentElement.innerHTML='<div class=\\'user-avatar--placeholder\\'><i class=\\'fas fa-user\\'></i></div>'">`
+      : `<div class="user-avatar--placeholder"><i class="fas fa-user"></i></div>`
+    }
+  </div>
+  <div>
+    <h2 class="username">${user.username}</h2>
+    <span class="role">${user.role}</span>
+  </div>
+</div>
+    <button class="btn-toggle">
+      ${isActive ? 'Desactivar' : 'Activar'}
+    </button>
+  </header>
 
     <section class="vac-data">
       <h3>Información</h3>
@@ -74,15 +82,26 @@ function createUserCard(user) {
   btnToggle.addEventListener('click', async () => {
     const currentlyActive = card.classList.contains('active');
     const newState = currentlyActive ? 'inactiva' : 'activa';
+    const accion = currentlyActive ? 'desactivar' : 'activar';
+
+    // Pedir mensaje al admin
+    const adminMessage = await showPromptConfirm({
+      title: `¿Quieres ${accion} a ${user.username}?`,
+      message: `Puedes escribir un mensaje opcional para notificar al usuario:`,
+      placeholder: `Motivo para ${accion} la cuenta...`,
+      confirmText: accion.charAt(0).toUpperCase() + accion.slice(1),
+      cancelText: 'Cancelar'
+    });
+
+    // Si se canceló (null), no hacer nada
+    if (adminMessage === null) return;
 
     // Actualizar UI inmediatamente
     if (currentlyActive) {
-      card.classList.remove('active');
-      card.classList.add('inactive');
+      card.classList.replace('active', 'inactive');
       btnToggle.textContent = 'Activar';
     } else {
-      card.classList.remove('inactive');
-      card.classList.add('active');
+      card.classList.replace('inactive', 'active');
       btnToggle.textContent = 'Desactivar';
     }
 
@@ -92,31 +111,30 @@ function createUserCard(user) {
 
       if (result.success) {
         user.state = newState;
+
+        // Enviar email con el mensaje
+        await fetch(`index.php?accion=notifyUser&id=${user.id}&state=${newState}&message=${encodeURIComponent(adminMessage)}`);
+
       } else {
-        // Revertir UI si falla
+        // Revertir UI
         if (currentlyActive) {
-          card.classList.remove('inactive');
-          card.classList.add('active');
+          card.classList.replace('inactive', 'active');
           btnToggle.textContent = 'Desactivar';
         } else {
-          card.classList.remove('active');
-          card.classList.add('inactive');
+          card.classList.replace('active', 'inactive');
           btnToggle.textContent = 'Activar';
         }
-        alert('Error al cambiar el estado del usuario');
+        showAlert({ title: 'Error', message: 'No se pudo cambiar el estado del usuario' });
       }
     } catch (error) {
-      // Revertir UI si hay error de red
       if (currentlyActive) {
-        card.classList.remove('inactive');
-        card.classList.add('active');
+        card.classList.replace('inactive', 'active');
         btnToggle.textContent = 'Desactivar';
       } else {
-        card.classList.remove('active');
-        card.classList.add('inactive');
+        card.classList.replace('active', 'inactive');
         btnToggle.textContent = 'Activar';
       }
-      alert('Error de conexión al cambiar el estado');
+      showAlert({ title: 'Error', message: 'Error de conexión al cambiar el estado' });
     }
   });
 
@@ -138,9 +156,9 @@ function createUserCard(user) {
   // Botón Chat — el admin inicia conversación con ese usuario
   const btnMessage = card.querySelector('.btn-message');
   if (btnMessage) {
-      btnMessage.addEventListener('click', () => {
-          window.location.href = `index.php?accion=adminChat&user_id=${user.id}`;
-      });
+    btnMessage.addEventListener('click', () => {
+      window.location.href = `index.php?accion=adminChat&user_id=${user.id}`;
+    });
   }
 
   return card;

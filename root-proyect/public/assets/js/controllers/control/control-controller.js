@@ -297,7 +297,7 @@ function createActivityControlCard(activity, type = 'activity') {
     const organizerName = activity.offertant_name || activity.participant_name || 'Desconocido';
 
     section.innerHTML = `
-        <div class="activity-image">
+        <div class="activity-image-control">
             <img src="${imageUrl}" alt="Actividad" onerror="this.src='https://images.unsplash.com/photo-1507525428034-b723cf961d3e'">
         </div>
         <div class="activity-info">
@@ -316,7 +316,7 @@ function createActivityControlCard(activity, type = 'activity') {
             </div>
             <div class="actions-control">
                 <button data-id="${activity.id}" data-type="${type}" class="btn approve btn-approve">
-                    <i class="fas fa-check"></i> Aprobar
+                    <i class="fas fa-check"></i> Aceptar
                 </button>
                 <button data-id="${activity.id}" data-type="${type}" class="btn reject btn-reject">
                     <i class="fas fa-times"></i> Rechazar
