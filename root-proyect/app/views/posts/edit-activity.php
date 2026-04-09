@@ -25,6 +25,7 @@ function old(string $key, $fallback = ''): string
 
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Actividad</title>
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="icon" type="image/ico" href="assets/img/ico/icono.svg">

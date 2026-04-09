@@ -223,7 +223,7 @@ function initChatLogic() {
         if (data.user_conversations?.length) {
           data.user_conversations.forEach(conv => {
             const convDiv = document.createElement('a');
-            convDiv.href = `index.php?accion=userAdminChat&user_id=${conv.user_id}`;
+            convDiv.href = `index.php?accion=chatHub`;
             convDiv.className = "chat-card";
 
             const imgHtml = conv.profile_image
