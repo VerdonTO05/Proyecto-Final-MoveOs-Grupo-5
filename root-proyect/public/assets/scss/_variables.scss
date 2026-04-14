@@ -26,6 +26,15 @@ $light-theme: (
   c-purple:#6a1d41,
   c-purple-rgb:(106, 29, 65),
 
+  btn-edit:#4a6fa5,
+  btn-edit-hover:#3f5f8e,
+  btn-details:#d4a373,
+  btn-details-hover:#b88a5f,
+  btn-delete:#b23a48,
+  btn-delete-hover:#962f3b,
+  btn-function-accept:#5fa77a,
+  btn-function-accept-hover:#4f9168,
+
 );
 
 $dark-theme: (
@@ -57,4 +66,12 @@ $dark-theme: (
   c-purple:#d08084,
   c-purple-rgb:(208, 128, 132),
 
+  btn-edit:#6f9bd1,
+  btn-edit-hover:#5c86bb,
+  btn-details:#e6b980,
+  btn-details-hover:#cfa76e,
+  btn-delete:#d96b75,
+  btn-delete-hover:#c45862,
+  btn-function-accept:#7fd1a3,
+  btn-function-accept-hover:#6bbc90,
 );

@@ -236,14 +236,23 @@ body {
 }
 
 .approve {
-  background: var(--accent-green);
-  color: var(--text-on-primary);
+  background: var(--btn-function-accept);
+  color: whitesmoke;
+
+  &:hover{
+    background-color: var(--btn-function-accept-hover);
+  }
 }
 
 .reject {
   background: transparent;
-  border: 1px solid var(--accent-danger);
-  color: var(--accent-danger);
+  border: 1px solid var(--btn-delete);
+  color: var(--btn-delete);
+
+  &:hover{
+    background-color: var(--btn-delete-hover);
+    color:whitesmoke;
+  }
 }
 
 .btn:disabled {

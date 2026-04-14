@@ -178,62 +178,6 @@ footer {
     display: flex;
 }
 
-
-
-.chat-menu-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-
-// Menu cerrar sesión y opciones usuario
-#chat-dropdown {
-    position: absolute;
-    top: calc(100% + 0.6rem);
-    right: 0;
-
-    display: none;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0;
-
-    background: var(--bg-surface);
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    min-width: 180px;
-
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-    overflow: hidden;
-    z-index: 1000;
-}
-
-#chat-dropdown a,
-#display-chat {
-    height: 7rem;
-    text-align: center;
-    text-decoration: none;
-    color: var(--text-primary);
-    font-size: 0.95rem;
-    transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-a .chat-card {
-    height: 7rem;
-}
-
-//hover
-#chat-dropdown a:hover,
-#display-chat:hover {
-    background-color: var(--bg-muted);
-    color: var(--brand-primary);
-    cursor: pointer;
-}
-
-#chat-dropdown.visible {
-    display: flex;
-}
-
 /* Sidebar del usuario   */
 .sidebar {
     display: flex;

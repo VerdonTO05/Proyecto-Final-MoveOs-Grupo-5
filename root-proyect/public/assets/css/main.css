@@ -85,6 +85,14 @@ button {
   --c-red-rgb: 255, 49, 80;
   --c-purple: #6a1d41;
   --c-purple-rgb: 106, 29, 65;
+  --btn-edit: #4a6fa5;
+  --btn-edit-hover: #3f5f8e;
+  --btn-details: #d4a373;
+  --btn-details-hover: #b88a5f;
+  --btn-delete: #b23a48;
+  --btn-delete-hover: #962f3b;
+  --btn-function-accept: #5fa77a;
+  --btn-function-accept-hover: #4f9168;
 }
 
 .dark-mode {
@@ -111,6 +119,14 @@ button {
   --c-red-rgb: 217, 86, 89;
   --c-purple: #d08084;
   --c-purple-rgb: 208, 128, 132;
+  --btn-edit: #6f9bd1;
+  --btn-edit-hover: #5c86bb;
+  --btn-details: #e6b980;
+  --btn-details-hover: #cfa76e;
+  --btn-delete: #d96b75;
+  --btn-delete-hover: #c45862;
+  --btn-function-accept: #7fd1a3;
+  --btn-function-accept-hover: #6bbc90;
 }
 
 /* Base body */
@@ -264,54 +280,6 @@ footer p {
 }
 
 #user-dropdown.visible {
-  display: flex;
-}
-
-.chat-menu-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-#chat-dropdown {
-  position: absolute;
-  top: calc(100% + 0.6rem);
-  right: 0;
-  display: none;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 0;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-  min-width: 180px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
-  z-index: 1000;
-}
-
-#chat-dropdown a,
-#display-chat {
-  height: 7rem;
-  text-align: center;
-  text-decoration: none;
-  color: var(--text-primary);
-  font-size: 0.95rem;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-a .chat-card {
-  height: 7rem;
-}
-
-#chat-dropdown a:hover,
-#display-chat:hover {
-  background-color: var(--bg-muted);
-  color: var(--brand-primary);
-  cursor: pointer;
-}
-
-#chat-dropdown.visible {
   display: flex;
 }
 
@@ -1492,11 +1460,17 @@ select {
   font-size: 1rem;
   box-sizing: border-box;
   transition: background-color 0.2s;
+  background-color: var(--btn-details);
+  color: whitesmoke;
+  border: 1px solid var(--btn-details-hover);
   flex: 1;
+}
+.activity .activity-content .actions .btn-detail:hover {
+  background-color: var(--btn-details-hover);
 }
 .activity .activity-content .actions .btn-signup {
   background-color: var(--brand-primary);
-  color: var(--bg-surface);
+  color: whitesmoke;
   border-radius: 10px;
   padding: 0.75rem;
   border-color: var(--border-color);
@@ -1544,6 +1518,41 @@ select {
   opacity: 0;
   transform: scale(0.5);
   animation: popIn 0.5s forwards;
+}
+
+.btn-edit {
+  background-color: var(--btn-edit) !important;
+  color: whitesmoke;
+  border: 1px solid var(--btn-edit-hover) !important;
+}
+.btn-edit:hover {
+  background-color: var(--btn-edit-hover) !important;
+}
+
+.btn-delete {
+  background-color: var(--btn-delete) !important;
+  color: whitesmoke;
+  border: 1px solid var(--btn-delete-hover) !important;
+}
+.btn-delete:hover {
+  background-color: var(--btn-delete-hover) !important;
+}
+
+.btn-function.accept {
+  background-color: var(--btn-function-accept);
+  color: whitesmoke;
+  border: 1px solid var(--btn-function-accept-hover);
+}
+.btn-function.accept:hover {
+  background-color: var(--btn-function-accept-hover);
+}
+.btn-function.cancel {
+  background-color: var(--btn-delete);
+  color: whitesmoke;
+  border: 1px solid var(--btn-delete-hover);
+}
+.btn-function.cancel:hover {
+  background-color: var(--btn-delete-hover);
 }
 
 /* ---------- Keyframes ---------- */
@@ -2454,14 +2463,21 @@ body {
 }
 
 .approve {
-  background: var(--accent-green);
-  color: var(--text-on-primary);
+  background: var(--btn-function-accept);
+  color: whitesmoke;
+}
+.approve:hover {
+  background-color: var(--btn-function-accept-hover);
 }
 
 .reject {
   background: transparent;
-  border: 1px solid var(--accent-danger);
-  color: var(--accent-danger);
+  border: 1px solid var(--btn-delete);
+  color: var(--btn-delete);
+}
+.reject:hover {
+  background-color: var(--btn-delete-hover);
+  color: whitesmoke;
 }
 
 .btn:disabled {
@@ -3692,9 +3708,43 @@ main.chat-page {
   border-radius: 50%;
 }
 
+.chat-menu-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
 #chat-dropdown {
-  max-height: 18rem;
-  overflow-y: auto;
+  position: absolute;
+  top: calc(100% + 0.1rem);
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  min-width: 180px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+  z-index: 1000;
+  /* 🔥 CLAVE */
+  overflow: clip;
+  /* mejor que hidden */
+  /* 🔥 evita cálculos raros */
+  contain: layout paint;
+  /* oculto */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-5px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+#chat-dropdown.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 @media (max-width: 700px) {

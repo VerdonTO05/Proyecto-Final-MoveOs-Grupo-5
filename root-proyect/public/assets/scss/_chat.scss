@@ -716,9 +716,52 @@ main.chat-page {
   border-radius: 50%;
 }
 
+.chat-menu-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+
+// Menu cerrar sesión y opciones usuario
 #chat-dropdown {
-  max-height: 18rem;
-  overflow-y: auto;
+  position: absolute;
+  top: calc(100% + 0.1rem);
+  right: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  min-width: 180px;
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+  z-index: 1000;
+
+  /* 🔥 CLAVE */
+  overflow: clip;
+  /* mejor que hidden */
+
+  /* 🔥 evita cálculos raros */
+  contain: layout paint;
+
+  /* oculto */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-5px);
+  pointer-events: none;
+
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+#chat-dropdown.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 // ── Responsive ──────────────────────────────────────────────────

@@ -146,11 +146,19 @@
 
       .btn-detail {
         @include m.btn-base();
+        background-color: var(--btn-details);
+        color: whitesmoke;
+        border: 1px solid var(--btn-details-hover);
         flex: 1;
+
+        &:hover {
+          background-color: var(--btn-details-hover);
+        }
+
       }
 
       .btn-signup {
-        @include m.btn-base(var(--brand-primary), var(--bg-surface));
+        @include m.btn-base(var(--brand-primary), whitesmoke);
         flex: 1;
 
         &.enrolled {
@@ -199,6 +207,50 @@
       animation: popIn 0.5s forwards;
     }
   }
+}
+
+.btn-edit {
+  background-color: var(--btn-edit) !important;
+  color: whitesmoke;
+  border: 1px solid var(--btn-edit-hover) !important;
+
+  &:hover {
+    background-color: var(--btn-edit-hover) !important;
+  }
+}
+
+.btn-delete {
+  background-color: var(--btn-delete) !important;
+  color: whitesmoke;
+  border: 1px solid var(--btn-delete-hover) !important;
+
+  &:hover {
+    background-color: var(--btn-delete-hover) !important;
+  }
+}
+
+.btn-function {
+
+  &.accept {
+    background-color: var(--btn-function-accept);
+    color: whitesmoke;
+    border: 1px solid var(--btn-function-accept-hover);
+
+    &:hover {
+      background-color: var(--btn-function-accept-hover);
+    }
+  }
+
+  &.cancel {
+    background-color: var(--btn-delete);
+    color: whitesmoke;
+    border: 1px solid var(--btn-delete-hover);
+
+    &:hover {
+      background-color: var(--btn-delete-hover);
+    }
+  }
+
 }
 
 /* ---------- Keyframes ---------- */

@@ -134,7 +134,7 @@ function createActivityCard(activity, type) {
             ${buildFooterHTML(activity)}
             <div class="actions">
                 <button class="btn-detail"  data-id="${activity.id}">Ver Detalles</button>
-                <button class="btn-function"  data-id="${activity.id}">${activity.state == 'aprobada' ? 'Cancelar' : 'Aceptar'}</button>
+                <button class="btn-function ${activity.state == 'aprobada' ? 'cancel' : 'accept'}" data-id="${activity.id}">${activity.state == 'aprobada' ? 'Cancelar' : 'Aceptar'}</button>
             </div>
         </div>`;
 
@@ -180,11 +180,13 @@ function createActivityCard(activity, type) {
 
                 if (realizar === 'approveActivity') {
                     activity.state = 'aprobada';
+                    btnFunction.classList = 'btn-function cancel';
                     stateEl.innerHTML = `<i class="fas fa-check-double"></i>`;
                     btnFunction.textContent = 'Cancelar';
                 } else {
                     activity.state = 'rechazada';
-                    stateEl.innerHTML = `<i class="fas fa-times"></i>`; 
+                    btnFunction.classList = 'btn-function accept';
+                    stateEl.innerHTML = `<i class="fas fa-times"></i>`;
                     btnFunction.textContent = 'Aceptar';
                 }
 

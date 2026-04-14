@@ -70,7 +70,7 @@ function createUserCard(user) {
     </section>
 
     <section class="buttons">
-      <button class="btn btn-edit">Ver datos</button>
+      <button class="btn btn-detail">Ver datos</button>
       <button class="btn btn-message">Chat</button>
     </section>
 
@@ -139,7 +139,7 @@ function createUserCard(user) {
   });
 
   // Botón ver/ocultar datos
-  const btnEdit = card.querySelector('.btn-edit');
+  const btnEdit = card.querySelector('.btn-detail');
   const vacData = card.querySelector('.vac-data');
 
   btnEdit.addEventListener('click', () => {
