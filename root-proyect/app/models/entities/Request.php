@@ -395,54 +395,6 @@ class Request
             if ($stmt->rowCount() === 0) {
                 return ['error' => 'already_accepted'];
             }
-
-            // Obtener los datos completos de la petición para crear la actividad
-            $reqSql = "SELECT * FROM {$this->table_name} WHERE id = :id";
-            $stmt = $this->conn->prepare($reqSql);
-            $stmt->execute(['id' => $request_id]);
-            $reqData = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            // Obtener el email del organizador
-            $userSql = "SELECT email FROM users WHERE id = :id";
-            $stmt = $this->conn->prepare($userSql);
-            $stmt->execute(['id' => $organizer_id]);
-            $organizer = $stmt->fetch(PDO::FETCH_ASSOC);
-            $organizerEmail = $organizer ? $organizer['email'] : $reqData['organizer_email'];
-
-            // Crear la actividad a partir de la petición aceptada
-            $actSql = "INSERT INTO activities
-                (offertant_id, category_id, title, description, date, time,
-                 price, max_people, current_registrations, organizer_email,
-                 location, transport_included, departure_city, language,
-                 min_age, pets_allowed, dress_code, image_url, state)
-                VALUES
-                (:offertant_id, :category_id, :title, :description, :date, :time,
-                 :price, :max_people, :current_registrations, :organizer_email,
-                 :location, :transport_included, :departure_city, :language,
-                 :min_age, :pets_allowed, :dress_code, :image_url, 'aprobada')";
-
-            $stmt = $this->conn->prepare($actSql);
-            $stmt->execute([
-                'offertant_id'          => $organizer_id,
-                'category_id'           => $reqData['category_id'],
-                'title'                 => $reqData['title'],
-                'description'           => $reqData['description'],
-                'date'                  => $reqData['date'],
-                'time'                  => $reqData['time'],
-                'price'                 => 0,
-                'max_people'            => null,
-                'current_registrations' => 0,
-                'organizer_email'       => $organizerEmail,
-                'location'              => $reqData['location'],
-                'transport_included'    => $reqData['transport_included'],
-                'departure_city'        => $reqData['departure_city'],
-                'language'              => $reqData['language'],
-                'min_age'               => $reqData['min_age'],
-                'pets_allowed'          => $reqData['pets_allowed'],
-                'dress_code'            => $reqData['dress_code'],
-                'image_url'             => $reqData['image_url'],
-            ]);
-
             return true;
 
         } catch (Exception $e) {

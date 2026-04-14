@@ -1718,6 +1718,7 @@ select {
 ========================= */
 @media (max-width: 576px) {
   .filters {
+    width: 100%;
     flex-direction: column;
     gap: 0.75rem;
   }
@@ -3727,12 +3728,8 @@ main.chat-page {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
   box-sizing: border-box;
   z-index: 1000;
-  /* 🔥 CLAVE */
   overflow: clip;
-  /* mejor que hidden */
-  /* 🔥 evita cálculos raros */
   contain: layout paint;
-  /* oculto */
   opacity: 0;
   visibility: hidden;
   transform: translateY(-5px);
@@ -3762,6 +3759,15 @@ main.chat-page {
   }
   .chat-conversation-panel {
     width: 100%;
+  }
+  #chat-dropdown {
+    position: fixed;
+    top: 50%;
+    right: 4%;
+    transform: translateX(-50%) translateY(-5px);
+    width: calc(100% - 2rem);
+    max-width: 400px;
+    min-width: unset;
   }
 }
 

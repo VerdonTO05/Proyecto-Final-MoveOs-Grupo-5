@@ -206,9 +206,9 @@ function old(string $key, $fallback = ''): string
                                 <span>Vista previa</span>
                             </div>
                         </div>
-                        <p class="current-image-hint">
+                        <p class="alert" style="margin: 0;">
                             <i class="fas fa-info-circle"></i>
-                            Sube una nueva imagen para reemplazarla, o deja el campo vacío para mantener ésta.
+                            Sube una nueva imagen para reemplazarla, o deja el campo vacío para mantenerla.
                         </p>
                     </div>
                 <?php endif; ?>

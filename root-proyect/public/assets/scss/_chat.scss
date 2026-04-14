@@ -728,32 +728,21 @@ main.chat-page {
   position: absolute;
   top: calc(100% + 0.1rem);
   right: 0;
-
   display: flex;
   flex-direction: column;
-
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
   border-radius: 10px;
   min-width: 180px;
-
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
   box-sizing: border-box;
   z-index: 1000;
-
-  /* 🔥 CLAVE */
   overflow: clip;
-  /* mejor que hidden */
-
-  /* 🔥 evita cálculos raros */
   contain: layout paint;
-
-  /* oculto */
   opacity: 0;
   visibility: hidden;
   transform: translateY(-5px);
   pointer-events: none;
-
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
@@ -783,6 +772,17 @@ main.chat-page {
   }
 
   .chat-conversation-panel {
-    width: 100%; // en móvil recupera el 100% normal
+    width: 100%; 
   }
+
+  #chat-dropdown {
+    position: fixed; 
+    top: 50%;
+    right: 4%;
+    transform: translateX(-50%) translateY(-5px);
+    width: calc(100% - 2rem); 
+    max-width: 400px;
+    min-width: unset;
+  }
+
 }
