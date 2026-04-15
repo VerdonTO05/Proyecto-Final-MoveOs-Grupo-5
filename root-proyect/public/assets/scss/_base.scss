@@ -67,15 +67,6 @@ header {
     }
 }
 
-.logo-container {
-    a {
-        &:hover {
-            border-bottom: none;
-        }
-    }
-}
-
-
 /* Footer */
 footer {
     display: flex;
@@ -241,6 +232,10 @@ footer {
         display: flex;
         align-items: center;
         text-decoration: none;
+
+        &:hover {
+            border-bottom: none;
+        }
     }
 
     img {
@@ -353,13 +348,6 @@ main section {
 }
 
 /* Estadísticas */
-.stats {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 2rem;
-}
-
 .stats div {
     text-align: center;
 }

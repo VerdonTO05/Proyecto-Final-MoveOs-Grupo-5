@@ -56,9 +56,9 @@ $username = $_SESSION['username'] ?? 'Usuario';
                 <a href="index.php?accion=logout" class="btn-inactive-logout btn-logout">
                     <i class="fas fa-sign-out-alt"></i> Cerrar sesión
                 </a>
-                <button class="btn-inactive-logout btn-profile" disabled title="Próximamente disponible">
+                <a href="index.php?accion=userAdminChat" class="btn-inactive-logout btn-profile">
                     <i class="fas fa-comments"></i> Hablar con un administrador
-                </button>
+                </a>
             </div>
         </div>
     </div>

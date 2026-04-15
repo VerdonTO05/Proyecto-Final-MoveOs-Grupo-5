@@ -6,6 +6,7 @@ return [
   'login' => __DIR__ . '/../app/controllers/access/login-controller.php',
   'registerUser' => __DIR__ . '/../app/controllers/access/register-controller.php',
   'logout' => __DIR__ . '/../app/controllers/access/logout.php',
+  'inactiveUser' => __DIR__ . '/../app/views/user/inactive-user.php',
 
   'editUser' => __DIR__ . '/../app/controllers/user/edit-info-controller.php',
   'viewInfo' => __DIR__ . '/../app/controllers/user/see-info-controller.php',

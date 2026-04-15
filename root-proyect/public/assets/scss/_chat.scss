@@ -9,7 +9,8 @@
   flex-direction: column;
   height: 100%;
   overflow: hidden;
-  padding: 0rem !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 // ── Cabecera del chat ─────────────────────────────────────────
@@ -445,11 +446,6 @@
 }
 
 // ── Columna derecha (conversación activa) ───────────────────────
-
-main.chat-page {
-  padding: 0 !important;
-  margin: 0 !important;
-}
 
 .chat-conversation-panel {
   flex: 1;

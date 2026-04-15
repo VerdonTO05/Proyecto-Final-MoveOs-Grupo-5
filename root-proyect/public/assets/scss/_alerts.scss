@@ -118,6 +118,17 @@
 
   .alert-body {
     font-size: 0.9rem;
+    line-height: 1.4;
+
+    ul {
+      padding-left: 20px;
+      margin: 0;
+      list-style: disc;
+    }
+
+    li {
+      margin-bottom: 5px;
+    }
   }
 
   .alert-close {
@@ -142,40 +153,4 @@
 
 .alert-overlay.warning .alert-box {
   border-left: 4px solid var(--c-yellow);
-}
-
-/* Animaciones */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeOut {
-  to {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-}
-
-.alert-box .alert-body {
-  font-size: 0.9rem;
-  line-height: 1.4;
-
-  /* Aseguramos que listas se vean correctamente */
-  ul {
-    padding-left: 20px;
-    margin: 0;
-    list-style: disc;
-  }
-
-  li {
-    margin-bottom: 5px;
-  }
 }
