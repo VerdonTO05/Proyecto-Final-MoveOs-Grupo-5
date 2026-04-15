@@ -18,7 +18,7 @@ $preselectUserId = (int) ($_GET['user_id'] ?? 0);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat Admin | MOVEos</title>
+    <title>Chat Admin - MOVEos</title>
     <script src="assets/js/utils.js"></script>
     <script src="assets/js/utils/header-footer.js"></script>
     <script src="assets/js/theme-init.js"></script>

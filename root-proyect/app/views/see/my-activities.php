@@ -20,7 +20,7 @@ $user = getCurrentUser();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOVEos - Explora <?= $user['role'] == 'organizador' ? 'Mis Actividades' : 'Mis Peticiones' ?></title>
+    <title>Explorar <?= $user['role'] == 'organizador' ? 'Mis Actividades' : 'Mis Peticiones' ?> - MOVEos</title>
     <script src="assets/js/utils.js"></script>
     <script src="assets/js/utils/header-footer.js"></script>
     <script src="assets/js/theme-init.js"></script>

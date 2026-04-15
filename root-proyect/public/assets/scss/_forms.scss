@@ -51,7 +51,7 @@
     border-radius: 2rem;
     padding: 0.3rem;
     margin-bottom: 1.5rem;
-
+    flex-wrap: wrap;
 
     .tab-btn {
         @include m.btn-base(var(--bg-main), var(--text-secondary), clamp(0.6rem, 2vw, 0.9rem) clamp(1rem, 3vw, 1.3rem), 2rem);
