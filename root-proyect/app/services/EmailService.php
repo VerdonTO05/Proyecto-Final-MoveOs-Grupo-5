@@ -127,4 +127,116 @@ class EmailService
             return false;
         }
     }
+
+    // TODO: que se mande un email cuando se elimine una actividad
+    public function sendActivityDeleted($activityTitle, $participants)
+    {
+        try {
+            foreach ($participants as $p) {
+                $this->mailer->clearAddresses();
+                $this->mailer->addAddress($p['email'], $p['name']);
+                $this->mailer->isHTML(true);
+
+                $this->mailer->Subject = "Actividad cancelada: {$activityTitle}";
+
+                $this->mailer->Body = "
+                <div style='font-family: Arial; max-width:600px; margin:auto; padding:20px;'>
+                    <h2 style='color:#8C1E32;'>Actividad cancelada</h2>
+                    <p>Hola <b>{$p['name']}</b>,</p>
+                    <p>Te informamos que la actividad <b>{$activityTitle}</b> ha sido cancelada por el organizador o un administrador.</p>
+                    <p>Ya no es necesario que asistas ni realices ninguna acción.</p>
+                    <hr>
+                    <p style='font-size:12px;color:#888;'>MOVEos</p>
+                </div>
+            ";
+
+                $this->mailer->AltBody = "La actividad {$activityTitle} ha sido cancelada.";
+
+                $this->mailer->send();
+            }
+
+            return true;
+        } catch (Exception $e) {
+            error_log("Error email actividad eliminada: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    // TODO: cuando se edite una actividad que se envie un correo
+    public function sendActivityUpdated($activityTitle, $changes, $participants)
+    {
+        try {
+            foreach ($participants as $p) {
+                $this->mailer->clearAddresses();
+                $this->mailer->addAddress($p['email'], $p['name']);
+                $this->mailer->isHTML(true);
+
+                $this->mailer->Subject = "Actividad actualizada: {$activityTitle}";
+
+                $this->mailer->Body = "
+                <div style='font-family: Arial; max-width:600px; margin:auto; padding:20px;'>
+                    <h2 style='color:#8C1E32;'>Actividad actualizada</h2>
+                    <p>Hola <b>{$p['name']}</b>,</p>
+                    <p>La actividad <b>{$activityTitle}</b> ha sido modificada.</p>
+
+                    <div style='background:#f4f4f4; padding:10px; border-radius:8px;'>
+                        {$changes}
+                    </div>
+
+                    <p>Te recomendamos revisar los nuevos detalles.</p>
+                </div>
+            ";
+
+                $this->mailer->AltBody = "La actividad {$activityTitle} ha sido actualizada.";
+
+                $this->mailer->send();
+            }
+
+            return true;
+        } catch (Exception $e) {
+            error_log("Error email actividad actualizada: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    // TODO: Crear un cron que se ejecute todos los dias a las 8 de la mañana y mande los correos  
+    public function sendTomorrowActivityReminder($activity, $participants)
+    {
+        try {
+            foreach ($participants as $p) {
+                $this->mailer->clearAddresses();
+                $this->mailer->addAddress($p['email'], $p['name']);
+                $this->mailer->isHTML(true);
+
+                $this->mailer->Subject = "Mañana tienes actividad: {$activity['title']}";
+
+                $this->mailer->Body = "
+                <div style='font-family: Arial; max-width:600px; margin:auto; padding:20px;'>
+                    <h2 style='color:#8C1E32;'>Recordatorio de actividad</h2>
+
+                    <p>Hola <b>{$p['name']}</b>,</p>
+
+                    <p>Te recordamos que <b>mañana</b> tienes la siguiente actividad:</p>
+
+                    <h3>{$activity['title']}</h3>
+
+                    <p><b>Fecha:</b> {$activity['date']}</p>
+                    <p><b>Hora:</b> {$activity['time']}</p>
+
+                    <p>¡Te esperamos!</p>
+                </div>
+            ";
+
+                $this->mailer->AltBody =
+                    "Mañana tienes la actividad {$activity['title']} a las {$activity['time']}";
+
+                $this->mailer->send();
+            }
+
+            return true;
+        } catch (Exception $e) {
+            error_log("Error email recordatorio mañana: " . $e->getMessage());
+            return false;
+        }
+    }
 }
