@@ -326,18 +326,30 @@ DELIMITER $$
 
 CREATE PROCEDURE deactivate_user(IN p_user_id INT)
 BEGIN
+
+  -- Actividades del organizador
   UPDATE activities
   SET is_finished = 1,
-      state       = 'finalizada'
+      state = 'finalizada'
   WHERE offertant_id = p_user_id
-    AND is_finished  = 0;
+    AND date >= CURDATE();
 
+  -- Requests donde es organizador
   UPDATE requests
-  SET state = 'finalizada'
-  WHERE participant_id = p_user_id
-    AND state         != 'finalizada';
+  SET accepted_by = NULL
+  WHERE accepted_by = p_user_id;
 
+  -- Inscripciones del participante
+  DELETE FROM registrations
+  WHERE participant_id = p_user_id;
+
+  -- Requests del participante
+  DELETE FROM requests
+  WHERE participant_id = p_user_id;
+
+  -- Finalmente eliminar usuario
   DELETE FROM users WHERE id = p_user_id;
+
 END$$
 
 DELIMITER ;

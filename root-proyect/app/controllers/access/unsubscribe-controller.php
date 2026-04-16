@@ -6,6 +6,9 @@ header('Content-Type: application/json; charset=utf-8');
 
 require_once __DIR__ . '/../../../config/database.php';
 require_once __DIR__ . '/../../models/entities/User.php';
+require_once __DIR__ . '/../../models/entities/Request.php';
+require_once __DIR__ . '/../../models/entities/Activity.php';
+require_once __DIR__ . '/../../models/entities/Registration.php';
 
 // Verificar sesión
 if (!isset($_SESSION['user_id'])) {
@@ -18,10 +21,29 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $userId = $_SESSION['user_id'];
+$role = $_SESSION['role'];
 
 try {
     $db = (new Database())->getConnection();
     $userModel = new User($db);
+    $requestModel = new Request($db);
+
+
+    $userNow = $userModel->getUserById($userId);
+    
+    if($role === 'participante'){
+        $requests = $requestModel->getRequestsByParticipantId($userId);
+        foreach($request as $r){
+            //email al organizador, el usuario se ha dado de baja por tanto tal peticion ha sido cancelada
+        }
+
+        $registrations = $registrationModel->getActivitiesByParticipant($userId);
+        //para cada actividad, ¿enviar email al propietario para informar?
+    }else{
+        // de sus actividades obtener a los participantes incritos y mandar un email a cada uno
+
+        // si tiene alguna peticion aceptada, enviar email al propietario de la actividad
+    }
 
     if ($userModel->deactivateUser($userId)) {
 

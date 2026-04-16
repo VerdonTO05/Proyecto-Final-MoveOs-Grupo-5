@@ -250,5 +250,20 @@ class Registration
         ]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function getActivitiesByParticipant($participant_id)
+    {
+        $sql = "SELECT a.* 
+            FROM registrations r
+            INNER JOIN activities a ON r.activity_id = a.id
+            WHERE r.participant_id = :participant_id";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            'participant_id' => $participant_id
+        ]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 ?>
