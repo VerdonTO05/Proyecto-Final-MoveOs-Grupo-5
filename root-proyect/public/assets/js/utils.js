@@ -447,3 +447,13 @@ window.buildChatHTML = function (activityTitle) {
         </div>
     `;
 }
+
+// Handler del botón de cierre en páginas fallback (login.php / register.php)
+document.addEventListener('DOMContentLoaded', () => {
+    const closeBtn = document.querySelector('.close-btn');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            window.location.href = 'index.php';
+        });
+    }
+});

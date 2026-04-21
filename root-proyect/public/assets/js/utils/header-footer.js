@@ -40,12 +40,8 @@ const headerHTML = `
         </div>
       </div>
 
-      <div class="user-menu-container">
-        <button id="user-btn"><img id="nav-avatar" class="nav-avatar" src="assets/img/default-avatar.png" alt="Avatar"></button>
-        <div id="user-dropdown" class="invisible">
-          <span id="display-username"></span>
-          <a href="#" id="logout-link">Cerrar sesión</a>
-        </div>
+      <div class="user-menu-container" id="user-menu-area">
+        <!-- Se rellena dinámicamente según sesión -->
       </div>
     </div>
 
@@ -95,13 +91,24 @@ const footerHTML = `
    INICIALIZADOR PRINCIPAL
    ========================= */
 document.addEventListener("DOMContentLoaded", () => {
+  loadAuthModal();
   injectLayout();
   initThemeLogic();
   initUserLogic();
   initSidebarLogic();
-  initChatLogic()
+  initChatLogic();
   initUnsubscribeLogic();
 });
+
+/**
+ * Carga auth-modal.js dinámicamente si no está ya en el DOM
+ */
+function loadAuthModal() {
+  if (window.openAuthModal) return; // ya cargado
+  const script = document.createElement('script');
+  script.src = 'assets/js/utils/auth-modal.js';
+  document.head.appendChild(script);
+}
 
 /* =========================
    LAYOUT
@@ -115,30 +122,56 @@ function injectLayout() {
    USUARIO: DROPDOWN Y LOGOUT
    ========================= */
 function initUserLogic() {
-  const userBtn = document.getElementById('user-btn');
+  const userMenuArea = document.getElementById('user-menu-area');
+  const user = window.CURRENT_USER || null;
+
+  if (!userMenuArea) return;
+
+  if (!user) {
+    // Usuario NO autenticado → mostrar botones de acceso
+    userMenuArea.innerHTML = `
+      <div class="auth-header-btns">
+        <button id="header-login-btn" class="btn-header-login">Iniciar sesión</button>
+        <button id="header-register-btn" class="btn-header-register">Registrarse</button>
+      </div>`;
+
+    document.getElementById('header-login-btn')?.addEventListener('click', () => {
+      if (window.openAuthModal) openAuthModal('login');
+      else window.location.href = 'index.php?accion=loginView';
+    });
+    document.getElementById('header-register-btn')?.addEventListener('click', () => {
+      if (window.openAuthModal) openAuthModal('register');
+      else window.location.href = 'index.php?accion=register';
+    });
+    return;
+  }
+
+  // Usuario autenticado → mostrar avatar + dropdown
+  userMenuArea.innerHTML = `
+    <button id="user-btn"><img id="nav-avatar" class="nav-avatar" src="assets/img/default-avatar.png" alt="Avatar"></button>
+    <div id="user-dropdown" class="invisible">
+      <span id="display-username"></span>
+      <a href="#" id="logout-link">Cerrar sesión</a>
+    </div>`;
+
+  const userBtn      = document.getElementById('user-btn');
   const userDropdown = document.getElementById('user-dropdown');
-  const logoutLink = document.getElementById('logout-link');
+  const logoutLink   = document.getElementById('logout-link');
   const displayUsername = document.getElementById('display-username');
 
-  const user = window.CURRENT_USER || null;
-  if (!userBtn || !userDropdown) return;
+  // Actualizar avatar
+  const navAvatar = document.getElementById('nav-avatar');
+  if (navAvatar && user.profile_image) {
+    navAvatar.src = user.profile_image + '?t=' + Date.now();
+  }
 
-  // Mostrar/ocultar dropdown
   userBtn.addEventListener('click', (e) => {
     e.stopPropagation();
-    if (!user) return window.location.href = 'index.php?accion=loginView';
     displayUsername && (displayUsername.innerText = user.name || 'Usuario');
     hideElement(document.getElementById('chat-dropdown'));
     toggleVisibility(userDropdown);
   });
 
-  // Actualizar avatar del navbar con la imagen del usuario
-  const navAvatar = document.getElementById('nav-avatar');
-  if (navAvatar && user && user.profile_image) {
-    navAvatar.src = user.profile_image + '?t=' + Date.now();
-  }
-
-  // Logout
   logoutLink?.addEventListener('click', (e) => {
     e.preventDefault();
     hideElement(userDropdown);
@@ -156,7 +189,10 @@ function initChatLogic() {
 
   chatBtn.addEventListener('click', async (e) => {
     e.stopPropagation();
-    if (!user) return window.location.href = 'index.php?accion=loginView';
+    if (!user) {
+      if (window.openAuthModal) return openAuthModal('login');
+      return window.location.href = 'index.php?accion=loginView';
+    }
 
     hideElement(document.getElementById('user-dropdown'));
     toggleVisibility(chatDropdown);

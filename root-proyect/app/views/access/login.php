@@ -16,25 +16,17 @@ if (isset($_SESSION['user_id'])) {
     <link rel="icon" type="image/ico" href="assets/img/ico/icono.svg" id="icon.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="assets/js/theme-init.js"></script>
-    <script src="assets/js/main.js"></script>
     <script src="assets/js/utils.js"></script>
     <script src="assets/js/controllers/access/login-controller.js"></script>
 </head>
 
 <body>
-    <!-- Switch del tema -->
-    <div class="icons">
-        <label class="switch top-right">
-            <input type="checkbox" id="theme-toggle" role="switch" aria-checked="false" aria-label="Cambiar tema claro/oscuro">
-            <span class="slider"></span>
-        </label>
-    </div>
-    <!-- Contenedor principal -->
-    <main class="first">
+    <!-- Contenedor principal (modal overlay) -->
+    <main class="first" id="login-modal" role="dialog" aria-modal="true" aria-labelledby="login-title">
         <div class="container">
-            <button class="close-btn" aria-label="Cerrar formulario" type="button">&times;</button>
+            <button class="close-btn" aria-label="Cerrar y volver al inicio" type="button">&times;</button>
             <header class="header-form">
-                <h1>BIENVENIDO a MOVEos</h1>
+                <h1 id="login-title">BIENVENIDO a MOVEos</h1>
                 <p>Inicia sesión para continuar tu aventura</p>
             </header>
 
@@ -59,7 +51,7 @@ if (isset($_SESSION['user_id'])) {
                     <i class="fas fa-lock icon" aria-hidden="true"></i>
                     <div class="div-password">
                         <input type="password" id="password" name="password" placeholder="••••••••" required>
-                        <button type="button" id="toggle-password">
+                        <button type="button" id="toggle-password" aria-label="Mostrar/Ocultar contraseña">
                             <i class="fa-solid fa-eye"></i>
                         </button>
                     </div>
@@ -71,4 +63,4 @@ if (isset($_SESSION['user_id'])) {
     </main>
 </body>
 
-</html>
+</html>

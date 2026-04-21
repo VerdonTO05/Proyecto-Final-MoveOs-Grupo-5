@@ -126,6 +126,46 @@ footer {
     align-items: center;
 }
 
+/* Botones login/register para usuarios no autenticados */
+.auth-header-btns {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-header-login {
+    padding: 0.45rem 1rem;
+    border-radius: 8px;
+    border: 1.5px solid var(--brand-primary);
+    background: transparent;
+    color: var(--brand-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+
+    &:hover {
+        background: var(--brand-primary);
+        color: var(--text-on-primary);
+    }
+}
+
+.btn-header-register {
+    padding: 0.45rem 1rem;
+    border-radius: 8px;
+    border: 1.5px solid var(--brand-dark);
+    background: var(--brand-dark);
+    color: var(--text-on-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+        opacity: 0.85;
+    }
+}
+
 
 // Menu cerrar sesión y opciones usuario
 #user-dropdown {

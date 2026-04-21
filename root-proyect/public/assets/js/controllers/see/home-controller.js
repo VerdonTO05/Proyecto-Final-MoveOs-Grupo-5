@@ -12,7 +12,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       'warning',
       2500
     );
-    window.location.href = "index.php?accion=loginView";
+    if (window.openAuthModal) {
+      openAuthModal('login');
+    } else {
+      window.location.href = "index.php?accion=loginView";
+    }
     return;
   }
 

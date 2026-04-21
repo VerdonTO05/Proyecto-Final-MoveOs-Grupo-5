@@ -2,13 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initThemeLogic();
   renderHeaderByRole();
 
-  const closeBtn = document.querySelector(".close-btn");
-
-  if (closeBtn) {
-    closeBtn.addEventListener("click", () => {
-      window.location.href = "index.php";
-    });
-  }
 
   //Filtro de publicaciones
   const filterType = document.getElementById("filterType");

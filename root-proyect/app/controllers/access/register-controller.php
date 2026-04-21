@@ -16,6 +16,10 @@ if (session_status() === PHP_SESSION_NONE) {
 // Establecer el tipo de respuesta como JSON con codificación UTF-8
 header('Content-Type: application/json; charset=utf-8');
 
+// Cargar la conexión a la base de datos y el modelo de usuario
+require_once __DIR__ . '/../../../config/database.php';
+require_once __DIR__ . '/../../models/entities/User.php';
+
 // Leer y decodificar el cuerpo de la petición JSON
 $input = file_get_contents('php://input');
 $data = json_decode($input, true);
@@ -23,8 +27,8 @@ $data = json_decode($input, true);
 // Obtener y limpiar cada campo; usar string vacío si no existe en la petición
 $fullname = trim($data['fullname'] ?? '');
 $username = trim($data['username'] ?? '');
-$email = trim($data['email'] ?? '');
-$rol = $data['rol'] ?? '';
+$email    = trim($data['email']    ?? '');
+$rol      = $data['rol']      ?? '';
 $password = $data['password'] ?? '';
 
 // Validar que ningún campo obligatorio esté vacío antes de continuar
@@ -34,9 +38,9 @@ if (empty($fullname) || empty($username) || empty($email) || empty($rol) || empt
 }
 
 try {
-    // Crear conexión PDO a la base de datos con manejo de errores por excepción
-    $bd = new PDO('mysql:host=localhost;dbname=moveos;charset=utf8', 'root', '');
-    $bd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    // Instanciar la conexión a la base de datos usando la clase del proyecto
+    $database = new Database();
+    $bd = $database->getConnection();
 
     // Verificar que el rol enviado existe en la tabla de roles y obtener su ID
     $consultaRol = $bd->prepare('SELECT id, name FROM roles WHERE name = ?');
@@ -49,7 +53,7 @@ try {
         exit;
     }
 
-    $idRol = $rolData['id'];
+    $idRol   = $rolData['id'];
     $rolName = $rolData['name'];
 
     // Hashear la contraseña antes de almacenarla (nunca se guarda en texto plano)
@@ -63,11 +67,15 @@ try {
     if ($insert->rowCount() == 1) {
         $userId = $bd->lastInsertId();
 
+        // Regenerar el ID de sesión para prevenir ataques de fijación de sesión
+        session_regenerate_id(true);
+
         // Iniciar sesión automáticamente tras el registro exitoso
-        $_SESSION['user_id'] = $userId;
+        $_SESSION['user_id']  = $userId;
         $_SESSION['username'] = $username;
-        $_SESSION['role'] = $rolName;
-        $_SESSION['email'] = $email;
+        $_SESSION['role']     = $rolName;
+        $_SESSION['email']    = $email;
+        $_SESSION['state']    = 'activa'; // Estado por defecto al registrar
 
         // Enviar email de bienvenida (no bloquea el registro si falla)
         try {
@@ -82,9 +90,9 @@ try {
             'success' => true,
             'message' => 'Usuario registrado con éxito',
             'userData' => [
-                'user_id' => $userId,
+                'user_id'  => $userId,
                 'username' => $username,
-                'role' => $rolName
+                'role'     => $rolName
             ]
         ]);
     }
@@ -109,4 +117,4 @@ try {
         'success' => false,
         'message' => 'Error inesperado. Inténtalo más tarde.'
     ]);
-}
+}

@@ -14,7 +14,6 @@ if (isset($_SESSION['user_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrarse - MOVEos</title>
     <script src="assets/js/theme-init.js"></script>
-    <script src="assets/js/main.js"></script>
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="icon" type="image/ico" href="assets/img/ico/icono.svg" id="icon.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -23,20 +22,13 @@ if (isset($_SESSION['user_id'])) {
 </head>
 
 <body>
-    <!-- Switch del tema -->
-    <div class="icons">
-        <label class="switch top-right">
-            <input type="checkbox" id="theme-toggle" role="swicth" aria-checked="false" aria-label="Cambiar tema claro/oscuro">
-            <span class="slider"></span>
-        </label>
-    </div>
-    <!-- Contenedor principal -->
-    <main class="first register">
+    <!-- Contenedor principal (modal overlay) -->
+    <main class="first register" id="register-modal" role="dialog" aria-modal="true" aria-labelledby="register-title">
         <div class="container">
-            <button class="close-btn" type="button" aria-label="Cerrar formulario">&times;</button>
+            <button class="close-btn" type="button" aria-label="Cerrar y volver al inicio">&times;</button>
 
             <header class="header-form">
-                <h1>BIENVENIDO a MOVEos</h1>
+                <h1 id="register-title">BIENVENIDO a MOVEos</h1>
                 <p>Crea una cuenta para comenzar tu aventura</p>
             </header>
 
@@ -100,4 +92,4 @@ if (isset($_SESSION['user_id'])) {
     </main>
 </body>
 
-</html>
+</html>
