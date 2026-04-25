@@ -562,7 +562,7 @@
     inset: 0;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     background: rgba(0, 0, 0, 0);
     backdrop-filter: blur(0px);
     -webkit-backdrop-filter: blur(0px);
@@ -585,6 +585,7 @@
 }
 
 .auth-modal-container {
+    margin: auto 0;
     position: relative;
     @include m.card-base();
     width: 100%;

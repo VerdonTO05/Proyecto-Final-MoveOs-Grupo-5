@@ -1129,7 +1129,7 @@ main section {
   inset: 0;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   background: rgba(0, 0, 0, 0);
   backdrop-filter: blur(0px);
   -webkit-backdrop-filter: blur(0px);
@@ -1150,6 +1150,7 @@ main section {
 }
 
 .auth-modal-container {
+  margin: auto 0;
   position: relative;
   background-color: var(--bg-surface);
   border: 1px solid var(--border-color);
