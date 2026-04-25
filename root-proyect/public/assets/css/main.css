@@ -250,34 +250,21 @@ footer p {
 }
 
 .btn-header-login {
-  padding: 0.45rem 1rem;
-  border-radius: 8px;
-  border: 1.5px solid var(--brand-primary);
-  background: transparent;
-  color: var(--brand-primary);
+  background: var(--bg-surface);
+  color: var(--text-primary);
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.5rem;
   cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease;
-}
-.btn-header-login:hover {
-  background: var(--brand-primary);
-  color: var(--text-on-primary);
+  transition: background 0.2s ease;
 }
 
 .btn-header-register {
-  padding: 0.45rem 1rem;
-  border-radius: 8px;
-  border: 1.5px solid var(--brand-dark);
-  background: var(--brand-dark);
-  color: var(--text-on-primary);
+  background: var(--bg-surface);
+  color: var(--text-primary);
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.5rem;
   cursor: pointer;
-  transition: opacity 0.2s ease;
-}
-.btn-header-register:hover {
-  opacity: 0.85;
+  transition: background 0.2s ease;
 }
 
 #user-dropdown {
@@ -3850,3 +3837,5 @@ input[type=checkbox] {
     min-width: unset;
   }
 }
+
+/*# sourceMappingURL=main.css.map */

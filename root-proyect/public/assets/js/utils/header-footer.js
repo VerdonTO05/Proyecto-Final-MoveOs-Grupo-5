@@ -131,8 +131,8 @@ function initUserLogic() {
     // Usuario NO autenticado → mostrar botones de acceso
     userMenuArea.innerHTML = `
       <div class="auth-header-btns">
-        <button id="header-login-btn" class="btn-header-login">Iniciar sesión</button>
-        <button id="header-register-btn" class="btn-header-register">Registrarse</button>
+        <button id="header-login-btn" class="btn-header-login"><i class="fa-solid fa-right-to-bracket"></i></button>
+        <button id="header-register-btn" class="btn-header-register"><i class="fa-solid fa-user-plus"></i></button>
       </div>`;
 
     document.getElementById('header-login-btn')?.addEventListener('click', () => {
