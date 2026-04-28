@@ -56,7 +56,7 @@ const headerHTML = `
     </div>
   </nav>
 </header>
-<div id="social-modal" class="modal invisible">
+<div id="social-modal" class="modal-social invisible">
   <div class="modal-content">
     <div class="social-links">
       <a href="#" data-app="instagram"><img src="assets/img/social/instagram.png" alt="Instagram"></a>
