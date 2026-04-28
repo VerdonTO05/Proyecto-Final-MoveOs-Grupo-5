@@ -230,12 +230,17 @@ CREATE INDEX idx_chat_created ON chat_messages (created_at);
 -- Insert users de ejemplo
 -- --------------------------------------------------------
 
-INSERT INTO `users` (`id`, `full_name`, `email`, `username`, `password_hash`, `state`, `role_id`, `created_at`) VALUES
-(1, 'Irene Osuna',          'irene@gmail.com',     'ireneosuna',    '$2y$10$b5ViZkLR4zFSXlVaawLEMOXAh7HyCMdMN39ANbItbDJlLqoC1CNve', 'activa', 2, '2026-01-26 17:29:15'),
-(2, 'Manuel Verdon',        'manuel@gmail.com',    'manuelverdon',  '$2y$10$MNF.N94OmKc9D0YQ4rK2XewgRBVjNXGoaRSym8R53XdLtk9lZM6ki', 'activa', 2, '2026-01-26 17:29:51'),
-(3, 'Alejandro Montesinos', 'alejandro@gmail.com', 'alejandrom',    '$2y$10$TfJ05ZNAR6VcI5OF/ZdmsOJ3KH4xua03MtJvn9fFiY6nYQOkwCfeu', 'activa', 1, '2026-01-26 17:30:28'),
-(4, 'Admin 1',              'admin@gmail.com',     'admin',         '$2y$10$khd15J.3JvRGtkKn4A3z7O1u4SmzyJVT37ZEWGzLFnjRR45ZkUeau', 'activa', 3, '2026-01-26 17:32:00');
-
+INSERT INTO `users` (`id`, `full_name`, `email`, `username`, `password_hash`, `state`, `profile_image`, `role_id`, `created_at`) VALUES
+(1, 'Irene Osuna', 'ireneod20@gmail.com', 'ireneosuna', '$2y$10$b5ViZkLR4zFSXlVaawLEMOXAh7HyCMdMN39ANbItbDJlLqoC1CNve', 'activa', 'uploads/avatars/avatar_1.jpg', 2, '2026-01-26 17:29:15'),
+(2, 'Manuel Verdon', 'verdontorres2005@gmail.com', 'manuelverdon', '$2y$10$MNF.N94OmKc9D0YQ4rK2XewgRBVjNXGoaRSym8R53XdLtk9lZM6ki', 'activa', 'uploads/avatars/avatar_2.jpg', 2, '2026-01-26 17:29:51'),
+(3, 'Alejandro Montesinos', 'alejandro@gmail.com', 'alejandrom', '$2y$10$TfJ05ZNAR6VcI5OF/ZdmsOJ3KH4xua03MtJvn9fFiY6nYQOkwCfeu', 'activa', NULL, 1, '2026-01-26 17:30:28'),
+(4, 'Admin 1', 'admin@gmail.com', 'admin', '$2y$10$khd15J.3JvRGtkKn4A3z7O1u4SmzyJVT37ZEWGzLFnjRR45ZkUeau', 'activa', NULL, 3, '2026-01-26 17:32:00'),
+(5, 'Francisco Pino', 'fran@gmail.com', 'fran_pino', '$2y$10$7qLJYqybIMNdpxPsCnRl0.eU0..7.O45eQw1m/aespYD7i47xSjJm', 'activa', 'uploads/avatars/avatar_5.jpg', 1, '2026-04-28 12:50:53'),
+(6, 'Sandra Osuna', 'sandraosuna@gmail.com', 'sandraosuna', '$2y$10$RkPqOOtbVLGMgA8fsMITgeHAVgMps7pX/cW49l5vAJdhoOu2wuq8u', 'activa', 'uploads/avatars/avatar_6.jpg', 1, '2026-04-28 12:51:28'),
+(7, 'Carmen Mei', 'carmen@gmail.com', 'carmenmei', '$2y$10$UnOxbzNJszl0K6hFxKYJnOq3OSHzPDMtO7/w7CV2hy5aF9/22MPvu', 'activa', 'uploads/avatars/avatar_7.jpg', 1, '2026-04-28 12:52:04'),
+(8, 'Mario Cisneros', 'mario@gmail.com', 'mariocismen', '$2y$10$GL6mQF6QrX8PUbSxArMOheLuIXDnOSxN9bzQ7xfswMvPgKYGFebB6', 'activa', 'uploads/avatars/avatar_8.jpg', 1, '2026-04-28 12:53:30'),
+(9, 'Rocío López', 'rocio@gmail.com', 'rociolopez', '$2y$10$SWxJUnKlcYrXtrRgn7A/VeTKlSIM.6eLqx1bB/FWON8OoCGPC1bBu', 'activa', 'uploads/avatars/avatar_9.webp', 1, '2026-04-28 12:54:08'),
+(10, 'María Cadenas', 'maria@gmail.com', 'mariacadenas', '$2y$10$JREOOxmsAXI0gx4z.6DzNuO/QYZKDtT5vVae1Q6XVsK.4W7mz4e.S', 'activa', 'uploads/avatars/avatar_10.jpg', 2, '2026-04-28 13:13:03');
 -- --------------------------------------------------------
 -- TRIGGERS
 -- --------------------------------------------------------
