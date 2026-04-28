@@ -1,11 +1,22 @@
 @use "abstracts/mixins" as m;
 
+/* Página entera con fondo y padding para se pueda scrollear */
+body:has(.form-activity) {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem;
+  box-sizing: border-box;
+  background-color: var(--bg-main);
+}
+
+/* Contenedor central de la página crear actividad */
 .c {
-  margin: 2rem;
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
   position: relative;
-  top: auto;
-  left: auto;
-  transform: none;
 }
 
 .create {
@@ -160,8 +171,8 @@ input[type="checkbox"] {
    Responsive — Tablet
 ========================= */
 @media (max-width: 768px) {
-  .c {
-    margin: 1.5rem;
+  body:has(.form-activity) {
+    padding: 1.5rem 1rem;
   }
 
   .btn-submit {
@@ -173,12 +184,8 @@ input[type="checkbox"] {
    Responsive — Móvil
 ========================= */
 @media (max-width: 576px) {
-  .c {
-    margin: 1rem;
-  }
-
-  .container {
-    max-height: none !important;
+  body:has(.form-activity) {
+    padding: 1rem 0.75rem;
   }
 
   .header-form {
