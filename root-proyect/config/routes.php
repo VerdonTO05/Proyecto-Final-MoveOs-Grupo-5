@@ -62,7 +62,8 @@ return [
   'adminChat' => __DIR__ . '/../app/views/chat/admin-chat.php',
   'userAdminChat' => __DIR__ . '/../app/views/chat/user-admin-chat.php',
 
-  'docs' => dirname($_SERVER['SCRIPT_NAME']) . '/docs/index.html',
+  'docsJS' => dirname($_SERVER['SCRIPT_NAME']) . '/docsJS/index.html',
+  'docsPHP' => dirname($_SERVER['SCRIPT_NAME']) . '/docsPHP/index.html',
   'activitiesSSE' => __DIR__ . '/../app/controllers/get/get-activities-sse.php',
 
 ];

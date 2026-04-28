@@ -18,7 +18,16 @@ const headerHTML = `
     <ul id="list">
       <li><a href="index.php">Inicio</a></li>
       <li id="how"><a href="index.php#how-tutorial">Cómo Funciona</a></li>
-      <li><a href="index.php?accion=docs" target="_blank"><i class="fas fa-file-alt docs"></i></a></li>
+      <li class="docs-menu-container">
+      <button id="docs-btn">
+        <i class="fas fa-file-alt docs"></i>
+      </button>
+
+      <div id="docs-dropdown" class="invisible">
+        <a href="index.php?accion=docsJS" target="_blank">JSDoc</a>
+        <a href="index.php?accion=docsPHP" target="_blank">PHPDoc</a>
+      </div>
+      </li>
     </ul>
 
     <div class="icons">
@@ -106,6 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initUserLogic();
   initSidebarLogic();
   initChatLogic();
+  initDocsLogic();
   initUnsubscribeLogic();
   initSocialModal();
 });
@@ -452,6 +462,28 @@ function initSocialModal() {
       const app = link.dataset.app;
       openSocial(app);
     });
+  });
+}
+
+function initDocsLogic() {
+  const docsBtn = document.getElementById('docs-btn');
+  const docsDropdown = document.getElementById('docs-dropdown');
+
+  if (!docsBtn || !docsDropdown) return;
+
+  docsBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+
+    // cerrar otros dropdowns
+    hideElement(document.getElementById('user-dropdown'));
+    hideElement(document.getElementById('chat-dropdown'));
+
+    toggleVisibility(docsDropdown);
+  });
+
+  // cerrar al hacer click fuera
+  window.addEventListener('click', () => {
+    hideElement(docsDropdown);
   });
 }
 

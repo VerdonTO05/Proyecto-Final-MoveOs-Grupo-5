@@ -1,4 +1,4 @@
-.social-modal {
+.modal-social {
   position: fixed;
   top: 0;
   left: 0;
@@ -70,7 +70,7 @@
 }
 
 @media (max-width: 768px) {
-  .social-modal {
+  .modal-social {
     .modal-content {
       .social-links {
         flex-direction: column;
