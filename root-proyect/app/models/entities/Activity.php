@@ -37,7 +37,7 @@ class Activity
     public function createActivity($data)
     {
         try {
-            $date         = $data['date']         ?? null;
+            $date = $data['date'] ?? null;
             $offertant_id = $data['offertant_id'] ?? null;
 
             // Solo comprobar conflictos si hay ofertante
@@ -180,8 +180,8 @@ class Activity
     public function updateActivity($data): bool|array
     {
         try {
-            $id           = $data['id']           ?? null;
-            $date         = $data['date']         ?? null;
+            $id = $data['id'] ?? null;
+            $date = $data['date'] ?? null;
             $offertant_id = $data['offertant_id'] ?? null;
 
             // Solo comprobar conflictos si hay ofertante
@@ -236,7 +236,8 @@ class Activity
                 dress_code         = :dress_code,
                 transport_included = :transport_included,
                 departure_city     = :departure_city,
-                pets_allowed       = :pets_allowed
+                pets_allowed       = :pets_allowed,
+                image_url          = :image_url
             WHERE id = :id";
 
             $stmt = $this->conn->prepare($sql);

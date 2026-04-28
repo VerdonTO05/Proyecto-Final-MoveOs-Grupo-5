@@ -447,7 +447,7 @@ main section:first-of-type button:hover {
 
 .grid-activities article {
   width: calc(30vw - 1rem);
-  height: calc(40vh - 1rem);
+  height: calc(85vh - 1rem);
 }
 
 .grid-activities p a {
@@ -1504,7 +1504,8 @@ main section {
 }
 .activity .activity-image {
   position: relative;
-  height: 200px;
+  min-height: 200px;
+  max-height: 240px;
   overflow: hidden;
 }
 .activity .activity-image img {
@@ -1550,6 +1551,10 @@ main section {
   color: var(--text-primary);
   font-size: 0.9rem;
   margin-bottom: 0.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .activity .activity-content .details {
   list-style: none;
@@ -1763,7 +1768,8 @@ main section {
 .modalHome .modal-content .modal-header-activity h2 {
   font-size: 1.3rem;
   padding-bottom: 0.75rem;
-  padding-right: 2.5rem; /* espacio para el botón de cierre */
+  padding-right: 2.5rem;
+  /* espacio para el botón de cierre */
 }
 .modalHome .modal-content .modal-header-activity .category {
   background-color: var(--alert);

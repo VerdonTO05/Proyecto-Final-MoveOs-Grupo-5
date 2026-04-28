@@ -96,9 +96,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         fetch(form.action, {
             method: "POST",
-            body: formData
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'  // Permite que PHP detecte petición fetch
+            }
         })
-        .then(res => res.json())
+        .then(res => {
+            // Verificar que la respuesta sea JSON antes de parsear
+            const contentType = res.headers.get('content-type') || '';
+            if (!contentType.includes('application/json')) {
+                throw new Error('El servidor no devolvió JSON. Posible error PHP.');
+            }
+            return res.json();
+        })
         .then(data => {
 
             if (!data.success) {
@@ -131,10 +141,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 "success",
                 1800
             );
-            window.location.href = "?accion=seeMyActivities";
+            setTimeout(() => {
+                window.location.href = "?accion=seeMyActivities";
+            }, 1800);
 
         })
         .catch(error => {
+            console.error('Error fetch:', error);
             showAlert(
                 "Error",
                 "No se pudo conectar con el servidor",

@@ -140,46 +140,53 @@ class Request
     public function createRequest($data)
     {
         try {
-            $date           = $data['date']           ?? null;
+            $date = $data['date'] ?? null;
             $participant_id = $data['participant_id'] ?? null;
 
-            // Comprobar si el participante ya tiene otra petición en esa fecha
             $conflictRequestSql = "SELECT title FROM {$this->table_name}
-                                   WHERE participant_id = :participant_id
-                                   AND date = :date
-                                   AND state != 'finalizada'
-                                   LIMIT 1";
+                               WHERE participant_id = :participant_id
+                               AND date = :date
+                               AND state != 'finalizada'
+                               LIMIT 1";
             $stmt = $this->conn->prepare($conflictRequestSql);
             $stmt->execute(['participant_id' => $participant_id, 'date' => $date]);
             $conflictRequest = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($conflictRequest) {
-                return ['error' => 'conflict_request', 'title' => $conflictRequest['title']];
+                return [
+                    'error' => 'conflict_request',
+                    'field' => 'date',
+                    'message' => "Ya tienes una petición ese día: " . $conflictRequest['title']
+                ];
             }
 
-            // Comprobar si el participante tiene una inscripción en una actividad en esa fecha
+            // ❗ Conflicto con actividad
             $conflictActivitySql = "SELECT a.title
-                                    FROM registrations r
-                                    JOIN activities a ON a.id = r.activity_id
-                                    WHERE r.participant_id = :participant_id
-                                    AND a.date = :date
-                                    AND a.is_finished = 0
-                                    LIMIT 1";
+                                FROM registrations r
+                                JOIN activities a ON a.id = r.activity_id
+                                WHERE r.participant_id = :participant_id
+                                AND a.date = :date
+                                AND a.is_finished = 0
+                                LIMIT 1";
             $stmt = $this->conn->prepare($conflictActivitySql);
             $stmt->execute(['participant_id' => $participant_id, 'date' => $date]);
             $conflictActivity = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($conflictActivity) {
-                return ['error' => 'conflict_activity', 'title' => $conflictActivity['title']];
+                return [
+                    'error' => 'conflict_activity',
+                    'field' => 'date',
+                    'message' => "Ya estás inscrito este día en: " . $conflictActivity['title']
+                ];
             }
 
-            // Insertar la petición
+            // Insert
             $sql = "INSERT INTO {$this->table_name} 
-                (participant_id, category_id, title, description, date, time, location, current_registrations, organizer_email,
-                 transport_included, departure_city, language, min_age, pets_allowed, dress_code, image_url, state)
-                VALUES 
-                (:participant_id, :category_id, :title, :description, :date, :time, :location, :current_registrations, :organizer_email,
-                 :transport_included, :departure_city, :language, :min_age, :pets_allowed, :dress_code, :image_url, :state)";
+            (participant_id, category_id, title, description, date, time, location, current_registrations, organizer_email,
+             transport_included, departure_city, language, min_age, pets_allowed, dress_code, image_url, state)
+            VALUES 
+            (:participant_id, :category_id, :title, :description, :date, :time, :location, :current_registrations, :organizer_email,
+             :transport_included, :departure_city, :language, :min_age, :pets_allowed, :dress_code, :image_url, :state)";
 
             $stmt = $this->conn->prepare($sql);
 
@@ -187,11 +194,18 @@ class Request
                 return $this->conn->lastInsertId();
             }
 
-            return ['error' => 'insert_failed'];
+            return [
+                'error' => 'insert_failed',
+                'field' => 'global',
+                'message' => 'Error al guardar la petición'
+            ];
 
         } catch (PDOException $e) {
-            error_log("Error en createRequest: " . $e->getMessage());
-            return ['error' => 'exception', 'message' => $e->getMessage()];
+            return [
+                'error' => 'exception',
+                'field' => 'global',
+                'message' => 'Error interno'
+            ];
         }
     }
 
@@ -203,8 +217,8 @@ class Request
     public function updateRequest($data): bool|array
     {
         try {
-            $id             = $data['id']             ?? null;
-            $date           = $data['date']           ?? null;
+            $id = $data['id'] ?? null;
+            $date = $data['date'] ?? null;
             $participant_id = $data['participant_id'] ?? null;
 
             // Comprobar si el participante tiene otra petición propia en esa fecha (excluyendo la actual)

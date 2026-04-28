@@ -46,11 +46,16 @@ try {
     // ===== VALIDACIONES =====
     $errors = [];
 
-    if (strlen($title) < 5) $errors[] = "El título debe tener al menos 5 caracteres.";
-    if (strlen($title) > 50) $errors[] = "El título debe tener menos de 50 caracteres.";
-    if (strlen($description) < 15) $errors[] = "La descripción debe tener al menos 15 caracteres.";
-    if (empty($category_id)) $errors[] = "Debes seleccionar una categoría.";
-    if (empty($location)) $errors[] = "La ubicación es obligatoria.";
+    if (strlen($title) < 5)
+        $errors[] = "El título debe tener al menos 5 caracteres.";
+    if (strlen($title) > 50)
+        $errors[] = "El título debe tener menos de 50 caracteres.";
+    if (strlen($description) < 15)
+        $errors[] = "La descripción debe tener al menos 15 caracteres.";
+    if (empty($category_id))
+        $errors[] = "Debes seleccionar una categoría.";
+    if (empty($location))
+        $errors[] = "La ubicación es obligatoria.";
 
     if (!empty($date)) {
         if ($date < date('Y-m-d')) {
@@ -58,8 +63,10 @@ try {
         }
     }
 
-    if ($price < 0) $errors[] = "El precio no puede ser negativo.";
-    if ($max_people < 0) $errors[] = "El número de participantes no es válido.";
+    if ($price < 0)
+        $errors[] = "El precio no puede ser negativo.";
+    if ($max_people < 0)
+        $errors[] = "El número de participantes no es válido.";
 
     // ===== IMAGEN =====
     $imagePath = null;
@@ -147,9 +154,22 @@ try {
             exit;
         }
 
+        if (is_array($result) && isset($result['error'])) {
+
+            echo json_encode([
+                'success' => false,
+                'message' => $result['message'] ?? 'Error al crear la petición',
+                'errors' => [
+                    $result['field'] ?? 'global' => $result['message']
+                ]
+            ]);
+            exit;
+        }
+
+        // fallback (por si algo raro pasa)
         echo json_encode([
             'success' => false,
-            'message' => 'Error al crear la petición'
+            'message' => 'Error inesperado'
         ]);
         exit;
     }

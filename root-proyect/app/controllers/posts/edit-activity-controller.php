@@ -1,70 +1,110 @@
 <?php
 /**
  * Controlador para editar una publicación propia (actividad o petición).
- *
- * Gestiona dos fases en una misma ruta:
- * - GET:  carga la publicación y muestra el formulario de edición.
- * - POST: valida los cambios, detecta si hubo modificaciones reales
- *         y actualiza el registro en la base de datos.
- *
- * Verifica que el usuario esté autenticado y que la publicación le pertenezca
- * antes de permitir cualquier operación.
  */
 
-// Iniciar sesión solo si no hay una activa
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Cargar los modelos necesarios y la conexión a la base de datos
 require_once __DIR__ . '/../../models/entities/Activity.php';
 require_once __DIR__ . '/../../models/entities/Request.php';
 require_once __DIR__ . '/../../../config/database.php';
 
-// Verificar que el usuario esté autenticado; redirigir al login si no lo está
 if (!isset($_SESSION['user_id'])) {
     header('Location: index.php?accion=loginView');
     exit;
 }
 
-try {
-    // Instanciar la conexión y los modelos
-    $database = new Database();
-    $db = $database->getConnection();
-    $activityModel = new Activity($db);
-    $requestModel = new Request($db);
+function jsonResponse(bool $success, string $message, array $errors = []): void
+{
+    header('Content-Type: application/json');
+    echo json_encode(['success' => $success, 'message' => $message, 'errors' => $errors]);
+    exit;
+}
 
-    // Obtener el ID de la publicación desde POST (edición) o GET (carga inicial)
+/**
+ * Procesa y guarda la imagen subida.
+ * Devuelve la ruta pública relativa o null si no se subió ninguna imagen válida.
+ */
+function handleImageUpload(): ?string
+{
+    if (
+        !isset($_FILES['image_file']) ||
+        $_FILES['image_file']['error'] === UPLOAD_ERR_NO_FILE ||
+        $_FILES['image_file']['size'] === 0
+    ) {
+        return null;
+    }
+
+    $file = $_FILES['image_file'];
+
+    if ($file['error'] !== UPLOAD_ERR_OK) {
+        jsonResponse(false, 'Error al subir la imagen.', ['Error de subida: código ' . $file['error']]);
+    }
+
+    $allowedMimes = ['image/jpeg', 'image/jpg', 'image/png'];
+    $finfo    = finfo_open(FILEINFO_MIME_TYPE);
+    $mimeType = finfo_file($finfo, $file['tmp_name']);
+    finfo_close($finfo);
+
+    if (!in_array($mimeType, $allowedMimes)) {
+        jsonResponse(false, 'Error en el formulario.', ['Formato de imagen inválido (solo JPG o PNG).']);
+    }
+
+    if ($file['size'] > 5 * 1024 * 1024) {
+        jsonResponse(false, 'Error en el formulario.', ['La imagen no puede superar 5MB.']);
+    }
+
+    $extension   = ($mimeType === 'image/png') ? 'png' : 'jpg';
+    $filename    = uniqid('activity_', true) . '.' . $extension;
+
+    // Ajusta esta ruta al directorio real de tu proyecto
+    $uploadDir   = __DIR__ . '/../../../public/assets/img/activities/';
+
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0755, true);
+    }
+
+    $destination = $uploadDir . $filename;
+
+    if (!move_uploaded_file($file['tmp_name'], $destination)) {
+        jsonResponse(false, 'No se pudo guardar la imagen en el servidor.', []);
+    }
+
+    return 'assets/img/activities/' . $filename;
+}
+
+try {
+    $database      = new Database();
+    $db            = $database->getConnection();
+    $activityModel = new Activity($db);
+    $requestModel  = new Request($db);
+
     $id = $_POST['id'] ?? $_GET['id'] ?? null;
 
-    // Validar que se haya proporcionado un ID
     if (!$id) {
         $_SESSION['error'] = 'Información no recibida';
         header('Location: index.php?accion=seeMyActivities');
         exit;
     }
 
-    // Obtener la publicación según el rol del usuario
     if ($_SESSION['role'] === 'participante') {
-        // El participante trabaja con peticiones
-        $publication = $requestModel->getRequestById($id);
+        $publication     = $requestModel->getRequestById($id);
         $typePublication = 'request';
     } else {
-        // El organizador (u otro rol) trabaja con actividades
-        $publication = $activityModel->getActivityById($id);
+        $publication     = $activityModel->getActivityById($id);
         $typePublication = 'activity';
     }
 
-    // Verificar que la publicación existe en la base de datos
     if (!$publication) {
         $_SESSION['error'] = 'Publicación no encontrada';
         header('Location: index.php?accion=seeMyActivities');
         exit;
     }
 
-    // Verificar que la publicación pertenece al usuario autenticado
     $userId = $_SESSION['user_id'];
-    $field = ($typePublication === 'activity') ? 'offertant_id' : 'participant_id';
+    $field  = ($typePublication === 'activity') ? 'offertant_id' : 'participant_id';
 
     if ($publication[$field] != $userId) {
         $_SESSION['error'] = 'No tienes permiso para editar esta publicación';
@@ -72,46 +112,44 @@ try {
         exit;
     }
 
-    // ── Fase POST: procesar el formulario de edición ──────────────────────────
+    // ── Fase POST ─────────────────────────────────────────────────────────────
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['title'])) {
 
-        // Recoger y limpiar los campos comunes del formulario
-        $data = [
-            'id' => $id,
-            'title' => trim($_POST['title'] ?? ''),
-            'description' => trim($_POST['description'] ?? ''),
-            'category_id' => $_POST['category_id'] ?? null,
-            'location' => trim($_POST['location'] ?? ''),
-            'date' => $_POST['date'] ?? null,
-            'time' => $_POST['time'] ?? null,
-            'language' => trim($_POST['language'] ?? ''),
-            'min_age' => $_POST['min_age'] ?: null,
-            'dress_code' => trim($_POST['dress_code'] ?? ''),
-            'transport_included' => isset($_POST['transport_included']) ? 1 : 0, // Checkbox
-            'departure_city' => trim($_POST['departure_city'] ?? ''),
-            'pets_allowed' => isset($_POST['pets_allowed']) ? 1 : 0, // Checkbox
-        ];
-
-        // Añadir campos exclusivos de actividad
-        if ($typePublication === 'activity') {
-            $data['price'] = $_POST['price'] ?: null;
-            $data['max_people'] = $_POST['max_people'] ?: null;
+        $categoryId = $_POST['category_id'] ?? null;
+        if (empty($categoryId)) {
+            jsonResponse(false, 'Error en el formulario', ['Debes seleccionar una categoría válida.']);
         }
 
-        // Definir los campos a comparar con los valores actuales para detectar cambios
+        // Nueva imagen si se subió, si no mantener la actual
+        $newImageUrl = handleImageUpload();
+        $imageUrl    = $newImageUrl ?? ($_POST['current_image'] ?? $publication['image_url'] ?? null);
+
+        $data = [
+            'id'                 => $id,
+            'title'              => trim($_POST['title'] ?? ''),
+            'description'        => trim($_POST['description'] ?? ''),
+            'category_id'        => $categoryId,
+            'location'           => trim($_POST['location'] ?? ''),
+            'date'               => $_POST['date'] ?? null,
+            'time'               => $_POST['time'] ?? null,
+            'language'           => trim($_POST['language'] ?? ''),
+            'min_age'            => $_POST['min_age'] ?? null,
+            'dress_code'         => trim($_POST['dress_code'] ?? ''),
+            'transport_included' => isset($_POST['transport_included']) ? 1 : 0,
+            'departure_city'     => trim($_POST['departure_city'] ?? ''),
+            'pets_allowed'       => isset($_POST['pets_allowed']) ? 1 : 0,
+            'image_url'          => $imageUrl,
+        ];
+
+        if ($typePublication === 'activity') {
+            $data['price']      = $_POST['price'] ?? null;
+            $data['max_people'] = $_POST['max_people'] ?? null;
+        }
+
         $fieldsToCompare = [
-            'title',
-            'description',
-            'category_id',
-            'location',
-            'date',
-            'time',
-            'language',
-            'min_age',
-            'dress_code',
-            'transport_included',
-            'departure_city',
-            'pets_allowed'
+            'title', 'description', 'category_id', 'location', 'date', 'time',
+            'language', 'min_age', 'dress_code', 'transport_included',
+            'departure_city', 'pets_allowed', 'image_url',
         ];
 
         if ($typePublication === 'activity') {
@@ -119,7 +157,6 @@ try {
             $fieldsToCompare[] = 'max_people';
         }
 
-        // Comparar campo a campo para detectar si hubo alguna modificación real
         $hasChanges = false;
         foreach ($fieldsToCompare as $f) {
             if ((string) ($data[$f] ?? '') !== (string) ($publication[$f] ?? '')) {
@@ -128,66 +165,58 @@ try {
             }
         }
 
-        // Si no hubo ningún cambio, redirigir sin ejecutar la actualización
         if (!$hasChanges) {
-            header('Location: index.php?accion=seeMyActivities');
-            exit;
+            jsonResponse(true, 'Sin cambios detectados.');
         }
 
-        // Ejecutar la actualización según el tipo de publicación
         if ($typePublication === 'activity') {
             $data['offertant_id'] = $_SESSION['user_id'];
             $result = $activityModel->updateActivity($data);
 
-            // Mapear códigos de error del modelo a mensajes legibles
             $errorMessages = [
                 'conflict_activity' => 'Ya tienes otra actividad ese día: "' . (is_array($result) ? ($result['title'] ?? '') : '') . '".',
-                'conflict_request' => 'Ya tienes una petición aceptada ese día: "' . (is_array($result) ? ($result['title'] ?? '') : '') . '".',
-                'not_found' => 'La actividad no existe o no se pudo actualizar.',
-                'exception' => 'Error del servidor.',
+                'conflict_request'  => 'Ya tienes una petición aceptada ese día: "' . (is_array($result) ? ($result['title'] ?? '') : '') . '".',
+                'not_found'         => 'La actividad no existe o no se pudo actualizar.',
+                'exception'         => 'Error del servidor.',
             ];
-
         } else {
             $data['participant_id'] = $_SESSION['user_id'];
             $result = $requestModel->updateRequest($data);
 
-            // Mapear códigos de error del modelo a mensajes legibles
             $errorMessages = [
-                'conflict_request' => 'Ya tienes otra petición ese día: "' . (is_array($result) ? ($result['title'] ?? '') : '') . '".',
+                'conflict_request'  => 'Ya tienes otra petición ese día: "' . (is_array($result) ? ($result['title'] ?? '') : '') . '".',
                 'conflict_activity' => 'Ya tienes una inscripción en una actividad ese día: "' . (is_array($result) ? ($result['title'] ?? '') : '') . '".',
-                'not_found' => 'La petición no existe o no se pudo actualizar.',
-                'exception' => 'Error del servidor.',
+                'not_found'         => 'La petición no existe o no se pudo actualizar.',
+                'exception'         => 'Error del servidor.',
             ];
         }
 
-        // Si la actualización fue correcta, redirigir a mis actividades
         if ($result === true) {
-            header('Location: index.php?accion=seeMyActivities');
-            exit;
+            jsonResponse(true, 'Publicación actualizada correctamente.');
         }
 
-        // Guardar el error en sesión y redirigir al formulario con los datos anteriores
         $msg = is_array($result) && isset($result['error'])
             ? ($errorMessages[$result['error']] ?? 'Error al actualizar.')
             : 'Error al actualizar.';
 
-        $_SESSION['form_errors'] = [$msg];
-        $_SESSION['form_old_data'] = $_POST;
-        header('Location: index.php?accion=editActivity&id=' . $id);
-        exit;
+        jsonResponse(false, $msg, [$msg]);
     }
 
-    // ── Fase GET: mostrar el formulario de edición con los datos actuales ─────
+    // ── Fase GET ──────────────────────────────────────────────────────────────
     require __DIR__ . '/../../views/posts/edit-activity.php';
 
 } catch (PDOException $e) {
-    // Error específico de base de datos: registrar internamente sin exponer detalles
     error_log('[PDOException] editActivityController: ' . $e->getMessage());
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        jsonResponse(false, 'Error de base de datos. Inténtalo más tarde.');
+    }
     http_response_code(500);
     echo 'Error de base de datos. Inténtalo más tarde.';
 } catch (Exception $e) {
-    // Error genérico inesperado: registrar internamente sin exponer detalles
     error_log('[Exception] editActivityController: ' . $e->getMessage());
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        jsonResponse(false, 'Error del servidor. Inténtalo más tarde.');
+    }
     http_response_code(500);
     echo 'Error del servidor. Inténtalo más tarde.';
 }
