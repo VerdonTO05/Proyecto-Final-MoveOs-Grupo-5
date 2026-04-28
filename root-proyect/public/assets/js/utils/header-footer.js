@@ -31,7 +31,7 @@ const headerHTML = `
       <div class="chat-menu-container">
         <button id="chat-btn"><i class="fa-solid fa-bell"></i></button>
         <div id="chat-dropdown" class="invisible">
-          <div class="chat-hub-page" id="chatHubContainer">
+          <div class="chat-hub-page-select" id="chatHubContainer">
             <div class="chat-hub-loading">
               <i class="fas fa-spinner fa-spin"></i>
               <p>Cargando conversaciones...</p>
@@ -51,11 +51,20 @@ const headerHTML = `
       <a href="index.php?accion=editUser">Editar datos</a>
       <a href="index.php?accion=forgot-password">Recuperar contraseña</a>
       <a href="index.php?accion=chatHub" id="sidebarChatLink">Mis conversaciones</a>
-      <a href="#">Redes sociales</a>
+      <a href="#" id="social-link">Redes sociales</a>
       <a href="index.php?accion=unsubscribe">Dar de baja</a>
     </div>
   </nav>
 </header>
+<div id="social-modal" class="modal invisible">
+  <div class="modal-content">
+    <div class="social-links">
+      <a href="#" data-app="instagram"><img src="assets/img/social/instagram.png" alt="Instagram"></a>
+      <a href="#" data-app="twitter"><img src="assets/img/social/x.png" alt="X"></a>
+      <a href="#" data-app="facebook"><img src="assets/img/social/facebook.png" alt="Facebook"></a>
+    </div>
+  </div>
+</div>
 `;
 
 const footerHTML = `
@@ -98,6 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initSidebarLogic();
   initChatLogic();
   initUnsubscribeLogic();
+  initSocialModal();
 });
 
 /**
@@ -154,9 +164,9 @@ function initUserLogic() {
       <a href="#" id="logout-link">Cerrar sesión</a>
     </div>`;
 
-  const userBtn      = document.getElementById('user-btn');
+  const userBtn = document.getElementById('user-btn');
   const userDropdown = document.getElementById('user-dropdown');
-  const logoutLink   = document.getElementById('logout-link');
+  const logoutLink = document.getElementById('logout-link');
   const displayUsername = document.getElementById('display-username');
 
   // Actualizar avatar
@@ -403,6 +413,81 @@ function initUnsubscribeLogic() {
       });
     }
   });
+}
+
+function initSocialModal() {
+  const link = document.getElementById('social-link');
+  const modal = document.getElementById('social-modal');
+  const closeBtn = modal?.querySelector('.close-modal');
+
+  if (!link || !modal) return;
+
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const sidebar = document.getElementById('userSidebar');
+    if (sidebar) sidebar.style.width = '0';
+    modal.classList.remove('invisible');
+    modal.classList.add('visible');
+  });
+
+  // Cerrar modal
+  closeBtn?.addEventListener('click', () => {
+    modal.classList.remove('visible');
+    modal.classList.add('invisible');
+  });
+
+  // Click fuera
+  window.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.classList.remove('visible');
+      modal.classList.add('invisible');
+    }
+  });
+
+  // Links redes
+  modal.querySelectorAll('.social-links a').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      const app = link.dataset.app;
+      openSocial(app);
+    });
+  });
+}
+
+function openSocial(app) {
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  const urls = {
+    instagram: {
+      app: "instagram://",
+      web: "https://www.instagram.com/accounts/login/"
+    },
+    twitter: {
+      app: "twitter://",
+      web: "https://twitter.com/login"
+    },
+    facebook: {
+      app: "fb://",
+      web: "https://www.facebook.com/login"
+    }
+  };
+
+  const selected = urls[app];
+  if (!selected) return;
+
+  if (isMobile) {
+    // Intentar abrir app
+    window.location.href = selected.app;
+
+    // Fallback a web si no abre
+    setTimeout(() => {
+      window.location.href = selected.web;
+    }, 800);
+  } else {
+    // Desktop → directo a login web
+    window.open(selected.web, "_blank");
+  }
 }
 
 /* =========================

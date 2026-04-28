@@ -42,7 +42,7 @@ if ($currentUser['role'] === 'administrador') {
 
         <section class="chat-hub-header">
             <h1 id="hub-title">Mis Conversaciones</h1>
-            <p>Chats grupales y soporte</p>
+            <p>Consulta y organiza tus actividades fácilmente, y contacta con soporte siempre que lo necesites</p>
         </section>
 
         <!-- Contenedor dinámico -->
