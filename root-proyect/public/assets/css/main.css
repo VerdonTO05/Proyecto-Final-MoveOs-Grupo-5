@@ -3842,7 +3842,7 @@ input[type=checkbox] {
     min-width: unset;
   }
 }
-.modal {
+.modal-social {
   position: fixed;
   top: 0;
   left: 0;
@@ -3854,20 +3854,20 @@ input[type=checkbox] {
   align-items: center;
   z-index: 999;
 }
-.modal.invisible {
+.modal-social.invisible {
   display: none;
 }
-.modal.visible {
+.modal-social.visible {
   display: flex;
 }
-.modal .modal-content {
+.modal-social .modal-content {
   position: relative;
   background: var(--bg-surface);
   padding: 1rem;
   border-radius: 10px;
   text-align: center;
 }
-.modal .modal-content .close-modal {
+.modal-social .modal-content .close-modal {
   position: absolute;
   top: 10px;
   left: 10px;
@@ -3875,12 +3875,12 @@ input[type=checkbox] {
   font-size: 1.2rem;
   font-weight: bold;
 }
-.modal .modal-content .social-links {
+.modal-social .modal-content .social-links {
   display: flex;
   justify-content: center;
   gap: 1rem;
 }
-.modal .modal-content .social-links a {
+.modal-social .modal-content .social-links a {
   width: 7rem;
   height: 7rem;
   display: flex;
@@ -3892,17 +3892,17 @@ input[type=checkbox] {
   border: solid 3px var(--border-color);
   transition: transform 0.2s ease;
 }
-.modal .modal-content .social-links a:hover {
+.modal-social .modal-content .social-links a:hover {
   transform: scale(1.1);
 }
-.modal .modal-content .social-links a img {
+.modal-social .modal-content .social-links a img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
 @media (max-width: 768px) {
-  .modal .modal-content .social-links {
+  .modal-social .modal-content .social-links {
     flex-direction: column;
     align-items: center;
   }
