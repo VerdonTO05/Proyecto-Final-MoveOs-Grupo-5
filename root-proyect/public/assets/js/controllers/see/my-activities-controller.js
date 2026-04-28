@@ -107,7 +107,12 @@ function createActiveCard(pub,role) {
     });
 
     card.querySelector(".btn-delete")?.addEventListener("click", async function () {
-        const confirmed = await showConfirm('¿Estás seguro que quieres eliminar esta publicación?');
+        const confirmed = await showConfirm({
+            title: '¿Eliminar publicación?',
+            message: 'Esta acción es permanente y no se puede deshacer.',
+            confirmText: 'Sí, eliminar',
+            cancelText: 'Cancelar'
+        });
         if (!confirmed) return;
 
         try {

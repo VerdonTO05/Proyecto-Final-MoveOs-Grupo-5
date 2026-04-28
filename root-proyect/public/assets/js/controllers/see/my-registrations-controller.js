@@ -100,7 +100,12 @@ function createActiveCard(pub, role) {
     });
 
     card.querySelector(".btn-signup")?.addEventListener("click", async function () {
-        const confirmed = await showConfirm('¿Estás seguro que quieres cancelar esta actividad?');
+        const confirmed = await showConfirm({
+            title: '¿Cancelar inscripción?',
+            message: 'Dejarás de estar apuntado a esta actividad. Podrás volver a inscribirte si hay plazas disponibles.',
+            confirmText: 'Sí, cancelar',
+            cancelText: 'Volver'
+        });
         if (!confirmed) return;
 
         try {

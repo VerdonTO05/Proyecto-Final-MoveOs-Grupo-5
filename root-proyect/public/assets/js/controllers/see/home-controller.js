@@ -121,7 +121,9 @@ async function handleSignup(btn, activity, role, card) {
 
   const confirmed = await showConfirm({
     title: role === 'organizador' ? '¿Aceptar esta actividad?' : '¿Inscribirse a esta actividad?',
-    message: `Estás a punto de ${actionText}.`
+    message: `Estás a punto de ${actionText}.`,
+    confirmText: role === 'organizador' ? 'Sí, aceptar' : 'Sí, inscribirme',
+    cancelText: 'Cancelar'
   });
 
   if (!confirmed) return;

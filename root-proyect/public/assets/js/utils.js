@@ -80,11 +80,30 @@ window.showConfirm = function (optionsOrTitle, message = "") {
         modalContainer.appendChild(modal);
         modalContainer.classList.add("active");
 
+        // Inline styles: garantizan centrado real sin importar el contexto CSS del body
+        Object.assign(modalContainer.style, {
+            position: 'fixed',
+            top: '0',
+            left: '0',
+            width: '100vw',
+            height: '100vh',
+            margin: '0',
+            padding: '0',
+            display: 'grid',
+            placeItems: 'center',
+            zIndex: '999999',
+            boxSizing: 'border-box',
+            background: 'rgba(0,0,0,0.55)',
+            backdropFilter: 'blur(5px)',
+            WebkitBackdropFilter: 'blur(5px)'
+        });
+
         const close = () => {
             modal.style.animation = "fadeOut 0.25s forwards";
             setTimeout(() => {
                 modal.remove();
                 modalContainer.classList.remove("active");
+                modalContainer.removeAttribute("style");
             }, 250);
         };
 

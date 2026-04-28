@@ -59,9 +59,11 @@ async function handleActivityAction(button, action, resultAction) {
             : type === "activity" ? "¿Rechazar actividad?" : "¿Rechazar petición?",
         message: isApprove
             ? type === "activity"
-                ? "Estás a punto de aprobar esta actividad."
-                : "Estás a punto de aprobar esta petición."
-            : "Esta acción no se puede deshacer."
+                ? "La actividad será publicada y visible para los participantes."
+                : "La petición será publicada y visible para los organizadores."
+            : "La publicación será rechazada. El autor podrá volver a publicarla.",
+        confirmText: isApprove ? "Sí, aprobar" : "Sí, rechazar",
+        cancelText: "Cancelar"
     });
 
     if (!confirmed) return;
@@ -388,35 +390,10 @@ function updateAfterAction(type, id, action) {
  * @returns {Promise<boolean>} Resultado de la confirmación del usuario.
  */
 function showConfirm({ title, message }) {
-    return new Promise((resolve) => {
-        const overlay = document.createElement('div');
-        overlay.id = 'modal-container';
-        overlay.classList.add('active');
-
-        const modal = document.createElement('div');
-        modal.classList.add('modal');
-        modal.innerHTML = `
-            <div class="modal-header">${title}</div>
-            <div class="modal-body">${message}</div>
-            <div class="modal-actions">
-                <button class="confirm">Aceptar</button>
-                <button class="cancel">Cancelar</button>
-            </div>
-        `;
-
-        overlay.appendChild(modal);
-        document.body.appendChild(overlay);
-
-        const closeModal = () => {
-            modal.style.animation = 'fadeOut 0.25s forwards';
-            overlay.classList.remove('active');
-            setTimeout(() => document.body.removeChild(overlay), 250);
-        };
-
-        modal.querySelector('.confirm').addEventListener('click', () => { resolve(true); closeModal(); });
-        modal.querySelector('.cancel').addEventListener('click', () => { resolve(false); closeModal(); });
-    });
+    // Delegar a la función global que aplica inline styles para centrado correcto
+    return window.showConfirm({ title, message });
 }
+
 
 /**
  * Muestra una alerta visual temporal en pantalla.
@@ -429,27 +406,5 @@ function showConfirm({ title, message }) {
  * @returns {void}
  */
 function showAlert(title, message, type = 'info', duration = 2000) {
-    const overlay = document.createElement('div');
-    overlay.classList.add('alert-overlay', type);
-
-    const alertBox = document.createElement('div');
-    alertBox.classList.add('alert-box');
-    alertBox.innerHTML = `
-        <div class="alert-header">${title}</div>
-        <div class="alert-body">${message}</div>
-    `;
-
-    overlay.appendChild(alertBox);
-    document.body.appendChild(overlay);
-
-    const closeAlert = () => {
-        alertBox.style.animation = 'fadeOut 0.3s forwards';
-        overlay.classList.remove('active');
-        setTimeout(() => document.body.removeChild(overlay), 300);
-    };
-    setTimeout(closeAlert, duration);
-    requestAnimationFrame(() => {
-        overlay.classList.add('active');
-        alertBox.style.animation = 'fadeIn 0.3s forwards';
-    });
+    window.showAlert(title, message, type, duration);
 }
