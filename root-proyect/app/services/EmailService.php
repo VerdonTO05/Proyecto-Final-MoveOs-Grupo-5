@@ -129,20 +129,19 @@ class EmailService
     }
 
     // TODO: que se mande un email cuando se elimine una actividad
-    public function sendActivityDeleted($activityTitle, $participants)
+    public function sendActivityDeleted($activityTitle, $p)
     {
         try {
-            foreach ($participants as $p) {
-                $this->mailer->clearAddresses();
-                $this->mailer->addAddress($p['email'], $p['name']);
-                $this->mailer->isHTML(true);
+            $this->mailer->clearAddresses();
+            $this->mailer->addAddress($p['email'], $p['full_name']);
+            $this->mailer->isHTML(true);
 
-                $this->mailer->Subject = "Actividad cancelada: {$activityTitle}";
+            $this->mailer->Subject = "Actividad cancelada: {$activityTitle}";
 
-                $this->mailer->Body = "
+            $this->mailer->Body = "
                 <div style='font-family: Arial; max-width:600px; margin:auto; padding:20px;'>
                     <h2 style='color:#8C1E32;'>Actividad cancelada</h2>
-                    <p>Hola <b>{$p['name']}</b>,</p>
+                    <p>Hola <b>{$p['full_name']}</b>,</p>
                     <p>Te informamos que la actividad <b>{$activityTitle}</b> ha sido cancelada por el organizador o un administrador.</p>
                     <p>Ya no es necesario que asistas ni realices ninguna acción.</p>
                     <hr>
@@ -150,10 +149,8 @@ class EmailService
                 </div>
             ";
 
-                $this->mailer->AltBody = "La actividad {$activityTitle} ha sido cancelada.";
-
-                $this->mailer->send();
-            }
+            $this->mailer->AltBody = "La actividad {$activityTitle} ha sido cancelada.";
+            $this->mailer->send();
 
             return true;
         } catch (Exception $e) {
@@ -162,13 +159,42 @@ class EmailService
         }
     }
 
-    // TODO: cuando se edite una actividad que se envie un correo
-    public function sendActivityUpdated($activityTitle, $changes, $participants)
+    public function sendRequestUnaccepted($requestTitle, $p)
     {
         try {
-            foreach ($participants as $p) {
+            $this->mailer->clearAddresses();
+            $this->mailer->addAddress($p['email'], $p['full_name']);
+            $this->mailer->isHTML(true);
+
+            $this->mailer->Subject = "Petición rehusada por organizador: {$requestTitle}";
+
+            $this->mailer->Body = "
+                <div style='font-family: Arial; max-width:600px; margin:auto; padding:20px;'>
+                    <h2 style='color:#8C1E32;'>Petición rehusada</h2>
+                    <p>Hola <b>{$p['full_name']}</b>,</p>
+                    <p>Te informamos que la petición <b>{$requestTitle}</b> ha sido cancelada por el organizador.</p>
+                    <p>Tu petición volverá a mostrarse a los organizadores para su realización.</p>
+                    <hr>
+                    <p style='font-size:12px;color:#888;'>MOVEos</p>
+                </div>
+            ";
+
+            $this->mailer->AltBody = "La actividad {$requestTitle} ha sido cancelada.";
+            $this->mailer->send();
+
+            return true;
+        } catch (Exception $e) {
+            error_log("Error email petición cancelada por organizador: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    // TODO: cuando se edite una actividad que se envie un correo
+    public function sendActivityUpdated($activityTitle, $changes, $p)
+    {
+        try {
                 $this->mailer->clearAddresses();
-                $this->mailer->addAddress($p['email'], $p['name']);
+                $this->mailer->addAddress($p['email'], $p['full_name']);
                 $this->mailer->isHTML(true);
 
                 $this->mailer->Subject = "Actividad actualizada: {$activityTitle}";
@@ -176,7 +202,7 @@ class EmailService
                 $this->mailer->Body = "
                 <div style='font-family: Arial; max-width:600px; margin:auto; padding:20px;'>
                     <h2 style='color:#8C1E32;'>Actividad actualizada</h2>
-                    <p>Hola <b>{$p['name']}</b>,</p>
+                    <p>Hola <b>{$p['full_name']}</b>,</p>
                     <p>La actividad <b>{$activityTitle}</b> ha sido modificada.</p>
 
                     <div style='background:#f4f4f4; padding:10px; border-radius:8px;'>
@@ -186,11 +212,8 @@ class EmailService
                     <p>Te recomendamos revisar los nuevos detalles.</p>
                 </div>
             ";
-
                 $this->mailer->AltBody = "La actividad {$activityTitle} ha sido actualizada.";
-
                 $this->mailer->send();
-            }
 
             return true;
         } catch (Exception $e) {
@@ -199,13 +222,74 @@ class EmailService
         }
     }
 
+    public function sendRequestDeleted($requestTitle, $organizer)
+    {
+        try {
+            $this->mailer->clearAddresses();
+            $this->mailer->addAddress($organizer['email'], $organizer['full_name']);
+            $this->mailer->isHTML(true);
+
+            $this->mailer->Subject = "Petición cancelada: {$requestTitle}";
+
+            $this->mailer->Body = "
+                <div style='font-family: Arial; max-width:600px; margin:auto; padding:20px;'>
+                    <h2 style='color:#8C1E32;'>Petición cancelada</h2>
+                    <p>Hola <b>{$organizer['full_name']}</b>,</p>
+                    <p>Te informamos que la petición <b>{$requestTitle}</b> ha sido cancelada por el participante o un administrador.</p>
+                    <p>Ya no es necesario que asistas ni realices ninguna acción.</p>
+                    <hr>
+                    <p style='font-size:12px;color:#888;'>MOVEos</p>
+                </div>
+                ";
+            $this->mailer->AltBody = "La petición {$requestTitle} ha sido cancelada.";
+            $this->mailer->send();
+            return true;
+        } catch (Exception $e) {
+            error_log("Error email petición eliminada: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function sendRequestUpdated($requestTitle, $changes, $organizer)
+    {
+        try {
+            $this->mailer->clearAddresses();
+            $this->mailer->addAddress($organizer['email'], $organizer['full_name']);
+            $this->mailer->isHTML(true);
+
+            $this->mailer->Subject = "Petición actualizada: {$requestTitle}";
+
+            $this->mailer->Body = "
+                <div style='font-family: Arial; max-width:600px; margin:auto; padding:20px;'>
+                    <h2 style='color:#8C1E32;'>Petición actualizada</h2>
+                    <p>Hola <b>{$organizer['full_name']}</b>,</p>
+                    <p>La petición <b>{$requestTitle}</b> ha sido modificada.</p>
+
+                    <div style='background:#f4f4f4; padding:10px; border-radius:8px;'>
+                        {$changes}
+                    </div>
+
+                    <p>Te recomendamos revisar los nuevos detalles.</p>
+                </div>
+            ";
+            $this->mailer->AltBody = "La petición {$requestTitle} ha sido actualizada.";
+            $this->mailer->send();
+
+            return true;
+        } catch (Exception $e) {
+            error_log("Error email petición actualizada: " . $e->getMessage());
+            return false;
+        }
+    }
+
+
     // TODO: Crear un cron que se ejecute todos los dias a las 8 de la mañana y mande los correos  
     public function sendTomorrowActivityReminder($activity, $participants)
     {
         try {
             foreach ($participants as $p) {
                 $this->mailer->clearAddresses();
-                $this->mailer->addAddress($p['email'], $p['name']);
+                $this->mailer->addAddress($p['email'], $p['full_name']);
                 $this->mailer->isHTML(true);
 
                 $this->mailer->Subject = "Mañana tienes actividad: {$activity['title']}";
@@ -214,7 +298,7 @@ class EmailService
                 <div style='font-family: Arial; max-width:600px; margin:auto; padding:20px;'>
                     <h2 style='color:#8C1E32;'>Recordatorio de actividad</h2>
 
-                    <p>Hola <b>{$p['name']}</b>,</p>
+                    <p>Hola <b>{$p['full_name']}</b>,</p>
 
                     <p>Te recordamos que <b>mañana</b> tienes la siguiente actividad:</p>
 

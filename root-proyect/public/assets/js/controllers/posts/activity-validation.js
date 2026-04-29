@@ -72,9 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (maxPeopleNum > 500) errors.push("El máximo de participantes es 500.");
         if (precio > 1000) errors.push("El precio no puede ser mayor a 1000€.");
 
-        if (!imagen && !currentImage) {
-            errors.push("Debes subir una imagen.");
-        } else if (imagen) {
+        if (imagen) {
             const tiposValidos = ['image/jpeg', 'image/png', 'image/jpg'];
             if (!tiposValidos.includes(imagen.type)) errors.push("Formato de imagen inválido (solo JPG o PNG).");
             if (imagen.size > 5 * 1024 * 1024) errors.push("La imagen no puede superar 5MB.");

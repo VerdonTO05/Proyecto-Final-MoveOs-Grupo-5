@@ -178,12 +178,13 @@ function old(string $key, $default = ''): string
 
             <div class="full">
                 <label>Imagen de la <?= $participante ? "Petición" : "Actividad" ?></label>
-                <div class="upload-box">
+                <div class="upload-box" id="upload-box">
                     <input type="file" name="image_file" id="image_file" accept="image/png, image/jpeg" required />
-                    <div class="upload-content">
+                    <div class="upload-content" id="upload-content">
                         <i class="fas fa-upload"></i>
                         <p id="file-name">Haz clic para subir una imagen (JPG/PNG)</p>
                     </div>
+                    <img id="image-preview" style="display:none;" />
                 </div>
             </div>
 
@@ -194,7 +195,7 @@ function old(string $key, $default = ''): string
             </div>
         </form>
     </div>
-
+    <script src="assets/js/controllers/posts/image-uploads.js"></script>
     <script src="assets/js/controllers/posts/activity-validation.js"></script>
 </body>
 

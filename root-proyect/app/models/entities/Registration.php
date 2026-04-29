@@ -265,5 +265,27 @@ class Registration
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    /**
+     * Obtener inscripciones por ID de actividad
+     * @param int $activity_id ID de la actividad
+     * @return array Lista de inscripciones
+     */
+    public function getRegistrationsByActivityId($activity_id)
+    {
+        $sql = "SELECT r.*, 
+                   u.full_name AS participant_name, 
+                   a.title AS activity_title
+            FROM {$this->table_name} r
+            JOIN users u ON r.participant_id = u.id
+            JOIN activities a ON r.activity_id = a.id
+            WHERE r.activity_id = :activity_id
+            ORDER BY r.registration_date DESC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(['activity_id' => $activity_id]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 ?>

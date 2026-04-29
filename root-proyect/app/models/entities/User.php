@@ -75,6 +75,26 @@ class User
         return $stmt->fetch();
     }
 
+    /**
+     * Obtener usuario por email
+     * @param string $email Correo del usuario
+     * @return array|null Datos del usuario o null si no existe
+     */
+    public function getUserByEmail($email)
+    {
+        $sql = "SELECT u.id, u.full_name, u.email, u.username, u.password_hash, 
+                   u.profile_image, r.name AS role, u.created_at
+            FROM {$this->table_name} u
+            JOIN roles r ON u.role_id = r.id
+            WHERE u.email = :email
+            LIMIT 1";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(['email' => $email]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+    }
+
     /* =========================
        AUTENTICACIÓN
        ========================= */

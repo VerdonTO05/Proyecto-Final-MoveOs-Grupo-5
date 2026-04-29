@@ -124,12 +124,12 @@ function old(string $key, $fallback = ''): string
 
             <div>
                 <label>Fecha</label>
-                <input type="date" name="date" value="<?= old('date') ?>" required/>
+                <input type="date" name="date" value="<?= old('date') ?>" required />
             </div>
 
             <div>
                 <label>Hora</label>
-                <input type="time" name="time" value="<?= old('time') ?>" required/>
+                <input type="time" name="time" value="<?= old('time') ?>" required />
             </div>
 
             <?php if (!$participante): ?>
@@ -213,15 +213,13 @@ function old(string $key, $fallback = ''): string
                     </div>
                 <?php endif; ?>
 
-                <div class="upload-box">
-                    <input type="file" name="image_file" id="image_file" accept="image/png, image/jpeg"
-                        <?= empty($publication['image_url']) ? 'required' : '' ?> />
-                    <input type="hidden" name="current_image"
-                        value="<?= htmlspecialchars($publication['image_url'] ?? '') ?>">
-                    <div class="upload-content">
+                <div class="upload-box" id="upload-box">
+                    <input type="file" name="image_file" id="image_file" accept="image/png, image/jpeg" />
+                    <div class="upload-content" id="upload-content">
                         <i class="fas fa-upload"></i>
-                        <p id="file-name">Haz clic para subir una nueva imagen (JPG/PNG)</p>
+                        <p id="file-name">Haz clic para subir una imagen (JPG/PNG)</p>
                     </div>
+                    <img id="image-preview" style="display:none;" />
                 </div>
             </div>
 
@@ -232,7 +230,7 @@ function old(string $key, $fallback = ''): string
             </div>
         </form>
     </div>
-
+    <script src="assets/js/controllers/posts/image-uploads.js"></script>
     <script src="assets/js/controllers/posts/activity-validation.js"></script>
 </body>
 

@@ -61,7 +61,7 @@ const headerHTML = `
       <a href="index.php?accion=forgot-password">Recuperar contraseña</a>
       <a href="index.php?accion=chatHub" id="sidebarChatLink">Mis conversaciones</a>
       <a href="#" id="social-link">Redes sociales</a>
-      <a href="index.php?accion=unsubscribe">Dar de baja</a>
+      <a href="#" id="unsubscribeBtn">Dar de baja</a>
     </div>
   </nav>
 </header>
@@ -379,48 +379,59 @@ function initSidebarLogic() {
    DAR DE BAJA (UNSUBSCRIBE)
    ========================= */
 function initUnsubscribeLogic() {
-  const unsubscribeLink = document.querySelector('a[href="index.php?accion=unsubscribe"]');
-  if (!unsubscribeLink) return;
+  const unsubscribeLink = document.getElementById("unsubscribeBtn");
+
+  if (!unsubscribeLink) {
+    console.warn("unsubscribeBtn no encontrado");
+    return;
+  }
+
+  console.log("unsubscribe init cargado");
 
   unsubscribeLink.addEventListener("click", async (e) => {
     e.preventDefault();
 
     const confirmDelete = await showConfirm({
       title: "Dar de baja su cuenta",
-      message: "Esta acción es irreversible.\nSe eliminará tu cuenta y todos tus datos.\n¿Deseas continuar?"
+      message: "Esta acción es irreversible.\n¿Deseas continuar?"
     });
 
     if (!confirmDelete) return;
 
     try {
-      const res = await fetch("index.php", {
+      const res = await fetch("index.php?accion=unsubscribe", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ accion: "unsubscribe" })
+        headers: {
+          "Accept": "application/json"
+        }
       });
 
-      const data = await res.json();
+      const text = await res.text(); // 👈 DEBUG CLAVE
+
+      console.log("RESPUESTA RAW:", text);
+
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        throw new Error("El servidor no devolvió JSON válido");
+      }
 
       if (data.success) {
-        showAlert({
-          title: "Cuenta eliminada",
-          message: "Tu cuenta se eliminó correctamente"
-        });
-
-        setTimeout(() => {
-          window.location.href = "index.php";
-        }, 1200);
-      } else {
-        showAlert({
-          title: "Error",
-          message: data.message || "No se pudo eliminar la cuenta"
-        });
+        await showAlert("Cuenta eliminada", data.message, 'info', 1500);
+        window.location.href = "index.php";
+        return;
       }
+
+      showAlert("Error", "No se pudo eliminar");
+
     } catch (err) {
-      showAlert({
-        title: "Error",
-        message: "Error al eliminar la cuenta"
-      });
+      console.error(err);
+
+      showAlert(
+        "Error",
+        "Error al eliminar la cuenta"
+      );
     }
   });
 }
