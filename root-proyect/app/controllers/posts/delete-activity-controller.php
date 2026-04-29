@@ -16,7 +16,10 @@ if (session_status() === PHP_SESSION_NONE) {
 // Cargar los modelos necesarios y la conexión a la base de datos
 require_once __DIR__ . '/../../models/entities/Activity.php';
 require_once __DIR__ . '/../../models/entities/Request.php';
+require_once __DIR__ . '/../../models/entities/User.php';
+require_once __DIR__ . '/../../models/entities/Registration.php';
 require_once __DIR__ . '/../../../config/database.php';
+require_once __DIR__ . '/../../services/EmailService.php';
 
 // Establecer el tipo de respuesta como JSON
 header('Content-Type: application/json');
@@ -49,6 +52,9 @@ try {
     $db = $database->getConnection();
     $activityModel = new Activity($db);
     $requestModel = new Request($db);
+    $registrationModel = new Registration($db);
+    $userModel = new User($db);
+    $emailService = new EmailService();
 
     $role = $_SESSION['role'];
 
@@ -89,11 +95,61 @@ try {
 
     // Eliminar la publicación y preparar el mensaje de confirmación
     if ($typePublication === 'activity') {
-        $activityModel->deleteActivity($id);
-        $msg = 'Actividad eliminada correctamente';
+
+        $registrations = $registrationModel->getRegistrationsByActivityId($id);
+
+        // Guardas usuarios antes de borrar
+        $usersToNotify = [];
+        foreach ($registrations as $r) {
+            $user = $userModel->getUserById($r['participant_id']);
+            if ($user) {
+                $usersToNotify[] = $user;
+            }
+        }
+        $deleted = $activityModel->deleteActivity($id);
+
+        if ($deleted) {
+            foreach ($usersToNotify as $user) {
+                try {
+                    $emailService->sendActivityDeleted($publication['title'], $user);
+                } catch (Exception $e) {
+                    error_log("Error enviando email: " . $e->getMessage());
+                }
+            }
+
+            $msg = 'Actividad eliminada correctamente';
+
+        } else {
+            echo json_encode([
+                'success' => false,
+                'message' => 'No se pudo eliminar la actividad'
+            ]);
+            exit;
+        }
+
     } else {
-        $requestModel->deleteRequest($id);
-        $msg = 'Petición eliminada correctamente';
+
+        $user = $userModel->getUserById($publication['accepted_by']);
+        $deleted = $requestModel->deleteRequest($id);
+
+        if ($deleted) {
+            if ($user != null) {
+                try {
+                    $emailService->sendRequestDeleted($publication['title'], $user);
+                } catch (Exception $e) {
+                    error_log("Error enviando email: " . $e->getMessage());
+                }
+            }
+
+            $msg = 'Petición eliminada correctamente';
+
+        } else {
+            echo json_encode([
+                'success' => false,
+                'message' => 'No se pudo eliminar la petición'
+            ]);
+            exit;
+        }
     }
 
     echo json_encode([

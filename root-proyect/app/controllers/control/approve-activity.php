@@ -14,6 +14,8 @@ header('Content-Type: application/json');
 require_once __DIR__ . '/../../../config/database.php';
 require_once __DIR__ . '/../../models/entities/Activity.php';
 require_once __DIR__ . '/../../models/entities/Request.php';
+require_once __DIR__ . '/../../models/entities/User.php';
+require_once __DIR__ . '/../../services/EmailService.php';
 
 // Iniciar sesión solo si no hay una activa
 if (session_status() === PHP_SESSION_NONE) {
@@ -36,8 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $data = json_decode(file_get_contents('php://input'), true);
 
 // Obtener el ID del elemento y el tipo ('activity' o petición)
-$activityId = $data['id']   ?? null;
-$type       = $data['type'] ?? null;
+$activityId = $data['id'] ?? null;
+$type = $data['type'] ?? null;
 
 // Validar que se haya proporcionado un ID
 if (!$activityId) {
@@ -48,22 +50,38 @@ if (!$activityId) {
 try {
     // Instanciar la conexión y los modelos
     $database = new Database();
-    $db       = $database->getConnection();
+    $db = $database->getConnection();
     $activity = new Activity($db);
-    $request  = new Request($db);
+    $request = new Request($db);
+    $userModel = new User($db);
+    $emailService = new EmailService();
 
     // Actualizar el estado según el tipo recibido
     if ($type == 'activity') {
         // Aprobar una actividad
         if ($activity->updateState($activityId, 'aprobada')) {
-            echo json_encode(['success' => true,  'message' => 'Actividad aprobada']);
+            try {
+                $publication = $activity->getActivityById($activityId);
+                $user = $userModel->getUserById($publication['offertant_id']);
+                $emailService->sendActivityAccepted($publication['title'], $user);
+            } catch (Exception $e) {
+                error_log("Error enviando email: " . $e->getMessage());
+            }
+            echo json_encode(['success' => true, 'message' => 'Actividad aprobada']);
         } else {
             echo json_encode(['success' => false, 'message' => 'Error al aprobar actividad']);
         }
     } else {
         // Aprobar una petición
         if ($request->updateState($activityId, 'aprobada')) {
-            echo json_encode(['success' => true,  'message' => 'Petición aprobada']);
+            try {
+                $publication = $request->getRequestById($activityId);
+                $user = $userModel->getUserById($publication['participant_id']);
+                $emailService->sendRequestAccepted($publication['title'], $user);
+            } catch (Exception $e) {
+                error_log("Error enviando email: " . $e->getMessage());
+            }
+            echo json_encode(['success' => true, 'message' => 'Petición aprobada']);
         } else {
             echo json_encode(['success' => false, 'message' => 'Error al aprobar petición']);
         }

@@ -7,6 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('.form-activity');
     if (!form) return;
 
+    // ===== FECHA ORIGINAL (NO MODIFICABLE) =====
+    const dateInput = form.querySelector('[name="date"]');
+    const originalDate = dateInput ? dateInput.value : null;
+
     form.addEventListener('submit', (e) => {
         e.preventDefault();
 
@@ -17,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const descripcion = form.querySelector('[name="description"]')?.value.trim() || '';
         const categoria = form.querySelector('#category')?.value || '';
         const ubicacion = form.querySelector('[name="location"]')?.value.trim() || '';
-        const fecha = form.querySelector('[name="date"]')?.value || '';
+        const fecha = dateInput?.value || '';
         const hora = form.querySelector('[name="time"]')?.value || '';
 
         const edad = form.querySelector('[name="min_age"]')?.value || '';
@@ -50,6 +54,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!fecha) errors.push("La fecha es obligatoria.");
         if (!hora) errors.push("La hora es obligatoria.");
 
+        // ===== 🔒 VALIDACIÓN: FECHA NO MODIFICABLE =====
+        if (dateInput && originalDate && dateInput.value !== originalDate) {
+            errors.push("La fecha no se puede modificar.");
+        }
+
+        // ===== VALIDACIÓN FECHA =====
         if (fecha) {
             const hoy = new Date();
             const fechaInput = new Date(fecha);
@@ -61,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (fechaInput > maxFecha) errors.push("La fecha no puede ser superior a 2 años.");
         }
 
+        // ===== VALIDACIÓN HORA =====
         if (hora) {
             const [h, m] = hora.split(':').map(Number);
             if (h < 8 || h > 23 || (h === 23 && m > 0)) {
@@ -72,6 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (maxPeopleNum > 500) errors.push("El máximo de participantes es 500.");
         if (precio > 1000) errors.push("El precio no puede ser mayor a 1000€.");
 
+        // ===== IMAGEN =====
         if (imagen) {
             const tiposValidos = ['image/jpeg', 'image/png', 'image/jpg'];
             if (!tiposValidos.includes(imagen.type)) errors.push("Formato de imagen inválido (solo JPG o PNG).");
@@ -96,11 +108,10 @@ document.addEventListener('DOMContentLoaded', () => {
             method: "POST",
             body: formData,
             headers: {
-                'X-Requested-With': 'XMLHttpRequest'  // Permite que PHP detecte petición fetch
+                'X-Requested-With': 'XMLHttpRequest'
             }
         })
         .then(res => {
-            // Verificar que la respuesta sea JSON antes de parsear
             const contentType = res.headers.get('content-type') || '';
             if (!contentType.includes('application/json')) {
                 throw new Error('El servidor no devolvió JSON. Posible error PHP.');
@@ -111,7 +122,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!data.success) {
 
-                // ===== ERRORES DE VALIDACIÓN PHP =====
                 if (data.errors && data.errors.length > 0) {
                     showAlert(
                         data.message || "Errores en el formulario:",
@@ -122,7 +132,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                // ===== ERROR GENERAL =====
                 showAlert(
                     "Error",
                     data.message || "Ha ocurrido un error",
@@ -132,13 +141,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // ===== ÉXITO =====
             showAlert(
                 "Éxito",
                 data.message,
                 "success",
                 1800
             );
+
             setTimeout(() => {
                 window.location.href = "?accion=seeMyActivities";
             }, 1800);
@@ -176,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ===== LIGHTBOX IMAGEN ACTUAL =====
+    // ===== LIGHTBOX IMAGEN =====
     const previewImg = document.querySelector('.current-image-preview img');
     if (previewImg) {
         previewImg.parentElement.addEventListener('click', () => {
@@ -184,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
             lightbox.className = 'lightbox-overlay';
             lightbox.innerHTML = `
                 <div class="lightbox-content">
-                    <button class="lightbox-close" aria-label="Cerrar">
+                    <button class="lightbox-close">
                         <i class="fas fa-times"></i>
                     </button>
                     <img src="${previewImg.src}" alt="Vista previa ampliada">
@@ -199,8 +208,13 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             lightbox.querySelector('.lightbox-close').addEventListener('click', close);
-            lightbox.addEventListener('click', (e) => { if (e.target === lightbox) close(); });
-            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); }, { once: true });
+            lightbox.addEventListener('click', (e) => {
+                if (e.target === lightbox) close();
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') close();
+            }, { once: true });
         });
     }
 });

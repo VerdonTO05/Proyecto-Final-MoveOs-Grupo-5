@@ -44,7 +44,7 @@ function handleImageUpload(): ?string
     }
 
     $allowedMimes = ['image/jpeg', 'image/jpg', 'image/png'];
-    $finfo    = finfo_open(FILEINFO_MIME_TYPE);
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
     $mimeType = finfo_file($finfo, $file['tmp_name']);
     finfo_close($finfo);
 
@@ -56,11 +56,11 @@ function handleImageUpload(): ?string
         jsonResponse(false, 'Error en el formulario.', ['La imagen no puede superar 5MB.']);
     }
 
-    $extension   = ($mimeType === 'image/png') ? 'png' : 'jpg';
-    $filename    = uniqid('activity_', true) . '.' . $extension;
+    $extension = ($mimeType === 'image/png') ? 'png' : 'jpg';
+    $filename = uniqid('activity_', true) . '.' . $extension;
 
     // Ajusta esta ruta al directorio real de tu proyecto
-    $uploadDir   = __DIR__ . '/../../../public/assets/img/activities/';
+    $uploadDir = __DIR__ . '/../../../public/assets/img/activities/';
 
     if (!is_dir($uploadDir)) {
         mkdir($uploadDir, 0755, true);
@@ -76,10 +76,10 @@ function handleImageUpload(): ?string
 }
 
 try {
-    $database      = new Database();
-    $db            = $database->getConnection();
+    $database = new Database();
+    $db = $database->getConnection();
     $activityModel = new Activity($db);
-    $requestModel  = new Request($db);
+    $requestModel = new Request($db);
 
     $id = $_POST['id'] ?? $_GET['id'] ?? null;
 
@@ -90,10 +90,10 @@ try {
     }
 
     if ($_SESSION['role'] === 'participante') {
-        $publication     = $requestModel->getRequestById($id);
+        $publication = $requestModel->getRequestById($id);
         $typePublication = 'request';
     } else {
-        $publication     = $activityModel->getActivityById($id);
+        $publication = $activityModel->getActivityById($id);
         $typePublication = 'activity';
     }
 
@@ -104,7 +104,7 @@ try {
     }
 
     $userId = $_SESSION['user_id'];
-    $field  = ($typePublication === 'activity') ? 'offertant_id' : 'participant_id';
+    $field = ($typePublication === 'activity') ? 'offertant_id' : 'participant_id';
 
     if ($publication[$field] != $userId) {
         $_SESSION['error'] = 'No tienes permiso para editar esta publicación';
@@ -122,34 +122,44 @@ try {
 
         // Nueva imagen si se subió, si no mantener la actual
         $newImageUrl = handleImageUpload();
-        $imageUrl    = $newImageUrl ?? ($_POST['current_image'] ?? $publication['image_url'] ?? null);
+        $imageUrl = $newImageUrl ?? ($_POST['current_image'] ?? $publication['image_url'] ?? null);
 
         $data = [
-            'id'                 => $id,
-            'title'              => trim($_POST['title'] ?? ''),
-            'description'        => trim($_POST['description'] ?? ''),
-            'category_id'        => $categoryId,
-            'location'           => trim($_POST['location'] ?? ''),
-            'date'               => $_POST['date'] ?? null,
-            'time'               => $_POST['time'] ?? null,
-            'language'           => trim($_POST['language'] ?? ''),
-            'min_age'            => $_POST['min_age'] ?? null,
-            'dress_code'         => trim($_POST['dress_code'] ?? ''),
+            'id' => $id,
+            'title' => trim($_POST['title'] ?? ''),
+            'description' => trim($_POST['description'] ?? ''),
+            'category_id' => $categoryId,
+            'location' => trim($_POST['location'] ?? ''),
+            'date' => $publication['date'],
+            'time' => $_POST['time'] ?? null,
+            'language' => trim($_POST['language'] ?? ''),
+            'min_age' => $_POST['min_age'] ?? null,
+            'dress_code' => trim($_POST['dress_code'] ?? ''),
             'transport_included' => isset($_POST['transport_included']) ? 1 : 0,
-            'departure_city'     => trim($_POST['departure_city'] ?? ''),
-            'pets_allowed'       => isset($_POST['pets_allowed']) ? 1 : 0,
-            'image_url'          => $imageUrl,
+            'departure_city' => trim($_POST['departure_city'] ?? ''),
+            'pets_allowed' => isset($_POST['pets_allowed']) ? 1 : 0,
+            'image_url' => $imageUrl,
         ];
 
         if ($typePublication === 'activity') {
-            $data['price']      = $_POST['price'] ?? null;
+            $data['price'] = $_POST['price'] ?? null;
             $data['max_people'] = $_POST['max_people'] ?? null;
         }
 
         $fieldsToCompare = [
-            'title', 'description', 'category_id', 'location', 'date', 'time',
-            'language', 'min_age', 'dress_code', 'transport_included',
-            'departure_city', 'pets_allowed', 'image_url',
+            'title',
+            'description',
+            'category_id',
+            'location',
+            'date',
+            'time',
+            'language',
+            'min_age',
+            'dress_code',
+            'transport_included',
+            'departure_city',
+            'pets_allowed',
+            'image_url',
         ];
 
         if ($typePublication === 'activity') {
@@ -171,23 +181,35 @@ try {
 
         if ($typePublication === 'activity') {
             $data['offertant_id'] = $_SESSION['user_id'];
+
+            if ((int) $data['max_people'] !== (int) $publication['max_people']) {
+
+                $currentParticipants = $activityModel->getCurrentRegistrations((int) $id);
+
+                if ($currentParticipants > (int) $data['max_people']) {
+                    jsonResponse(false, 'Error en el formulario', [
+                        "No puedes reducir el máximo de participantes a {$data['max_people']} porque ya hay {$currentParticipants} inscritos."
+                    ]);
+                }
+            }
+
             $result = $activityModel->updateActivity($data);
 
             $errorMessages = [
                 'conflict_activity' => 'Ya tienes otra actividad ese día: "' . (is_array($result) ? ($result['title'] ?? '') : '') . '".',
-                'conflict_request'  => 'Ya tienes una petición aceptada ese día: "' . (is_array($result) ? ($result['title'] ?? '') : '') . '".',
-                'not_found'         => 'La actividad no existe o no se pudo actualizar.',
-                'exception'         => 'Error del servidor.',
+                'conflict_request' => 'Ya tienes una petición aceptada ese día: "' . (is_array($result) ? ($result['title'] ?? '') : '') . '".',
+                'not_found' => 'La actividad no existe o no se pudo actualizar.',
+                'exception' => 'Error del servidor.',
             ];
         } else {
             $data['participant_id'] = $_SESSION['user_id'];
             $result = $requestModel->updateRequest($data);
 
             $errorMessages = [
-                'conflict_request'  => 'Ya tienes otra petición ese día: "' . (is_array($result) ? ($result['title'] ?? '') : '') . '".',
+                'conflict_request' => 'Ya tienes otra petición ese día: "' . (is_array($result) ? ($result['title'] ?? '') : '') . '".',
                 'conflict_activity' => 'Ya tienes una inscripción en una actividad ese día: "' . (is_array($result) ? ($result['title'] ?? '') : '') . '".',
-                'not_found'         => 'La petición no existe o no se pudo actualizar.',
-                'exception'         => 'Error del servidor.',
+                'not_found' => 'La petición no existe o no se pudo actualizar.',
+                'exception' => 'Error del servidor.',
             ];
         }
 

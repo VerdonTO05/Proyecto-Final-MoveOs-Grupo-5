@@ -295,7 +295,9 @@ class Request
     {
         $sql = "DELETE FROM {$this->table_name} WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
-        return $stmt->execute(['id' => $id]);
+        $stmt->execute(['id' => $id]);
+
+        return $stmt->rowCount() > 0;
     }
 
     /**

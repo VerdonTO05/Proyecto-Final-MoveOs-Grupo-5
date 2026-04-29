@@ -382,11 +382,8 @@ function initUnsubscribeLogic() {
   const unsubscribeLink = document.getElementById("unsubscribeBtn");
 
   if (!unsubscribeLink) {
-    console.warn("unsubscribeBtn no encontrado");
     return;
   }
-
-  console.log("unsubscribe init cargado");
 
   unsubscribeLink.addEventListener("click", async (e) => {
     e.preventDefault();
@@ -406,9 +403,7 @@ function initUnsubscribeLogic() {
         }
       });
 
-      const text = await res.text(); // 👈 DEBUG CLAVE
-
-      console.log("RESPUESTA RAW:", text);
+      const text = await res.text();
 
       let data;
       try {

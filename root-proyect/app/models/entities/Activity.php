@@ -264,7 +264,8 @@ class Activity
     {
         $sql = "DELETE FROM {$this->table_name} WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
-        return $stmt->execute(['id' => $id]);
+        $stmt->execute(['id' => $id]);
+        return $stmt->rowCount() > 0;
     }
 
     /**
@@ -374,6 +375,23 @@ class Activity
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(['user_id' => $participant_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getCurrentRegistrations(int $activityId): int
+    {
+        $stmt = $this->conn->prepare("
+        SELECT current_registrations
+        FROM activities
+        WHERE id = :id
+        LIMIT 1
+    ");
+
+        $stmt->bindParam(':id', $activityId);
+        $stmt->execute();
+
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return (int) ($row['current_registrations'] ?? 0);
     }
 }
 ?>

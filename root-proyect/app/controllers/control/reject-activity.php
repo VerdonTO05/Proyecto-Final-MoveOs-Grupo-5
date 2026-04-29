@@ -14,6 +14,8 @@ header('Content-Type: application/json');
 require_once __DIR__ . '/../../../config/database.php';
 require_once __DIR__ . '/../../models/entities/Activity.php';
 require_once __DIR__ . '/../../models/entities/Request.php';
+require_once __DIR__ . '/../../models/entities/User.php';
+require_once __DIR__ . '/../../services/EmailService.php';
 
 // Iniciar sesión solo si no hay una activa
 if (session_status() === PHP_SESSION_NONE) {
@@ -36,8 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $data = json_decode(file_get_contents('php://input'), true);
 
 // Obtener el ID del elemento y el tipo ('activity' o petición)
-$activityId = $data['id']   ?? null;
-$type       = $data['type'] ?? null;
+$activityId = $data['id'] ?? null;
+$type = $data['type'] ?? null;
 
 // Validar que se haya proporcionado un ID
 if (!$activityId) {
@@ -48,22 +50,38 @@ if (!$activityId) {
 try {
     // Instanciar la conexión y los modelos
     $database = new Database();
-    $db       = $database->getConnection();
+    $db = $database->getConnection();
     $activity = new Activity($db);
-    $request  = new Request($db);
+    $request = new Request($db);
+    $userModel = new User($db);
+    $emailService = new EmailService();
 
     // Actualizar el estado a 'rechazada' según el tipo recibido
     if ($type == 'activity') {
         // Rechazar una actividad
         if ($activity->updateState($activityId, 'rechazada')) {
-            echo json_encode(['success' => true,  'message' => 'Actividad rechazada']);
+            try {
+                $publication = $activity->getActivityById($activityId);
+                $user = $userModel->getUserById($publication['offertant_id']);
+                $emailService->sendActivityRejected($publication['title'], $user);
+            } catch (Exception $e) {
+                error_log("Error enviando email: " . $e->getMessage());
+            }
+            echo json_encode(['success' => true, 'message' => 'Actividad rechazada']);
         } else {
             echo json_encode(['success' => false, 'message' => 'Error al rechazar actividad']);
         }
     } else {
         // Rechazar una petición
         if ($request->updateState($activityId, 'rechazada')) {
-            echo json_encode(['success' => true,  'message' => 'Petición rechazada']);
+            try {
+                $publication = $request->getRequestById($activityId);
+                $user = $userModel->getUserById($publication['participant_id']);
+                $emailService->sendRequestRejected($publication['title'], $user);
+            } catch (Exception $e) {
+                error_log("Error enviando email: " . $e->getMessage());
+            }
+            echo json_encode(['success' => true, 'message' => 'Petición rechazada']);
         } else {
             echo json_encode(['success' => false, 'message' => 'Error al rechazar petición']);
         }

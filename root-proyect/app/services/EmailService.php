@@ -193,13 +193,13 @@ class EmailService
     public function sendActivityUpdated($activityTitle, $changes, $p)
     {
         try {
-                $this->mailer->clearAddresses();
-                $this->mailer->addAddress($p['email'], $p['full_name']);
-                $this->mailer->isHTML(true);
+            $this->mailer->clearAddresses();
+            $this->mailer->addAddress($p['email'], $p['full_name']);
+            $this->mailer->isHTML(true);
 
-                $this->mailer->Subject = "Actividad actualizada: {$activityTitle}";
+            $this->mailer->Subject = "Actividad actualizada: {$activityTitle}";
 
-                $this->mailer->Body = "
+            $this->mailer->Body = "
                 <div style='font-family: Arial; max-width:600px; margin:auto; padding:20px;'>
                     <h2 style='color:#8C1E32;'>Actividad actualizada</h2>
                     <p>Hola <b>{$p['full_name']}</b>,</p>
@@ -212,8 +212,8 @@ class EmailService
                     <p>Te recomendamos revisar los nuevos detalles.</p>
                 </div>
             ";
-                $this->mailer->AltBody = "La actividad {$activityTitle} ha sido actualizada.";
-                $this->mailer->send();
+            $this->mailer->AltBody = "La actividad {$activityTitle} ha sido actualizada.";
+            $this->mailer->send();
 
             return true;
         } catch (Exception $e) {
@@ -323,4 +323,176 @@ class EmailService
             return false;
         }
     }
+
+    //Emails al aceptar o rechazar
+    public function sendActivityAccepted($activityTitle, $user)
+    {
+        try {
+            $this->mailer->clearAddresses();
+            $this->mailer->addAddress($user['email'], $user['full_name']);
+            $this->mailer->isHTML(true);
+
+            $this->mailer->Subject = "Actividad aprobada: {$activityTitle}";
+
+            $this->mailer->Body = "
+            <div style='font-family: Arial; max-width:600px; margin:auto; padding:20px;'>
+                <h2 style='color:#2e7d32;'>¡Actividad aprobada!</h2>
+
+                <p>Hola <b>{$user['full_name']}</b>,</p>
+
+                <p>Nos complace informarte de que tu actividad 
+                <b>{$activityTitle}</b> ha sido <b>aprobada por un administrador</b>.</p>
+
+                <p>Ya está disponible para los participantes en la plataforma.</p>
+
+                <p>Te recomendamos revisarla y prepararte para gestionar las inscripciones.</p>
+
+                <hr>
+
+                <p style='font-size:12px;color:#888;'>MOVEos</p>
+            </div>
+        ";
+
+            $this->mailer->AltBody =
+                "Tu actividad '{$activityTitle}' ha sido aprobada y ya está disponible.";
+
+            $this->mailer->send();
+
+            return true;
+
+        } catch (Exception $e) {
+            error_log("Error email actividad aprobada: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function sendRequestAccepted($requestTitle, $user)
+    {
+        try {
+            $this->mailer->clearAddresses();
+            $this->mailer->addAddress($user['email'], $user['full_name']);
+            $this->mailer->isHTML(true);
+
+            $this->mailer->Subject = "Petición aprobada: {$requestTitle}";
+
+            $this->mailer->Body = "
+            <div style='font-family: Arial; max-width:600px; margin:auto; padding:20px;'>
+                <h2 style='color:#2e7d32;'>¡Petición aprobada!</h2>
+
+                <p>Hola <b>{$user['full_name']}</b>,</p>
+
+                <p>Nos complace informarte de que tu petición 
+                <b>{$requestTitle}</b> ha sido <b>aprobada por un administrador</b>.</p>
+
+                <p>Ya está disponible para los participantes en la plataforma.</p>
+
+                <p>Te recomendamos revisarla y prepararte para gestionar las inscripciones.</p>
+
+                <hr>
+
+                <p style='font-size:12px;color:#888;'>MOVEos</p>
+            </div>
+        ";
+
+            $this->mailer->AltBody =
+                "Tu petición '{$requestTitle}' ha sido aprobada y ya está disponible.";
+
+            $this->mailer->send();
+
+            return true;
+
+        } catch (Exception $e) {
+            error_log("Error email petición aprobada: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function sendActivityRejected($activityTitle, $user, $reason = null)
+    {
+        try {
+            $this->mailer->clearAddresses();
+            $this->mailer->addAddress($user['email'], $user['full_name']);
+            $this->mailer->isHTML(true);
+
+            $this->mailer->Subject = "Actividad rechazada: {$activityTitle}";
+
+            $this->mailer->Body = "
+        <div style='font-family: Arial; max-width:600px; margin:auto; padding:20px;'>
+            <h2 style='color:#8C1E32;'>Actividad rechazada</h2>
+
+            <p>Hola <b>{$user['full_name']}</b>,</p>
+
+            <p>Lamentamos informarte de que tu actividad 
+            <b>{$activityTitle}</b> ha sido <b>rechazada por un administrador</b>.</p>
+
+            " . ($reason ? "
+            <div style='background:#fff; border-left:4px solid #8C1E32; padding:10px; border-radius:6px; margin:10px 0;'>
+                <p style='margin:0; color:#333;'><b>Motivo:</b> {$reason}</p>
+            </div>
+            " : "") . "
+
+            <p>Puedes revisarla, corregirla e informar a un administrador para una nueva revisión.</p>
+
+            <hr>
+            <p style='font-size:12px;color:#888;'>MOVEos</p>
+        </div>
+        ";
+
+            $this->mailer->AltBody =
+                "Tu actividad '{$activityTitle}' ha sido rechazada. {$reason}";
+
+            $this->mailer->send();
+
+            return true;
+
+        } catch (Exception $e) {
+            error_log("Error email actividad rechazada: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function sendRequestRejected($requestTitle, $user, $reason = null)
+    {
+        try {
+            $this->mailer->clearAddresses();
+            $this->mailer->addAddress($user['email'], $user['full_name']);
+            $this->mailer->isHTML(true);
+
+            $this->mailer->Subject = "Petición rechazada: {$requestTitle}";
+
+            $this->mailer->Body = "
+        <div style='font-family: Arial; max-width:600px; margin:auto; padding:20px;'>
+            <h2 style='color:#8C1E32;'>Petición rechazada</h2>
+
+            <p>Hola <b>{$user['full_name']}</b>,</p>
+
+            <p>Lamentamos informarte de que tu petición 
+            <b>{$requestTitle}</b> ha sido <b>rechazada por un administrador</b>.</p>
+
+            " . ($reason ? "
+            <div style='background:#fff; border-left:4px solid #8C1E32; padding:10px; border-radius:6px; margin:10px 0;'>
+                <p style='margin:0; color:#333;'><b>Motivo:</b> {$reason}</p>
+            </div>
+            " : "") . "
+
+            <p>Puedes revisarla y volver a intentarlo cuando lo desees.</p>
+
+            <hr>
+            <p style='font-size:12px;color:#888;'>MOVEos</p>
+        </div>
+        ";
+
+            $this->mailer->AltBody =
+                "Tu petición '{$requestTitle}' ha sido rechazada. {$reason}";
+
+            $this->mailer->send();
+
+            return true;
+
+        } catch (Exception $e) {
+            error_log("Error email petición rechazada: " . $e->getMessage());
+            return false;
+        }
+    }
+
 }

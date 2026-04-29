@@ -124,7 +124,7 @@ function old(string $key, $fallback = ''): string
 
             <div>
                 <label>Fecha</label>
-                <input type="date" name="date" value="<?= old('date') ?>" required />
+                <input type="date" name="date" value="<?= old('date') ?>" required readonly/>
             </div>
 
             <div>
