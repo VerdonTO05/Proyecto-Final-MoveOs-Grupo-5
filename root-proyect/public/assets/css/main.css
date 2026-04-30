@@ -250,7 +250,7 @@ footer p {
 }
 
 .btn-header-login {
-  background: var(--bg-surface);
+  background: transparent;
   color: var(--text-primary);
   font-weight: 600;
   font-size: 0.5rem;
@@ -259,7 +259,7 @@ footer p {
 }
 
 .btn-header-register {
-  background: var(--bg-surface);
+  background: transparent;
   color: var(--text-primary);
   font-weight: 600;
   font-size: 0.5rem;
@@ -2694,7 +2694,8 @@ main section:nth-of-type(3) p {
   display: none;
 }
 #modal-container.active {
-  display: grid !important; /* grid centra sin conflictos con flex body */
+  display: grid !important;
+  /* grid centra sin conflictos con flex body */
   place-items: center !important;
   background: rgba(0, 0, 0, 0.5) !important;
   backdrop-filter: blur(5px);
@@ -2797,12 +2798,12 @@ main section:nth-of-type(3) p {
     transform: translateY(-20px);
   }
 }
-/* Contenedor de la alerta — aparece en la esquina superior*/
+/* Contenedor de la alerta — centrado arriba */
 .alert-overlay {
   position: fixed;
   top: 1.5rem;
-  right: 1.5rem;
-  left: auto;
+  left: 50%;
+  transform: translateX(-50%);
   width: auto;
   max-width: 380px;
   display: none;
@@ -4026,6 +4027,9 @@ input[type=checkbox] {
   position: relative;
   display: flex;
   align-items: center;
+}
+.docs-menu-container button {
+  color: var(--brand-dark);
 }
 
 #docs-dropdown {

@@ -283,46 +283,46 @@ class EmailService
     }
 
 
-    // TODO: Crear un cron que se ejecute todos los dias a las 8 de la mañana y mande los correos  
-    public function sendTomorrowActivityReminder($activity, $participants)
-    {
-        try {
-            foreach ($participants as $p) {
-                $this->mailer->clearAddresses();
-                $this->mailer->addAddress($p['email'], $p['full_name']);
-                $this->mailer->isHTML(true);
+    // TODO: Crear un cron que se ejecute todos los dias a las 8 de la mañana y mande los correos (Una vez subido al servidor) 
+    // public function sendTomorrowActivityReminder($activity, $participants)
+    // {
+    //     try {
+    //         foreach ($participants as $p) {
+    //             $this->mailer->clearAddresses();
+    //             $this->mailer->addAddress($p['email'], $p['full_name']);
+    //             $this->mailer->isHTML(true);
 
-                $this->mailer->Subject = "Mañana tienes actividad: {$activity['title']}";
+    //             $this->mailer->Subject = "Mañana tienes actividad: {$activity['title']}";
 
-                $this->mailer->Body = "
-                <div style='font-family: Arial; max-width:600px; margin:auto; padding:20px;'>
-                    <h2 style='color:#8C1E32;'>Recordatorio de actividad</h2>
+    //             $this->mailer->Body = "
+    //             <div style='font-family: Arial; max-width:600px; margin:auto; padding:20px;'>
+    //                 <h2 style='color:#8C1E32;'>Recordatorio de actividad</h2>
 
-                    <p>Hola <b>{$p['full_name']}</b>,</p>
+    //                 <p>Hola <b>{$p['full_name']}</b>,</p>
 
-                    <p>Te recordamos que <b>mañana</b> tienes la siguiente actividad:</p>
+    //                 <p>Te recordamos que <b>mañana</b> tienes la siguiente actividad:</p>
 
-                    <h3>{$activity['title']}</h3>
+    //                 <h3>{$activity['title']}</h3>
 
-                    <p><b>Fecha:</b> {$activity['date']}</p>
-                    <p><b>Hora:</b> {$activity['time']}</p>
+    //                 <p><b>Fecha:</b> {$activity['date']}</p>
+    //                 <p><b>Hora:</b> {$activity['time']}</p>
 
-                    <p>¡Te esperamos!</p>
-                </div>
-            ";
+    //                 <p>¡Te esperamos!</p>
+    //             </div>
+    //         ";
 
-                $this->mailer->AltBody =
-                    "Mañana tienes la actividad {$activity['title']} a las {$activity['time']}";
+    //             $this->mailer->AltBody =
+    //                 "Mañana tienes la actividad {$activity['title']} a las {$activity['time']}";
 
-                $this->mailer->send();
-            }
+    //             $this->mailer->send();
+    //         }
 
-            return true;
-        } catch (Exception $e) {
-            error_log("Error email recordatorio mañana: " . $e->getMessage());
-            return false;
-        }
-    }
+    //         return true;
+    //     } catch (Exception $e) {
+    //         error_log("Error email recordatorio mañana: " . $e->getMessage());
+    //         return false;
+    //     }
+    // }
 
     //Emails al aceptar o rechazar
     public function sendActivityAccepted($activityTitle, $user)

@@ -6,6 +6,10 @@
     position: relative;
     display: flex;
     align-items: center;
+
+    button {
+        color: var(--brand-dark);
+    }
 }
 
 #docs-dropdown {
