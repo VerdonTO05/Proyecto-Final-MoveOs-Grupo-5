@@ -10,6 +10,9 @@ if (session_status() === PHP_SESSION_NONE) {
 require_once __DIR__ . '/../../models/entities/Activity.php';
 require_once __DIR__ . '/../../models/entities/Request.php';
 require_once __DIR__ . '/../../../config/database.php';
+require_once __DIR__ . '/../../models/entities/User.php';
+require_once __DIR__ . '/../../models/entities/Registration.php';
+require_once __DIR__ . '/../../services/EmailService.php';
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: index.php?accion=loginView');
@@ -80,6 +83,9 @@ try {
     $db = $database->getConnection();
     $activityModel = new Activity($db);
     $requestModel = new Request($db);
+    $registrationModel = new Registration($db);
+    $userModel = new User($db);
+    $emailService = new EmailService();
 
     $id = $_POST['id'] ?? $_GET['id'] ?? null;
 
@@ -175,6 +181,25 @@ try {
             }
         }
 
+        $changesList = [];
+
+        foreach ($fieldsToCompare as $f) {
+            $old = (string) ($publication[$f] ?? '');
+            $new = (string) ($data[$f] ?? '');
+
+            if ($old !== $new) {
+
+                if ($f === 'image_url' || $f === 'title' || $f === 'category_id') {
+                    continue;
+                }
+
+                $changesList[$f] = [
+                    'old' => $old,
+                    'new' => $new
+                ];
+            }
+        }
+
         if (!$hasChanges) {
             jsonResponse(true, 'Sin cambios detectados.');
         }
@@ -213,15 +238,96 @@ try {
             ];
         }
 
-        if ($result === true) {
-            jsonResponse(true, 'Publicación actualizada correctamente.');
+        $changesHtml = '';
+
+        $labels = [
+            'title' => 'Título',
+            'description' => 'Descripción',
+            'category_id' => 'Categoría',
+            'location' => 'Ubicación',
+            'date' => 'Fecha',
+            'time' => 'Hora',
+            'language' => 'Idioma',
+            'min_age' => 'Edad mínima',
+            'dress_code' => 'Código de vestimenta',
+            'transport_included' => 'Transporte incluido',
+            'departure_city' => 'Ciudad de salida',
+            'pets_allowed' => 'Mascotas permitidas',
+            'price' => 'Precio',
+            'max_people' => 'Máximo de personas',
+            'image_url' => 'Imagen'
+        ];
+
+        foreach ($changesList as $field => $values) {
+            $label = $labels[$field] ?? ucfirst(str_replace('_', ' ', $field));
+
+            $oldValue = $values['old'];
+            $newValue = $values['new'];
+
+            // Formateo de booleanos
+            if (in_array($field, ['transport_included', 'pets_allowed'])) {
+                $oldValue = ($oldValue == '1') ? 'Sí' : 'No';
+                $newValue = ($newValue == '1') ? 'Sí' : 'No';
+            }
+
+            $changesHtml .= "
+        <p style='margin:5px 0;'>
+            <b>{$label}:</b><br>
+            <span style='color:#999;'>Antes:</span> {$oldValue}<br>
+            <span style='color:#2E7D32;'>Ahora:</span> {$newValue}
+        </p>
+    ";
         }
 
-        $msg = is_array($result) && isset($result['error'])
-            ? ($errorMessages[$result['error']] ?? 'Error al actualizar.')
-            : 'Error al actualizar.';
+        if ($result === true) {
+            if ($typePublication === 'activity') {
+                $registrations = $registrationModel->getRegistrationsByActivityId($id);
 
-        jsonResponse(false, $msg, [$msg]);
+                foreach ($registrations as $r) {
+                    $user = $userModel->getUserById($r['participant_id']);
+
+                    if ($user) {
+                        try {
+                            $emailService->sendActivityUpdated(
+                                $data['title'],
+                                $changesHtml,
+                                $user
+                            );
+                        } catch (Exception $e) {
+                            error_log("Error enviando email: " . $e->getMessage());
+                        }
+                    }
+                }
+            } else {
+                // Notificar al organizador si la request está aceptada
+                if (!empty($publication['accepted_by'])) {
+
+                    $organizer = $userModel->getUserById($publication['accepted_by']);
+
+                    if ($organizer) {
+                        try {
+                            $emailService->sendRequestUpdated(
+                                $data['title'],
+                                $changesHtml,
+                                $organizer
+                            );
+                        } catch (Exception $e) {
+                            error_log("Error enviando email: " . $e->getMessage());
+                        }
+                    }
+                }
+            }
+
+            jsonResponse(true, 'Publicación actualizada correctamente.');
+
+
+        } else {
+            $msg = is_array($result) && isset($result['error'])
+                ? ($errorMessages[$result['error']] ?? 'Error al actualizar.')
+                : 'Error al actualizar.';
+
+            jsonResponse(false, $msg, [$msg]);
+        }
     }
 
     // ── Fase GET ──────────────────────────────────────────────────────────────

@@ -268,6 +268,7 @@ class Request
                 dress_code         = :dress_code,
                 transport_included = :transport_included,
                 departure_city     = :departure_city,
+                image_url = :image_url,
                 pets_allowed       = :pets_allowed
             WHERE id = :id";
 
