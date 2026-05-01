@@ -19,6 +19,10 @@ document.addEventListener("DOMContentLoaded", () => {
         isOrg ? "Ocultar peticiones terminadas" : "Ocultar inscripciones terminadas",
         isOrg ? "Ver peticiones terminadas" : "Ver inscripciones terminadas"
     );
+
+    setInterval(() => {
+        loadRegistrations(CURRENT_USER.role);
+    }, 5000);
 });
 
 // ----------------------------
@@ -29,12 +33,24 @@ async function loadRegistrations(role) {
     if (!grid) return;
 
     try {
-        const result = await fetch('index.php?accion=inscripciones').then(r => r.json());
-        if (result.success) {
-            registrationsActive = result.data.active || [];
-            registrationsFinished = result.data.finished || [];
+        const result = await fetch('index.php?accion=inscripciones')
+            .then(r => r.json());
+
+        if (!result.success) return;
+
+        const newActive = result.data.active || [];
+        const newFinished = result.data.finished || [];
+
+        const changed =
+            JSON.stringify(newActive) !== JSON.stringify(registrationsActive) ||
+            JSON.stringify(newFinished) !== JSON.stringify(registrationsFinished);
+
+        if (changed) {
+            registrationsActive = newActive;
+            registrationsFinished = newFinished;
             render(registrationsActive, registrationsFinished, role);
         }
+
     } catch (error) {
         grid.innerHTML = '<p class="error">Error al cargar inscripciones.</p>';
     }
@@ -111,9 +127,9 @@ function createActiveCard(pub, role) {
         try {
             const response = await fetch('index.php', {
                 method: 'POST',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest' 
+                    'X-Requested-With': 'XMLHttpRequest'
                 },
                 body: JSON.stringify({
                     accion: 'cancelRegistration',

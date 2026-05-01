@@ -5,6 +5,7 @@
 let activitiesActive = [];
 let activitiesFinished = [];
 
+
 document.addEventListener("DOMContentLoaded", () => {
     loadActivities(CURRENT_USER.role);
 
@@ -16,6 +17,10 @@ document.addEventListener("DOMContentLoaded", () => {
     );
 
     bindFilterListeners(applyFilters);
+
+    setInterval(() => {
+        loadActivities(CURRENT_USER.role);
+    }, 5000);
 });
 
 // ----------------------------
@@ -26,12 +31,24 @@ async function loadActivities(role) {
     if (!grid) return;
 
     try {
-        const result = await fetch('index.php?accion=getMyActivities').then(r => r.json());
-        if (result.success) {
-            activitiesActive = result.data.active || [];
-            activitiesFinished = result.data.finished || [];
-            render(activitiesActive, activitiesFinished,role);
+        const result = await fetch('index.php?accion=getMyActivities')
+            .then(r => r.json());
+
+        if (!result.success) return;
+
+        const newActive = result.data.active || [];
+        const newFinished = result.data.finished || [];
+
+        const changed =
+            JSON.stringify(newActive) !== JSON.stringify(activitiesActive) ||
+            JSON.stringify(newFinished) !== JSON.stringify(activitiesFinished);
+
+        if (changed) {
+            activitiesActive = newActive;
+            activitiesFinished = newFinished;
+            render(activitiesActive, activitiesFinished, role);
         }
+
     } catch (error) {
         grid.innerHTML = '<p class="error">Error al cargar tus actividades.</p>';
     }
@@ -40,7 +57,7 @@ async function loadActivities(role) {
 // ----------------------------
 // Render
 // ----------------------------
-function render(active, finished,role) {
+function render(active, finished, role) {
     const grid = document.getElementById('gridActivities');
     const gridF = document.getElementById('gridActivitiesFinished');
 
@@ -48,7 +65,7 @@ function render(active, finished,role) {
         ? `<p class="no-activities">Todavía no tienes ninguna actividad.</p>
            <p><a href="index.php?accion=createActivity">Crea una ahora</a></p>`
         : '';
-    active.forEach(a => grid.appendChild(createActiveCard(a,role)));
+    active.forEach(a => grid.appendChild(createActiveCard(a, role)));
 
     gridF.innerHTML = finished.length === 0
         ? '<p class="no-activities">Todavía no tienes ninguna actividad propia terminada.</p>'
@@ -71,7 +88,7 @@ function applyFilters() {
 // ----------------------------
 // Card activa (con acciones editar/eliminar)
 // ----------------------------
-function createActiveCard(pub,role) {
+function createActiveCard(pub, role) {
     const card = document.createElement("article");
     card.className = "activity activity-card";
 
@@ -179,36 +196,3 @@ function createFinishedCard(pub) {
 
     return card;
 }
-
-// ── SSE: actualización en tiempo real ────────────────────────────────────────
-
-// let activitiesEventSource = null;
-
-// function connectActivitiesSSE() {
-//     const base = window.location.pathname.replace('index.php', '');
-//     const url  = new URL('index.php', window.location.origin + base);
-//     url.searchParams.set('accion', 'activitiesSSE');
-
-//     activitiesEventSource = new EventSource(url.toString());
-
-//     activitiesEventSource.onmessage = (event) => {
-//         const data = JSON.parse(event.data);
-
-//         if (data.reconnect) {
-//             activitiesEventSource.close();
-//             connectActivitiesSSE();
-//             return;
-//         }
-
-//         if (data.reload) {
-//             loadActivities(CURRENT_USER.role);
-//         }
-//     };
-
-//     activitiesEventSource.onerror = () => {
-//         activitiesEventSource.close();
-//         setTimeout(connectActivitiesSSE, 2000);
-//     };
-// }
-
-// connectActivitiesSSE();

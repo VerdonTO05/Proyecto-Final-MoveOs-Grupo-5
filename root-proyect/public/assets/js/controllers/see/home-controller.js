@@ -22,6 +22,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   loadPublications(CURRENT_USER.role);
   bindFilterListeners(applyFilters);
+
+  setInterval(() => {
+    loadPublications(CURRENT_USER.role);
+  }, 5000);
 });
 
 // ----------------------------
@@ -33,9 +37,14 @@ async function loadPublications(role) {
 
   try {
     const result = await fetch('index.php?accion=getAprove').then(r => r.json());
+
     if (result.success) {
-      publications = result.data || [];
-      render(publications, role);
+      const newData = result.data || [];
+
+      if (JSON.stringify(newData) !== JSON.stringify(publications)) {
+        publications = newData;
+        render(publications, role);
+      }
     }
   } catch (error) {
     grid.innerHTML = '<p class="error">Error al cargar las actividades.</p>';
