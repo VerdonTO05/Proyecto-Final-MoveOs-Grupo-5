@@ -303,6 +303,14 @@ CREATE TABLE chat_messages (
 CREATE INDEX idx_chat_room    ON chat_messages (room_type, room_id);
 CREATE INDEX idx_chat_created ON chat_messages (created_at);
 
+CREATE TABLE activity_events (
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    event_type  ENUM('created', 'updated', 'deleted') NOT NULL,
+    activity_id INT NOT NULL,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_created_at (created_at)
+);
+
 -- --------------------------------------------------------
 -- TRIGGERS
 -- --------------------------------------------------------
