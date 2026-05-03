@@ -1,11 +1,26 @@
 <?php
 /**
- * Controlador de autenticación de usuarios.
+ * @file        login.controller.php
+ * @brief       Controlador de autenticación de usuarios.
  *
  * Gestiona el proceso de login: valida las credenciales recibidas por JSON,
  * crea la sesión del usuario autenticado y devuelve la URL de redirección
- * según su rol. 
+ * según su rol.
  * Todas las respuestas se emiten en formato JSON.
+ *
+ * @package     App\Controllers\Auth
+ * @author      MOVEos
+ * @version     1.0.0
+ *
+ * @uses        Database   Clase de conexión a la base de datos.
+ * @uses        User       Modelo de usuario con método loginByUsername().
+ *
+ * Flujo esperado:
+ *  1. Recibe POST con JSON { "username": "...", "password": "..." }
+ *  2. Valida campos no vacíos.
+ *  3. Busca al usuario en la BD mediante loginByUsername().
+ *  4. Si existe, regenera sesión y guarda datos del usuario.
+ *  5. Devuelve JSON { success: true, redirect: "..." } o { success: false, message: "..." }
  */
 
 // Iniciar sesión solo si no hay una activa
@@ -20,11 +35,27 @@ header('Content-Type: application/json; charset=utf-8');
 require_once __DIR__ . '/../../../config/database.php';
 require_once __DIR__ . '/../../models/entities/User.php';
 
-// Leer y decodificar el cuerpo de la petición (se espera un JSON con 'username' y 'password')
+/**
+ * Cuerpo de la petición HTTP decodificado desde JSON.
+ *
+ * Se espera un objeto con las claves 'username' y 'password'.
+ *
+ * @var array<string, string>|null $input
+ */
 $input = json_decode(file_get_contents('php://input'), true);
 
-// Obtener y limpiar los campos del formulario; usar string vacío si no existen
+/**
+ * Nombre de usuario recibido en la petición, saneado con trim().
+ *
+ * @var string $username
+ */
 $username = trim($input['username'] ?? '');
+
+/**
+ * Contraseña recibida en la petición, saneada con trim().
+ *
+ * @var string $password
+ */
 $password = trim($input['password'] ?? '');
 
 // Validar que ninguno de los campos obligatorios esté vacío
@@ -37,12 +68,40 @@ if ($username === '' || $password === '') {
 }
 
 try {
-    // Instanciar la conexión a la base de datos
+    /**
+     * Instancia de la clase Database para obtener la conexión PDO.
+     *
+     * @var Database $database
+     */
     $database = new Database();
+
+    /**
+     * Conexión activa a la base de datos (objeto PDO).
+     *
+     * @var \PDO $db
+     */
     $db = $database->getConnection();
 
-    // Instanciar el modelo de usuario y buscar al usuario por sus credenciales
+    /**
+     * Modelo de usuario usado para autenticar las credenciales.
+     *
+     * @var User $userModel
+     */
     $userModel = new User($db);
+
+    /**
+     * Datos del usuario autenticado o false/null si las credenciales son inválidas.
+     *
+     * Estructura esperada si el login es exitoso:
+     * @var array{
+     *     id:            int,
+     *     username:      string,
+     *     email:         string,
+     *     role_name:     string,
+     *     state:         string,
+     *     profile_image: string|null
+     * }|false $user
+     */
     $user = $userModel->loginByUsername($username, $password);
 
     // Si las credenciales no coinciden con ningún usuario, denegar el acceso
@@ -62,13 +121,20 @@ try {
     $_SESSION['username'] = $user['username'];
     $_SESSION['role'] = $user['role_name'];
     $_SESSION['email'] = $user['email'];
-    $_SESSION['state'] = $user['state']; // Valores esperados: 'activa' o 'inactiva'
+    $_SESSION['state'] = $user['state'];          // 'activa' | 'inactiva'
     $_SESSION['profile_image'] = $user['profile_image'] ?? null;
 
-    // Determinar la URL de redirección según el rol del usuario
+    /**
+     * URL de redirección determinada según el rol del usuario autenticado.
+     *
+     * - 'administrador' → seeBoth
+     * - cualquier otro rol → seeActivities
+     *
+     * @var string $redirect
+     */
     $redirect = $user['role_name'] === 'administrador'
-        ? 'index.php?accion=seeBoth'        
-        : 'index.php?accion=seeActivities'; 
+        ? 'index.php?accion=seeBoth'
+        : 'index.php?accion=seeActivities';
 
     // Responder con éxito e indicar al cliente a dónde redirigir
     echo json_encode([
@@ -77,7 +143,14 @@ try {
     ]);
 
 } catch (Exception $e) {
-    // Error inesperado del servidor: responder con código 500 sin exponer detalles internos
+    /**
+     * Captura cualquier excepción no controlada durante el proceso de login.
+     *
+     * Se responde con HTTP 500 sin exponer detalles internos del error
+     * para evitar fugas de información sensible.
+     *
+     * @var Exception $e
+     */
     http_response_code(500);
     echo json_encode([
         'success' => false,

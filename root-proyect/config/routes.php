@@ -65,5 +65,6 @@ return [
   'docsJS' => dirname($_SERVER['SCRIPT_NAME']) . '/docsJS/index.html',
   'docsPHP' => dirname($_SERVER['SCRIPT_NAME']) . '/docsPHP/index.html',
   'activitiesSSE' => __DIR__ . '/../app/controllers/get/get-activities-sse.php',
+  'republishActivity' => __DIR__ . '/../app/controllers/posts/republish-activity-controller.php',
 
 ];

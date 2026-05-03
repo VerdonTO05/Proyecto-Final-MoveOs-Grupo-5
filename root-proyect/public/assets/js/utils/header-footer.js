@@ -207,8 +207,118 @@ function initChatLogic() {
 
   if (!chatBtn || !chatDropdown || !chatHubContainer) return;
 
+  let lastChatState = null;
+
+  async function renderChats(data) {
+    chatHubContainer.innerHTML = '';
+    const fragment = document.createDocumentFragment();
+
+    // Chat soporte (solo para no administradores)
+    if (data.support_room && !data.is_admin) {
+      const supportDiv = document.createElement('a');
+      supportDiv.href = "index.php?accion=userAdminChat";
+      supportDiv.className = "chat-card chat-card--support";
+      supportDiv.innerHTML = `
+        <div class="chat-card__header">
+          <div class="chat-card__icon">
+            <img src="assets/img/perfilAdmin.png" alt="Admin">
+          </div>
+          <div>
+            <h2 class="chat-card__title">Soporte MOVEos</h2>
+            <span class="chat-card__type">Chat con administración</span>
+          </div>
+        </div>
+      `;
+      fragment.appendChild(supportDiv);
+    }
+
+    // Chats de actividades (no admin)
+    if (!data.is_admin && data.activities?.length) {
+      data.activities.forEach(act => {
+        const chatDiv = document.createElement('a');
+        chatDiv.href = `index.php?accion=chatActivity&activity_id=${act.room_id}`;
+        chatDiv.className = "chat-card";
+
+        const imgHtml = act.image_url
+          ? `<img src="${act.image_url}" class="chat-card__img" alt="${escapeHtml(act.title)}" onerror="this.src='assets/img/default-activity.jpg'">`
+          : `<div class="chat-card__icon"><i class="fas fa-users"></i></div>`;
+
+        chatDiv.innerHTML = `
+          <div class="chat-card__header">
+            ${imgHtml}
+            <div style="min-width:0">
+              <h2 class="chat-card__title" title="${escapeHtml(act.title)}">
+                ${escapeHtml(act.title)}
+              </h2>
+              <span class="chat-card__type">Grupo de Actividad</span>
+            </div>
+          </div>
+        `;
+        fragment.appendChild(chatDiv);
+      });
+    }
+
+    // Conversaciones admin
+    if (data.is_admin) {
+      if (data.user_conversations?.length) {
+        data.user_conversations.forEach(conv => {
+          const convDiv = document.createElement('a');
+          convDiv.href = `index.php?accion=chatHub`;
+          convDiv.className = "chat-card";
+
+          const imgHtml = conv.profile_image
+            ? `<img src="${conv.profile_image}" class="chat-card__img"
+                 alt="${escapeHtml(conv.full_name)}"
+                 onerror="this.src='assets/img/perfilAdmin.png'">`
+            : `<div class="chat-card__icon"><i class="fas fa-user"></i></div>`;
+
+          convDiv.innerHTML = `
+            <div class="chat-card__header">
+              ${imgHtml}
+              <div style="min-width:0">
+                <h2 class="chat-card__title">${escapeHtml(conv.full_name)}</h2>
+                <span class="chat-card__type">@${escapeHtml(conv.username)}</span>
+              </div>
+            </div>
+          `;
+          fragment.appendChild(convDiv);
+        });
+      } else {
+        const empty = document.createElement('p');
+        empty.className = 'no-activities';
+        empty.textContent = 'No hay conversaciones aún.';
+        fragment.appendChild(empty);
+      }
+    }
+
+    // Mensaje vacío usuario normal
+    if (!data.is_admin && !data.activities?.length && !data.support_room) {
+      const empty = document.createElement('p');
+      empty.className = 'no-activities';
+      empty.textContent = 'No hay conversaciones aún.';
+      fragment.appendChild(empty);
+    }
+
+    chatHubContainer.appendChild(fragment);
+  }
+
+  async function loadChats() {
+    const res = await fetch('index.php?accion=getChatHub');
+    const data = await res.json();
+
+    if (!data.success) return;
+
+    const currentState = JSON.stringify(data);
+
+    if (currentState !== lastChatState) {
+      lastChatState = currentState;
+      renderChats(data);
+    }
+  }
+
   chatBtn.addEventListener('click', async (e) => {
     e.stopPropagation();
+
     if (!user) {
       if (window.openAuthModal) return openAuthModal('login');
       return window.location.href = 'index.php?accion=loginView';
@@ -225,106 +335,19 @@ function initChatLogic() {
     `;
 
     try {
-      const response = await fetch('index.php?accion=getChatHub');
-      const data = await response.json();
-
-      if (!data.success) throw new Error(data.message || 'Error al cargar chats');
-
-      chatHubContainer.innerHTML = '';
-      const fragment = document.createDocumentFragment();
-
-      // Chat soporte (solo para no administradores)
-      if (data.support_room && !data.is_admin) {
-        const supportDiv = document.createElement('a');
-        supportDiv.href = "index.php?accion=userAdminChat";
-        supportDiv.className = "chat-card chat-card--support";
-        supportDiv.innerHTML = `
-          <div class="chat-card__header">
-            <div class="chat-card__icon"><img src="assets/img/perfilAdmin.png" alt="Admin"></div>
-            <div>
-              <h2 class="chat-card__title">Soporte MOVEos</h2>
-              <span class="chat-card__type">Chat con administración</span>
-            </div>
-          </div>
-        `;
-        fragment.appendChild(supportDiv);
-      }
-
-      // Chats de actividades (para no administradores)
-      if (!data.is_admin && data.activities?.length) {
-        data.activities.forEach(act => {
-          const chatDiv = document.createElement('a');
-          chatDiv.href = `index.php?accion=chatActivity&activity_id=${act.room_id}`;
-          chatDiv.className = "chat-card";
-
-          const imgHtml = act.image_url
-            ? `<img src="${act.image_url}" class="chat-card__img" alt="${escapeHtml(act.title)}" onerror="this.src='assets/img/default-activity.jpg'">`
-            : `<div class="chat-card__icon"><i class="fas fa-users"></i></div>`;
-
-          chatDiv.innerHTML = `
-            <div class="chat-card__header">
-              ${imgHtml}
-              <div style="min-width:0">
-                <h2 class="chat-card__title" title="${escapeHtml(act.title)}">${escapeHtml(act.title)}</h2>
-                <span class="chat-card__type">Grupo de Actividad</span>
-              </div>
-            </div>
-          `;
-          fragment.appendChild(chatDiv);
-        });
-      }
-
-      // Conversaciones con usuarios (solo administrador)
-      if (data.is_admin) {
-        if (data.user_conversations?.length) {
-          data.user_conversations.forEach(conv => {
-            const convDiv = document.createElement('a');
-            convDiv.href = `index.php?accion=chatHub`;
-            convDiv.className = "chat-card";
-
-            const imgHtml = conv.profile_image
-              ? `<img src="${conv.profile_image}" class="chat-card__img"
-                     alt="${escapeHtml(conv.full_name)}"
-                     onerror="this.src='assets/img/perfilAdmin.png'">`
-              : `<div class="chat-card__icon"><i class="fas fa-user"></i></div>`;
-
-            convDiv.innerHTML = `
-              <div class="chat-card__header">
-                ${imgHtml}
-                <div style="min-width:0">
-                  <h2 class="chat-card__title">${escapeHtml(conv.full_name)}</h2>
-                  <span class="chat-card__type">@${escapeHtml(conv.username)}</span>
-                </div>
-              </div>
-            `;
-            fragment.appendChild(convDiv);
-          });
-        } else {
-          const empty = document.createElement('p');
-          empty.className = 'no-activities';
-          empty.textContent = 'No hay conversaciones aún.';
-          fragment.appendChild(empty);
-        }
-      }
-
-      // Mensaje si no hay nada para no administradores
-      if (!data.is_admin && !data.activities?.length && !data.support_room) {
-        const empty = document.createElement('p');
-        empty.className = 'no-activities';
-        empty.textContent = 'No hay conversaciones aún.';
-        fragment.appendChild(empty);
-      }
-
-      chatHubContainer.appendChild(fragment);
-
+      await loadChats();
     } catch (err) {
       chatHubContainer.innerHTML = `
-        <p class="no-activities">
-          No se pudieron cargar los chats.
-        </p>
+        <p class="no-activities">No se pudieron cargar los chats.</p>
       `;
     }
   });
+
+  setInterval(() => {
+    if (!window.CURRENT_USER) return;
+
+    loadChats().catch(e => console.error("Error actualizando chats", e));
+  }, 5000);
 }
 
 /* =========================

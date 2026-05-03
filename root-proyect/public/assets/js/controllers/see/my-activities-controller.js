@@ -192,7 +192,67 @@ function createFinishedCard(pub) {
             <h3>${pub.title}</h3>
             <p class="description">${pub.description}</p>
             ${buildMetaHTML(pub)}
+            <div class="actions">
+                <button class="btn-republish" data-id="${pub.id}">
+                    Volver a publicar
+                </button>
+            </div>
         </div>`;
 
+    card.querySelector(".btn-republish")?.addEventListener("click", async function () {
+
+        const confirmed = await showConfirm({
+            title: 'Republicar actividad',
+            message: `
+            <p>Selecciona la nueva fecha:</p>
+            <input type="date" id="republish-date" class="swal2-input">
+        `,
+            confirmText: 'Republicar',
+            cancelText: 'Cancelar'
+        });
+
+        if (!confirmed) return;
+
+        const date = document.getElementById("republish-date").value;
+
+        if (!date) {
+            showAlert("Error", "Debes seleccionar una fecha", "error");
+            return;
+        }
+
+        await republishActivity(pub.id, date);
+    });
     return card;
+}
+
+
+async function republishActivity(id, newDate) {
+    const type_publication = CURRENT_USER.role === 'participante' ? 'request' : 'activity';
+    try {
+        const response = await fetch('index.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: new URLSearchParams({
+                accion: 'republishActivity',
+                id: id,
+                date: newDate,
+                type: type_publication
+            })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            showAlert('Re-publicada', 'La actividad se ha creado de nuevo correctamente', 'success');
+            loadActivities(CURRENT_USER.role);
+        } else {
+            showAlert('Error', result.message || 'No se pudo republicar', 'error');
+        }
+
+    } catch (error) {
+        showAlert('Error', 'No se pudo republicar la actividad', 'error');
+    }
 }
