@@ -124,13 +124,24 @@ function createActiveCard(pub, role) {
     });
 
     card.querySelector(".btn-delete")?.addEventListener("click", async function () {
-        const confirmed = await showConfirm({
+        const confirmedDelete = await showConfirmTwo({
             title: '¿Eliminar publicación?',
             message: 'Esta acción es permanente y no se puede deshacer.',
             confirmText: 'Sí, eliminar',
             cancelText: 'Cancelar'
         });
-        if (!confirmed) return;
+        if (!confirmedDelete) return;
+
+        const sendEmails = await showConfirmTwo({
+            title: '¿Notificar a los participantes?',
+            message: 'Se enviará un email a todos los inscritos informando de la cancelación.',
+            confirmText: 'Sí, enviar emails',
+            cancelText: 'No, eliminar sin notificar'
+        });
+
+        // Mostrar spinner
+        const actionsDiv = card.querySelector('.actions');
+        actionsDiv.innerHTML = `<span class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Procesando...</span>`;
 
         try {
             const response = await fetch('index.php', {
@@ -141,37 +152,36 @@ function createActiveCard(pub, role) {
                 },
                 body: JSON.stringify({
                     accion: 'deleteActivity',
-                    id: this.dataset.id
+                    id: this.dataset.id,
+                    sendEmails: sendEmails  // true o false
                 })
             });
             const result = await response.json();
 
             if (result.success) {
                 showAlert('Eliminada', result.message, 'success');
-
-                // Animación y eliminación de la card
                 card.style.transition = 'opacity 0.3s, transform 0.3s';
                 card.style.opacity = '0';
                 card.style.transform = 'scale(0.9)';
                 setTimeout(() => {
                     card.remove();
-
-                    // Si no quedan más cards, mostrar párrafo
                     if (grid && grid.children.length === 0) {
                         grid.innerHTML = `
-                            <p class="no-activities">
-                                Todavía no tienes ninguna actividad.
-                            </p>
-                            <p><a href="index.php?accion=createActivity">Crea una ahora</a></p>`;
+                        <p class="no-activities">Todavía no tienes ninguna actividad.</p>
+                        <p><a href="index.php?accion=createActivity">Crea una ahora</a></p>`;
                     }
                 }, 300);
-
             } else {
-                throw new Error(result.message || 'Error desconocido');
+                showAlert('Error', result.message || 'No se pudo eliminar', 'error');
+                // Restaurar botones si falla
+                actionsDiv.innerHTML = `
+                <button class="btn-detail" data-id="${pub.id}">Ver detalles</button>
+                <button class="btn-edit" data-id="${pub.id}">Editar</button>
+                <button class="btn-delete" data-id="${pub.id}">Eliminar</button>`;
             }
 
         } catch (error) {
-            showAlert('Error', 'No se pudo eliminar la publicación', 'error');
+            showAlert('Error', 'Error de conexión con el servidor', 'error');
         }
     });
 

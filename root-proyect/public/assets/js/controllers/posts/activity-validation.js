@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const dateInput = form.querySelector('[name="date"]');
     const originalDate = dateInput ? dateInput.value : null;
 
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         let errors = [];
@@ -104,6 +104,20 @@ document.addEventListener('DOMContentLoaded', () => {
         // ===== ENVÍO AL BACKEND =====
         const formData = new FormData(form);
 
+        const sendEmails = await showConfirm({
+            title: '¿Notificar a los participantes?',
+            message: 'Se enviará un email a los inscritos informando de los cambios realizados.',
+            confirmText: 'Sí, notificar',
+            cancelText: 'No notificar'
+        });
+
+        formData.append('send_emails', sendEmails ? '1' : '0');
+
+        // Spinner en el botón
+        const btn = form.querySelector('.btn-submit');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+
         fetch(form.action, {
             method: "POST",
             body: formData,
@@ -111,57 +125,42 @@ document.addEventListener('DOMContentLoaded', () => {
                 'X-Requested-With': 'XMLHttpRequest'
             }
         })
-        .then(res => {
-            const contentType = res.headers.get('content-type') || '';
-            if (!contentType.includes('application/json')) {
-                throw new Error('El servidor no devolvió JSON. Posible error PHP.');
-            }
-            return res.json();
-        })
-        .then(data => {
+            .then(res => {
+                const contentType = res.headers.get('content-type') || '';
+                if (!contentType.includes('application/json')) {
+                    throw new Error('El servidor no devolvió JSON. Posible error PHP.');
+                }
+                return res.json();
+            })
+            .then(data => {
+                if (!data.success) {
+                    // Restaurar botón si falla
+                    btn.disabled = false;
+                    btn.innerHTML = '<?= $participante ? "Editar Petición" : "Editar Actividad" ?>';
 
-            if (!data.success) {
-
-                if (data.errors && data.errors.length > 0) {
-                    showAlert(
-                        data.message || "Errores en el formulario:",
-                        `<ul>${data.errors.map(err => `<li>${err}</li>`).join('')}</ul>`,
-                        "error",
-                        4000
-                    );
+                    if (data.errors && data.errors.length > 0) {
+                        showAlert(
+                            data.message || "Errores en el formulario:",
+                            `<ul>${data.errors.map(err => `<li>${err}</li>`).join('')}</ul>`,
+                            "error", 4000
+                        );
+                        return;
+                    }
+                    showAlert("Error", data.message || "Ha ocurrido un error", "error", 4000);
                     return;
                 }
 
-                showAlert(
-                    "Error",
-                    data.message || "Ha ocurrido un error",
-                    "error",
-                    4000
-                );
-                return;
-            }
-
-            showAlert(
-                "Éxito",
-                data.message,
-                "success",
-                1800
-            );
-
-            setTimeout(() => {
-                window.location.href = "?accion=seeMyActivities";
-            }, 1800);
-
-        })
-        .catch(error => {
-            console.error('Error fetch:', error);
-            showAlert(
-                "Error",
-                "No se pudo conectar con el servidor",
-                "error",
-                4000
-            );
-        });
+                showAlert("Éxito", data.message, "success", 1800);
+                setTimeout(() => {
+                    window.location.href = "?accion=seeMyActivities";
+                }, 1800);
+            })
+            .catch(error => {
+                btn.disabled = false;
+                btn.innerHTML = 'Editar';
+                console.error('Error fetch:', error);
+                showAlert("Error", "No se pudo conectar con el servidor", "error", 4000);
+            });
     });
 
     // ===== TRANSPORTE =====

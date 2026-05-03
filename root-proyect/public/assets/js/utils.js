@@ -112,6 +112,71 @@ window.showConfirm = function (optionsOrTitle, message = "") {
     });
 };
 
+window.showConfirmTwo = function (optionsOrTitle, message = "") {
+    const options = typeof optionsOrTitle === "string"
+        ? { title: optionsOrTitle, message }
+        : optionsOrTitle;
+
+    const { title = "Confirmar", message: msg = "", confirmText = "Aceptar", cancelText = "Cancelar" } = options;
+
+    let modalContainer = document.getElementById("modal-container");
+    if (!modalContainer) {
+        modalContainer = document.createElement("div");
+        modalContainer.id = "modal-container";
+        document.body.appendChild(modalContainer);
+    }
+
+    return new Promise((resolve) => {
+        const modal = document.createElement("div");
+        modal.className = "modal";
+
+        modal.innerHTML = `
+            <div class="modal-header">${title}</div>
+            <div class="modal-body">${msg}</div>
+            <div class="modal-actions">
+                <button class="cancel">${cancelText}</button>
+                <button class="confirm">${confirmText}</button>
+            </div>
+        `;
+
+        modalContainer.appendChild(modal);
+        modalContainer.classList.add("active");
+
+        Object.assign(modalContainer.style, {
+            position: 'fixed',
+            top: '0',
+            left: '0',
+            width: '100vw',
+            height: '100vh',
+            margin: '0',
+            padding: '0',
+            display: 'grid',
+            placeItems: 'center',
+            zIndex: '999999',
+            boxSizing: 'border-box',
+            background: 'rgba(0,0,0,0.55)',
+            backdropFilter: 'blur(5px)',
+            WebkitBackdropFilter: 'blur(5px)'
+        });
+
+        // ✅ resolve se llama DENTRO del setTimeout, tras la animación
+        const close = (resolveValue) => {
+            modal.style.animation = "fadeOut 0.25s forwards";
+            setTimeout(() => {
+                modal.remove();
+                if (modalContainer.children.length === 0) {
+                    modalContainer.classList.remove("active");
+                    modalContainer.removeAttribute("style");
+                }
+                resolve(resolveValue); // 👈 aquí, no antes
+            }, 250);
+        };
+
+        modal.querySelector(".cancel").addEventListener("click", () => close(false));
+        modal.querySelector(".confirm").addEventListener("click", () => close(true));
+    });
+};
+
 window.showPromptConfirm = function (optionsOrTitle, message = "") {
     const options = typeof optionsOrTitle === "string"
         ? { title: optionsOrTitle, message }

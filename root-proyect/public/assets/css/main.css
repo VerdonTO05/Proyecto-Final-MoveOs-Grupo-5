@@ -577,6 +577,19 @@ main section {
     text-align: center;
   }
 }
+.loading-spinner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--border-color);
+  font-size: 0.9rem;
+  padding: 8px 0;
+}
+
+.loading-spinner .fa-spinner {
+  color: var(--bg-main);
+}
+
 /* ============================================================
    Overlay fallback — Login / Register
    Usado cuando el servidor PHP redirige a loginView/register.

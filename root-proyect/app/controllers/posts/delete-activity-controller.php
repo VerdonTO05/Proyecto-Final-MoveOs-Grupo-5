@@ -36,6 +36,7 @@ if (!isset($_SESSION['user_id'])) {
 // Leer y decodificar el cuerpo de la petición JSON
 $input = json_decode(file_get_contents('php://input'), true) ?? [];
 $id = $input['id'] ?? null;
+$sendEmails = $input['sendEmails'] ?? false;
 
 // Validar que se haya proporcionado el ID de la publicación a eliminar
 if (!$id) {
@@ -100,10 +101,12 @@ try {
 
         // Guardas usuarios antes de borrar
         $usersToNotify = [];
-        foreach ($registrations as $r) {
-            $user = $userModel->getUserById($r['participant_id']);
-            if ($user) {
-                $usersToNotify[] = $user;
+        if ($sendEmails) {
+            foreach ($registrations as $r) {
+                $user = $userModel->getUserById($r['participant_id']);
+                if ($user) {
+                    $usersToNotify[] = $user;
+                }
             }
         }
         $deleted = $activityModel->deleteActivity($id);
@@ -129,7 +132,7 @@ try {
 
     } else {
 
-        $user = $userModel->getUserById($publication['accepted_by']);
+        $user = $sendEmails ? $userModel->getUserById($publication['accepted_by']) : null;
         $deleted = $requestModel->deleteRequest($id);
 
         if ($deleted) {

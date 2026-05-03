@@ -26,10 +26,6 @@ function jsonResponse(bool $success, string $message, array $errors = []): void
     exit;
 }
 
-/**
- * Procesa y guarda la imagen subida.
- * Devuelve la ruta pública relativa o null si no se subió ninguna imagen válida.
- */
 function handleImageUpload(): ?string
 {
     if (
@@ -62,7 +58,6 @@ function handleImageUpload(): ?string
     $extension = ($mimeType === 'image/png') ? 'png' : 'jpg';
     $filename = uniqid('activity_', true) . '.' . $extension;
 
-    // Ajusta esta ruta al directorio real de tu proyecto
     $uploadDir = __DIR__ . '/../../../public/assets/img/activities/';
 
     if (!is_dir($uploadDir)) {
@@ -126,9 +121,11 @@ try {
             jsonResponse(false, 'Error en el formulario', ['Debes seleccionar una categoría válida.']);
         }
 
-        // Nueva imagen si se subió, si no mantener la actual
         $newImageUrl = handleImageUpload();
         $imageUrl = $newImageUrl ?? ($_POST['current_image'] ?? $publication['image_url'] ?? null);
+
+        // ===== LEER DECISIÓN DE EMAILS ===== 👈
+        $sendEmails = ($_POST['send_emails'] ?? '0') === '1';
 
         $data = [
             'id' => $id,
@@ -182,21 +179,13 @@ try {
         }
 
         $changesList = [];
-
         foreach ($fieldsToCompare as $f) {
             $old = (string) ($publication[$f] ?? '');
             $new = (string) ($data[$f] ?? '');
-
             if ($old !== $new) {
-
-                if ($f === 'image_url' || $f === 'title' || $f === 'category_id') {
+                if ($f === 'image_url' || $f === 'title' || $f === 'category_id')
                     continue;
-                }
-
-                $changesList[$f] = [
-                    'old' => $old,
-                    'new' => $new
-                ];
+                $changesList[$f] = ['old' => $old, 'new' => $new];
             }
         }
 
@@ -208,9 +197,7 @@ try {
             $data['offertant_id'] = $_SESSION['user_id'];
 
             if ((int) $data['max_people'] !== (int) $publication['max_people']) {
-
                 $currentParticipants = $activityModel->getCurrentRegistrations((int) $id);
-
                 if ($currentParticipants > (int) $data['max_people']) {
                     jsonResponse(false, 'Error en el formulario', [
                         "No puedes reducir el máximo de participantes a {$data['max_people']} porque ya hay {$currentParticipants} inscritos."
@@ -238,8 +225,6 @@ try {
             ];
         }
 
-        $changesHtml = '';
-
         $labels = [
             'title' => 'Título',
             'description' => 'Descripción',
@@ -258,61 +243,50 @@ try {
             'image_url' => 'Imagen'
         ];
 
+        $changesHtml = '';
         foreach ($changesList as $field => $values) {
             $label = $labels[$field] ?? ucfirst(str_replace('_', ' ', $field));
-
             $oldValue = $values['old'];
             $newValue = $values['new'];
-
-            // Formateo de booleanos
             if (in_array($field, ['transport_included', 'pets_allowed'])) {
                 $oldValue = ($oldValue == '1') ? 'Sí' : 'No';
                 $newValue = ($newValue == '1') ? 'Sí' : 'No';
             }
-
             $changesHtml .= "
-        <p style='margin:5px 0;'>
-            <b>{$label}:</b><br>
-            <span style='color:#999;'>Antes:</span> {$oldValue}<br>
-            <span style='color:#2E7D32;'>Ahora:</span> {$newValue}
-        </p>
-    ";
+                <p style='margin:5px 0;'>
+                    <b>{$label}:</b><br>
+                    <span style='color:#999;'>Antes:</span> {$oldValue}<br>
+                    <span style='color:#2E7D32;'>Ahora:</span> {$newValue}
+                </p>
+            ";
         }
 
         if ($result === true) {
-            if ($typePublication === 'activity') {
-                $registrations = $registrationModel->getRegistrationsByActivityId($id);
 
-                foreach ($registrations as $r) {
-                    $user = $userModel->getUserById($r['participant_id']);
+            // ===== ENVÍO DE EMAILS CONDICIONAL ===== 👈
+            if ($sendEmails) {
 
-                    if ($user) {
-                        try {
-                            $emailService->sendActivityUpdated(
-                                $data['title'],
-                                $changesHtml,
-                                $user
-                            );
-                        } catch (Exception $e) {
-                            error_log("Error enviando email: " . $e->getMessage());
+                if ($typePublication === 'activity') {
+                    $registrations = $registrationModel->getRegistrationsByActivityId($id);
+                    foreach ($registrations as $r) {
+                        $user = $userModel->getUserById($r['participant_id']);
+                        if ($user) {
+                            try {
+                                $emailService->sendActivityUpdated($data['title'], $changesHtml, $user);
+                            } catch (Exception $e) {
+                                error_log("Error enviando email: " . $e->getMessage());
+                            }
                         }
                     }
-                }
-            } else {
-                // Notificar al organizador si la request está aceptada
-                if (!empty($publication['accepted_by'])) {
-
-                    $organizer = $userModel->getUserById($publication['accepted_by']);
-
-                    if ($organizer) {
-                        try {
-                            $emailService->sendRequestUpdated(
-                                $data['title'],
-                                $changesHtml,
-                                $organizer
-                            );
-                        } catch (Exception $e) {
-                            error_log("Error enviando email: " . $e->getMessage());
+                } else {
+                    if (!empty($publication['accepted_by'])) {
+                        $organizer = $userModel->getUserById($publication['accepted_by']);
+                        if ($organizer) {
+                            try {
+                                $emailService->sendRequestUpdated($data['title'], $changesHtml, $organizer);
+                            } catch (Exception $e) {
+                                error_log("Error enviando email: " . $e->getMessage());
+                            }
                         }
                     }
                 }
@@ -320,12 +294,10 @@ try {
 
             jsonResponse(true, 'Publicación actualizada correctamente.');
 
-
         } else {
             $msg = is_array($result) && isset($result['error'])
                 ? ($errorMessages[$result['error']] ?? 'Error al actualizar.')
                 : 'Error al actualizar.';
-
             jsonResponse(false, $msg, [$msg]);
         }
     }
