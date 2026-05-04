@@ -1,8 +1,7 @@
--- phpMyAdmin SQL Dump
+-- phpMyAdmin SQL Dump (FIXED)
 -- Server version: 10.4.32-MariaDB
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
 SET time_zone = "+00:00";
 SET NAMES utf8mb4;
 
@@ -115,8 +114,8 @@ CREATE TABLE audit_logs (
   table_name VARCHAR(50) NOT NULL,
   action_type VARCHAR(20) NOT NULL,
   record_id INT NOT NULL,
-  old_values LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(old_values)),
-  new_values LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(new_values)),
+  old_values LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  new_values LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
   changed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   db_user VARCHAR(100) DEFAULT CURRENT_USER()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -303,98 +302,89 @@ CREATE TABLE chat_messages (
 CREATE INDEX idx_chat_room    ON chat_messages (room_type, room_id);
 CREATE INDEX idx_chat_created ON chat_messages (created_at);
 
+-- --------------------------------------------------------
+-- Table: activity_events
+-- --------------------------------------------------------
+
 CREATE TABLE activity_events (
-    id          INT AUTO_INCREMENT PRIMARY KEY,
-    event_type  ENUM('created', 'updated', 'deleted') NOT NULL,
-    activity_id INT NOT NULL,
-    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    INDEX idx_created_at (created_at)
-);
+  id          INT AUTO_INCREMENT PRIMARY KEY,
+  event_type  ENUM('created', 'updated', 'deleted') NOT NULL,
+  activity_id INT NOT NULL,
+  created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_created_at (created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 -- TRIGGERS
+-- FIX: En phpMyAdmin los triggers se crean SIN bloques DELIMITER.
+--      Cada CREATE TRIGGER termina con su propio punto y coma,
+--      y phpMyAdmin los procesa correctamente uno a uno.
 -- --------------------------------------------------------
-
-DELIMITER $$
 
 CREATE TRIGGER registrations_after_insert
 AFTER INSERT ON registrations
 FOR EACH ROW
-BEGIN
-  UPDATE activities
-  SET current_registrations = current_registrations + 1
-  WHERE id = NEW.activity_id;
-END$$
+UPDATE activities
+SET current_registrations = current_registrations + 1
+WHERE id = NEW.activity_id;
 
 CREATE TRIGGER registrations_after_delete
 AFTER DELETE ON registrations
 FOR EACH ROW
-BEGIN
-  UPDATE activities
-  SET current_registrations = current_registrations - 1
-  WHERE id = OLD.activity_id;
-END$$
+UPDATE activities
+SET current_registrations = current_registrations - 1
+WHERE id = OLD.activity_id;
 
 CREATE TRIGGER audit_activities_insert
 AFTER INSERT ON activities
 FOR EACH ROW
-BEGIN
-  INSERT INTO audit_logs (table_name, action_type, record_id, new_values)
-  VALUES ('activities', 'INSERT', NEW.id,
-    JSON_OBJECT('title', NEW.title, 'offertant_id', NEW.offertant_id));
-END$$
+INSERT INTO audit_logs (table_name, action_type, record_id, new_values)
+VALUES ('activities', 'INSERT', NEW.id,
+  JSON_OBJECT('title', NEW.title, 'offertant_id', NEW.offertant_id));
 
 CREATE TRIGGER audit_activities_update
 AFTER UPDATE ON activities
 FOR EACH ROW
-BEGIN
-  INSERT INTO audit_logs (table_name, action_type, record_id, old_values, new_values)
-  VALUES ('activities', 'UPDATE', NEW.id,
-    JSON_OBJECT('title', OLD.title),
-    JSON_OBJECT('title', NEW.title));
-END$$
+INSERT INTO audit_logs (table_name, action_type, record_id, old_values, new_values)
+VALUES ('activities', 'UPDATE', NEW.id,
+  JSON_OBJECT('title', OLD.title),
+  JSON_OBJECT('title', NEW.title));
 
 CREATE TRIGGER audit_activities_delete
 BEFORE DELETE ON activities
 FOR EACH ROW
-BEGIN
-  INSERT INTO audit_logs (table_name, action_type, record_id, old_values)
-  VALUES ('activities', 'DELETE', OLD.id,
-    JSON_OBJECT('title', OLD.title));
-END$$
+INSERT INTO audit_logs (table_name, action_type, record_id, old_values)
+VALUES ('activities', 'DELETE', OLD.id,
+  JSON_OBJECT('title', OLD.title));
 
 CREATE TRIGGER audit_requests_insert
 AFTER INSERT ON requests
 FOR EACH ROW
-BEGIN
-  INSERT INTO audit_logs (table_name, action_type, record_id, new_values)
-  VALUES ('requests', 'INSERT', NEW.id,
-    JSON_OBJECT('title', NEW.title));
-END$$
+INSERT INTO audit_logs (table_name, action_type, record_id, new_values)
+VALUES ('requests', 'INSERT', NEW.id,
+  JSON_OBJECT('title', NEW.title));
 
 CREATE TRIGGER audit_requests_update
 AFTER UPDATE ON requests
 FOR EACH ROW
-BEGIN
-  INSERT INTO audit_logs (table_name, action_type, record_id, old_values, new_values)
-  VALUES ('requests', 'UPDATE', NEW.id,
-    JSON_OBJECT('is_accepted', OLD.is_accepted),
-    JSON_OBJECT('is_accepted', NEW.is_accepted));
-END$$
+INSERT INTO audit_logs (table_name, action_type, record_id, old_values, new_values)
+VALUES ('requests', 'UPDATE', NEW.id,
+  JSON_OBJECT('is_accepted', OLD.is_accepted),
+  JSON_OBJECT('is_accepted', NEW.is_accepted));
 
 CREATE TRIGGER audit_requests_delete
 BEFORE DELETE ON requests
 FOR EACH ROW
-BEGIN
-  INSERT INTO audit_logs (table_name, action_type, record_id, old_values)
-  VALUES ('requests', 'DELETE', OLD.id,
-    JSON_OBJECT('title', OLD.title));
-END$$
-
-DELIMITER ;
+INSERT INTO audit_logs (table_name, action_type, record_id, old_values)
+VALUES ('requests', 'DELETE', OLD.id,
+  JSON_OBJECT('title', OLD.title));
 
 -- --------------------------------------------------------
 -- PROCEDIMIENTO: deactivate_user
+-- FIX: Sin DELIMITER. phpMyAdmin requiere que el procedimiento
+--      se importe en la pestaña "Rutinas" o usando la opción
+--      de delimitador personalizado en la importación.
+--      Aquí se deja listo para importar con delimitador $$.
 -- --------------------------------------------------------
 
 DELIMITER $$
@@ -424,13 +414,17 @@ DELIMITER ;
 
 -- --------------------------------------------------------
 -- EVENTO: finalizar actividades y requests pasadas
+-- FIX: SET GLOBAL requiere privilegio SUPER. Si falla,
+--      actívalo manualmente en XAMPP desde my.ini añadiendo:
+--      event_scheduler=ON
+--      bajo la sección [mysqld]
 -- --------------------------------------------------------
 
 SET GLOBAL event_scheduler = ON;
 
 DELIMITER $$
 
-CREATE EVENT finalizar_actividades_requests
+CREATE EVENT IF NOT EXISTS finalizar_actividades_requests
 ON SCHEDULE EVERY 1 DAY
 STARTS CURRENT_DATE + INTERVAL 1 DAY
 DO
@@ -445,5 +439,3 @@ BEGIN
 END$$
 
 DELIMITER ;
-
-COMMIT;
