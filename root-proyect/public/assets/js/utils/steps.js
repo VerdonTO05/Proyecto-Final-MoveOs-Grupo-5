@@ -2,7 +2,7 @@
  * @typedef {Object} Step
  * @property {string} icon - Clase del icono (actualmente no usado en la UI)
  * @property {string} title - Título del paso del tutorial
- * @property {string} subtitle - Subtítulo o descripción breve del paso
+ * @property {string} subtitle - Subtítulo
  * @property {string[]} list - Lista de instrucciones o información del paso
  * @property {string|null} next - Texto del botón "Siguiente", null si no aplica
  * @property {string|null} prev - Texto del botón "Anterior", null si no aplica

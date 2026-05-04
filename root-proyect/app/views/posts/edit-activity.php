@@ -70,7 +70,7 @@ function old(string $key, $fallback = ''): string
         </div>
 
         <form class="form-activity" id="form-create-activity" action="index.php" method="POST"
-            enctype="multipart/form-data">
+            enctype="multipart/form-data" data-mode="edit">
 
             <input type="hidden" name="accion" value="editActivity">
             <input type="hidden" name="id" value="<?= htmlspecialchars($publication['id']) ?>">

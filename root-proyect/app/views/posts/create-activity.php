@@ -68,7 +68,7 @@ function old(string $key, $default = ''): string
         </div>
 
         <form class="form-activity" id="form-create-activity" action="index.php" method="POST"
-            enctype="multipart/form-data">
+            enctype="multipart/form-data" data-mode="create">
 
             <input type="hidden" name="accion" value="create">
             <input type="hidden" name="type" value="<?= $participante ? 'request' : 'activity' ?>">

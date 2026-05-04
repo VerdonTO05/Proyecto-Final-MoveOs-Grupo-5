@@ -1,3 +1,14 @@
+/**
+ * Validar publicaciones 
+ * Maneja:
+ * - Validación del formulario de edición de actividad o petición
+ * - Bloqueo de modificación de la fecha original
+ * - Envío de datos al servidor con confirmación de notificación por email
+ * - Visibilidad del campo de transporte según el toggle
+ * - Previsualización del nombre del archivo de imagen seleccionado
+ * - Lightbox para ampliar la imagen actual de la actividad
+ */
+
 document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelector('.back-btn')?.addEventListener('click', () => {
@@ -7,41 +18,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('.form-activity');
     if (!form) return;
 
-    // ===== FECHA ORIGINAL (NO MODIFICABLE) =====
+    // Guardar la fecha original al cargar el formulario para impedir su modificación
     const dateInput = form.querySelector('[name="date"]');
     const originalDate = dateInput ? dateInput.value : null;
 
+    // Envío del formulario 
     form.addEventListener('submit', async (e) => {
+        const isEditing = form.dataset.mode === 'edit';
         e.preventDefault();
 
         let errors = [];
 
-        // ===== OBTENER VALORES =====
+        // Recoger y limpiar valores del formulario
         const titulo = form.querySelector('[name="title"]')?.value.trim() || '';
         const descripcion = form.querySelector('[name="description"]')?.value.trim() || '';
         const categoria = form.querySelector('#category')?.value || '';
         const ubicacion = form.querySelector('[name="location"]')?.value.trim() || '';
         const fecha = dateInput?.value || '';
         const hora = form.querySelector('[name="time"]')?.value || '';
+        const edadNum = parseInt(form.querySelector('[name="min_age"]')?.value) || 0;
+        const maxPeopleNum = parseInt(form.querySelector('[name="max_people"]')?.value) || 0;
 
-        const edad = form.querySelector('[name="min_age"]')?.value || '';
-        const edadNum = parseInt(edad) || 0;
-
-        const max_people = form.querySelector('[name="max_people"]')?.value || '';
-        const maxPeopleNum = parseInt(max_people) || 0;
-
+        // Normalizar precio vacío a 0 antes de leerlo
         const precioInput = form.querySelector('[name="price"]');
-        if (precioInput && !precioInput.value.trim()) {
-            precioInput.value = 0;
-        }
+        if (precioInput && !precioInput.value.trim()) precioInput.value = 0;
         const precio = precioInput ? parseFloat(precioInput.value) || 0 : 0;
 
         const imagenInput = document.getElementById('image_file');
         const imagen = imagenInput?.files[0];
-        const currentImage = form.querySelector('[name="current_image"]')?.value || '';
 
-        // ===== VALIDACIONES FRONT =====
-
+        // Validaciones
         if (!titulo) errors.push("El título no puede estar vacío.");
         else if (titulo.length < 5) errors.push("El título debe tener al menos 5 caracteres.");
         else if (titulo.length > 50) errors.push("El título debe tener menos de 50 caracteres.");
@@ -54,12 +60,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!fecha) errors.push("La fecha es obligatoria.");
         if (!hora) errors.push("La hora es obligatoria.");
 
-        // ===== 🔒 VALIDACIÓN: FECHA NO MODIFICABLE =====
-        if (dateInput && originalDate && dateInput.value !== originalDate) {
+        // La fecha no puede ser modificada respecto al valor original
+        if(isEditing){
+            if (dateInput && originalDate && dateInput.value !== originalDate) {
             errors.push("La fecha no se puede modificar.");
         }
-
-        // ===== VALIDACIÓN FECHA =====
+        }
+        
         if (fecha) {
             const hoy = new Date();
             const fechaInput = new Date(fecha);
@@ -71,7 +78,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (fechaInput > maxFecha) errors.push("La fecha no puede ser superior a 2 años.");
         }
 
-        // ===== VALIDACIÓN HORA =====
         if (hora) {
             const [h, m] = hora.split(':').map(Number);
             if (h < 8 || h > 23 || (h === 23 && m > 0)) {
@@ -83,14 +89,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (maxPeopleNum > 500) errors.push("El máximo de participantes es 500.");
         if (precio > 1000) errors.push("El precio no puede ser mayor a 1000€.");
 
-        // ===== IMAGEN =====
         if (imagen) {
             const tiposValidos = ['image/jpeg', 'image/png', 'image/jpg'];
             if (!tiposValidos.includes(imagen.type)) errors.push("Formato de imagen inválido (solo JPG o PNG).");
             if (imagen.size > 5 * 1024 * 1024) errors.push("La imagen no puede superar 5MB.");
         }
 
-        // ===== MOSTRAR ERRORES FRONT =====
+        // Mostrar todos los errores de validación antes de enviar
         if (errors.length > 0) {
             showAlert(
                 "Errores en el formulario:",
@@ -101,19 +106,22 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // ===== ENVÍO AL BACKEND =====
+        // Confirmación de notificación por email
         const formData = new FormData(form);
+        let sendEmails = false;
+        if (isEditing) {
+            sendEmails = await showConfirm({
+                title: '¿Notificar a los participantes?',
+                message: 'Se enviará un email a los inscritos informando de los cambios realizados.',
+                confirmText: 'Sí, notificar',
+                cancelText: 'No notificar'
+            });
 
-        const sendEmails = await showConfirm({
-            title: '¿Notificar a los participantes?',
-            message: 'Se enviará un email a los inscritos informando de los cambios realizados.',
-            confirmText: 'Sí, notificar',
-            cancelText: 'No notificar'
-        });
+            formData.append('send_emails', sendEmails ? '1' : '0');
+        }
 
-        formData.append('send_emails', sendEmails ? '1' : '0');
+        // Envío al servidor
 
-        // Spinner en el botón
         const btn = form.querySelector('.btn-submit');
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
@@ -121,9 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch(form.action, {
             method: "POST",
             body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
         })
             .then(res => {
                 const contentType = res.headers.get('content-type') || '';
@@ -134,11 +140,11 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .then(data => {
                 if (!data.success) {
-                    // Restaurar botón si falla
+                    // Restaurar el botón si el servidor devuelve error
                     btn.disabled = false;
                     btn.innerHTML = '<?= $participante ? "Editar Petición" : "Editar Actividad" ?>';
 
-                    if (data.errors && data.errors.length > 0) {
+                    if (data.errors?.length > 0) {
                         showAlert(
                             data.message || "Errores en el formulario:",
                             `<ul>${data.errors.map(err => `<li>${err}</li>`).join('')}</ul>`,
@@ -150,6 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
+                // Éxito: mostrar alerta y redirigir tras el mismo tiempo
                 showAlert("Éxito", data.message, "success", 1800);
                 setTimeout(() => {
                     window.location.href = "?accion=seeMyActivities";
@@ -163,28 +170,32 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     });
 
-    // ===== TRANSPORTE =====
+    // Toggle de transporte
     const transportToggle = document.getElementById('transport_toggle');
     const box = document.getElementById('departure_box');
 
     if (transportToggle && box) {
+        // Establecer visibilidad inicial según el estado del checkbox
         box.style.display = transportToggle.checked ? 'block' : 'none';
         transportToggle.addEventListener('change', function () {
             box.style.display = this.checked ? 'block' : 'none';
         });
     }
 
-    // ===== NOMBRE DEL ARCHIVO =====
+    // Nombre del archivo de imagen seleccionado 
     const imageInput = document.getElementById('image_file');
     if (imageInput) {
         imageInput.addEventListener('change', function () {
-            const fileName = this.files[0] ? this.files[0].name : "Haz clic para subir una imagen";
             const label = document.getElementById('file-name');
-            if (label) label.innerText = fileName;
+            if (label) {
+                label.innerText = this.files[0]
+                    ? this.files[0].name
+                    : "Haz clic para subir una imagen";
+            }
         });
     }
 
-    // ===== LIGHTBOX IMAGEN =====
+    // Lightbox de imagen actual
     const previewImg = document.querySelector('.current-image-preview img');
     if (previewImg) {
         previewImg.parentElement.addEventListener('click', () => {
@@ -199,6 +210,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
             document.body.appendChild(lightbox);
+
+            // Forzar un frame antes de añadir la clase para que la transición CSS se active
             requestAnimationFrame(() => lightbox.classList.add('active'));
 
             const close = () => {
@@ -206,14 +219,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 lightbox.addEventListener('transitionend', () => lightbox.remove(), { once: true });
             };
 
+            // Cerrar con el botón, clic en el fondo o tecla Escape
             lightbox.querySelector('.lightbox-close').addEventListener('click', close);
-            lightbox.addEventListener('click', (e) => {
-                if (e.target === lightbox) close();
-            });
-
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') close();
-            }, { once: true });
+            lightbox.addEventListener('click', (e) => { if (e.target === lightbox) close(); });
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); }, { once: true });
         });
     }
 });

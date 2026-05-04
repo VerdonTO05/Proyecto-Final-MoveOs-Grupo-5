@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: controllers/control/users-controller.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: controllers/control/users-controller.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Control de usuarios
+ * Maneja:
+ * - Redirección si el usuario no está autenticado
+ * - Carga y renderizado de tarjetas de usuario
+ * - Activación y desactivación de cuentas con mensaje opcional
+ * - Notificación por email al usuario afectado
+ * - Navegación al chat directo con un usuario desde la tarjeta
+ */
+
+document.addEventListener("DOMContentLoaded", () => {
+    if (!window.CURRENT_USER) {
+        window.location.href = "index.php?accion=loginView";
+        return;
+    } else {
+        role = CURRENT_USER.role;
+    }
+
+    loadPublications();
+});
+
+/**
+ * Carga la lista de usuarios desde el servidor y la renderiza en el grid.
+ * Si no hay usuarios, muestra un mensaje informativo.
+ *
+ * @returns {Promise&lt;void>}
+ */
+async function loadPublications() {
+    const gridContainer = document.getElementById('users');
+    if (!gridContainer) return;
+
+    try {
+        const response = await fetch('index.php?accion=getUsers');
+        const text = await response.text();
+        const result = JSON.parse(text);
+
+        if (result.success &amp;&amp; result.data.length > 0) {
+            gridContainer.innerHTML = '';
+            result.data.forEach(user => {
+                gridContainer.appendChild(createUserCard(user));
+            });
+        } else {
+            gridContainer.innerHTML = '&lt;p class="no-activities">No hay usuarios registrados en este momento.&lt;/p>';
+        }
+    } catch (error) {
+        gridContainer.innerHTML = '&lt;p class="error">Error al cargar los usuarios.&lt;/p>';
+    }
+}
+
+/**
+ * Crea la tarjeta DOM de un usuario con sus acciones de administración.
+ *
+ * @param {Object}      user               - Datos del usuario
+ * @param {number}      user.id            - ID único del usuario
+ * @param {string}      user.username      - Nombre de usuario
+ * @param {string}      user.full_name     - Nombre completo
+ * @param {string}      user.email         - Correo electrónico
+ * @param {string}      user.role          - Rol asignado ('administrador', 'participante', etc.)
+ * @param {string}      user.state         - Estado de la cuenta: 'activa' o 'inactiva'
+ * @param {string}      user.created_at    - Fecha de registro
+ * @param {string|null} user.profile_image - URL de la imagen de perfil, o null
+ * @param {string|null} user.message       - Mensaje de alerta asociado, o null
+ * @returns {HTMLElement} Tarjeta lista para insertar en el DOM
+ */
+function createUserCard(user) {
+    const card = document.createElement('article');
+    card.className = 'user-card';
+
+    const isActive = user.state === 'activa';
+    card.classList.add(isActive ? 'active' : 'inactive');
+
+    card.innerHTML = `
+    &lt;header class="user-header">
+      &lt;div class="username-role">
+        &lt;div class="user-avatar-wrapper">
+          ${user.profile_image
+            ? `&lt;img src="${user.profile_image}" alt="${user.username}"
+                 onerror="this.parentElement.innerHTML='&lt;div class=\\'user-avatar--placeholder\\'>&lt;i class=\\'fas fa-user\\'>&lt;/i>&lt;/div>'">`
+            : `&lt;div class="user-avatar--placeholder">&lt;i class="fas fa-user">&lt;/i>&lt;/div>`
+          }
+        &lt;/div>
+        &lt;div>
+          &lt;h2 class="username">${user.username}&lt;/h2>
+          &lt;span class="role">${user.role}&lt;/span>
+        &lt;/div>
+      &lt;/div>
+      &lt;button class="btn-toggle">
+        ${isActive ? 'Desactivar' : 'Activar'}
+      &lt;/button>
+    &lt;/header>
+
+    &lt;section class="vac-data">
+      &lt;h3>Información&lt;/h3>
+      &lt;p id="full_name">&lt;b>Nombre completo:&lt;/b> ${user.full_name}&lt;/p>
+      &lt;p id="email">&lt;b>Email:&lt;/b> ${user.email}&lt;/p>
+      &lt;p id="created_at">&lt;b>Fecha de registro:&lt;/b> ${user.created_at}&lt;/p>
+    &lt;/section>
+
+    &lt;section class="buttons">
+      &lt;button class="btn btn-detail">Ver datos&lt;/button>
+      &lt;button class="btn btn-message">Chat&lt;/button>
+    &lt;/section>
+
+    ${user.message ? `&lt;section class="alert-message">${user.message}&lt;/section>` : ''}
+  `;
+
+    // Botón activar / desactivar 
+    const btnToggle = card.querySelector('.btn-toggle');
+
+    btnToggle.addEventListener('click', async () => {
+        const currentlyActive = card.classList.contains('active');
+        const newState = currentlyActive ? 'inactiva' : 'activa';
+        const accion = currentlyActive ? 'desactivar' : 'activar';
+
+        // Solicitar al admin un mensaje opcional para notificar al usuario
+        const adminMessage = await showPromptConfirm({
+            title: `¿Quieres ${accion} a ${user.username}?`,
+            message: `Puedes escribir un mensaje opcional para notificar al usuario:`,
+            placeholder: `Motivo para ${accion} la cuenta...`,
+            confirmText: accion.charAt(0).toUpperCase() + accion.slice(1),
+            cancelText: 'Cancelar'
+        });
+
+        // El admin canceló el diálogo → no hacer nada
+        if (adminMessage === null) return;
+
+        // Actualizar la UI de forma optimista antes de confirmar con el servidor
+        if (currentlyActive) {
+            card.classList.replace('active', 'inactive');
+            btnToggle.textContent = 'Activar';
+        } else {
+            card.classList.replace('inactive', 'active');
+            btnToggle.textContent = 'Desactivar';
+        }
+
+        try {
+            const response = await fetch(`index.php?accion=toggleUser&amp;id=${user.id}&amp;state=${newState}`);
+            const result = await response.json();
+
+            if (result.success) {
+                user.state = newState;
+
+                // Notificar al usuario por email con el mensaje del admin
+                await fetch(`index.php?accion=notifyUser&amp;id=${user.id}&amp;state=${newState}&amp;message=${encodeURIComponent(adminMessage)}`);
+            } else {
+                // El servidor rechazó el cambio → revertir la UI
+                if (currentlyActive) {
+                    card.classList.replace('inactive', 'active');
+                    btnToggle.textContent = 'Desactivar';
+                } else {
+                    card.classList.replace('active', 'inactive');
+                    btnToggle.textContent = 'Activar';
+                }
+                showAlert('Error', 'No se pudo cambiar el estado del usuario', 'error');
+            }
+        } catch (error) {
+            // Error de red → revertir la UI
+            if (currentlyActive) {
+                card.classList.replace('inactive', 'active');
+                btnToggle.textContent = 'Desactivar';
+            } else {
+                card.classList.replace('active', 'inactive');
+                btnToggle.textContent = 'Activar';
+            }
+            showAlert('Error', 'Error de conexión al cambiar el estado', 'error');
+        }
+    });
+
+    // Botón ver / ocultar datos
+    const btnEdit = card.querySelector('.btn-detail');
+    const vacData = card.querySelector('.vac-data');
+
+    btnEdit.addEventListener('click', () => {
+        const isHidden = window.getComputedStyle(vacData).display === 'none';
+        vacData.style.display = isHidden ? 'block' : 'none';
+        btnEdit.textContent = isHidden ? 'Ocultar datos' : 'Ver datos';
+    });
+
+    // Botón chat
+    const btnMessage = card.querySelector('.btn-message');
+    if (btnMessage) {
+        btnMessage.addEventListener('click', () => {
+            window.location.href = `index.php?accion=adminChat&amp;user_id=${user.id}`;
+        });
+    }
+
+    return card;
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Distancia">Distancia</a></li><li><a href="global.html#Intervalo">Intervalo</a></li><li><a href="global.html#activateHowItWorks">activateHowItWorks</a></li><li><a href="global.html#activeRoomId">activeRoomId</a></li><li><a href="global.html#activeRoomType">activeRoomType</a></li><li><a href="global.html#activities">activities</a></li><li><a href="global.html#activitiesActive">activitiesActive</a></li><li><a href="global.html#activitiesFinished">activitiesFinished</a></li><li><a href="global.html#applyFilters">applyFilters</a></li><li><a href="global.html#buildConversationItem">buildConversationItem</a></li><li><a href="global.html#buildMessageBubble">buildMessageBubble</a></li><li><a href="global.html#controlPanelData">controlPanelData</a></li><li><a href="global.html#createActiveCard">createActiveCard</a></li><li><a href="global.html#createActivityCard">createActivityCard</a></li><li><a href="global.html#createActivityControlCard">createActivityControlCard</a></li><li><a href="global.html#createCard">createCard</a></li><li><a href="global.html#createFinishedCard">createFinishedCard</a></li><li><a href="global.html#createUserCard">createUserCard</a></li><li><a href="global.html#fetchNewMessages">fetchNewMessages</a></li><li><a href="global.html#formatTime">formatTime</a></li><li><a href="global.html#getChatForm">getChatForm</a></li><li><a href="global.html#getChatInput">getChatInput</a></li><li><a href="global.html#getEmptyState">getEmptyState</a></li><li><a href="global.html#getMessagesArea">getMessagesArea</a></li><li><a href="global.html#handleActivityAction">handleActivityAction</a></li><li><a href="global.html#handleButtonClick">handleButtonClick</a></li><li><a href="global.html#handleChangePassword">handleChangePassword</a></li><li><a href="global.html#handleLoginSubmit">handleLoginSubmit</a></li><li><a href="global.html#handleRegisterSubmit">handleRegisterSubmit</a></li><li><a href="global.html#handleRequestCode">handleRequestCode</a></li><li><a href="global.html#handleSendMessage">handleSendMessage</a></li><li><a href="global.html#handleSignup">handleSignup</a></li><li><a href="global.html#headerHTML">headerHTML</a></li><li><a href="global.html#hideElement">hideElement</a></li><li><a href="global.html#hideEmptyState">hideEmptyState</a></li><li><a href="global.html#howHTML">howHTML</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initAdminMode">initAdminMode</a></li><li><a href="global.html#initChatLogic">initChatLogic</a></li><li><a href="global.html#initDocsLogic">initDocsLogic</a></li><li><a href="global.html#initFilterLogic">initFilterLogic</a></li><li><a href="global.html#initSidebarLogic">initSidebarLogic</a></li><li><a href="global.html#initSocialModal">initSocialModal</a></li><li><a href="global.html#initTabSwitch">initTabSwitch</a></li><li><a href="global.html#initTabs">initTabs</a></li><li><a href="global.html#initThemeLogic">initThemeLogic</a></li><li><a href="global.html#initUnsubscribeLogic">initUnsubscribeLogic</a></li><li><a href="global.html#initUserLogic">initUserLogic</a></li><li><a href="global.html#injectLayout">injectLayout</a></li><li><a href="global.html#isFirstLoad">isFirstLoad</a></li><li><a href="global.html#lastMessageId">lastMessageId</a></li><li><a href="global.html#loadActivities">loadActivities</a></li><li><a href="global.html#loadAdminConversations">loadAdminConversations</a></li><li><a href="global.html#loadAuthModal">loadAuthModal</a></li><li><a href="global.html#loadControlPanel">loadControlPanel</a></li><li><a href="global.html#loadPublications">loadPublications</a></li><li><a href="global.html#loadRegistrations">loadRegistrations</a></li><li><a href="global.html#loadRequests">loadRequests</a></li><li><a href="global.html#openAdminConversation">openAdminConversation</a></li><li><a href="global.html#openSocial">openSocial</a></li><li><a href="global.html#openVideo">openVideo</a></li><li><a href="global.html#pollingTimer">pollingTimer</a></li><li><a href="global.html#postAction">postAction</a></li><li><a href="global.html#publications">publications</a></li><li><a href="global.html#registrationsActive">registrationsActive</a></li><li><a href="global.html#registrationsFinished">registrationsFinished</a></li><li><a href="global.html#removeActivityCard">removeActivityCard</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#renderConversationList">renderConversationList</a></li><li><a href="global.html#renderError">renderError</a></li><li><a href="global.html#renderHeaderByRole">renderHeaderByRole</a></li><li><a href="global.html#renderItems">renderItems</a></li><li><a href="global.html#renderMessages">renderMessages</a></li><li><a href="global.html#renderStep">renderStep</a></li><li><a href="global.html#republishActivity">republishActivity</a></li><li><a href="global.html#requests">requests</a></li><li><a href="global.html#scrollToBottomIfNeeded">scrollToBottomIfNeeded</a></li><li><a href="global.html#setupPasswordToggle">setupPasswordToggle</a></li><li><a href="global.html#showConversationPanel">showConversationPanel</a></li><li><a href="global.html#showHowItWorks">showHowItWorks</a></li><li><a href="global.html#showStep1">showStep1</a></li><li><a href="global.html#showStep2">showStep2</a></li><li><a href="global.html#startPolling">startPolling</a></li><li><a href="global.html#stepsOrganizadores">stepsOrganizadores</a></li><li><a href="global.html#stepsParticipante">stepsParticipante</a></li><li><a href="global.html#stopPolling">stopPolling</a></li><li><a href="global.html#togglePlay">togglePlay</a></li><li><a href="global.html#toggleVisibility">toggleVisibility</a></li><li><a href="global.html#updateAfterAction">updateAfterAction</a></li><li><a href="global.html#updateRangeFill">updateRangeFill</a></li><li><a href="global.html#updateStats">updateStats</a></li><li><a href="global.html#updateSteps">updateSteps</a></li><li><a href="global.html#updateTabCounts">updateTabCounts</a></li><li><a href="global.html#videoHTML">videoHTML</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Mon May 04 2026 14:09:13 GMT+0200 (hora de verano de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: controllers/see/home-controller.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: controllers/see/home-controller.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Explorar
+ * Maneja:
+ * - Redirección o modal de login si el usuario no está autenticado
+ * - Carga y refresco periódico de actividades y peticiones aprobadas
+ * - Renderizado de tarjetas según el rol del usuario
+ * - Filtrado de publicaciones por categoría u otros criterios
+ * - Inscripción de participantes a actividades
+ * - Aceptación de peticiones por parte de organizadores
+ */
+
+/** @type {Object[]} Caché local de publicaciones aprobadas cargadas desde el servidor */
+let publications = [];
+
+document.addEventListener("DOMContentLoaded", async () => {
+  if (!window.CURRENT_USER) {
+    await showAlert(
+      'Acceso denegado',
+      'Debes iniciar sesión o registrarte para explorar.',
+      'warning',
+      2500
+    );
+    if (window.openAuthModal) {
+      openAuthModal('login');
+    } else {
+      window.location.href = "index.php?accion=loginView";
+    }
+    return;
+  }
+
+  loadPublications(CURRENT_USER.role);
+  bindFilterListeners(applyFilters);
+
+  // Refresco automático cada 5 segundos para mantener el grid actualizado
+  setInterval(() => {
+    loadPublications(CURRENT_USER.role);
+  }, 5000);
+});
+
+/**
+ * Carga las publicaciones aprobadas desde el servidor y las renderiza si han cambiado.
+ * Usa comparación por JSON para evitar re-renders innecesarios.
+ *
+ * @param {string} role - Rol del usuario actual ('organizador', 'participante', etc.)
+ * @returns {Promise&lt;void>}
+ */
+async function loadPublications(role) {
+  const grid = document.getElementById('gridActivities');
+  if (!grid) return;
+
+  try {
+    const result = await fetch('index.php?accion=getAprove').then(r => r.json());
+
+    if (result.success) {
+      const newData = result.data || [];
+
+      // Solo re-renderizar si los datos han cambiado respecto a la caché local
+      if (JSON.stringify(newData) !== JSON.stringify(publications)) {
+        publications = newData;
+        render(publications, role);
+      }
+    }
+  } catch (error) {
+    grid.innerHTML = '&lt;p class="error">Error al cargar las actividades.&lt;/p>';
+  }
+}
+
+/**
+ * Renderiza la lista de publicaciones en el grid.
+ * Muestra un mensaje diferente según el rol si no hay elementos.
+ *
+ * @param {Object[]} items - Lista de publicaciones a renderizar
+ * @param {string}   role  - Rol del usuario actual
+ */
+function render(items, role) {
+  const grid = document.getElementById('gridActivities');
+  grid.innerHTML = '';
+
+  if (items.length === 0) {
+    grid.innerHTML = role === 'organizador'
+      ? '&lt;p class="no-activities">No hay peticiones disponibles en este momento.&lt;/p>'
+      : '&lt;p class="no-activities">No hay actividades disponibles en este momento.&lt;/p>';
+    return;
+  }
+
+  items.forEach(item => grid.appendChild(createCard(item, role)));
+}
+
+/**
+ * Aplica los filtros activos sobre la caché local y vuelve a renderizar el grid.
+ */
+function applyFilters() {
+  const { type, value } = getFilterValues();
+  if (!type) return;
+
+  render(publications.filter(a => matchFilter(a, type, value)), CURRENT_USER.role);
+}
+
+/**
+ * Crea la tarjeta DOM de una publicación con sus acciones según el rol del usuario.
+ * Si el usuario ya está inscrito, deshabilita el botón de inscripción.
+ *
+ * @param {Object}   activity                      - Datos de la publicación
+ * @param {number}   activity.id                   - ID único
+ * @param {string}   activity.title                - Título         
+ * @param {string}   [activity.category_name]      - Nombre de la categoría
+ * @param {number[]} [activity.enrolled_user_ids]  - IDs de usuarios ya inscritos
+ * @param {string}   role                          - Rol del usuario actual
+ * @returns {HTMLElement} Tarjeta lista para insertar en el DOM
+ */
+function createCard(activity, role) {
+  const card = document.createElement("article");
+  card.className = "activity activity-card";
+
+  card.innerHTML = `
+        &lt;div class="activity-image">${buildImageHTML(activity)}&lt;/div>
+        &lt;div class="activity-content">
+            ${activity.category_name ? `&lt;span class="category">${activity.category_name}&lt;/span>` : ""}
+            &lt;h3>${activity.title}&lt;/h3>
+            &lt;p class="description">${activity.description}&lt;/p>
+            ${buildDetailsHTML(activity)}
+            ${buildMetaHTML(activity)}
+            ${buildFooterHTML(activity)}
+            &lt;div class="actions">
+                &lt;button class="btn-detail" data-id="${activity.id}">Ver Detalles&lt;/button>
+                &lt;button class="btn-signup" data-id="${activity.id}">
+                    ${role === 'organizador' ? 'Aceptar' : 'Inscribirse'}
+                &lt;/button>
+            &lt;/div>
+        &lt;/div>`;
+
+  const signupBtn = card.querySelector(".btn-signup");
+
+  // Si el participante ya está inscrito, bloquear el botón sin necesidad de llamar al servidor
+  if (role !== 'organizador' &amp;&amp; activity.enrolled_user_ids?.includes(CURRENT_USER.id)) {
+    signupBtn.textContent = "Inscrito";
+    signupBtn.disabled = true;
+    signupBtn.classList.add("enrolled");
+  }
+
+  card.querySelector(".btn-detail")?.addEventListener("click", () => {
+    openDetailModal(activity, role, CURRENT_USER);
+  });
+
+  signupBtn?.addEventListener("click", (e) => {
+    handleSignup(e.currentTarget, activity, role, card);
+  });
+
+  return card;
+}
+
+/**
+ * Gestiona la inscripción de un participante o la aceptación de una petición por un organizador.
+ * Muestra confirmación, llama al servidor y actualiza el DOM según el resultado.
+ *
+ * @param {HTMLElement} btn      - Botón que disparó la acción
+ * @param {Object}      activity - Datos de la publicación
+ * @param {string}      role     - Rol del usuario actual
+ * @param {HTMLElement} card     - Tarjeta asociada a la publicación
+ * @returns {Promise&lt;void>}
+ */
+async function handleSignup(btn, activity, role, card) {
+  const actionText = role === 'organizador'
+    ? 'aceptar esta actividad'
+    : 'inscribirte en esta actividad';
+
+  const confirmed = await showConfirm({
+    title: role === 'organizador' ? '¿Aceptar esta actividad?' : '¿Inscribirse a esta actividad?',
+    message: `Estás a punto de ${actionText}.`,
+    confirmText: role === 'organizador' ? 'Sí, aceptar' : 'Sí, inscribirme',
+    cancelText: 'Cancelar'
+  });
+
+  if (!confirmed) return;
+
+  const signupBtn = card.querySelector(".btn-signup");
+  signupBtn.disabled = true;
+
+  // Comprobar inscripción duplicada en local antes de llamar al servidor.
+  // enrolled_user_ids contiene enteros (intval en PHP) y CURRENT_USER.id puede ser string → parseamos.
+  if (activity.enrolled_user_ids?.includes(parseInt(CURRENT_USER.id))) {
+    signupBtn.textContent = "Inscrito";
+    signupBtn.classList.add("enrolled");
+    return;
+  }
+
+  try {
+    const response = await fetch('index.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        accion: role === 'organizador' ? 'acceptRequest' : 'signupActivity',
+        ...(role === 'organizador'
+          ? { id_request: activity.id }
+          : { id_activity: activity.id })
+      })
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      showAlert(
+        role === 'organizador' ? 'Actividad aceptada' : 'Inscripción realizada',
+        result.message,
+        'success'
+      );
+
+      // Animar y eliminar la tarjeta del grid tras la acción exitosa
+      card.style.transition = 'opacity 0.3s, transform 0.3s';
+      card.style.opacity = '0';
+      card.style.transform = 'scale(0.9)';
+
+      // Quitar de la caché local para que los filtros no la vuelvan a mostrar
+      if (role !== 'organizador') {
+        publications = publications.filter(p => p.id !== activity.id);
+      }
+
+      setTimeout(() => {
+        card.remove();
+        const grid = document.getElementById('gridActivities');
+        if (grid &amp;&amp; grid.querySelectorAll('.activity-card').length === 0) {
+          grid.innerHTML = role === 'organizador'
+            ? '&lt;p class="no-activities">No hay peticiones disponibles en este momento.&lt;/p>'
+            : '&lt;p class="no-activities">No hay actividades disponibles en este momento.&lt;/p>';
+        }
+      }, 300);
+
+    } else {
+      // El servidor indica que el usuario ya estaba inscrito → tratar como estado válido
+      if (result.message === 'Ya estás inscrito en esta actividad') {
+        signupBtn.textContent = "Inscrito";
+        signupBtn.disabled = true;
+        signupBtn.classList.add("enrolled");
+      } else {
+        throw new Error(result.message || 'Error desconocido');
+      }
+    }
+  } catch (error) {
+    showAlert('Error', error, 'error');
+    signupBtn.disabled = false;
+    signupBtn.textContent = role === 'organizador' ? 'Aceptar' : 'Inscribirse';
+  }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Distancia">Distancia</a></li><li><a href="global.html#Intervalo">Intervalo</a></li><li><a href="global.html#activateHowItWorks">activateHowItWorks</a></li><li><a href="global.html#activeRoomId">activeRoomId</a></li><li><a href="global.html#activeRoomType">activeRoomType</a></li><li><a href="global.html#activities">activities</a></li><li><a href="global.html#activitiesActive">activitiesActive</a></li><li><a href="global.html#activitiesFinished">activitiesFinished</a></li><li><a href="global.html#applyFilters">applyFilters</a></li><li><a href="global.html#buildConversationItem">buildConversationItem</a></li><li><a href="global.html#buildMessageBubble">buildMessageBubble</a></li><li><a href="global.html#controlPanelData">controlPanelData</a></li><li><a href="global.html#createActiveCard">createActiveCard</a></li><li><a href="global.html#createActivityCard">createActivityCard</a></li><li><a href="global.html#createActivityControlCard">createActivityControlCard</a></li><li><a href="global.html#createCard">createCard</a></li><li><a href="global.html#createFinishedCard">createFinishedCard</a></li><li><a href="global.html#createUserCard">createUserCard</a></li><li><a href="global.html#fetchNewMessages">fetchNewMessages</a></li><li><a href="global.html#formatTime">formatTime</a></li><li><a href="global.html#getChatForm">getChatForm</a></li><li><a href="global.html#getChatInput">getChatInput</a></li><li><a href="global.html#getEmptyState">getEmptyState</a></li><li><a href="global.html#getMessagesArea">getMessagesArea</a></li><li><a href="global.html#handleActivityAction">handleActivityAction</a></li><li><a href="global.html#handleButtonClick">handleButtonClick</a></li><li><a href="global.html#handleChangePassword">handleChangePassword</a></li><li><a href="global.html#handleLoginSubmit">handleLoginSubmit</a></li><li><a href="global.html#handleRegisterSubmit">handleRegisterSubmit</a></li><li><a href="global.html#handleRequestCode">handleRequestCode</a></li><li><a href="global.html#handleSendMessage">handleSendMessage</a></li><li><a href="global.html#handleSignup">handleSignup</a></li><li><a href="global.html#headerHTML">headerHTML</a></li><li><a href="global.html#hideElement">hideElement</a></li><li><a href="global.html#hideEmptyState">hideEmptyState</a></li><li><a href="global.html#howHTML">howHTML</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initAdminMode">initAdminMode</a></li><li><a href="global.html#initChatLogic">initChatLogic</a></li><li><a href="global.html#initDocsLogic">initDocsLogic</a></li><li><a href="global.html#initFilterLogic">initFilterLogic</a></li><li><a href="global.html#initSidebarLogic">initSidebarLogic</a></li><li><a href="global.html#initSocialModal">initSocialModal</a></li><li><a href="global.html#initTabSwitch">initTabSwitch</a></li><li><a href="global.html#initTabs">initTabs</a></li><li><a href="global.html#initThemeLogic">initThemeLogic</a></li><li><a href="global.html#initUnsubscribeLogic">initUnsubscribeLogic</a></li><li><a href="global.html#initUserLogic">initUserLogic</a></li><li><a href="global.html#injectLayout">injectLayout</a></li><li><a href="global.html#isFirstLoad">isFirstLoad</a></li><li><a href="global.html#lastMessageId">lastMessageId</a></li><li><a href="global.html#loadActivities">loadActivities</a></li><li><a href="global.html#loadAdminConversations">loadAdminConversations</a></li><li><a href="global.html#loadAuthModal">loadAuthModal</a></li><li><a href="global.html#loadControlPanel">loadControlPanel</a></li><li><a href="global.html#loadPublications">loadPublications</a></li><li><a href="global.html#loadRegistrations">loadRegistrations</a></li><li><a href="global.html#loadRequests">loadRequests</a></li><li><a href="global.html#openAdminConversation">openAdminConversation</a></li><li><a href="global.html#openSocial">openSocial</a></li><li><a href="global.html#openVideo">openVideo</a></li><li><a href="global.html#pollingTimer">pollingTimer</a></li><li><a href="global.html#postAction">postAction</a></li><li><a href="global.html#publications">publications</a></li><li><a href="global.html#registrationsActive">registrationsActive</a></li><li><a href="global.html#registrationsFinished">registrationsFinished</a></li><li><a href="global.html#removeActivityCard">removeActivityCard</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#renderConversationList">renderConversationList</a></li><li><a href="global.html#renderError">renderError</a></li><li><a href="global.html#renderHeaderByRole">renderHeaderByRole</a></li><li><a href="global.html#renderItems">renderItems</a></li><li><a href="global.html#renderMessages">renderMessages</a></li><li><a href="global.html#renderStep">renderStep</a></li><li><a href="global.html#republishActivity">republishActivity</a></li><li><a href="global.html#requests">requests</a></li><li><a href="global.html#scrollToBottomIfNeeded">scrollToBottomIfNeeded</a></li><li><a href="global.html#setupPasswordToggle">setupPasswordToggle</a></li><li><a href="global.html#showConversationPanel">showConversationPanel</a></li><li><a href="global.html#showHowItWorks">showHowItWorks</a></li><li><a href="global.html#showStep1">showStep1</a></li><li><a href="global.html#showStep2">showStep2</a></li><li><a href="global.html#startPolling">startPolling</a></li><li><a href="global.html#stepsOrganizadores">stepsOrganizadores</a></li><li><a href="global.html#stepsParticipante">stepsParticipante</a></li><li><a href="global.html#stopPolling">stopPolling</a></li><li><a href="global.html#togglePlay">togglePlay</a></li><li><a href="global.html#toggleVisibility">toggleVisibility</a></li><li><a href="global.html#updateAfterAction">updateAfterAction</a></li><li><a href="global.html#updateRangeFill">updateRangeFill</a></li><li><a href="global.html#updateStats">updateStats</a></li><li><a href="global.html#updateSteps">updateSteps</a></li><li><a href="global.html#updateTabCounts">updateTabCounts</a></li><li><a href="global.html#videoHTML">videoHTML</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Mon May 04 2026 14:09:13 GMT+0200 (hora de verano de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

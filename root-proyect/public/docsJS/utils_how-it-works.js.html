@@ -207,7 +207,7 @@ function renderStep(card, step) {
 /**
  * Abre el video tutorial, ocultando el tutorial dinámico
  * @param {*} container 
- * @returns 
+ * @returns {void}
  */
 function openVideo(container) {
   container.innerHTML = `&lt;div class="how-it-works">${videoHTML}&lt;/div>`;
@@ -256,7 +256,7 @@ function openVideo(container) {
 
   closeBtn?.addEventListener("click", closeVideo);
 
-  // ✅ Solo cierra si el click es directamente en el fondo oscuro
+  // Solo cierra si el click es directamente en el fondo
   overlayDiv?.addEventListener("click", (e) => {
     if (e.target === overlayDiv) closeVideo();
   });
@@ -284,7 +284,7 @@ function togglePlay(video, button) {
 /**
  * Actualiza la barra de progreso o volumen
  * @param {*} range 
- * @returns 
+ * @returns {void}
  */
 function updateRangeFill(range) {
   if (!range) return;
@@ -302,7 +302,7 @@ function updateRangeFill(range) {
 /**
  * Formatea el tiempo, minutos y segundos
  * @param {*} seconds 
- * @returns 
+ * @returns {void}
  */
 function formatTime(seconds) {
   const min = Math.floor(seconds / 60);
@@ -318,13 +318,13 @@ function formatTime(seconds) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#activateHowItWorks">activateHowItWorks</a></li><li><a href="global.html#controlPanelData">controlPanelData</a></li><li><a href="global.html#createActivityControlCard">createActivityControlCard</a></li><li><a href="global.html#formatTime">formatTime</a></li><li><a href="global.html#handleActivityAction">handleActivityAction</a></li><li><a href="global.html#handleButtonClick">handleButtonClick</a></li><li><a href="global.html#handleLoginSubmit">handleLoginSubmit</a></li><li><a href="global.html#handleRegisterSubmit">handleRegisterSubmit</a></li><li><a href="global.html#howHTML">howHTML</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initTabs">initTabs</a></li><li><a href="global.html#initThemeLogic">initThemeLogic</a></li><li><a href="global.html#loadControlPanel">loadControlPanel</a></li><li><a href="global.html#openVideo">openVideo</a></li><li><a href="global.html#postAction">postAction</a></li><li><a href="global.html#removeActivityCard">removeActivityCard</a></li><li><a href="global.html#renderError">renderError</a></li><li><a href="global.html#renderHeaderByRole">renderHeaderByRole</a></li><li><a href="global.html#renderItems">renderItems</a></li><li><a href="global.html#renderStep">renderStep</a></li><li><a href="global.html#showAlert">showAlert</a></li><li><a href="global.html#showConfirm">showConfirm</a></li><li><a href="global.html#showHowItWorks">showHowItWorks</a></li><li><a href="global.html#stepsOrganizadores">stepsOrganizadores</a></li><li><a href="global.html#stepsParticipante">stepsParticipante</a></li><li><a href="global.html#togglePlay">togglePlay</a></li><li><a href="global.html#updateAfterAction">updateAfterAction</a></li><li><a href="global.html#updateRangeFill">updateRangeFill</a></li><li><a href="global.html#updateStats">updateStats</a></li><li><a href="global.html#updateSteps">updateSteps</a></li><li><a href="global.html#updateTabCounts">updateTabCounts</a></li><li><a href="global.html#videoHTML">videoHTML</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Distancia">Distancia</a></li><li><a href="global.html#Intervalo">Intervalo</a></li><li><a href="global.html#activateHowItWorks">activateHowItWorks</a></li><li><a href="global.html#activeRoomId">activeRoomId</a></li><li><a href="global.html#activeRoomType">activeRoomType</a></li><li><a href="global.html#activities">activities</a></li><li><a href="global.html#activitiesActive">activitiesActive</a></li><li><a href="global.html#activitiesFinished">activitiesFinished</a></li><li><a href="global.html#applyFilters">applyFilters</a></li><li><a href="global.html#buildConversationItem">buildConversationItem</a></li><li><a href="global.html#buildMessageBubble">buildMessageBubble</a></li><li><a href="global.html#controlPanelData">controlPanelData</a></li><li><a href="global.html#createActiveCard">createActiveCard</a></li><li><a href="global.html#createActivityCard">createActivityCard</a></li><li><a href="global.html#createActivityControlCard">createActivityControlCard</a></li><li><a href="global.html#createCard">createCard</a></li><li><a href="global.html#createFinishedCard">createFinishedCard</a></li><li><a href="global.html#createUserCard">createUserCard</a></li><li><a href="global.html#fetchNewMessages">fetchNewMessages</a></li><li><a href="global.html#formatTime">formatTime</a></li><li><a href="global.html#getChatForm">getChatForm</a></li><li><a href="global.html#getChatInput">getChatInput</a></li><li><a href="global.html#getEmptyState">getEmptyState</a></li><li><a href="global.html#getMessagesArea">getMessagesArea</a></li><li><a href="global.html#handleActivityAction">handleActivityAction</a></li><li><a href="global.html#handleButtonClick">handleButtonClick</a></li><li><a href="global.html#handleChangePassword">handleChangePassword</a></li><li><a href="global.html#handleLoginSubmit">handleLoginSubmit</a></li><li><a href="global.html#handleRegisterSubmit">handleRegisterSubmit</a></li><li><a href="global.html#handleRequestCode">handleRequestCode</a></li><li><a href="global.html#handleSendMessage">handleSendMessage</a></li><li><a href="global.html#handleSignup">handleSignup</a></li><li><a href="global.html#headerHTML">headerHTML</a></li><li><a href="global.html#hideElement">hideElement</a></li><li><a href="global.html#hideEmptyState">hideEmptyState</a></li><li><a href="global.html#howHTML">howHTML</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initAdminMode">initAdminMode</a></li><li><a href="global.html#initChatLogic">initChatLogic</a></li><li><a href="global.html#initDocsLogic">initDocsLogic</a></li><li><a href="global.html#initFilterLogic">initFilterLogic</a></li><li><a href="global.html#initSidebarLogic">initSidebarLogic</a></li><li><a href="global.html#initSocialModal">initSocialModal</a></li><li><a href="global.html#initTabSwitch">initTabSwitch</a></li><li><a href="global.html#initTabs">initTabs</a></li><li><a href="global.html#initThemeLogic">initThemeLogic</a></li><li><a href="global.html#initUnsubscribeLogic">initUnsubscribeLogic</a></li><li><a href="global.html#initUserLogic">initUserLogic</a></li><li><a href="global.html#injectLayout">injectLayout</a></li><li><a href="global.html#isFirstLoad">isFirstLoad</a></li><li><a href="global.html#lastMessageId">lastMessageId</a></li><li><a href="global.html#loadActivities">loadActivities</a></li><li><a href="global.html#loadAdminConversations">loadAdminConversations</a></li><li><a href="global.html#loadAuthModal">loadAuthModal</a></li><li><a href="global.html#loadControlPanel">loadControlPanel</a></li><li><a href="global.html#loadPublications">loadPublications</a></li><li><a href="global.html#loadRegistrations">loadRegistrations</a></li><li><a href="global.html#loadRequests">loadRequests</a></li><li><a href="global.html#openAdminConversation">openAdminConversation</a></li><li><a href="global.html#openSocial">openSocial</a></li><li><a href="global.html#openVideo">openVideo</a></li><li><a href="global.html#pollingTimer">pollingTimer</a></li><li><a href="global.html#postAction">postAction</a></li><li><a href="global.html#publications">publications</a></li><li><a href="global.html#registrationsActive">registrationsActive</a></li><li><a href="global.html#registrationsFinished">registrationsFinished</a></li><li><a href="global.html#removeActivityCard">removeActivityCard</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#renderConversationList">renderConversationList</a></li><li><a href="global.html#renderError">renderError</a></li><li><a href="global.html#renderHeaderByRole">renderHeaderByRole</a></li><li><a href="global.html#renderItems">renderItems</a></li><li><a href="global.html#renderMessages">renderMessages</a></li><li><a href="global.html#renderStep">renderStep</a></li><li><a href="global.html#republishActivity">republishActivity</a></li><li><a href="global.html#requests">requests</a></li><li><a href="global.html#scrollToBottomIfNeeded">scrollToBottomIfNeeded</a></li><li><a href="global.html#setupPasswordToggle">setupPasswordToggle</a></li><li><a href="global.html#showConversationPanel">showConversationPanel</a></li><li><a href="global.html#showHowItWorks">showHowItWorks</a></li><li><a href="global.html#showStep1">showStep1</a></li><li><a href="global.html#showStep2">showStep2</a></li><li><a href="global.html#startPolling">startPolling</a></li><li><a href="global.html#stepsOrganizadores">stepsOrganizadores</a></li><li><a href="global.html#stepsParticipante">stepsParticipante</a></li><li><a href="global.html#stopPolling">stopPolling</a></li><li><a href="global.html#togglePlay">togglePlay</a></li><li><a href="global.html#toggleVisibility">toggleVisibility</a></li><li><a href="global.html#updateAfterAction">updateAfterAction</a></li><li><a href="global.html#updateRangeFill">updateRangeFill</a></li><li><a href="global.html#updateStats">updateStats</a></li><li><a href="global.html#updateSteps">updateSteps</a></li><li><a href="global.html#updateTabCounts">updateTabCounts</a></li><li><a href="global.html#videoHTML">videoHTML</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Mon Apr 06 2026 22:39:04 GMT+0200 (hora de verano de Europa central)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Mon May 04 2026 14:09:13 GMT+0200 (hora de verano de Europa central)
 </footer>
 
 <script> prettyPrint(); </script>

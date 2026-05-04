@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: controllers/control/all-post-controller.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: controllers/control/all-post-controller.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Explorar publicaciones administradores
+ * Maneja:
+ * - Cambio entre pestañas de actividades y peticiones
+ * - Carga y renderizado de actividades y peticiones
+ * - Filtrado de elementos por categoría u otros criterios
+ * - Aprobación y cancelación de publicaciones desde la tarjeta
+ */
+
+/** @type {Object[]} Caché local de actividades cargadas desde el servidor */
+let activities = [];
+
+/** @type {Object[]} Caché local de peticiones cargadas desde el servidor */
+let requests = [];
+
+document.addEventListener("DOMContentLoaded", () => {
+    initTabSwitch();
+    loadActivities();
+    bindFilterListeners(applyFilters);
+});
+
+/**
+ * Inicializa el cambio entre pestañas de actividades y peticiones.
+ * Actualiza el título, subtítulo y contenido del grid al cambiar de pestaña.
+ */
+function initTabSwitch() {
+    const buttons = document.querySelectorAll('.tab-btn.control');
+    const title = document.getElementById('view-title');
+    const subtitle = document.getElementById('view-subtitle');
+
+    buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            buttons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const type = btn.dataset.type;
+
+            if (type === 'activities') {
+                title.innerHTML = 'Explorar Actividades';
+                subtitle.innerHTML = 'Los organizadores han añadido actividades para los próximos días';
+                loadActivities('activities');
+            } else if (type === 'requests') {
+                title.innerHTML = 'Explorar Peticiones';
+                subtitle.innerHTML = 'Los participantes han añadido peticiones para llevar a cabo sus ideas';
+                loadRequests('requests');
+            }
+        });
+    });
+}
+
+/**
+ * Carga las actividades desde el servidor y las renderiza en el grid.
+ *
+ * @param {string} [type='activities'] - Tipo de vista activa, usado para generar las tarjetas
+ * @returns {Promise&lt;void>}
+ */
+async function loadActivities(type = 'activities') {
+    const grid = document.getElementById('gridActivities');
+    if (!grid) return;
+
+    try {
+        const result = await fetch('index.php?accion=getActivities').then(r => r.json());
+        if (result.success) {
+            activities = result.data || [];
+            renderItems(activities, activity => createActivityCard(activity, type));
+        }
+    } catch (error) {
+        grid.innerHTML = '&lt;p class="error">Error al cargar las actividades.&lt;/p>';
+    }
+}
+
+/**
+ * Carga las peticiones desde el servidor y las renderiza en el grid.
+ *
+ * @param {string} [type='requests'] - Tipo de vista activa, usado para generar las tarjetas
+ * @returns {Promise&lt;void>}
+ */
+async function loadRequests(type = 'requests') {
+    const grid = document.getElementById('gridActivities');
+    if (!grid) return;
+
+    try {
+        const result = await fetch('index.php?accion=getRequests').then(r => r.json());
+        if (result.success) {
+            requests = result.data || [];
+            renderItems(requests, activity => createActivityCard(activity, type));
+        } else {
+            grid.innerHTML = '&lt;p class="no-activities">No hay peticiones disponibles en este momento.&lt;/p>';
+        }
+    } catch (error) {
+        grid.innerHTML = '&lt;p class="error">Error al cargar las peticiones.&lt;/p>';
+    }
+}
+
+/**
+ * Renderiza una lista de elementos en el grid usando una función de fábrica de tarjetas.
+ * Si la lista está vacía, muestra un mensaje informativo.
+ *
+ * @param {Object[]}                  items       - Lista de elementos a renderizar
+ * @param {function(Object): Element} cardFactory - Función que recibe un elemento y devuelve su tarjeta DOM
+ */
+function renderItems(items, cardFactory) {
+    const grid = document.getElementById('gridActivities');
+    grid.innerHTML = '';
+
+    if (!items || items.length === 0) {
+        grid.innerHTML = '&lt;p class="no-activities">No hay elementos disponibles en este momento.&lt;/p>';
+        return;
+    }
+
+    items.forEach(item => grid.appendChild(cardFactory(item)));
+}
+
+/**
+ * Aplica los filtros activos sobre la caché local de actividades o peticiones
+ * según la pestaña seleccionada y vuelve a renderizar el grid.
+ */
+function applyFilters() {
+    const { type, value } = getFilterValues();
+    if (!type) return;
+
+    const activeTab = document.querySelector(".tab-btn.control.active")?.dataset.type;
+
+    if (activeTab === "activities") {
+        renderItems(
+            activities.filter(i => matchFilter(i, type, value)),
+            activity => createActivityCard(activity, activeTab)
+        );
+    } else if (activeTab === "requests") {
+        renderItems(
+            requests.filter(i => matchFilter(i, type, value)),
+            activity => createActivityCard(activity, activeTab)
+        );
+    }
+}
+
+/**
+ * Crea la tarjeta DOM de una actividad o petición con sus acciones de moderación.
+ *
+ * @param {Object} activity               - Datos del elemento a representar
+ * @param {number} activity.id            - ID único de la actividad o petición
+ * @param {string} activity.title         - Título  
+ * @param {string} activity.state         - Estado actual: 'pendiente', 'aprobada', 'rechazada' u otro
+ * @param {string} [activity.category_name] - Nombre de la categoría, si existe
+ * @param {string} type                   - Tipo de vista: 'activities' o 'requests'
+ * @returns {HTMLElement} Tarjeta lista para insertar en el DOM
+ */
+function createActivityCard(activity, type) {
+    const card = document.createElement("article");
+    card.className = "activity activity-card";
+
+    const stateHTML = activity.state === 'pendiente'
+        ? `&lt;button id="btn-state" class="state">&lt;i class="fas fa-hourglass-half">&lt;/i>&lt;/button>`
+        : activity.state === 'rechazada'
+            ? `&lt;button id="btn-state" class="state">&lt;i class="fas fa-times">&lt;/i>&lt;/button>`
+            : activity.state === 'aprobada'
+                ? `&lt;button id="btn-state" class="state">&lt;i class="fas fa-check-double">&lt;/i>&lt;/button>`
+                : `&lt;button id="btn-state" class="state">&lt;i class="fas fa-flag-checkered">&lt;/i>&lt;/button>`;
+
+    card.innerHTML = `
+        &lt;div class="activity-image">${buildImageHTML(activity)}&lt;/div>
+        &lt;div class="activity-content">
+            ${activity.category_name ? `&lt;span class="category">${activity.category_name}&lt;/span>` : ""}
+            ${stateHTML}
+            &lt;h3>${activity.title}&lt;/h3>
+            &lt;p class="description">${activity.description}&lt;/p>
+            ${buildDetailsHTML(activity)}
+            ${buildMetaHTML(activity)}
+            ${buildFooterHTML(activity)}
+            &lt;div class="actions">
+                &lt;button class="btn-detail"  data-id="${activity.id}">Ver Detalles&lt;/button>
+                &lt;button class="btn-function ${activity.state == 'aprobada' ? 'cancel' : 'accept'}" data-id="${activity.id}">${activity.state == 'aprobada' ? 'Cancelar' : 'Aceptar'}&lt;/button>
+            &lt;/div>
+        &lt;/div>`;
+
+    // 'activity' → para actividades | 'request' → para peticiones
+    const typeSingular = type === 'activities' ? 'activity' : 'request';
+
+    /**
+     * Alterna el estado de la publicación entre aprobada y rechazada.
+     * Muestra un diálogo de confirmación antes de enviar la petición al servidor.
+     * Actualiza el icono y el botón de acción en la tarjeta sin recargar el grid.
+     *
+     * @returns {Promise&lt;void>}
+     */
+    async function toggleActivityState() {
+        let title = '';
+        let message = '';
+        let realizar = '';
+
+        if (activity.state === 'aprobada') {
+            title = "Cancelar publicación";
+            message = "¿Deseas cancelar esta publicación?";
+            realizar = 'rejectActivity';
+        } else {
+            title = "Aceptar publicación";
+            message = "¿Deseas aceptar esta publicación?";
+            realizar = 'approveActivity';
+        }
+
+        const confirmed = await showConfirm(title, message);
+        if (!confirmed) return;
+
+        try {
+            const response = await fetch('index.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ accion: realizar, id: activity.id, type: typeSingular })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                showAlert('Éxito', result.message, 'success');
+
+                // Actualizar icono de estado y texto del botón de acción sin re-renderizar la tarjeta
+                const stateEl = card.querySelector(".state");
+                const btnFunction = card.querySelector(".btn-function");
+
+                if (realizar === 'approveActivity') {
+                    activity.state = 'aprobada';
+                    btnFunction.classList = 'btn-function cancel';
+                    stateEl.innerHTML = `&lt;i class="fas fa-check-double">&lt;/i>`;
+                    btnFunction.textContent = 'Cancelar';
+                } else {
+                    activity.state = 'rechazada';
+                    btnFunction.classList = 'btn-function accept';
+                    stateEl.innerHTML = `&lt;i class="fas fa-times">&lt;/i>`;
+                    btnFunction.textContent = 'Aceptar';
+                }
+
+            } else {
+                throw new Error(result.message || 'Error desconocido');
+            }
+        } catch (error) {
+            showAlert('Error', 'No se pudo procesar la acción', 'error');
+        }
+    }
+
+    card.querySelector(".btn-detail")?.addEventListener("click", () => openDetailModal(activity));
+    card.querySelector(".btn-function")?.addEventListener("click", toggleActivityState);
+    card.querySelector("#btn-state")?.addEventListener("click", toggleActivityState);
+
+    return card;
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Distancia">Distancia</a></li><li><a href="global.html#Intervalo">Intervalo</a></li><li><a href="global.html#activateHowItWorks">activateHowItWorks</a></li><li><a href="global.html#activeRoomId">activeRoomId</a></li><li><a href="global.html#activeRoomType">activeRoomType</a></li><li><a href="global.html#activities">activities</a></li><li><a href="global.html#activitiesActive">activitiesActive</a></li><li><a href="global.html#activitiesFinished">activitiesFinished</a></li><li><a href="global.html#applyFilters">applyFilters</a></li><li><a href="global.html#buildConversationItem">buildConversationItem</a></li><li><a href="global.html#buildMessageBubble">buildMessageBubble</a></li><li><a href="global.html#controlPanelData">controlPanelData</a></li><li><a href="global.html#createActiveCard">createActiveCard</a></li><li><a href="global.html#createActivityCard">createActivityCard</a></li><li><a href="global.html#createActivityControlCard">createActivityControlCard</a></li><li><a href="global.html#createCard">createCard</a></li><li><a href="global.html#createFinishedCard">createFinishedCard</a></li><li><a href="global.html#createUserCard">createUserCard</a></li><li><a href="global.html#fetchNewMessages">fetchNewMessages</a></li><li><a href="global.html#formatTime">formatTime</a></li><li><a href="global.html#getChatForm">getChatForm</a></li><li><a href="global.html#getChatInput">getChatInput</a></li><li><a href="global.html#getEmptyState">getEmptyState</a></li><li><a href="global.html#getMessagesArea">getMessagesArea</a></li><li><a href="global.html#handleActivityAction">handleActivityAction</a></li><li><a href="global.html#handleButtonClick">handleButtonClick</a></li><li><a href="global.html#handleChangePassword">handleChangePassword</a></li><li><a href="global.html#handleLoginSubmit">handleLoginSubmit</a></li><li><a href="global.html#handleRegisterSubmit">handleRegisterSubmit</a></li><li><a href="global.html#handleRequestCode">handleRequestCode</a></li><li><a href="global.html#handleSendMessage">handleSendMessage</a></li><li><a href="global.html#handleSignup">handleSignup</a></li><li><a href="global.html#headerHTML">headerHTML</a></li><li><a href="global.html#hideElement">hideElement</a></li><li><a href="global.html#hideEmptyState">hideEmptyState</a></li><li><a href="global.html#howHTML">howHTML</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initAdminMode">initAdminMode</a></li><li><a href="global.html#initChatLogic">initChatLogic</a></li><li><a href="global.html#initDocsLogic">initDocsLogic</a></li><li><a href="global.html#initFilterLogic">initFilterLogic</a></li><li><a href="global.html#initSidebarLogic">initSidebarLogic</a></li><li><a href="global.html#initSocialModal">initSocialModal</a></li><li><a href="global.html#initTabSwitch">initTabSwitch</a></li><li><a href="global.html#initTabs">initTabs</a></li><li><a href="global.html#initThemeLogic">initThemeLogic</a></li><li><a href="global.html#initUnsubscribeLogic">initUnsubscribeLogic</a></li><li><a href="global.html#initUserLogic">initUserLogic</a></li><li><a href="global.html#injectLayout">injectLayout</a></li><li><a href="global.html#isFirstLoad">isFirstLoad</a></li><li><a href="global.html#lastMessageId">lastMessageId</a></li><li><a href="global.html#loadActivities">loadActivities</a></li><li><a href="global.html#loadAdminConversations">loadAdminConversations</a></li><li><a href="global.html#loadAuthModal">loadAuthModal</a></li><li><a href="global.html#loadControlPanel">loadControlPanel</a></li><li><a href="global.html#loadPublications">loadPublications</a></li><li><a href="global.html#loadRegistrations">loadRegistrations</a></li><li><a href="global.html#loadRequests">loadRequests</a></li><li><a href="global.html#openAdminConversation">openAdminConversation</a></li><li><a href="global.html#openSocial">openSocial</a></li><li><a href="global.html#openVideo">openVideo</a></li><li><a href="global.html#pollingTimer">pollingTimer</a></li><li><a href="global.html#postAction">postAction</a></li><li><a href="global.html#publications">publications</a></li><li><a href="global.html#registrationsActive">registrationsActive</a></li><li><a href="global.html#registrationsFinished">registrationsFinished</a></li><li><a href="global.html#removeActivityCard">removeActivityCard</a></li><li><a href="global.html#render">render</a></li><li><a href="global.html#renderConversationList">renderConversationList</a></li><li><a href="global.html#renderError">renderError</a></li><li><a href="global.html#renderHeaderByRole">renderHeaderByRole</a></li><li><a href="global.html#renderItems">renderItems</a></li><li><a href="global.html#renderMessages">renderMessages</a></li><li><a href="global.html#renderStep">renderStep</a></li><li><a href="global.html#republishActivity">republishActivity</a></li><li><a href="global.html#requests">requests</a></li><li><a href="global.html#scrollToBottomIfNeeded">scrollToBottomIfNeeded</a></li><li><a href="global.html#setupPasswordToggle">setupPasswordToggle</a></li><li><a href="global.html#showConversationPanel">showConversationPanel</a></li><li><a href="global.html#showHowItWorks">showHowItWorks</a></li><li><a href="global.html#showStep1">showStep1</a></li><li><a href="global.html#showStep2">showStep2</a></li><li><a href="global.html#startPolling">startPolling</a></li><li><a href="global.html#stepsOrganizadores">stepsOrganizadores</a></li><li><a href="global.html#stepsParticipante">stepsParticipante</a></li><li><a href="global.html#stopPolling">stopPolling</a></li><li><a href="global.html#togglePlay">togglePlay</a></li><li><a href="global.html#toggleVisibility">toggleVisibility</a></li><li><a href="global.html#updateAfterAction">updateAfterAction</a></li><li><a href="global.html#updateRangeFill">updateRangeFill</a></li><li><a href="global.html#updateStats">updateStats</a></li><li><a href="global.html#updateSteps">updateSteps</a></li><li><a href="global.html#updateTabCounts">updateTabCounts</a></li><li><a href="global.html#videoHTML">videoHTML</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Mon May 04 2026 14:09:13 GMT+0200 (hora de verano de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

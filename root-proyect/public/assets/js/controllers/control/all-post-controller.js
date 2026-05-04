@@ -1,4 +1,16 @@
+/**
+ * Explorar publicaciones administradores
+ * Maneja:
+ * - Cambio entre pestañas de actividades y peticiones
+ * - Carga y renderizado de actividades y peticiones
+ * - Filtrado de elementos por categoría u otros criterios
+ * - Aprobación y cancelación de publicaciones desde la tarjeta
+ */
+
+/** @type {Object[]} Caché local de actividades cargadas desde el servidor */
 let activities = [];
+
+/** @type {Object[]} Caché local de peticiones cargadas desde el servidor */
 let requests = [];
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -7,9 +19,10 @@ document.addEventListener("DOMContentLoaded", () => {
     bindFilterListeners(applyFilters);
 });
 
-// ----------------------------
-// Tabs
-// ----------------------------
+/**
+ * Inicializa el cambio entre pestañas de actividades y peticiones.
+ * Actualiza el título, subtítulo y contenido del grid al cambiar de pestaña.
+ */
 function initTabSwitch() {
     const buttons = document.querySelectorAll('.tab-btn.control');
     const title = document.getElementById('view-title');
@@ -35,9 +48,12 @@ function initTabSwitch() {
     });
 }
 
-// ----------------------------
-// Carga de datos
-// ----------------------------
+/**
+ * Carga las actividades desde el servidor y las renderiza en el grid.
+ *
+ * @param {string} [type='activities'] - Tipo de vista activa, usado para generar las tarjetas
+ * @returns {Promise<void>}
+ */
 async function loadActivities(type = 'activities') {
     const grid = document.getElementById('gridActivities');
     if (!grid) return;
@@ -53,6 +69,12 @@ async function loadActivities(type = 'activities') {
     }
 }
 
+/**
+ * Carga las peticiones desde el servidor y las renderiza en el grid.
+ *
+ * @param {string} [type='requests'] - Tipo de vista activa, usado para generar las tarjetas
+ * @returns {Promise<void>}
+ */
 async function loadRequests(type = 'requests') {
     const grid = document.getElementById('gridActivities');
     if (!grid) return;
@@ -70,9 +92,13 @@ async function loadRequests(type = 'requests') {
     }
 }
 
-// ----------------------------
-// Render genérico
-// ----------------------------
+/**
+ * Renderiza una lista de elementos en el grid usando una función de fábrica de tarjetas.
+ * Si la lista está vacía, muestra un mensaje informativo.
+ *
+ * @param {Object[]}                  items       - Lista de elementos a renderizar
+ * @param {function(Object): Element} cardFactory - Función que recibe un elemento y devuelve su tarjeta DOM
+ */
 function renderItems(items, cardFactory) {
     const grid = document.getElementById('gridActivities');
     grid.innerHTML = '';
@@ -85,9 +111,10 @@ function renderItems(items, cardFactory) {
     items.forEach(item => grid.appendChild(cardFactory(item)));
 }
 
-// ----------------------------
-// Filtros
-// ----------------------------
+/**
+ * Aplica los filtros activos sobre la caché local de actividades o peticiones
+ * según la pestaña seleccionada y vuelve a renderizar el grid.
+ */
 function applyFilters() {
     const { type, value } = getFilterValues();
     if (!type) return;
@@ -107,9 +134,17 @@ function applyFilters() {
     }
 }
 
-// ----------------------------
-// Card
-// ----------------------------
+/**
+ * Crea la tarjeta DOM de una actividad o petición con sus acciones de moderación.
+ *
+ * @param {Object} activity               - Datos del elemento a representar
+ * @param {number} activity.id            - ID único de la actividad o petición
+ * @param {string} activity.title         - Título  
+ * @param {string} activity.state         - Estado actual: 'pendiente', 'aprobada', 'rechazada' u otro
+ * @param {string} [activity.category_name] - Nombre de la categoría, si existe
+ * @param {string} type                   - Tipo de vista: 'activities' o 'requests'
+ * @returns {HTMLElement} Tarjeta lista para insertar en el DOM
+ */
 function createActivityCard(activity, type) {
     const card = document.createElement("article");
     card.className = "activity activity-card";
@@ -138,9 +173,16 @@ function createActivityCard(activity, type) {
             </div>
         </div>`;
 
+    // 'activity' → para actividades | 'request' → para peticiones
     const typeSingular = type === 'activities' ? 'activity' : 'request';
 
-    // --- Función reutilizable para aprobar/cancelar ---
+    /**
+     * Alterna el estado de la publicación entre aprobada y rechazada.
+     * Muestra un diálogo de confirmación antes de enviar la petición al servidor.
+     * Actualiza el icono y el botón de acción en la tarjeta sin recargar el grid.
+     *
+     * @returns {Promise<void>}
+     */
     async function toggleActivityState() {
         let title = '';
         let message = '';
@@ -174,7 +216,7 @@ function createActivityCard(activity, type) {
             if (result.success) {
                 showAlert('Éxito', result.message, 'success');
 
-                // --- Actualizar icono y botón ---
+                // Actualizar icono de estado y texto del botón de acción sin re-renderizar la tarjeta
                 const stateEl = card.querySelector(".state");
                 const btnFunction = card.querySelector(".btn-function");
 

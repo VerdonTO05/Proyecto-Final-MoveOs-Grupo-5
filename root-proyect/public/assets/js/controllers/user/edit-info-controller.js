@@ -1,6 +1,17 @@
+/**
+ * Editar datos usuario
+ * Maneja:
+ * - Muestra de errores de validación enviados desde PHP
+ * - Subida y previsualización del avatar de perfil vía AJAX
+ * - Actualización del avatar en el navbar tras la subida
+ * - Mostrar/ocultar campos de contraseña según el checkbox
+ * - Toggle de visibilidad de campos de contraseña
+ * - Validación del formulario de edición de perfil antes del envío
+ */
+
 document.addEventListener("DOMContentLoaded", () => {
 
-  // ===== ERRORES DESDE PHP =====
+  // Mostrar errores de validación del servidor que quedaron en sesión
   const phpErrors = window.__PHP_FORM_ERRORS__ ?? [];
   if (phpErrors.length > 0) {
     showAlert(
@@ -14,16 +25,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const editForm = document.getElementById("edit-form");
   const closeBtn = document.querySelector('.close-btn');
 
-  // Botón cerrar
   if (closeBtn) {
     closeBtn.addEventListener('click', () => {
       window.location.href = "index.php";
     });
   }
 
-  // ===== AVATAR UPLOAD =====
+  // Avatar 
   const avatarWrapper = document.getElementById('avatarWrapper');
-  const avatarInput   = document.getElementById('avatarInput');
+  const avatarInput = document.getElementById('avatarInput');
   const profileAvatar = document.getElementById('profileAvatar');
 
   if (avatarWrapper && avatarInput) {
@@ -34,18 +44,16 @@ document.addEventListener("DOMContentLoaded", () => {
       const file = avatarInput.files[0];
       if (!file) return;
 
-      // Validar tamaño (2 MB)
       if (file.size > 2 * 1024 * 1024) {
         showAlert('Error', 'La imagen no puede superar los 2 MB.', 'error');
         return;
       }
 
-      // Previsualizar la imagen inmediatamente
+      // Previsualizar la imagen localmente antes de confirmar la subida
       const reader = new FileReader();
       reader.onload = (e) => { profileAvatar.src = e.target.result; };
       reader.readAsDataURL(file);
 
-      // Subir vía AJAX
       const formData = new FormData();
       formData.append('avatar', file);
 
@@ -58,7 +66,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (result.success) {
           showAlert('¡Listo!', result.message, 'success');
-          // Actualizar también el avatar del navbar
+
+          // Sincronizar el avatar del navbar con la nueva imagen
+          // Se añade timestamp para forzar recarga y evitar caché del navegador
           const navAvatar = document.getElementById('nav-avatar');
           if (navAvatar) {
             navAvatar.src = result.image_url + '?t=' + Date.now();
@@ -72,23 +82,21 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Campos de contraseña opcionales
+  // Campos de contraseña 
+
   const changePasswordCheckbox = document.getElementById('changePassword');
   const passwordFields = document.getElementById('passwordFields');
   const currentPassword = document.getElementById('current_password');
   const newPassword = document.getElementById('new_password');
 
   if (changePasswordCheckbox && passwordFields) {
-    passwordFields.style.display = 'none';
-
-    // Si volvemos con error y el checkbox estaba marcado, mostramos los campos
-    if (changePasswordCheckbox.checked) {
-      passwordFields.style.display = 'block';
-    }
+    // Ocultar campos por defecto; mostrarlos si el checkbox vuelve marcado tras un error de servidor
+    passwordFields.style.display = changePasswordCheckbox.checked ? 'block' : 'none';
 
     changePasswordCheckbox.addEventListener('change', () => {
       passwordFields.style.display = changePasswordCheckbox.checked ? 'block' : 'none';
 
+      // Limpiar campos al desmarcar para no enviar datos no deseados
       if (!changePasswordCheckbox.checked) {
         currentPassword.value = '';
         newPassword.value = '';
@@ -97,22 +105,17 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Toggle ver/ocultar contraseña
-  const toggleButtons = document.querySelectorAll(".toggle-password");
-  toggleButtons.forEach((button) => {
+  document.querySelectorAll(".toggle-password").forEach((button) => {
     const input = button.closest(".div-password").querySelector("input");
     const icon = button.querySelector("i");
 
     button.addEventListener("click", (e) => {
       e.preventDefault();
-      if (input.type === "password") {
-        input.type = "text";
-        icon.classList.remove("fa-eye");
-        icon.classList.add("fa-eye-slash");
-      } else {
-        input.type = "password";
-        icon.classList.remove("fa-eye-slash");
-        icon.classList.add("fa-eye");
-      }
+
+      const isPassword = input.type === "password";
+      input.type = isPassword ? "text" : "password";
+      icon.classList.toggle("fa-eye", !isPassword);
+      icon.classList.toggle("fa-eye-slash", isPassword);
     });
   });
 
@@ -123,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const fullname = document.getElementById("fullname").value.trim();
       const username = document.getElementById("username").value.trim();
-      const email    = document.getElementById("email").value.trim();
+      const email = document.getElementById("email").value.trim();
 
       let errors = [];
 
@@ -131,7 +134,6 @@ document.addEventListener("DOMContentLoaded", () => {
         errors.push("Por favor, introduce nombre y apellido.");
       }
 
-      // Corregido: era < 0, nunca se cumplía
       if (username.length < 3) {
         errors.push("El nombre de usuario debe tener al menos 3 caracteres.");
       }
@@ -140,15 +142,13 @@ document.addEventListener("DOMContentLoaded", () => {
         errors.push("El formato del correo electrónico no es válido.");
       }
 
-      if (changePasswordCheckbox && changePasswordCheckbox.checked) {
+      if (changePasswordCheckbox?.checked) {
         if (!currentPassword.value) {
           errors.push("Debes introducir tu contraseña actual.");
         }
-
         if (!newPassword.value) {
           errors.push("Debes introducir la nueva contraseña.");
         }
-
         if (newPassword.value && !validatePassword(newPassword.value)) {
           errors.push("La nueva contraseña debe tener al menos 8 caracteres.");
         }

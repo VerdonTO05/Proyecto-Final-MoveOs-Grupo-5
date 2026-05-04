@@ -1,30 +1,36 @@
+/**
+ * Panel de control de publicaciones
+ * Maneja:
+ * - Carga inicial del panel de control con actividades y peticiones pendientes
+ * - Renderizado de estadísticas y contadores por pestaña
+ * - Aprobación y rechazo de actividades y peticiones con confirmación
+ * - Actualización optimista del estado local tras cada acción
+ * - Animación de eliminación de tarjetas del DOM
+ */
+
 document.addEventListener("DOMContentLoaded", async () => {
     await loadControlPanel();
 
     const activitiesContainer = document.querySelector(".activities");
     if (!activitiesContainer) return;
 
+    // Delegación de eventos para aprobar/rechazar desde cualquier tarjeta del grid
     activitiesContainer.addEventListener("click", async (e) => {
         const approveBtn = e.target.closest(".btn-approve");
         const rejectBtn = e.target.closest(".btn-reject");
 
-        if (approveBtn) {
-            handleActivityAction(approveBtn, "approveActivity", "approved");
-        }
-
-        if (rejectBtn) {
-            handleActivityAction(rejectBtn, "rejectActivity", "rejected");
-        }
+        if (approveBtn) handleActivityAction(approveBtn, "approveActivity", "approved");
+        if (rejectBtn) handleActivityAction(rejectBtn, "rejectActivity", "rejected");
     });
 
     initTabs();
 });
 
-/** @type {Object|null} */
+/** @type {Object|null} Caché local con los datos del panel cargados desde el servidor */
 let controlPanelData = null;
 
 /**
- * Inicializa los botones de pestañas.
+ * Inicializa los botones de pestañas para alternar entre actividades y peticiones.
  */
 function initTabs() {
     const tabButtons = document.querySelectorAll(".tab-btn.control");
@@ -41,10 +47,14 @@ function initTabs() {
 }
 
 /**
- * Maneja la aprobación o rechazo de una actividad/petición.
- * @param {HTMLElement} button
- * @param {"approveActivity"|"rejectActivity"} action
- * @param {"approved"|"rejected"} resultAction
+ * Maneja la aprobación o rechazo de una actividad o petición.
+ * Muestra un diálogo de confirmación, envía la acción al servidor
+ * y actualiza el DOM y la caché local si la operación tiene éxito.
+ *
+ * @param {HTMLElement}                       button       - Botón que disparó la acción
+ * @param {'approveActivity'|'rejectActivity'} action      - Acción a ejecutar en el servidor
+ * @param {'approved'|'rejected'}              resultAction - Estado resultante tras la acción
+ * @returns {Promise<void>}
  */
 async function handleActivityAction(button, action, resultAction) {
     const id = button.dataset.id;
@@ -72,12 +82,9 @@ async function handleActivityAction(button, action, resultAction) {
         const result = await postAction(action, { id, type });
 
         if (result.success) {
-            showAlert(
-                isApprove ? "Aprobada" : "Rechazada",
-                result.message,
-                "success"
-            );
+            showAlert(isApprove ? "Aprobada" : "Rechazada", result.message, "success");
 
+            // Animar y eliminar la tarjeta, luego sincronizar caché y estadísticas
             removeActivityCard(activityCard, () => {
                 updateAfterAction(type, id, resultAction);
             });
@@ -87,19 +94,18 @@ async function handleActivityAction(button, action, resultAction) {
     } catch (error) {
         showAlert(
             "Error",
-            isApprove
-                ? "Ocurrió un error al aprobar."
-                : "Ocurrió un error al rechazar la actividad",
+            isApprove ? "Ocurrió un error al aprobar." : "Ocurrió un error al rechazar la actividad",
             "error"
         );
     }
 }
 
 /**
- * Realiza una petición POST al backend.
- * @param {string} accion
- * @param {Object} data
- * @returns {Promise<Object>}
+ * Realiza una petición POST al backend con datos en formato JSON.
+ *
+ * @param {string} accion - Nombre de la acción a ejecutar en el servidor
+ * @param {Object} data   - Datos adicionales a incluir en el cuerpo de la petición
+ * @returns {Promise<Object>} Respuesta del servidor parseada como JSON
  */
 async function postAction(accion, data) {
     const response = await fetch("index.php", {
@@ -112,9 +118,11 @@ async function postAction(accion, data) {
 }
 
 /**
- * Aplica animación y elimina la tarjeta del DOM.
- * @param {HTMLElement|null} card
- * @param {Function} callback
+ * Aplica una animación de desvanecimiento y elimina la tarjeta del DOM.
+ * Ejecuta el callback una vez completada la animación.
+ *
+ * @param {HTMLElement|null} card     - Tarjeta a eliminar
+ * @param {Function}         callback - Función a ejecutar tras eliminar la tarjeta
  */
 function removeActivityCard(card, callback) {
     if (!card) return;
@@ -130,7 +138,10 @@ function removeActivityCard(card, callback) {
 }
 
 /**
- * Carga los datos iniciales del panel de control.
+ * Carga los datos iniciales del panel de control desde el servidor.
+ * Actualiza estadísticas, contadores de pestañas y renderiza las actividades pendientes.
+ *
+ * @returns {Promise<void>}
  */
 async function loadControlPanel() {
     try {
@@ -144,7 +155,6 @@ async function loadControlPanel() {
 
         if (result.success) {
             controlPanelData = result;
-
             updateStats(result.stats);
             updateTabCounts(result.activities.length, result.requests.length);
             renderItems("activities");
@@ -152,19 +162,17 @@ async function loadControlPanel() {
             renderError(result.message || "Error al cargar actividades");
         }
     } catch {
-        renderError(
-            "Error de conexión. Verifica que estés autenticado como administrador."
-        );
+        renderError("Error de conexión. Verifica que estés autenticado como administrador.");
     }
 }
 
 /**
- * Muestra mensaje de error en el contenedor principal.
- * @param {string} message
+ * Muestra un mensaje de error en el contenedor principal del grid.
+ *
+ * @param {string} message - Mensaje de error a mostrar
  */
 function renderError(message) {
     const container = document.querySelector(".activities");
-
     if (!container) return;
 
     container.innerHTML = `
@@ -175,13 +183,15 @@ function renderError(message) {
 }
 
 /**
- * Actualiza las estadísticas del panel.
- * @param {Object} stats
+ * Actualiza las tarjetas de estadísticas del panel con los datos actuales.
+ *
+ * @param {Object} stats            - Objeto con estadísticas de actividades y peticiones
+ * @param {Object} stats.activities - Contadores de actividades por estado
+ * @param {Object} stats.requests   - Contadores de peticiones por estado
  */
 function updateStats(stats) {
     const { activities, requests } = stats;
     const statsContainer = document.querySelector(".stats");
-
     if (!statsContainer) return;
 
     statsContainer.innerHTML = `
@@ -213,9 +223,10 @@ function updateStats(stats) {
 }
 
 /**
- * Actualiza los contadores de las pestañas.
- * @param {number} activitiesCount
- * @param {number} requestsCount
+ * Actualiza el texto y contador numérico de cada pestaña.
+ *
+ * @param {number} activitiesCount - Número de actividades pendientes
+ * @param {number} requestsCount   - Número de peticiones pendientes
  */
 function updateTabCounts(activitiesCount, requestsCount) {
     const tabs = document.querySelectorAll(".tab-btn.control");
@@ -225,61 +236,61 @@ function updateTabCounts(activitiesCount, requestsCount) {
 }
 
 /**
- * Renderiza actividades o peticiones en pantalla.
- * @param {"activities"|"requests"} type
+ * Renderiza en el grid las actividades o peticiones pendientes según la pestaña activa.
+ * Si no hay elementos, muestra un mensaje informativo.
+ *
+ * @param {'activities'|'requests'} type - Tipo de elementos a renderizar
  */
 function renderItems(type) {
     const container = document.querySelector(".activities");
-
     if (!container || !controlPanelData) return;
 
-    const items =
-        type === "activities"
-            ? controlPanelData.activities
-            : controlPanelData.requests;
+    const items = type === "activities"
+        ? controlPanelData.activities
+        : controlPanelData.requests;
 
     const cardType = type === "activities" ? "activity" : "request";
 
     if (!items.length) {
-        container.innerHTML = `<p class="no-items"><i class="fas fa-check-circle"></i> No hay ${type === "activities" ? "actividades" : "peticiones"
-            } pendientes.</p>`;
+        container.innerHTML = `
+            <p class="no-items">
+                <i class="fas fa-check-circle"></i>
+                No hay ${type === "activities" ? "actividades" : "peticiones"} pendientes.
+            </p>
+        `;
         return;
     }
 
     container.innerHTML = "";
-
-    items.forEach(item =>
-        container.appendChild(createActivityControlCard(item, cardType))
-    );
+    items.forEach(item => container.appendChild(createActivityControlCard(item, cardType)));
 }
 
 /**
- * Crea una tarjeta HTML para una actividad o petición pendiente.
+ * Crea la tarjeta DOM de control para una actividad o petición pendiente.
  *
- * @param {Object} activity - Datos de la actividad o petición.
- * @param {number|string} activity.id - Identificador único.
- * @param {string} activity.title - Título de la actividad.
- * @param {string} activity.description - Descripción de la actividad.
- * @param {string} activity.date - Fecha de la actividad en formato ISO o similar.
- * @param {string} activity.location - Ubicación donde se realiza.
- * @param {string} [activity.image_url] - URL de la imagen de la actividad.
- * @param {string} activity.category_name - Nombre de la categoría.
- * @param {string} [activity.offertant_name] - Nombre del organizador (si es actividad).
- * @param {string} [activity.participant_name] - Nombre del solicitante (si es petición).
- * @param {number} [activity.max_people] - Máximo número de participantes.
- * @param {number} [activity.current_registrations] - Participantes actuales.
- * @param {number} [activity.price] - Precio de la actividad.
- * @param {'activity'|'request'} [type='activity'] - Tipo de tarjeta que se está renderizando.
- *
- * @returns {HTMLElement} Elemento `<section>` que representa la tarjeta de control.
+ * @param {Object}          activity                        - Datos del elemento
+ * @param {number|string}   activity.id                     - ID único
+ * @param {string}          activity.title                  - Título            
+ * @param {string}          activity.date                   - Fecha en formato ISO o similar
+ * @param {string}          activity.location               - Ubicación
+ * @param {string}          activity.category_name          - Nombre de la categoría
+ * @param {string}          [activity.image_url]            - URL de la imagen
+ * @param {string}          [activity.offertant_name]       - Nombre del organizador (actividades)
+ * @param {string}          [activity.participant_name]     - Nombre del solicitante (peticiones)
+ * @param {number}          [activity.max_people]           - Aforo máximo
+ * @param {number}          [activity.current_registrations] - Inscritos actuales
+ * @param {number}          [activity.price]                - Precio (0 = gratis)
+ * @param {'activity'|'request'} [type='activity']         - Tipo de tarjeta
+ * @returns {HTMLElement} Elemento `<section>` listo para insertar en el DOM
  */
 function createActivityControlCard(activity, type = 'activity') {
     const section = document.createElement('section');
     section.className = 'activity-control';
 
     const imageUrl = activity.image_url || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e';
-    const date = new Date(activity.date);
-    const formattedDate = date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
+    const formattedDate = new Date(activity.date).toLocaleDateString('es-ES', {
+        day: 'numeric', month: 'short', year: 'numeric'
+    });
 
     const categoryIcons = {
         'Taller': 'fa-tools',
@@ -300,7 +311,8 @@ function createActivityControlCard(activity, type = 'activity') {
 
     section.innerHTML = `
         <div class="activity-image-control">
-            <img src="${imageUrl}" alt="Actividad" onerror="this.src='https://images.unsplash.com/photo-1507525428034-b723cf961d3e'">
+            <img src="${imageUrl}" alt="Actividad"
+                 onerror="this.src='https://images.unsplash.com/photo-1507525428034-b723cf961d3e'">
         </div>
         <div class="activity-info">
             <div class="tags">
@@ -313,8 +325,12 @@ function createActivityControlCard(activity, type = 'activity') {
             <div class="meta">
                 <span><i class="fas fa-calendar-alt"></i> ${formattedDate}</span>
                 <span><i class="fas fa-map-marker-alt"></i> ${activity.location}</span>
-                ${activity.max_people ? `<span><i class="fas fa-users"></i> ${activity.current_registrations || 0}/${activity.max_people}</span>` : ''}
-                ${activity.price ? `<span><i class="fas fa-euro-sign"></i> ${activity.price == 0? 'Gratis' : activity.price + '€'}</span>` : ''}
+                ${activity.max_people
+                    ? `<span><i class="fas fa-users"></i> ${activity.current_registrations || 0}/${activity.max_people}</span>`
+                    : ''}
+                ${activity.price
+                    ? `<span><i class="fas fa-euro-sign"></i> ${activity.price == 0 ? 'Gratis' : activity.price + '€'}</span>`
+                    : ''}
             </div>
             <div class="actions-control">
                 <button data-id="${activity.id}" data-type="${type}" class="btn approve btn-approve">
@@ -326,85 +342,47 @@ function createActivityControlCard(activity, type = 'activity') {
             </div>
         </div>
     `;
+
     return section;
 }
 
 /**
- * Actualiza los datos del panel de control tras aprobar o rechazar
- * una actividad o petición y refresca estadísticas y contadores.
+ * Actualiza la caché local y las estadísticas del panel tras aprobar o rechazar
+ * una actividad o petición, y muestra un mensaje vacío si ya no quedan elementos.
  *
- * @param {'activity'|'request'} type - Tipo de elemento afectado.
- * @param {number|string} id - ID del elemento que se ha procesado.
- * @param {'approved'|'rejected'} action - Acción realizada.
- *
- * @returns {void}
+ * @param {'activity'|'request'} type   - Tipo de elemento afectado
+ * @param {number|string}        id     - ID del elemento procesado
+ * @param {'approved'|'rejected'} action - Acción realizada
  */
 function updateAfterAction(type, id, action) {
     if (type === 'activity') {
         controlPanelData.activities = controlPanelData.activities.filter(item => item.id != id);
         controlPanelData.stats.activities.pendiente--;
-        if (action == 'approved') {
-            controlPanelData.stats.activities.aprobada++;
-        } else {
-            controlPanelData.stats.activities.rechazada++;
-        }
+        if (action === 'approved') controlPanelData.stats.activities.aprobada++;
+        else controlPanelData.stats.activities.rechazada++;
     } else if (type === 'request') {
         controlPanelData.requests = controlPanelData.requests.filter(item => item.id != id);
         controlPanelData.stats.requests.pendiente--;
-
-        if (action === 'approved') {
-            controlPanelData.stats.requests.aprobada++;
-        }
-
-        if (action === 'rejected') {
-            controlPanelData.stats.requests.rechazada++;
-        }
+        if (action === 'approved') controlPanelData.stats.requests.aprobada++;
+        if (action === 'rejected') controlPanelData.stats.requests.rechazada++;
     }
+
     updateStats(controlPanelData.stats);
     updateTabCounts(
         controlPanelData.activities.length,
         controlPanelData.requests.length
     );
 
+    // Si el grid quedó vacío, mostrar mensaje según la pestaña activa
     const container = document.querySelector('.activities');
     if (container.querySelectorAll('.activity-control').length === 0) {
         const currentTab = document.querySelector('.tab-btn.control.active');
-        const isActivitiesTab = currentTab && currentTab.textContent.trim().startsWith('Actividades');
-        container.innerHTML = `<p>
-            <i class="fas fa-check-circle"></i> ${isActivitiesTab ? 'No hay actividades pendientes' : 'No hay peticiones pendientes'}
-        </p>`;
+        const isActivitiesTab = currentTab?.textContent.trim().startsWith('Actividades');
+        container.innerHTML = `
+            <p>
+                <i class="fas fa-check-circle"></i>
+                ${isActivitiesTab ? 'No hay actividades pendientes' : 'No hay peticiones pendientes'}
+            </p>
+        `;
     }
-}
-
-/**
- * Muestra un modal de confirmación personalizado.
- *
- * Devuelve una promesa que se resuelve en:
- * - `true` si el usuario confirma.
- * - `false` si cancela.
- *
- * @param {Object} options
- * @param {string} options.title - Título del modal.
- * @param {string} options.message - Mensaje descriptivo.
- *
- * @returns {Promise<boolean>} Resultado de la confirmación del usuario.
- */
-function showConfirm({ title, message }) {
-    // Delegar a la función global que aplica inline styles para centrado correcto
-    return window.showConfirm({ title, message });
-}
-
-
-/**
- * Muestra una alerta visual temporal en pantalla.
- *
- * @param {string} title - Título de la alerta.
- * @param {string} message - Mensaje descriptivo.
- * @param {'info'|'success'|'error'|'warning'} [type='info'] - Tipo de alerta.
- * @param {number} [duration=3000] - Tiempo en milisegundos antes de cerrarse automáticamente.
- *
- * @returns {void}
- */
-function showAlert(title, message, type = 'info', duration = 2000) {
-    window.showAlert(title, message, type, duration);
 }

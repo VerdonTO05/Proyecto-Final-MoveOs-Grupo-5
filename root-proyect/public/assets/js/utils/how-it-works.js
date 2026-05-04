@@ -179,7 +179,7 @@ function renderStep(card, step) {
 /**
  * Abre el video tutorial, ocultando el tutorial dinámico
  * @param {*} container 
- * @returns 
+ * @returns {void}
  */
 function openVideo(container) {
   container.innerHTML = `<div class="how-it-works">${videoHTML}</div>`;
@@ -228,7 +228,7 @@ function openVideo(container) {
 
   closeBtn?.addEventListener("click", closeVideo);
 
-  // ✅ Solo cierra si el click es directamente en el fondo oscuro
+  // Solo cierra si el click es directamente en el fondo
   overlayDiv?.addEventListener("click", (e) => {
     if (e.target === overlayDiv) closeVideo();
   });
@@ -256,7 +256,7 @@ function togglePlay(video, button) {
 /**
  * Actualiza la barra de progreso o volumen
  * @param {*} range 
- * @returns 
+ * @returns {void}
  */
 function updateRangeFill(range) {
   if (!range) return;
@@ -274,7 +274,7 @@ function updateRangeFill(range) {
 /**
  * Formatea el tiempo, minutos y segundos
  * @param {*} seconds 
- * @returns 
+ * @returns {void}
  */
 function formatTime(seconds) {
   const min = Math.floor(seconds / 60);
