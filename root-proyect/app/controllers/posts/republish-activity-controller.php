@@ -26,7 +26,7 @@ try {
     $db = $database->getConnection();
 
     // ===== DATOS =====
-    $type = $_POST['type'] ?? ''; // 👈 IMPORTANTE
+    $type = $_POST['type'] ?? ''; 
     $id = $_POST['id'] ?? null;
     $newDate = $_POST['date'] ?? null;
 

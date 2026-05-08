@@ -568,7 +568,7 @@ function openSocial(app) {
   const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
   const urls = {
-    instagram: { app: "instagram://", web: "https://www.instagram.com/accounts/login/" },
+    instagram: { app: "instagram://", web: "https://www.instagram.com/move.os.web/" },
     twitter: { app: "twitter://", web: "https://twitter.com/login" },
     facebook: { app: "fb://", web: "https://www.facebook.com/login" }
   };

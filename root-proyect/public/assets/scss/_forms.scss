@@ -20,6 +20,7 @@
     z-index: 1000;
     overflow-y: auto;
     animation: overlayFadeIn 0.2s ease forwards;
+    justify-content: center;
 }
 
 @keyframes overlayFadeIn {

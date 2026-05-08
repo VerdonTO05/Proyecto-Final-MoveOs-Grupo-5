@@ -1,4 +1,11 @@
 <?php
+
+/**
+ * unsubscribe-controller.php 
+ * 
+ * Elimina el contenido publicado o aceptador por un usuario y borra su cuenta.
+ */
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -25,26 +32,21 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $userId = $_SESSION['user_id'];
-$role   = $_SESSION['role'];
+$role = $_SESSION['role'];
 
 try {
     $db = (new Database())->getConnection();
 
-    $userModel        = new User($db);
-    $requestModel     = new Request($db);
-    $activityModel    = new Activity($db);
+    $userModel = new User($db);
+    $requestModel = new Request($db);
+    $activityModel = new Activity($db);
     $registrationModel = new Registration($db);
 
     $emailsToSend = [];
 
-    /* =========================
-       RECOPILAR EMAILS
-    ========================= */
-
+    // Recopila emails 
     if ($role === 'participante') {
-
         $requests = $requestModel->getRequestsByParticipantId($userId);
-
         foreach ($requests as $r) {
             if (!empty($r['accepted_by'])) {
                 $organizer = $userModel->getUserById($r['accepted_by']);
@@ -53,16 +55,14 @@ try {
                     $emailsToSend[] = [
                         'type' => 'request_deleted',
                         'title' => $r['title'],
-                        'user'  => $organizer
+                        'user' => $organizer
                     ];
                 }
             }
         }
 
     } else {
-
         $activities = $activityModel->getActivitiesByOffertantId($userId);
-
         foreach ($activities as $a) {
             $registrations = $registrationModel->getRegistrationsByActivityId($a['id']);
 
@@ -73,14 +73,13 @@ try {
                     $emailsToSend[] = [
                         'type' => 'activity_deleted',
                         'title' => $a['title'],
-                        'user'  => $participant
+                        'user' => $participant
                     ];
                 }
             }
         }
 
         $requests = $requestModel->getAcceptedRequestsByOrganizerId($userId, 'aprobada');
-
         foreach ($requests as $r) {
             $participant = $userModel->getUserById($r['participant_id']);
 
@@ -88,16 +87,13 @@ try {
                 $emailsToSend[] = [
                     'type' => 'request_unaccepted',
                     'title' => $r['title'],
-                    'user'  => $participant
+                    'user' => $participant
                 ];
             }
         }
     }
 
-    /* =========================
-       BORRAR USUARIO
-    ========================= */
-
+    //Borra el usuario
     if (!$userModel->deactivateUser($userId)) {
         echo json_encode([
             'success' => false,
@@ -106,16 +102,9 @@ try {
         exit;
     }
 
-    /* =========================
-       LIMPIAR SESIÓN
-    ========================= */
-
+    //Limpia la sesión
     session_unset();
     session_destroy();
-
-    /* =========================
-       RESPUESTA FINAL (IMPORTANTE: LIMPIA)
-    ========================= */
 
     echo json_encode([
         'success' => true,

@@ -36,7 +36,6 @@ $userId = (int) $currentUser['id'];
 $role = $currentUser['role'];
 
 // El administrador usa un panel distinto (adminChat), este Hub es principal para participantes y organizadores
-// El administrador usa un panel distinto (adminChat), este Hub es principal para participantes y organizadores
 if ($role === 'administrador') {
     try {
         $db = (new Database())->getConnection();
@@ -100,24 +99,24 @@ try {
     // 2. Obtener actividades donde participa u organiza, con el último mensaje
     $sqlActivities = "
         SELECT 
-    a.id AS room_id,
-    a.title,
-    a.image_url,
-    latest.message AS last_message,
-    COALESCE(latest.created_at, a.created_at) AS updated_at
-FROM activities a
-LEFT JOIN registrations r ON r.activity_id = a.id AND r.participant_id = :uid1
-LEFT JOIN (
-    SELECT room_id, message, created_at
-    FROM chat_messages m1
-    WHERE room_type = 'activity' AND id = (
-        SELECT MAX(id) FROM chat_messages m2 
-        WHERE m2.room_type = 'activity' AND m2.room_id = m1.room_id
-    )
-) latest ON latest.room_id = a.id
-WHERE a.offertant_id = :uid2 OR r.participant_id IS NOT NULL
-AND a.state != 'finalizada'
-ORDER BY COALESCE(latest.created_at, a.created_at) DESC
+            a.id AS room_id,
+            a.title,
+            a.image_url,
+            latest.message AS last_message,
+            COALESCE(latest.created_at, a.created_at) AS updated_at
+        FROM activities a
+        LEFT JOIN registrations r ON r.activity_id = a.id AND r.participant_id = :uid1
+        LEFT JOIN (
+            SELECT room_id, message, created_at
+            FROM chat_messages m1
+            WHERE room_type = 'activity' AND id = (
+                SELECT MAX(id) FROM chat_messages m2 
+                WHERE m2.room_type = 'activity' AND m2.room_id = m1.room_id
+            )
+        ) latest ON latest.room_id = a.id
+        WHERE a.offertant_id = :uid2 OR r.participant_id IS NOT NULL
+        AND a.state != 'finalizada'
+        ORDER BY COALESCE(latest.created_at, a.created_at) DESC
     ";
 
     $stmtAct = $db->prepare($sqlActivities);

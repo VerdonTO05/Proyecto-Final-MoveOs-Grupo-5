@@ -609,6 +609,7 @@ main section {
   z-index: 1000;
   overflow-y: auto;
   animation: overlayFadeIn 0.2s ease forwards;
+  justify-content: center;
 }
 
 @keyframes overlayFadeIn {
@@ -3753,7 +3754,8 @@ input[type=checkbox] {
 .chat-hub-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
+  gap: 1rem;
+  margin: 0.5rem;
 }
 
 .chat-card {

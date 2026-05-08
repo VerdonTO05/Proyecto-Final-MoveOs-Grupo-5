@@ -20,7 +20,7 @@ while (ob_get_level()) {
 try {
     // Obtener email y opcionalmente ID del usuario
     $email = $_POST['email'] ?? '';
-    $userId = $_POST['id'] ?? null; // opcional, si quieres validar con ID
+    $userId = $_POST['id'] ?? null;
 
     // Validar email vacío
     if (empty($email)) {
