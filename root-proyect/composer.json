@@ -13,5 +13,8 @@
     ],
     "require-dev": {
         "phpdocumentor/phpdocumentor": "^3.9"
+    },
+    "require": {
+        "phpmailer/phpmailer": "^7.0"
     }
 }
