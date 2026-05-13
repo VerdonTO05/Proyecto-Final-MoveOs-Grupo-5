@@ -13,10 +13,26 @@ let activities = [];
 /** @type {Object[]} Caché local de peticiones cargadas desde el servidor */
 let requests = [];
 
+// Al inicio del archivo, junto a las otras variables de caché
+/** @type {string} Snapshot JSON de las actividades para detectar cambios */
+let activitiesSnapshot = "";
+
+/** @type {string} Snapshot JSON de las peticiones para detectar cambios */
+let requestsSnapshot = "";
+
 document.addEventListener("DOMContentLoaded", () => {
     initTabSwitch();
     loadActivities();
     bindFilterListeners(applyFilters);
+
+    setInterval(() => {
+        const activeTab = document.querySelector(".tab-btn.control.active")?.dataset.type;
+        if (activeTab === "requests") {
+            loadRequests("requests");
+        } else {
+            loadActivities("activities");
+        }
+    }, 5000);
 });
 
 /**
@@ -61,7 +77,13 @@ async function loadActivities(type = 'activities') {
     try {
         const result = await fetch('index.php?accion=getActivities').then(r => r.json());
         if (result.success) {
-            activities = result.data || [];
+            const newData = result.data || [];
+            const newSnapshot = JSON.stringify(newData);
+
+            if (newSnapshot === activitiesSnapshot) return;
+
+            activitiesSnapshot = newSnapshot;
+            activities = newData;
             renderItems(activities, activity => createActivityCard(activity, type));
         }
     } catch (error) {
@@ -82,7 +104,13 @@ async function loadRequests(type = 'requests') {
     try {
         const result = await fetch('index.php?accion=getRequests').then(r => r.json());
         if (result.success) {
-            requests = result.data || [];
+            const newData = result.data || [];
+            const newSnapshot = JSON.stringify(newData);
+
+            if (newSnapshot === requestsSnapshot) return;
+
+            requestsSnapshot = newSnapshot;
+            requests = newData;
             renderItems(requests, activity => createActivityCard(activity, type));
         } else {
             grid.innerHTML = '<p class="no-activities">No hay peticiones disponibles en este momento.</p>';

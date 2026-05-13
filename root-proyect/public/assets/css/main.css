@@ -625,6 +625,7 @@ main section {
 /* Contenedor del formulario */
 .container {
   position: relative;
+  margin: auto;
   background-color: var(--bg-surface);
   border: 1px solid var(--border-color);
   border-radius: 12px;

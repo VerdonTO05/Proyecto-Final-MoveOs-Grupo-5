@@ -8,13 +8,15 @@
  * - Animación de eliminación de tarjetas del DOM
  */
 
+/** @type {number|null} ID del intervalo de polling activo */
+let pollingInterval = null;
+
 document.addEventListener("DOMContentLoaded", async () => {
     await loadControlPanel();
 
     const activitiesContainer = document.querySelector(".activities");
     if (!activitiesContainer) return;
 
-    // Delegación de eventos para aprobar/rechazar desde cualquier tarjeta del grid
     activitiesContainer.addEventListener("click", async (e) => {
         const approveBtn = e.target.closest(".btn-approve");
         const rejectBtn = e.target.closest(".btn-reject");
@@ -24,6 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     initTabs();
+    startPolling(); 
 });
 
 /** @type {Object|null} Caché local con los datos del panel cargados desde el servidor */
@@ -326,11 +329,11 @@ function createActivityControlCard(activity, type = 'activity') {
                 <span><i class="fas fa-calendar-alt"></i> ${formattedDate}</span>
                 <span><i class="fas fa-map-marker-alt"></i> ${activity.location}</span>
                 ${activity.max_people
-                    ? `<span><i class="fas fa-users"></i> ${activity.current_registrations || 0}/${activity.max_people}</span>`
-                    : ''}
+            ? `<span><i class="fas fa-users"></i> ${activity.current_registrations || 0}/${activity.max_people}</span>`
+            : ''}
                 ${activity.price
-                    ? `<span><i class="fas fa-euro-sign"></i> ${activity.price == 0 ? 'Gratis' : activity.price + '€'}</span>`
-                    : ''}
+            ? `<span><i class="fas fa-euro-sign"></i> ${activity.price == 0 ? 'Gratis' : activity.price + '€'}</span>`
+            : ''}
             </div>
             <div class="actions-control">
                 <button data-id="${activity.id}" data-type="${type}" class="btn approve btn-approve">
@@ -384,5 +387,48 @@ function updateAfterAction(type, id, action) {
                 ${isActivitiesTab ? 'No hay actividades pendientes' : 'No hay peticiones pendientes'}
             </p>
         `;
+    }
+}
+
+/**
+ * Inicia el polling cada 5 segundos para refrescar el panel.
+ * Evita duplicar intervalos si se llama varias veces.
+ */
+function startPolling() {
+    if (pollingInterval) return;
+
+    pollingInterval = setInterval(async () => {
+        await refreshControlPanel();
+    }, 5000);
+}
+
+/**
+ * Refresca los datos del servidor sin destruir la pestaña activa.
+ * Solo re-renderiza si hay cambios reales en los contadores.
+ */
+async function refreshControlPanel() {
+    try {
+        const response = await fetch("index.php?accion=getPendingActivities");
+        if (!response.ok) return;
+
+        const result = await response.json();
+        if (!result.success) return;
+
+        const changed =
+            JSON.stringify(result.activities) !== JSON.stringify(controlPanelData?.activities) ||
+            JSON.stringify(result.requests)   !== JSON.stringify(controlPanelData?.requests);
+
+        if (!changed) return;
+
+        controlPanelData = result;
+        updateStats(result.stats);
+        updateTabCounts(result.activities.length, result.requests.length);
+
+        const currentTab = document.querySelector(".tab-btn.control.active");
+        const isActivitiesTab = currentTab?.textContent.trim().startsWith("Actividades");
+        renderItems(isActivitiesTab ? "activities" : "requests");
+
+    } catch {
+        // Silencioso
     }
 }
