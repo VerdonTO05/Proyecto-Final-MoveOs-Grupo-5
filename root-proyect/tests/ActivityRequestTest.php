@@ -5,6 +5,9 @@ require_once __DIR__ . '/../app/models/entities/Activity.php';
 require_once __DIR__ . '/../app/models/entities/Request.php';
 require_once __DIR__ . '/../config/database.php';
 
+/**
+ * @testdox Pruebas de integración: Actividades y Peticiones (con base de datos real)
+ */
 class ActivityRequestTest extends TestCase
 {
     private $pdo;
@@ -41,6 +44,9 @@ class ActivityRequestTest extends TestCase
         $this->requestModel  = new Request($this->pdo);
     }
 
+    /**
+     * @testdox Crear actividad guarda correctamente los datos en la base de datos
+     */
     public function testCreateActivity()
     {
         $data = [
@@ -80,6 +86,9 @@ class ActivityRequestTest extends TestCase
         $this->assertEquals($data['organizer_email'], $activity['organizer_email']);
     }
 
+    /**
+     * @testdox Crear petición guarda correctamente los datos en la base de datos
+     */
     public function testCreateRequest()
     {
         $data = [

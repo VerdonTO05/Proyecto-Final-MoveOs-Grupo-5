@@ -4,6 +4,9 @@ use PHPUnit\Framework\TestCase;
 require_once __DIR__ . '/../app/models/entities/User.php';
 require_once __DIR__ . '/../config/database.php';
 
+/**
+ * @testdox Pruebas de integración: Registro de usuarios (con base de datos real)
+ */
 class RegisterTest extends TestCase
 {
     private $pdo;
@@ -77,6 +80,9 @@ class RegisterTest extends TestCase
         }
     }
 
+    /**
+     * @testdox Registro correcto crea el usuario en la base de datos
+     */
     public function testRegisterSuccess()
     {
         $response = $this->registerUser('Irene Pérez', 'iperez', 'irene@example.com', '12345678');
@@ -87,6 +93,9 @@ class RegisterTest extends TestCase
         $this->assertEquals('iperez', $response['userData']['username']);
     }
 
+    /**
+     * @testdox Registro con campos vacíos devuelve error
+     */
     public function testRegisterMissingField()
     {
         $response = $this->registerUser('', 'iperez', 'irene@example.com', '12345678');
@@ -95,6 +104,9 @@ class RegisterTest extends TestCase
         $this->assertEquals('Todos los campos son obligatorios', $response['message']);
     }
 
+    /**
+     * @testdox Registro con email duplicado devuelve error
+     */
     public function testRegisterDuplicateEmail()
     {
         // Insertar un usuario previamente

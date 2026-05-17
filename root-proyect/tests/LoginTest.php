@@ -4,6 +4,9 @@ use PHPUnit\Framework\TestCase;
 require_once __DIR__ . '/../app/models/entities/User.php';
 require_once __DIR__ . '/../config/database.php';
 
+/**
+ * @testdox Pruebas de integración: Login (con base de datos real)
+ */
 class LoginTest extends TestCase
 {
     private $pdo;
@@ -37,6 +40,9 @@ class LoginTest extends TestCase
         return $username;
     }
 
+    /**
+     * @testdox Login correcto devuelve el usuario con su rol asignado
+     */
     public function testLoginSuccess()
     {
         $this->createTestUser();
@@ -51,6 +57,9 @@ class LoginTest extends TestCase
         $this->assertEquals('participante', $user['role_name']);
     }
 
+    /**
+     * @testdox Login con contraseña incorrecta falla
+     */
     public function testLoginWrongPassword()
     {
         $this->createTestUser();
@@ -63,6 +72,9 @@ class LoginTest extends TestCase
         $this->assertFalse($user, "El login con contraseña incorrecta debería fallar");
     }
 
+    /**
+     * @testdox Login con campos vacíos falla
+     */
     public function testLoginEmptyFields()
     {
         $user = $this->userModel->loginByUsername('', '');

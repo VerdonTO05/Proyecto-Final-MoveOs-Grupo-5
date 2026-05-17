@@ -4,6 +4,9 @@ use PHPUnit\Framework\TestCase;
 require_once __DIR__ . '/../app/models/entities/User.php';
 require_once __DIR__ . '/../config/database.php';
 
+/**
+ * @testdox Pruebas de integración: Edición de perfil (con base de datos real)
+ */
 class EditInfoTest extends TestCase
 {
     private $pdo;
@@ -33,6 +36,9 @@ class EditInfoTest extends TestCase
         $_SESSION['user_id'] = $this->userId;
     }
 
+    /**
+     * @testdox Actualizar datos del perfil sin cambiar la contraseña
+     */
     public function testUpdateWithoutPassword()
     {
         $fullname = 'Irene Actualizada';
@@ -49,6 +55,9 @@ class EditInfoTest extends TestCase
         $this->assertEquals($email, $user['email']);
     }
 
+    /**
+     * @testdox Actualizar datos del perfil incluyendo nueva contraseña
+     */
     public function testUpdateWithPassword()
     {
         $fullname = 'Irene Cambio';
