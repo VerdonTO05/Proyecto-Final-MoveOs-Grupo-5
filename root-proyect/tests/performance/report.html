@@ -1,0 +1,252 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>MOVEos - Reporte de Rendimiento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Variables del proyecto â€” modo claro por defecto */
+:root {
+  --bg-main:       #ffffff;
+  --bg-surface:    #fef8f8;
+  --bg-muted:      #f3e9ea;
+  --text-primary:  #333333;
+  --text-secondary:#666666;
+  --brand-primary: #6c2d3a;
+  --brand-dark:    #3f0f1a;
+  --border-color:  #e0e0e0;
+  --c-green:       #44b363;
+  --c-green-rgb:   68,179,99;
+  --c-yellow:      #d59217;
+  --c-yellow-rgb:  213,146,23;
+  --c-red:         #ff3150;
+  --c-red-rgb:     255,49,80;
+  --c-purple:      #6a1d41;
+  --c-purple-rgb:  106,29,65;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-main:       #1a1214;
+    --bg-surface:    #2a1b1e;
+    --bg-muted:      #341f23;
+    --text-primary:  #f0f0f0;
+    --text-secondary:#b8a5a8;
+    --brand-primary: #c87b7f;
+    --brand-dark:    #99595c;
+    --border-color:  #382527;
+    --c-green:       #06d970;
+    --c-green-rgb:   6,217,112;
+    --c-yellow:      #dcb403;
+    --c-yellow-rgb:  220,180,3;
+    --c-red:         #d95659;
+    --c-red-rgb:     217,86,89;
+    --c-purple:      #d08084;
+    --c-purple-rgb:  208,128,132;
+  }
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Inter",Arial,sans-serif;background:var(--bg-main);color:var(--text-primary);min-height:100vh;line-height:1.6}
+
+/* ---- Top header (misma estructura que el proyecto) ---- */
+.top-header{
+  display:flex;flex-direction:column;
+  background:var(--bg-surface);
+  border-bottom:1px solid var(--border-color);
+  padding:1rem 3rem;
+}
+.top-nav{display:flex;justify-content:space-between;align-items:center;gap:1rem}
+.logo{display:flex;align-items:center;gap:0.5rem;text-decoration:none}
+.logo-text{font-size:1.3rem;font-weight:700;color:var(--brand-primary)}
+.nav-badge{font-size:0.78rem;color:var(--text-secondary);font-weight:500;padding:0.25rem 0.75rem;background:var(--bg-muted);border-radius:20px;border:1px solid var(--border-color)}
+
+/* ---- Breadcrumb / meta bar ---- */
+.meta-bar{background:var(--bg-muted);border-bottom:1px solid var(--border-color);padding:0.5rem 3rem;display:flex;gap:2rem;font-size:0.82rem;color:var(--text-secondary);flex-wrap:wrap}
+.meta-bar strong{color:var(--text-primary)}
+
+/* ---- Contenido central ---- */
+.container{padding:2rem 3rem;max-width:1200px;margin:0 auto}
+
+/* ---- Inner header (como _control.scss .header) ---- */
+.page-header{display:flex;align-items:center;gap:15px;padding-bottom:1.5rem;border-bottom:1px solid var(--border-color);margin-bottom:1.5rem}
+.header-icon{background:var(--bg-muted);padding:15px;border-radius:50%;color:var(--brand-primary);font-size:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.header-content h1{font-size:1.6rem;font-weight:700;margin:0}
+.header-content p{font-size:0.875rem;color:var(--text-secondary);margin:0}
+
+/* ---- Stats (igual que _control.scss) ---- */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-bottom:2rem}
+.card{background:var(--bg-surface);border:1px solid var(--border-color);padding:20px;border-radius:14px;position:relative}
+.card h2{font-size:2rem;font-weight:700;margin-bottom:4px}
+.card p{font-weight:600}
+.card small{color:var(--text-secondary)}
+.card .icon{position:absolute;top:15px;right:15px;font-size:18px}
+.approved{border:2px solid var(--c-green);background:rgba(var(--c-green-rgb),0.12)}
+.approved .icon,.approved h2{color:var(--c-green)}
+.pending{border:2px solid var(--c-yellow);background:rgba(var(--c-yellow-rgb),0.12)}
+.pending .icon,.pending h2{color:var(--c-yellow)}
+.rejected{border:2px solid var(--c-red);background:rgba(var(--c-red-rgb),0.12)}
+.rejected .icon,.rejected h2{color:var(--c-red)}
+.total{border:2px solid var(--c-purple);background:rgba(var(--c-purple-rgb),0.12)}
+.total .icon,.total h2{color:var(--c-purple)}
+
+/* ---- Leyenda ---- */
+.legend{display:flex;gap:1.5rem;font-size:0.8rem;color:var(--text-secondary);margin-bottom:1.5rem;flex-wrap:wrap;align-items:center}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:0.3rem;vertical-align:middle;flex-shrink:0}
+
+/* ---- Seccion titulo (como tag .section-title) ---- */
+.section-title{font-size:0.8rem;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border-color)}
+
+/* ---- Grid de graficas ---- */
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem}
+@media(max-width:768px){.charts-grid{grid-template-columns:1fr}.container{padding:1.25rem 1rem}.meta-bar{padding:0.5rem 1rem}.top-header{padding:1rem}}
+.chart-box{background:var(--bg-surface);border:1px solid var(--border-color);border-radius:14px;padding:1.5rem}
+.chart-title{font-size:0.85rem;font-weight:600;color:var(--text-secondary);margin-bottom:1.25rem}
+.bar-row{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.9rem}
+.bar-label{width:150px;font-size:0.76rem;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0}
+.bar-track{flex:1;height:10px;background:var(--bg-muted);border-radius:99px;overflow:hidden;border:1px solid var(--border-color)}
+.bar-fill{height:100%;border-radius:99px;transition:width 0.4s ease}
+.bar-value{width:80px;font-size:0.76rem;font-weight:600;color:var(--text-primary);text-align:right;flex-shrink:0}
+
+/* ---- Tabla ---- */
+.table-wrap{background:var(--bg-surface);border:1px solid var(--border-color);border-radius:14px;overflow:hidden;margin-bottom:2rem}
+.table-wrap table{width:100%;border-collapse:collapse;font-size:0.875rem}
+.table-wrap thead{background:var(--bg-muted)}
+.table-wrap th{padding:0.85rem 1rem;text-align:left;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-secondary)}
+.table-wrap td{padding:0.85rem 1rem;border-top:1px solid var(--border-color)}
+.table-wrap tr:hover td{background:var(--bg-muted)}
+.ep-name{font-weight:600;color:var(--text-primary)}
+.badge{font-size:0.7rem;font-weight:600;padding:0.2rem 0.6rem;border-radius:12px}
+.badge.ok{background:rgba(var(--c-green-rgb),0.15);color:var(--c-green)}
+.badge.fail{background:rgba(var(--c-red-rgb),0.15);color:var(--c-red)}
+
+/* ---- Footer ---- */
+footer{text-align:center;padding:1.25rem;font-size:0.75rem;color:var(--text-secondary);border-top:1px solid var(--border-color);background:var(--bg-surface)}
+</style>
+</head>
+<body>
+
+<!-- Header (misma estructura visual que el proyecto) -->
+<div class="top-header">
+  <div class="top-nav">
+    <div class="logo">
+      <span class="logo-text">MOVEos</span>
+    </div>
+    <span class="nav-badge">&#9889; Reporte de Rendimiento</span>
+    <span style="font-size:0.8rem;color:var(--text-secondary)">18/05/2026 13:06:57</span>
+  </div>
+</div>
+
+<!-- Barra de meta / configuracion -->
+<div class="meta-bar">
+  <span><strong>Peticiones/endpoint:</strong> 2000</span>
+  <span><strong>Concurrencia:</strong> 100 usuarios simultaneos</span>
+  <span><strong>Endpoints probados:</strong> 3</span>
+  <span><strong>Modo:</strong> Sin autenticacion (endpoints publicos)</span>
+  <span><strong>Herramienta:</strong> Apache Benchmark (XAMPP)</span>
+</div>
+
+<div class="container">
+
+  <!-- Inner header (estilo panel administrador) -->
+  <div class="page-header">
+    <div class="header-icon">&#9889;</div>
+    <div class="header-content">
+      <h1>Resultados de Rendimiento HTTP</h1>
+      <p>Generado el 18/05/2026 13:06:57 con Apache Benchmark</p>
+    </div>
+  </div>
+
+  <!-- Cards de estadisticas (mismas clases que el panel de control) -->
+  <div class="stats">
+    <div class="card approved">
+      <span class="icon">&#9654;</span>
+      <h2>764.8</h2>
+      <p>req/s promedio</p>
+      <small>Mayor es mejor</small>
+    </div>
+    <div class="card pending">
+      <span class="icon">&#8987;</span>
+      <h2>133.4 ms</h2>
+      <p>Tiempo medio</p>
+      <small>Por peticion</small>
+    </div>
+    <div class="card total">
+      <span class="icon">&#128202;</span>
+      <h2>51.3 ms</h2>
+      <p>Percentil 95 (media)</p>
+      <small>95% mas rapido que esto</small>
+    </div>
+    <div class="card approved">
+      <span class="icon">&#9888;</span>
+      <h2>0</h2>
+      <p>Peticiones fallidas</p>
+      <small>Objetivo: 0</small>
+    </div>
+  </div>
+
+  <!-- Leyenda de colores -->
+  <div class="legend">
+    <span><span class="dot" style="background:#44b363"></span>Rapido (menos de 100 ms)</span>
+    <span><span class="dot" style="background:#d59217"></span>Aceptable (100-500 ms)</span>
+    <span><span class="dot" style="background:#ff3150"></span>Lento (mas de 500 ms)</span>
+  </div>
+
+  <!-- Graficas de barras -->
+  <p class="section-title">Graficas comparativas</p>
+  <div class="charts-grid">
+    <div class="chart-box">
+      <div class="chart-title">&#9654; Peticiones por segundo &mdash; mayor es mejor</div>
+      <div class='bar-row'><span class='bar-label'>Pagina principal</span><div class='bar-track'><div class='bar-fill' style='width:71%;background:#44b363'></div></div><span class='bar-value'>625.3 req/s</span></div>
+<div class='bar-row'><span class='bar-label'>Vista de login</span><div class='bar-track'><div class='bar-fill' style='width:100%;background:#44b363'></div></div><span class='bar-value'>881.8 req/s</span></div>
+<div class='bar-row'><span class='bar-label'>Vista de registro</span><div class='bar-track'><div class='bar-fill' style='width:89%;background:#44b363'></div></div><span class='bar-value'>787.4 req/s</span></div>
+
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">&#8987; Tiempo de respuesta p95 &mdash; menor es mejor</div>
+      <div class='bar-row'><span class='bar-label'>Pagina principal</span><div class='bar-track'><div class='bar-fill' style='width:78%;background:#44b363'></div></div><span class='bar-value'>46 ms</span></div>
+<div class='bar-row'><span class='bar-label'>Vista de login</span><div class='bar-track'><div class='bar-fill' style='width:92%;background:#44b363'></div></div><span class='bar-value'>54 ms</span></div>
+<div class='bar-row'><span class='bar-label'>Vista de registro</span><div class='bar-track'><div class='bar-fill' style='width:92%;background:#44b363'></div></div><span class='bar-value'>54 ms</span></div>
+
+    </div>
+  </div>
+
+  <!-- Tabla detalle -->
+  <p class="section-title">Detalle por endpoint</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Endpoint</th><th>Media</th><th>p50</th><th>p90</th><th>p95</th><th>p99</th><th>Maximo</th><th>Errores</th>
+        </tr>
+      </thead>
+      <tbody><tr><td class='ep-name'>Pagina principal</td><td style='color:#d59217;font-weight:600'>159.9 ms</td><td>41 ms</td><td>45 ms</td><td style='color:#44b363;font-weight:600'>46 ms</td><td style='color:#44b363;font-weight:600'>49 ms</td><td>3018 ms</td><td><span class="badge ok">0</span></td></tr>
+<tr><td class='ep-name'>Vista de login</td><td style='color:#d59217;font-weight:600'>113.4 ms</td><td>47 ms</td><td>52 ms</td><td style='color:#44b363;font-weight:600'>54 ms</td><td style='color:#44b363;font-weight:600'>55 ms</td><td>2007 ms</td><td><span class="badge ok">0</span></td></tr>
+<tr><td class='ep-name'>Vista de registro</td><td style='color:#d59217;font-weight:600'>127 ms</td><td>47 ms</td><td>53 ms</td><td style='color:#44b363;font-weight:600'>54 ms</td><td style='color:#44b363;font-weight:600'>59 ms</td><td>2184 ms</td><td><span class="badge ok">0</span></td></tr>
+</tbody>
+    </table>
+  </div>
+
+  <!-- Glosario -->
+  <p class="section-title">Glosario de metricas</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Metrica</th><th>Que significa</th><th>Objetivo recomendado</th></tr></thead>
+      <tbody>
+        <tr><td class="ep-name">req/s</td><td>Peticiones por segundo que el servidor puede atender</td><td>Mas de 50 req/s</td></tr>
+        <tr><td class="ep-name">Media</td><td>Tiempo medio de respuesta por peticion</td><td>Menos de 200 ms</td></tr>
+        <tr><td class="ep-name">p50</td><td>El 50% de las peticiones fue mas rapido que este valor</td><td>Menos de 150 ms</td></tr>
+        <tr><td class="ep-name">p95</td><td>El 95% de las peticiones fue mas rapido que este valor</td><td>Menos de 500 ms</td></tr>
+        <tr><td class="ep-name">p99</td><td>El 99% de las peticiones fue mas rapido que este valor</td><td>Menos de 1000 ms</td></tr>
+        <tr><td class="ep-name">Maximo</td><td>Peticion mas lenta registrada</td><td>Referencia</td></tr>
+        <tr><td class="ep-name">Errores</td><td>Peticiones que devolvieron codigo de error HTTP</td><td>0</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div><!-- /container -->
+
+<footer>Proyecto Final MOVEos &mdash; Grupo 5 &mdash; Generado con Apache Benchmark 18/05/2026 13:06:57</footer>
+</body>
+</html>

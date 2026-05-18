@@ -20,7 +20,7 @@ En este proyecto usamos **PHPUnit 9**, el framework de pruebas estándar de PHP.
 
 ## 2. Estructura de las pruebas en MOVEos
 
-Todas las pruebas viven en la carpeta [tests/](tests/). Hay **dos tipos** de pruebas, con propósitos distintos:
+Todas las pruebas viven en la carpeta [tests/](tests/). Hay **tres tipos** de pruebas, con propósitos distintos:
 
 ### Tipo A — Pruebas con mocks (unitarias puras)
 
@@ -41,11 +41,37 @@ Todas las pruebas viven en la carpeta [tests/](tests/). Hay **dos tipos** de pru
 | [tests/RegisterTest.php](tests/RegisterTest.php) | Registro de nuevos usuarios |
 | [tests/EditInfoTest.php](tests/EditInfoTest.php) | Edición de perfil de usuario |
 | [tests/ActivityRequestTest.php](tests/ActivityRequestTest.php) | Creación de actividades y peticiones |
+| [tests/SecurityTest.php](tests/SecurityTest.php) | Seguridad: inyección SQL, hashing de contraseñas, entradas extremas |
 
 - **Necesitan XAMPP arrancado** (Apache + MySQL).
 - Necesitan la BD `moveos_test` con la estructura del proyecto.
 - Verifican que el SQL real, los triggers y los procedimientos almacenados funcionan correctamente.
 - Cada prueba limpia la BD antes de ejecutarse para garantizar aislamiento.
+
+### Tipo C — Pruebas de rendimiento (Apache Benchmark)
+
+| Archivo | Qué hace |
+|---|---|
+| [benchmark.ps1](benchmark.ps1) | Mide el rendimiento HTTP con Apache Benchmark |
+| [tests/performance/report.html](tests/performance/report.html) | Informe HTML generado con gráficos y percentiles |
+
+- **Necesitan XAMPP arrancado** (Apache + MySQL) y la aplicación accesible en `localhost`.
+- Prueban 6 endpoints (3 públicos + 3 autenticados) con carga configurable.
+- Generan un informe visual con tarjetas de resumen, gráfico de barras y tabla de percentiles.
+- Se ejecutan desde PowerShell (ver sección 6).
+
+### Vista interactiva web
+
+| Archivo | Qué hace |
+|---|---|
+| [tests/runner.php](tests/runner.php) | Panel web para lanzar y ver los resultados de forma interactiva |
+
+Accesible en: `http://localhost/xampp/Proyecto-Final-MoveOs-Grupo-5/root-proyect/tests/runner.php`
+
+- Permite ejecutar cualquier suite o todas a la vez con un clic.
+- Muestra los resultados con colores (verde/rojo) en tiempo real.
+- Incluye un formulario para lanzar Apache Benchmark desde el navegador.
+- Solo es accesible desde `localhost` por seguridad.
 
 ---
 
@@ -114,7 +140,17 @@ Deberías ver 10 tablas y 11 categorías.
 
 ## 6. Ejecutar las pruebas
 
-### Preparación
+### Opción A — Vista web interactiva (recomendada)
+
+Abre en el navegador:
+
+```
+http://localhost/xampp/Proyecto-Final-MoveOs-Grupo-5/root-proyect/tests/runner.php
+```
+
+Desde ahí puedes lanzar cualquier suite, ver los resultados con colores y ejecutar Apache Benchmark con un formulario, todo sin tocar la terminal.
+
+### Opción B — Terminal (PowerShell)
 
 PowerShell por defecto no tiene `php` en el PATH, pero el archivo `vendor\bin\phpunit.bat` lo necesita. Añade XAMPP al PATH de la sesión:
 
@@ -124,44 +160,37 @@ $env:Path += ';C:\xampp\php'
 
 Para hacerlo permanente, añade `C:\xampp\php` a las variables de entorno del sistema (`sysdm.cpl` → Opciones avanzadas → Variables de entorno).
 
-### Comandos
-
 Desde la carpeta `root-proyect/`:
 
 ```powershell
 # Toda la suite con formato legible (Spanish)
 .\vendor\bin\phpunit.bat --testdox
 
-# Toda la suite en formato compacto (puntos)
-.\vendor\bin\phpunit.bat
-
 # Solo las pruebas con mocks (no necesitan MySQL)
 .\vendor\bin\phpunit.bat tests\UserMockTest.php --testdox
+
+# Solo las pruebas de seguridad
+.\vendor\bin\phpunit.bat tests\SecurityTest.php --testdox
 
 # Solo un test concreto (filtra por nombre de método)
 .\vendor\bin\phpunit.bat --filter testLoginSuccess tests\LoginTest.php
 
-# Ejecutar un archivo concreto
-.\vendor\bin\phpunit.bat tests\RegisterTest.php --testdox
+# Pruebas de rendimiento con Apache Benchmark
+.\benchmark.ps1 -Requests 200 -Concurrency 10
 ```
 
-### Ejemplo de salida
+### Ejemplo de salida PHPUnit
 
 ```
-Pruebas unitarias de Usuario (con Mocks de PDO)
- ✔ Login correcto con contraseña válida devuelve el usuario
- ✔ Login falla cuando la contraseña es incorrecta
- ✔ Login falla cuando el usuario no existe
+Pruebas de seguridad: inyeccion SQL, hashing y entradas maliciosas
+ ✔ Inyeccion SQL clasica en username no salta la autenticacion
+ ✔ Inyeccion SQL DROP TABLE en username no destruye la tabla
+ ✔ La contraseña se almacena hasheada con bcrypt, nunca en texto plano
  ...
 
-Pruebas de integración: Login (con base de datos real)
- ✔ Login correcto devuelve el usuario con su rol asignado
- ✔ Login con contraseña incorrecta falla
- ✔ Login con campos vacíos falla
+Time: 00:02.489, Memory: 6.00 MB
 
-Time: 00:01.061, Memory: 8.00 MB
-
-OK (19 tests, 53 assertions)
+OK (34 tests, 80 assertions)
 ```
 
 ---
@@ -253,19 +282,36 @@ Por eso conviene tener **ambos tipos** de pruebas: los mocks cubren la lógica d
 
 ## 8. Cobertura actual
 
+### PHPUnit
+
 | Módulo | Tests con mocks | Tests de integración |
 |---|---|---|
 | Login | 3 | 3 |
 | Registro | — | 3 |
 | Edición de perfil | 3 (parcial) | 2 |
 | Actividades / Peticiones | — | 2 |
+| Seguridad (SQL injection, hashing, XSS) | — | 15 |
 | Inscripciones | — | — |
 | Chat | — | — |
-| **Total** | **9** | **10** |
+| **Total** | **6** | **25** |
 
-**Total general: 19 tests, 53 aserciones.**
+**Total PHPUnit: 34 tests, ~80 aserciones.**
 
-Áreas con cobertura pendiente (oportunidades de mejora):
+### Apache Benchmark
+
+| Endpoint | Tipo | Métrica medida |
+|---|---|---|
+| Página principal (`/`) | Público | RPS, latencia media, P95, P99 |
+| Vista de login | Público | RPS, latencia media, P95, P99 |
+| Vista de registro | Público | RPS, latencia media, P95, P99 |
+| `getActivities` | Autenticado | RPS, latencia media, P95, P99 |
+| `getRequests` | Autenticado | RPS, latencia media, P95, P99 |
+| `getMyActivities` | Autenticado | RPS, latencia media, P95, P99 |
+
+El script genera automáticamente un informe HTML en [tests/performance/report.html](tests/performance/report.html).
+
+### Áreas con cobertura pendiente
+
 - Lógica de inscripciones (`Registration::createRegistration` — ramas: `already_registered`, `activity_full`, conflictos de fecha).
 - Aceptación/rechazo de peticiones (`Request::acceptRequest`).
 - Aprobación/rechazo de actividades por parte del administrador.
