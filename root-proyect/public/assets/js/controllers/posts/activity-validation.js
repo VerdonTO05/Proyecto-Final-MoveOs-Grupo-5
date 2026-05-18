@@ -61,12 +61,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!hora) errors.push("La hora es obligatoria.");
 
         // La fecha no puede ser modificada respecto al valor original
-        if(isEditing){
+        if (isEditing) {
             if (dateInput && originalDate && dateInput.value !== originalDate) {
-            errors.push("La fecha no se puede modificar.");
+                errors.push("La fecha no se puede modificar.");
+            }
         }
-        }
-        
+
         if (fecha) {
             const hoy = new Date();
             const fechaInput = new Date(fecha);
@@ -109,17 +109,26 @@ document.addEventListener('DOMContentLoaded', () => {
         // Confirmación de notificación por email
         const formData = new FormData(form);
         let sendEmails = false;
+        console.log('CURRENT_USER.role');
         if (isEditing) {
-            sendEmails = await showConfirm({
-                title: '¿Notificar a los participantes?',
-                message: 'Se enviará un email a los inscritos informando de los cambios realizados.',
-                confirmText: 'Sí, notificar',
-                cancelText: 'No notificar'
-            });
+            if (CURRENT_USER.role === 'participante') {
+                sendEmails = await showConfirm({
+                    title: '¿Notificar al organizador?',
+                    message: 'Se enviará un email al organizador informando de los cambios realizados.',
+                    confirmText: 'Sí, notificar',
+                    cancelText: 'No notificar'
+                });
+            } else {
+                sendEmails = await showConfirm({
+                    title: '¿Notificar a los participantes?',
+                    message: 'Se enviará un email a los inscritos informando de los cambios realizados.',
+                    confirmText: 'Sí, notificar',
+                    cancelText: 'No notificar'
+                });
+            }
 
             formData.append('send_emails', sendEmails ? '1' : '0');
         }
-
         // Envío al servidor
 
         const btn = form.querySelector('.btn-submit');
