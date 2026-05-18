@@ -49,16 +49,16 @@ async function loadActivities(role) {
 
         if (!result.success) return;
 
-        const newActive   = result.data.active   || [];
-        const newFinished = result.data.finished  || [];
+        const newActive = result.data.active || [];
+        const newFinished = result.data.finished || [];
 
         // Evitar re-renders innecesarios comparando con la caché actual
         const changed =
-            JSON.stringify(newActive)   !== JSON.stringify(activitiesActive) ||
+            JSON.stringify(newActive) !== JSON.stringify(activitiesActive) ||
             JSON.stringify(newFinished) !== JSON.stringify(activitiesFinished);
 
         if (changed) {
-            activitiesActive   = newActive;
+            activitiesActive = newActive;
             activitiesFinished = newFinished;
             render(activitiesActive, activitiesFinished, role);
         }
@@ -77,7 +77,7 @@ async function loadActivities(role) {
  * @param {string}   role     - Rol del usuario actual
  */
 function render(active, finished, role) {
-    const grid  = document.getElementById('gridActivities');
+    const grid = document.getElementById('gridActivities');
     const gridF = document.getElementById('gridActivitiesFinished');
 
     grid.innerHTML = active.length === 0
@@ -100,8 +100,9 @@ function applyFilters() {
     if (!type) return;
 
     render(
-        activitiesActive.filter(a  => matchFilter(a, type, value)),
-        activitiesFinished.filter(a => matchFilter(a, type, value))
+        activitiesActive.filter(a => matchFilter(a, type, value)),
+        activitiesFinished.filter(a => matchFilter(a, type, value)),
+        CURRENT_USER.role
     );
 }
 
@@ -126,10 +127,10 @@ function createActiveCard(pub, role) {
         <div class="activity-content">
             ${pub.category_name ? `<span class="category">${pub.category_name}</span>` : ""}
             ${pub.state === 'pendiente'
-                ? `<button id="btn-state" class="state"><i class="fas fa-hourglass-half"></i></button>`
-                : pub.state === 'rechazada'
-                    ? `<span class="state"><i class="fas fa-times"></i></span>`
-                    : `<span class="state"><i class="fas fa-check-double"></i></span>`}
+            ? `<button id="btn-state" class="state"><i class="fas fa-hourglass-half"></i></button>`
+            : pub.state === 'rechazada'
+                ? `<span class="state"><i class="fas fa-times"></i></span>`
+                : `<span class="state"><i class="fas fa-check-double"></i></span>`}
             <h3>${pub.title}</h3>
             <p class="description">${pub.description}</p>
             ${buildDetailsHTML(pub)}
@@ -163,12 +164,23 @@ function createActiveCard(pub, role) {
         if (!confirmedDelete) return;
 
         // Segunda confirmación: ¿notificar a los inscritos por email?
-        const sendEmails = await showConfirmTwo({
-            title: '¿Notificar a los participantes?',
-            message: 'Se enviará un email a todos los inscritos informando de la cancelación.',
-            confirmText: 'Sí, enviar emails',
-            cancelText: 'No, eliminar sin notificar'
-        });
+        let sendEmails = false;
+
+        if (role === 'participante') {
+            sendEmails = await showConfirmTwo({
+                title: '¿Notificar al organizador?',
+                message: 'Se enviará un email al organizador informando de la cancelación.',
+                confirmText: 'Sí, enviar email',
+                cancelText: 'No, eliminar sin notificar'
+            });
+        } else {
+            sendEmails = await showConfirmTwo({
+                title: '¿Notificar a los participantes?',
+                message: 'Se enviará un email a todos los inscritos informando de la cancelación.',
+                confirmText: 'Sí, enviar emails',
+                cancelText: 'No, eliminar sin notificar'
+            });
+        }
 
         // Mostrar spinner mientras se procesa la petición
         const actionsDiv = card.querySelector('.actions');
@@ -195,8 +207,8 @@ function createActiveCard(pub, role) {
 
                 // Animar y eliminar la tarjeta del DOM
                 card.style.transition = 'opacity 0.3s, transform 0.3s';
-                card.style.opacity    = '0';
-                card.style.transform  = 'scale(0.9)';
+                card.style.opacity = '0';
+                card.style.transform = 'scale(0.9)';
 
                 setTimeout(() => {
                     card.remove();
