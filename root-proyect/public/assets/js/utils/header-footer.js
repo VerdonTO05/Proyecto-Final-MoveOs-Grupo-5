@@ -107,8 +107,8 @@ const footerHTML = `
     <div>
       <h4>Soporte</h4>
       <ul>
-        <li><a href="#">Contacto</a></li>
-        <li><a href="#">Privacidad</a></li>
+        <li><a href="https://www.instagram.com/move.os.web/">Contacto</a></li>
+        <li><a href="index.php?accion=testsRunner">Test</a></li>
       </ul>
     </div>
   </section>

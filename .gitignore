@@ -17,3 +17,5 @@ verification_codes.log
 # Archivos temporales
 tmp/
 temp/
+
+.phpdoc/

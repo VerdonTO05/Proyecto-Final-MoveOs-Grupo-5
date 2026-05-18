@@ -67,4 +67,5 @@ return [
   'activitiesSSE' => __DIR__ . '/../app/controllers/get/get-activities-sse.php',
   'republishActivity' => __DIR__ . '/../app/controllers/posts/republish-activity-controller.php',
 
+  'testsRunner' => __DIR__ . '/../tests/runner.php',
 ];
