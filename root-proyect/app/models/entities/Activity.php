@@ -289,7 +289,8 @@ class Activity
                 LEFT JOIN users u ON a.offertant_id = u.id
                 JOIN categories c ON a.category_id = c.id
                 WHERE a.state = :state AND a.is_completed = 0
-                ORDER BY a.created_at DESC";
+                AND a.date >= CURDATE()
+                ORDER BY a.date ASC";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(['state' => $state]);
@@ -351,7 +352,7 @@ class Activity
                 INNER JOIN registrations r ON a.id = r.activity_id
                 LEFT JOIN categories c ON a.category_id = c.id
                 WHERE r.participant_id = :user_id
-                AND a.is_finished = 0";
+                AND a.date >= CURDATE()";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(['user_id' => $participant_id]);

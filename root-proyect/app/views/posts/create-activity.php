@@ -29,6 +29,15 @@ function old(string $key, $default = ''): string
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="assets/js/utils.js"></script>
     <script src="assets/js/main.js"></script>
+    <script>
+        window.CURRENT_USER = <?= json_encode([
+            'id'            => $_SESSION['user_id']       ?? null,
+            'name'          => $_SESSION['username']      ?? null,
+            'email'         => $_SESSION['email']         ?? null,
+            'role'          => $_SESSION['role']          ?? null,
+            'profile_image' => $_SESSION['profile_image'] ?? null,
+        ]); ?>;
+    </script>
 </head>
 
 <body>

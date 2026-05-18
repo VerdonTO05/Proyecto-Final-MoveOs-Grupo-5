@@ -109,7 +109,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Confirmación de notificación por email
         const formData = new FormData(form);
         let sendEmails = false;
-        console.log('CURRENT_USER.role');
         if (isEditing) {
             if (CURRENT_USER.role === 'participante') {
                 sendEmails = await showConfirm({

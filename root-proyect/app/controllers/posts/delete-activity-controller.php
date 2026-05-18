@@ -139,13 +139,24 @@ try {
 
     } else {
 
-        $user = $sendEmails ? $userModel->getUserById($publication['accepted_by']) : null;
+        // Identificar al organizador a notificar:
+        // 1. Si la petición ya fue aceptada, notificar a quien la aceptó (accepted_by).
+        // 2. Si aún está pendiente, usar organizer_email para encontrar al organizador destino.
+        $organizerUser = null;
+        if ($sendEmails) {
+            if (!empty($publication['accepted_by'])) {
+                $organizerUser = $userModel->getUserById($publication['accepted_by']);
+            } elseif (!empty($publication['organizer_email'])) {
+                $organizerUser = $userModel->getUserByEmail($publication['organizer_email']);
+            }
+        }
+
         $deleted = $requestModel->deleteRequest($id);
 
         if ($deleted) {
-            if ($user != null) {
+            if ($organizerUser) {
                 try {
-                    $emailService->sendRequestDeleted($publication['title'], $user);
+                    $emailService->sendRequestDeleted($publication['title'], $organizerUser);
                 } catch (Exception $e) {
                     error_log("Error enviando email: " . $e->getMessage());
                 }
