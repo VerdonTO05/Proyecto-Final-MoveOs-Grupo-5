@@ -1,11 +1,18 @@
 <?php
 /**
- * Controlador para editar el perfil del usuario autenticado.
+ * @file   edit-info-controller.php
+ * @brief  Endpoint de edición del perfil del usuario autenticado.
  *
  * Gestiona dos fases en una misma ruta:
- * - GET:  carga los datos actuales del usuario y muestra el formulario.
- * - POST: valida los cambios, actualiza el perfil (y opcionalmente la
- *         contraseña) y refresca los datos de sesión si todo es correcto.
+ * - `GET`:  carga los datos actuales del usuario con `User::getUserById()`.
+ * - `POST`: valida los campos recibidos, actualiza el perfil mediante
+ *           `User::updateUser()` (con hash bcrypt si se cambia la contraseña)
+ *           y refresca los datos de `$_SESSION` si todo es correcto.
+ * Responde con JSON en ambos casos.
+ *
+ * @package User
+ * @author  MOVEos Grupo 5
+ * @version 1.0.0
  */
 
 // Iniciar sesión solo si no hay una activa

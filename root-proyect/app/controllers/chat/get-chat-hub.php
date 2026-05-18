@@ -1,23 +1,15 @@
 <?php
 /**
- * Controlador: get-chat-hub.php
+ * @file   get-chat-hub.php
+ * @brief  Endpoint para obtener la lista de conversaciones activas del usuario.
  *
- * Endpoint para obtener la lista de conversaciones activas del usuario actual.
- * Devuelve:
- *  - Actividades en las que está inscrito o de las que es organizador.
- *  - Conversación privada con soporte (siempre disponible para participantes y organizadores).
+ * Devuelve las salas disponibles según el rol:
+ * - Admin: lista de usuarios con conversaciones de soporte abiertas.
+ * - Organizador/Participante: sala de soporte y actividades donde participa u organiza.
  *
- * Método: GET
- *
- * Respuestas JSON:
- *   {
- *      success: true,
- *      support_room: { room_type: 'admin', room_id: N, last_message: '...', updated_at: '...' },
- *      activities: [
- *         { room_type: 'activity', room_id: X, title: '...', image_url: '...', last_message: '...', updated_at: '...' },
- *         ...
- *      ]
- *   }
+ * @package Chat
+ * @author  MOVEos Grupo 5
+ * @version 1.0.0
  */
 
 header('Content-Type: application/json');

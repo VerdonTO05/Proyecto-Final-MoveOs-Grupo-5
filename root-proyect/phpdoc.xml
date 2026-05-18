@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdocumentor
+    configVersion="3"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://www.phpdoc.org"
+    xsi:noNamespaceSchemaLocation="https://docs.phpdoc.org/3.3/phpdoc.xsd"
+>
+    <title>MOVEos — Documentación PHP</title>
+
+    <version number="1.0.0">
+        <api>
+            <!-- Archivos fuente a documentar -->
+            <source dsn=".">
+                <path>app</path>
+            </source>
+
+            <!-- Destino del HTML generado (ruta relativa, simple string) -->
+            <output>public/docsPHP</output>
+
+            <!-- Excluir carpetas que no aportan a la documentación pública -->
+            <ignore hidden="true">
+                <path>vendor</path>
+                <path>tests</path>
+                <path>public</path>
+            </ignore>
+
+            <!-- Solo archivos PHP -->
+            <extensions>
+                <extension>php</extension>
+            </extensions>
+
+            <!-- Mostrar métodos y propiedades públicas y protegidas -->
+            <visibility>public</visibility>
+            <visibility>protected</visibility>
+        </api>
+    </version>
+
+    <!-- Plantilla visual -->
+    <template name="default"/>
+</phpdocumentor>

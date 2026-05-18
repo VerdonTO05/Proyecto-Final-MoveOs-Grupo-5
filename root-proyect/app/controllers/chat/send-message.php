@@ -1,18 +1,14 @@
 <?php
 /**
- * Controlador: send-message.php
+ * @file   send-message.php
+ * @brief  Endpoint para guardar un nuevo mensaje en una sala de chat.
  *
- * Endpoint para enviar (guardar) un nuevo mensaje en una sala de chat.
+ * Acepta body JSON con `room_type` (`activity`|`admin`), `room_id` (int) y
+ * `message` (string, máx. 1000 caracteres). Verifica acceso a la sala antes de guardar.
  *
- * Método: POST
- * Body JSON:
- *   - room_type  (string) 'activity' | 'admin'
- *   - room_id    (int)    ID de la actividad o del participante
- *   - message    (string) Texto del mensaje (max. 1000 caracteres)
- *
- * Respuestas JSON:
- *   { success: true,  message: { id, sender_id, sender_name, message, created_at } }
- *   { success: false, message: "descripción del error" }
+ * @package Chat
+ * @author  MOVEos Grupo 5
+ * @version 1.0.0
  */
 
 header('Content-Type: application/json');

@@ -1,9 +1,14 @@
 <?php
 /**
- * Controlador para mostrar la información del perfil del usuario autenticado.
+ * @file   see-info-controller.php
+ * @brief  Endpoint para mostrar el perfil del usuario autenticado.
  *
- * Verifica que el usuario esté autenticado, carga sus datos desde la base
- * de datos y renderiza la vista de perfil.
+ * Verifica que el usuario esté autenticado, carga sus datos completos desde
+ * la base de datos con `User::getUserById()` y renderiza la vista de perfil.
+ *
+ * @package User
+ * @author  MOVEos Grupo 5
+ * @version 1.0.0
  */
 
 // Iniciar sesión solo si no hay una activa

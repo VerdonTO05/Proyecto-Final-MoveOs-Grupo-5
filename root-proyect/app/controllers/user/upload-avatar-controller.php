@@ -1,10 +1,15 @@
 <?php
 /**
- * Controlador para subir/actualizar la foto de perfil del usuario.
+ * @file   upload-avatar-controller.php
+ * @brief  Endpoint para subir o actualizar la foto de perfil del usuario.
  *
- * Recibe un archivo vía multipart/form-data, lo valida (tipo y tamaño),
- * borra la imagen anterior si existe, guarda la nueva en uploads/avatars/
- * y actualiza la base de datos y la sesión.
+ * Recibe un archivo vía `multipart/form-data`, lo valida (JPEG/PNG, máx. 2 MB),
+ * elimina la imagen anterior si existe, guarda la nueva en `public/uploads/avatars/`
+ * y actualiza la columna `profile_image` en la BD y en `$_SESSION`.
+ *
+ * @package User
+ * @author  MOVEos Grupo 5
+ * @version 1.0.0
  */
 
 // Iniciar sesión solo si no hay una activa

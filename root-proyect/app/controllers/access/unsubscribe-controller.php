@@ -1,9 +1,16 @@
 <?php
 
 /**
- * unsubscribe-controller.php 
- * 
- * Elimina el contenido publicado o aceptador por un usuario y borra su cuenta.
+ * @file   unsubscribe-controller.php
+ * @brief  Endpoint de baja de cuenta de usuario.
+ *
+ * Elimina el contenido publicado o aceptado por el usuario (actividades,
+ * peticiones, inscripciones) y borra su cuenta de forma permanente.
+ * Requiere que el usuario esté autenticado.
+ *
+ * @package Access
+ * @author  MOVEos Grupo 5
+ * @version 1.0.0
  */
 
 if (session_status() === PHP_SESSION_NONE) {

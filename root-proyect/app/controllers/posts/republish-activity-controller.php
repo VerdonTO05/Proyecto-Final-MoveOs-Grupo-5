@@ -1,4 +1,17 @@
 <?php
+/**
+ * @file   republish-activity-controller.php
+ * @brief  Endpoint para republicar una actividad o petición rechazada.
+ *
+ * Permite al propietario volver a poner en estado `pendiente` una publicación
+ * que fue rechazada por un administrador, para que pueda ser revisada de nuevo.
+ * Verifica que el usuario sea el dueño del recurso antes de actualizar.
+ * Devuelve JSON con el resultado de la operación.
+ *
+ * @package Publications
+ * @author  MOVEos Grupo 5
+ * @version 1.0.0
+ */
 
 header('Content-Type: application/json');
 

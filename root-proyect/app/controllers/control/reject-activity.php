@@ -1,10 +1,15 @@
 <?php
 /**
- * Controlador para rechazar actividades o peticiones.
+ * @file   reject-activity.php
+ * @brief  Endpoint de rechazo de actividades y peticiones (solo administrador).
  *
- * Solo accesible por administradores. Recibe el ID y el tipo del elemento
- * a rechazar ('activity' o petición) y actualiza su estado a 'rechazada'
- * en la base de datos.
+ * Recibe el ID y el tipo (`activity` o `request`) del elemento a rechazar,
+ * actualiza su estado a `rechazada` en la base de datos y notifica al
+ * propietario mediante `EmailService`. Devuelve JSON con el resultado.
+ *
+ * @package Admin
+ * @author  MOVEos Grupo 5
+ * @version 1.0.0
  */
 
 // Establecer el tipo de respuesta como JSON

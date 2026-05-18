@@ -3,7 +3,16 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 ini_set('display_errors', 0);
 
 /**
- * Controlador para solicitar código de verificación
+ * @file   request-code-controller.php
+ * @brief  Endpoint para solicitar el código de verificación de recuperación de contraseña.
+ *
+ * Recibe el email del usuario, genera un código numérico de 6 dígitos,
+ * lo almacena en sesión con su timestamp de expiración (15 min) y lo envía
+ * al usuario mediante `EmailService::sendVerificationCode()`. Devuelve JSON.
+ *
+ * @package User
+ * @author  MOVEos Grupo 5
+ * @version 1.0.0
  */
 
 if (session_status() === PHP_SESSION_NONE) {

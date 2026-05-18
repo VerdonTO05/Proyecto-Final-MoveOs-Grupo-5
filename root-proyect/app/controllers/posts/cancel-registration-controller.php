@@ -1,11 +1,15 @@
 <?php
 /**
- * Controlador para cancelar una inscripción o una petición aceptada.
+ * @file   cancel-registration-controller.php
+ * @brief  Endpoint para cancelar una inscripción o una petición aceptada.
  *
  * Compatible con dos flujos de respuesta:
- * - AJAX (fetch): devuelve JSON.
+ * - AJAX (`fetch`): devuelve JSON.
  * - Formulario tradicional: redirige con mensaje en sesión.
  *
+ * @package Publications
+ * @author  MOVEos Grupo 5
+ * @version 1.0.0
  * Según el rol del usuario:
  * - Participante: elimina su inscripción en la actividad.
  * - Otro rol (organizador): desacepta la petición que había aceptado.

@@ -1,10 +1,16 @@
 <?php
 /**
- * Controlador para aprobar actividades o peticiones.
+ * @file   approve-activity.php
+ * @brief  Endpoint de aprobación de actividades y peticiones (solo administrador).
  *
- * Solo accesible por administradores. Recibe el ID y el tipo del elemento
- * a aprobar ('activity' o petición) y actualiza su estado a 'aprobada'
- * en la base de datos.
+ * Recibe el ID y tipo (`activity` o `request`) del elemento a aprobar y
+ * actualiza su estado a `aprobada` en la base de datos. Envía un email de
+ * notificación al organizador o participante con `EmailService`.
+ * Devuelve JSON con el resultado de la operación.
+ *
+ * @package Admin
+ * @author  MOVEos Grupo 5
+ * @version 1.0.0
  */
 
 // Establecer el tipo de respuesta como JSON

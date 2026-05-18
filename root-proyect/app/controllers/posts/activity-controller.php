@@ -1,4 +1,21 @@
 <?php
+/**
+ * @file   activity-controller.php
+ * @brief  Endpoint de creación de actividades y peticiones.
+ *
+ * Procesa formularios multipart/form-data enviados por POST. Según el campo
+ * `type` y el rol del usuario en sesión:
+ * - `type=request` + rol `participante`: crea una petición con `Request::createRequest()`.
+ * - Cualquier otro tipo + rol `organizador`: crea una actividad con `Activity::createActivity()`.
+ *
+ * El flujo incluye validación de campos, comprobación de conflictos de fecha,
+ * subida y validación de imagen (JPEG/PNG, máx. 5 MB) a `public/uploads/activities/`,
+ * y respuesta JSON con `success` y mensaje de error detallado si procede.
+ *
+ * @package Publications
+ * @author  MOVEos Grupo 5
+ * @version 1.0.0
+ */
 
 header('Content-Type: application/json');
 

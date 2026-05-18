@@ -1,9 +1,14 @@
 <?php
 /**
- * Controlador para obtener el listado de peticiones.
+ * @file   get-requests.php
+ * @brief  Endpoint para obtener el listado completo de peticiones (solo administradores).
  *
- * Solo accesible por administradores. Recupera todas las peticiones
- * registradas en el sistema y las devuelve en formato JSON.
+ * Recupera todas las peticiones registradas en el sistema y las devuelve
+ * en formato JSON. Requiere rol `administrador` en sesión.
+ *
+ * @package API
+ * @author  MOVEos Grupo 5
+ * @version 1.0.0
  */
 
 // Establecer el tipo de respuesta como JSON

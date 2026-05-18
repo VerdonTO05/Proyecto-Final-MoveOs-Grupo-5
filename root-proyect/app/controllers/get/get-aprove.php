@@ -1,9 +1,15 @@
 <?php
 /**
- * Controlador para obtener actividades o peticiones aprobadas.
+ * @file   get-aprove.php
+ * @brief  Endpoint para obtener actividades o peticiones aprobadas.
  *
- * Según el rol del usuario autenticado, devuelve las peticiones
- * aprobadas (organizador) o las actividades aprobadas (resto de roles).
+ * Según el rol devuelve:
+ * - Organizador: sus peticiones con estado `aprobada`.
+ * - Resto de roles: actividades aprobadas en las que el usuario no está inscrito.
+ *
+ * @package API
+ * @author  MOVEos Grupo 5
+ * @version 1.0.0
  */
 
 // Establecer el tipo de respuesta como JSON

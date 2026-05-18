@@ -1,11 +1,16 @@
 <?php
 /**
- * Controlador para inscribir a un participante en una actividad.
+ * @file   signup-activity-controller.php
+ * @brief  Endpoint para inscribir a un participante en una actividad.
  *
  * Verifica que el usuario esté autenticado, valida el ID de la actividad
- * y delega la lógica de inscripción al modelo. Gestiona múltiples casos
- * de error devueltos por el modelo (actividad completa, conflictos de
- * horario, ya inscrito, etc.).
+ * y delega la lógica de inscripción a `Registration::createRegistration()`.
+ * Gestiona múltiples casos de error (actividad completa, conflictos de
+ * horario, ya inscrito, etc.) y devuelve JSON con el resultado.
+ *
+ * @package Publications
+ * @author  MOVEos Grupo 5
+ * @version 1.0.0
  */
 
 // Iniciar sesión solo si no hay una activa

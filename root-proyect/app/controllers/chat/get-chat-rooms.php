@@ -1,17 +1,14 @@
 <?php
 /**
- * Controlador: get-chat-rooms.php
+ * @file   get-chat-rooms.php
+ * @brief  Endpoint exclusivo para el administrador: lista de conversaciones de soporte.
  *
- * Endpoint exclusivo para el administrador.
- * Devuelve la lista de usuarios que tienen conversaciones abiertas en el chat admin,
- * ordenadas por el mensaje más reciente.
+ * Devuelve los usuarios que tienen conversaciones abiertas en el chat admin,
+ * ordenados por el mensaje más reciente. Solo accesible con rol `administrador`.
  *
- * Método: GET
- * Sin parámetros adicionales.
- *
- * Respuestas JSON:
- *   { success: true,  conversations: [...] }
- *   { success: false, message: "descripción del error" }
+ * @package Chat
+ * @author  MOVEos Grupo 5
+ * @version 1.0.0
  */
 
 header('Content-Type: application/json');

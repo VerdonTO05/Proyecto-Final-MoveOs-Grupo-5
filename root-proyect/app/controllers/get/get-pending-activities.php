@@ -1,9 +1,14 @@
 <?php
 /**
- * Controlador para obtener los datos del panel de administración.
+ * @file   get-pending-activities.php
+ * @brief  Endpoint para obtener los datos del panel de administración.
  *
- * Solo accesible por administradores. Devuelve las estadísticas globales
- * de actividades y peticiones, junto con los registros pendientes de revisión.
+ * Solo accesible por administradores. Devuelve estadísticas globales de
+ * actividades y peticiones, junto con los registros pendientes de revisión.
+ *
+ * @package Admin
+ * @author  MOVEos Grupo 5
+ * @version 1.0.0
  */
 
 // Establecer el tipo de respuesta como JSON

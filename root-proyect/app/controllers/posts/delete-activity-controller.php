@@ -1,11 +1,18 @@
 <?php
 /**
- * Controlador para eliminar una publicación propia (actividad o petición).
+ * @file   delete-activity-controller.php
+ * @brief  Endpoint para eliminar una publicación propia (actividad o petición).
  *
- * Verifica que el usuario esté autenticado y que la publicación le pertenezca
- * antes de eliminarla. Según el rol:
- * - Participante: elimina su petición.
- * - Otro rol (organizador): elimina su actividad.
+ * Verifica que el usuario esté autenticado y sea propietario del recurso
+ * antes de eliminarlo. Según el rol del usuario en sesión:
+ * - `participante`: elimina su petición con `Request::deleteRequest()`.
+ * - Otro rol (`organizador`): elimina su actividad con `Activity::deleteActivity()`.
+ * Notifica por email a los participantes inscritos mediante `EmailService`.
+ * Devuelve JSON con el resultado.
+ *
+ * @package Publications
+ * @author  MOVEos Grupo 5
+ * @version 1.0.0
  */
 
 // Iniciar sesión solo si no hay una activa

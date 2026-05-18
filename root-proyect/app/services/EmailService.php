@@ -1,14 +1,49 @@
 <?php
+/**
+ * @file EmailService.php
+ * Servicio de correo electrónico de MOVEos.
+ *
+ * Centraliza todos los envíos de email transaccional de la plataforma
+ * (bienvenida, recuperación de contraseña, notificaciones de actividades
+ * y cambios de estado de cuenta) usando PHPMailer sobre SMTP.
+ *
+ * @package    Services
+ * @author     MOVEos Grupo 5
+ * @version    1.0.0
+ */
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
+/**
+ * Servicio de envío de correos electrónicos transaccionales.
+ *
+ * Encapsula una instancia de PHPMailer preconfigurada con los ajustes SMTP
+ * del archivo `config/email-config.php`. Cada método público compone y
+ * envía un tipo específico de email; todos devuelven `true` si el envío
+ * fue exitoso o `false` ante cualquier excepción (que se registra en el log).
+ *
+ * @package Services
+ */
 class EmailService
 {
-
+    /**
+     * Instancia de PHPMailer usada para componer y enviar los correos.
+     *
+     * @var PHPMailer
+     */
     private $mailer;
 
+    /**
+     * Inicializa PHPMailer con la configuración SMTP del proyecto.
+     *
+     * Lee el array de configuración de `config/email-config.php` y configura
+     * host, autenticación, cifrado, puerto, remitente y charset.
+     * Los errores de inicialización se registran en el log sin propagarse,
+     * para no bloquear el flujo de la aplicación.
+     */
     public function __construct()
     {
         $this->mailer = new PHPMailer(true);
@@ -31,6 +66,14 @@ class EmailService
         }
     }
 
+    /**
+     * Envía un código de verificación para recuperar la contraseña.
+     *
+     * @param  string $toEmail Dirección de correo del destinatario.
+     * @param  string $toName  Nombre completo del destinatario.
+     * @param  string $code    Código numérico de verificación (expira en 15 min).
+     * @return bool            `true` si el mensaje se envió, `false` ante error.
+     */
     public function sendVerificationCode($toEmail, $toName, $code)
     {
         try {
@@ -62,6 +105,13 @@ class EmailService
         }
     }
 
+    /**
+     * Envía el correo de bienvenida tras el registro de un nuevo usuario.
+     *
+     * @param  string $toEmail Dirección de correo del nuevo usuario.
+     * @param  string $toName  Nombre completo del nuevo usuario.
+     * @return bool            `true` si el mensaje se envió, `false` ante error.
+     */
     public function sendWelcome($toEmail, $toName)
     {
         try {
@@ -92,6 +142,15 @@ class EmailService
         }
     }
 
+    /**
+     * Notifica al usuario que su cuenta ha sido activada o desactivada.
+     *
+     * @param  string $toEmail       Dirección de correo del usuario afectado.
+     * @param  string $toName        Nombre completo del usuario.
+     * @param  string $newState      Nuevo estado: `'activa'` o `'inactiva'`.
+     * @param  string $adminMessage  Mensaje opcional del administrador con el motivo.
+     * @return bool                  `true` si el mensaje se envió, `false` ante error.
+     */
     public function sendStateChange($toEmail, $toName, $newState, $adminMessage)
     {
         try {
@@ -128,7 +187,13 @@ class EmailService
         }
     }
 
-    // TODO: que se mande un email cuando se elimine una actividad
+    /**
+     * Notifica a un participante inscrito que una actividad ha sido cancelada.
+     *
+     * @param  string $activityTitle Título de la actividad eliminada.
+     * @param  array  $p             Datos del participante: `['email' => ..., 'full_name' => ...]`.
+     * @return bool                  `true` si el mensaje se envió, `false` ante error.
+     */
     public function sendActivityDeleted($activityTitle, $p)
     {
         try {
@@ -159,6 +224,14 @@ class EmailService
         }
     }
 
+    /**
+     * Notifica al participante que un organizador ha rechazado su petición.
+     * La petición vuelve a estar disponible para otros organizadores.
+     *
+     * @param  string $requestTitle Título de la petición rechazada.
+     * @param  array  $p            Datos del participante: `['email' => ..., 'full_name' => ...]`.
+     * @return bool                 `true` si el mensaje se envió, `false` ante error.
+     */
     public function sendRequestUnaccepted($requestTitle, $p)
     {
         try {
@@ -189,7 +262,14 @@ class EmailService
         }
     }
 
-    // TODO: cuando se edite una actividad que se envie un correo
+    /**
+     * Notifica a un participante inscrito que los detalles de una actividad han cambiado.
+     *
+     * @param  string $activityTitle Título de la actividad modificada.
+     * @param  string $changes       HTML con el resumen de los cambios realizados.
+     * @param  array  $p             Datos del participante: `['email' => ..., 'full_name' => ...]`.
+     * @return bool                  `true` si el mensaje se envió, `false` ante error.
+     */
     public function sendActivityUpdated($activityTitle, $changes, $p)
     {
         try {
@@ -222,6 +302,13 @@ class EmailService
         }
     }
 
+    /**
+     * Notifica al organizador que una petición que había aceptado ha sido cancelada.
+     *
+     * @param  string $requestTitle Título de la petición cancelada.
+     * @param  array  $organizer    Datos del organizador: `['email' => ..., 'full_name' => ...]`.
+     * @return bool                 `true` si el mensaje se envió, `false` ante error.
+     */
     public function sendRequestDeleted($requestTitle, $organizer)
     {
         try {
@@ -250,6 +337,14 @@ class EmailService
         }
     }
 
+    /**
+     * Notifica al organizador que los detalles de una petición aceptada han cambiado.
+     *
+     * @param  string $requestTitle Título de la petición modificada.
+     * @param  string $changes      HTML con el resumen de los cambios realizados.
+     * @param  array  $organizer    Datos del organizador: `['email' => ..., 'full_name' => ...]`.
+     * @return bool                 `true` si el mensaje se envió, `false` ante error.
+     */
     public function sendRequestUpdated($requestTitle, $changes, $organizer)
     {
         try {
@@ -282,7 +377,13 @@ class EmailService
         }
     }
 
-    //Emails al aceptar o rechazar
+    /**
+     * Notifica al organizador que su actividad ha sido aprobada por un administrador.
+     *
+     * @param  string $activityTitle Título de la actividad aprobada.
+     * @param  array  $user          Datos del organizador: `['email' => ..., 'full_name' => ...]`.
+     * @return bool                  `true` si el mensaje se envió, `false` ante error.
+     */
     public function sendActivityAccepted($activityTitle, $user)
     {
         try {
@@ -324,6 +425,13 @@ class EmailService
         }
     }
 
+    /**
+     * Notifica al participante que su petición ha sido aprobada por un administrador.
+     *
+     * @param  string $requestTitle Título de la petición aprobada.
+     * @param  array  $user         Datos del participante: `['email' => ..., 'full_name' => ...]`.
+     * @return bool                 `true` si el mensaje se envió, `false` ante error.
+     */
     public function sendRequestAccepted($requestTitle, $user)
     {
         try {
@@ -365,6 +473,14 @@ class EmailService
         }
     }
 
+    /**
+     * Notifica al organizador que su actividad ha sido rechazada por un administrador.
+     *
+     * @param  string      $activityTitle Título de la actividad rechazada.
+     * @param  array       $user          Datos del organizador: `['email' => ..., 'full_name' => ...]`.
+     * @param  string|null $reason        Motivo del rechazo proporcionado por el administrador (opcional).
+     * @return bool                       `true` si el mensaje se envió, `false` ante error.
+     */
     public function sendActivityRejected($activityTitle, $user, $reason = null)
     {
         try {
@@ -409,6 +525,14 @@ class EmailService
         }
     }
 
+    /**
+     * Notifica al participante que su petición ha sido rechazada por un administrador.
+     *
+     * @param  string      $requestTitle Título de la petición rechazada.
+     * @param  array       $user         Datos del participante: `['email' => ..., 'full_name' => ...]`.
+     * @param  string|null $reason       Motivo del rechazo proporcionado por el administrador (opcional).
+     * @return bool                      `true` si el mensaje se envió, `false` ante error.
+     */
     public function sendRequestRejected($requestTitle, $user, $reason = null)
     {
         try {

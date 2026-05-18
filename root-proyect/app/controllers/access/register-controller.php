@@ -1,11 +1,17 @@
 <?php
 
 /**
- * register-controller.php
+ * @file   register-controller.php
+ * @brief  Endpoint de registro de nuevos usuarios.
  *
  * Recibe los datos del nuevo usuario por POST (JSON), valida que el rol
- * exista, inserta el usuario en la BD, abre sesión automáticamente
- * y envía un email de bienvenida.
+ * exista, inserta el usuario en la BD mediante `User::registerUser()`,
+ * abre sesión automáticamente y envía un email de bienvenida con
+ * `EmailService::sendWelcome()`.
+ *
+ * @package Access
+ * @author  MOVEos Grupo 5
+ * @version 1.0.0
  */
 
 if (session_status() === PHP_SESSION_NONE) {

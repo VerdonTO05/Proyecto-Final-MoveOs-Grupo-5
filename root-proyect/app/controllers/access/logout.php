@@ -1,9 +1,14 @@
 <?php
 
 /**
- * Logout.php
+ * @file   logout.php
+ * @brief  Endpoint de cierre de sesión.
  *
- * Limpia la sesión activa y redirige al inicio.
+ * Destruye la sesión activa del usuario y redirige a la página de inicio.
+ *
+ * @package Access
+ * @author  MOVEos Grupo 5
+ * @version 1.0.0
  */
 
 if (session_status() === PHP_SESSION_NONE) {

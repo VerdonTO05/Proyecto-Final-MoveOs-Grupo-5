@@ -1,6 +1,15 @@
 <?php
 /**
- * Controlador para editar una publicación propia (actividad o petición).
+ * @file   edit-activity-controller.php
+ * @brief  Endpoint para editar una publicación propia (actividad o petición).
+ *
+ * Verifica que el usuario sea el propietario del recurso, actualiza los campos
+ * enviados por POST (incluyendo imagen opcional) y notifica por email a los
+ * participantes inscritos si hay cambios relevantes. Devuelve JSON.
+ *
+ * @package Publications
+ * @author  MOVEos Grupo 5
+ * @version 1.0.0
  */
 
 if (session_status() === PHP_SESSION_NONE) {

@@ -1,10 +1,16 @@
 <?php
 /**
- * Controlador para aceptar una petición de actividad.
+ * @file   accept-request-controller.php
+ * @brief  Endpoint para que un organizador acepte una petición de actividad.
  *
  * Verifica que el organizador esté autenticado, valida el ID de la petición
- * y delega la lógica de aceptación al modelo. Gestiona múltiples casos de
- * error devueltos por el modelo (conflictos de horario, petición ya aceptada, etc.).
+ * y delega la lógica de aceptación a `Request::acceptRequest()`. Gestiona
+ * múltiples casos de error (conflictos de horario, petición ya aceptada, etc.)
+ * y notifica al participante mediante `EmailService`. Devuelve JSON.
+ *
+ * @package Publications
+ * @author  MOVEos Grupo 5
+ * @version 1.0.0
  */
 
 // Iniciar sesión solo si no hay una activa

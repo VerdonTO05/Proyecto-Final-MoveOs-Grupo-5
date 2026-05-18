@@ -1,6 +1,15 @@
 <?php
 /**
- * Controlador para cambiar la contraseña del usuario con código de verificación
+ * @file   forgot-password-controller.php
+ * @brief  Endpoint de recuperación de contraseña mediante código de verificación.
+ *
+ * Valida el código recibido por email, comprueba que no haya expirado (15 min)
+ * y actualiza la contraseña del usuario con un nuevo hash bcrypt mediante
+ * `User::updatePassword()`. Devuelve JSON con el resultado.
+ *
+ * @package User
+ * @author  MOVEos Grupo 5
+ * @version 1.0.0
  */
 
 // Asegurarse de que la sesión esté iniciada

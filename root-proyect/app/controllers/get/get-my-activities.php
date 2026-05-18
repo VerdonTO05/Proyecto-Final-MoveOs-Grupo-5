@@ -1,10 +1,15 @@
 <?php
 /**
- * Controlador para obtener las actividades o peticiones del usuario autenticado.
+ * @file   get-my-activities.php
+ * @brief  Endpoint para obtener las actividades o peticiones del usuario autenticado.
  *
- * Según el rol, devuelve dos listados: los registros activos y los finalizados.
- * - Organizador: sus actividades como ofertante (activas y finalizadas).
- * - Participante: sus peticiones como participante (activas y finalizadas).
+ * Según el rol, devuelve dos listados (activos y finalizados):
+ * - Organizador: actividades ofertadas por él mismo.
+ * - Participante: peticiones en las que participa.
+ *
+ * @package API
+ * @author  MOVEos Grupo 5
+ * @version 1.0.0
  */
 
 // Establecer el tipo de respuesta como JSON

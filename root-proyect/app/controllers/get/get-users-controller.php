@@ -1,12 +1,16 @@
 <?php
 /**
- * Controlador para la gestión de usuarios.
+ * @file   get-users-controller.php
+ * @brief  Endpoint para la gestión de usuarios (solo administradores).
  *
- * Solo accesible por administradores. Soporta tres acciones mediante
- * el parámetro GET 'action':
- * - 'list'   (por defecto): devuelve el listado completo de usuarios.
- * - 'toggle': cambia el estado de un usuario entre 'activa' e 'inactiva'.
- * - 'notify': envía un email al usuario notificando el cambio de estado.
+ * Soporta tres acciones mediante el parámetro GET `accion`:
+ * - (por defecto): devuelve el listado completo de usuarios.
+ * - `toggleUser`: cambia el estado entre `activa` e `inactiva`.
+ * - `notifyUser`: envía email al usuario notificando el cambio de estado.
+ *
+ * @package Admin
+ * @author  MOVEos Grupo 5
+ * @version 1.0.0
  */
 
 header('Content-Type: application/json');

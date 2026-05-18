@@ -1,10 +1,16 @@
 <?php
 /**
- * Controlador para obtener el listado de actividades.
+ * @file   get-activities.php
+ * @brief  Endpoint REST que devuelve el listado de actividades.
  *
  * Verifica que el usuario esté autenticado y, según su rol,
- * recupera las actividades correspondientes. El administrador
- * obtiene todas las actividades; el resto solo las aprobadas.
+ * recupera las actividades correspondientes mediante `Activity::getActivities()`.
+ * El administrador obtiene todas las actividades sin filtro; el resto
+ * recibe únicamente las aprobadas. Responde con JSON.
+ *
+ * @package API
+ * @author  MOVEos Grupo 5
+ * @version 1.0.0
  */
 
 // Establecer el tipo de respuesta como JSON

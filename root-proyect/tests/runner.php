@@ -11,6 +11,8 @@ define('PHP_BIN',     'C:\\xampp\\php\\php.exe');
 define('PHPUNIT_BIN', ROOT . '\\vendor\\bin\\phpunit');
 define('BENCH_SCRIPT',ROOT . '\\benchmark.ps1');
 define('REPORT_HTML', ROOT . '\\tests\\performance\\report.html');
+define('PHPDOC_BIN',  ROOT . '\\phpdoc.phar');
+define('DOCS_INDEX',  ROOT . '\\public\\docsPHP\\index.html');
 
 // ── AJAX: ejecutar PHPUnit ────────────────────────────────────
 if (isset($_POST['action']) && $_POST['action'] === 'run_phpunit') {
@@ -43,6 +45,30 @@ if (isset($_POST['action']) && $_POST['action'] === 'run_phpunit') {
     $code = proc_close($proc);
 
     echo json_encode(['output' => $out, 'exit_code' => $code, 'passed' => ($code === 0)]);
+    exit;
+}
+
+// ── AJAX: regenerar PHPDoc ────────────────────────────────────
+if (isset($_POST['action']) && $_POST['action'] === 'run_phpdoc') {
+    header('Content-Type: application/json; charset=utf-8');
+
+    $cmd = '"' . PHP_BIN . '" "' . PHPDOC_BIN . '" run 2>&1';
+
+    $proc = proc_open('cd /d "' . ROOT . '" && ' . $cmd,
+        [0 => ['pipe','r'], 1 => ['pipe','w'], 2 => ['pipe','w']], $pipes);
+
+    if (!is_resource($proc)) { echo json_encode(['error' => 'No se pudo lanzar phpDocumentor']); exit; }
+
+    fclose($pipes[0]);
+    $out  = stream_get_contents($pipes[1]);
+    fclose($pipes[1]); fclose($pipes[2]);
+    $code = proc_close($proc);
+
+    echo json_encode([
+        'output'       => $out,
+        'exit_code'    => $code,
+        'docs_exists'  => file_exists(DOCS_INDEX),
+    ]);
     exit;
 }
 
@@ -389,6 +415,14 @@ if (isset($_POST['action']) && $_POST['action'] === 'run_benchmark') {
       <i class="fas fa-bolt"></i><span class="lbl">Apache Bench</span>
     </button>
 
+    <hr class="side-divider">
+
+    <p class="side-label">Documentacion</p>
+
+    <button class="suite-btn" onclick="switchView('docs',this)">
+      <i class="fas fa-book"></i><span class="lbl">PHPDoc</span>
+    </button>
+
   </nav>
 
   <!-- ═══════════════════ VISTA PHPUNIT ═══════════════════ -->
@@ -505,6 +539,59 @@ if (isset($_POST['action']) && $_POST['action'] === 'run_benchmark') {
     </div>
 
   </div><!-- /view-benchmark -->
+
+  <!-- ═══════════════════ VISTA DOCS ══════════════════════ -->
+  <div id="view-docs" class="runner-main view">
+
+    <div class="runner-page-header">
+      <div class="header-icon" aria-hidden="true">
+        <i class="fas fa-book"></i>
+      </div>
+      <div class="header-content">
+        <h1>PHPDoc — Documentacion PHP</h1>
+        <p>Regenera la documentacion desde los docblocks del codigo fuente</p>
+      </div>
+      <button id="docs-run-btn" class="btn-run" onclick="runPhpdoc()" style="background:var(--brand-primary)">
+        <i class="fas fa-sync-alt" id="docs-icon"></i>
+        <span id="docs-label">Regenerar docs</span>
+      </button>
+    </div>
+
+    <!-- Info card -->
+    <div class="output-panel">
+      <div class="output-head">
+        <i class="fas fa-info-circle"></i> Configuracion activa
+      </div>
+      <div style="padding:1rem 1.25rem;font-size:.875rem;color:var(--text-secondary);line-height:1.7">
+        <p><strong style="color:var(--text-primary)">Fuente:</strong> <code>app/</code></p>
+        <p><strong style="color:var(--text-primary)">Salida:</strong> <code>public/docsPHP/</code></p>
+        <p><strong style="color:var(--text-primary)">Config:</strong> <code>phpdoc.xml</code> en la raiz del proyecto</p>
+        <p><strong style="color:var(--text-primary)">Paquetes:</strong> Access &bull; Admin &bull; API &bull; Chat &bull; Publications &bull; Services &bull; User</p>
+      </div>
+      <div style="padding:0 1.25rem 1rem;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap">
+        <span id="docs-badge" class="result-badge" aria-live="polite"></span>
+        <a id="docs-link" class="btn-secondary"
+           href="../public/docsPHP/index.html" target="_blank"
+           style="<?= file_exists(DOCS_INDEX) ? '' : 'display:none' ?>">
+          <i class="fas fa-external-link-alt"></i> Abrir documentacion
+        </a>
+      </div>
+    </div>
+
+    <!-- Output -->
+    <div class="output-panel" style="margin-top:1.25rem">
+      <div class="output-head">
+        <i class="fas fa-terminal"></i> Salida de phpDocumentor
+      </div>
+      <div id="docs-output" aria-live="polite"
+           style="font-family:'Cascadia Code','Fira Mono',Consolas,monospace;font-size:.79rem;line-height:1.85;
+                  padding:1.25rem;min-height:140px;max-height:52vh;overflow-y:auto;white-space:pre-wrap;
+                  color:var(--text-secondary)">
+        Pulsa "Regenerar docs" para actualizar la documentacion HTML.
+      </div>
+    </div>
+
+  </div><!-- /view-docs -->
 
 </div><!-- /runner-wrap -->
 
@@ -686,6 +773,49 @@ function runBenchmark() {
       btn.disabled = false;
       icon.className = 'fas fa-bolt';
       lbl.textContent = 'Lanzar prueba';
+    });
+}
+
+// ──────────────────────────────────────────────
+//  Regenerar PHPDoc
+// ──────────────────────────────────────────────
+function runPhpdoc() {
+  const btn    = document.getElementById('docs-run-btn');
+  const icon   = document.getElementById('docs-icon');
+  const lbl    = document.getElementById('docs-label');
+  const output = document.getElementById('docs-output');
+  const badge  = document.getElementById('docs-badge');
+
+  btn.disabled = true;
+  icon.className = 'fas fa-spinner fa-spin';
+  lbl.textContent = 'Generando...';
+  output.textContent = 'Ejecutando phpDocumentor, esto puede tardar unos segundos...';
+  badge.className = 'result-badge';
+  badge.textContent = '';
+
+  const fd = new FormData();
+  fd.append('action', 'run_phpdoc');
+
+  fetch(location.href, { method: 'POST', body: fd })
+    .then(r => r.json())
+    .then(data => {
+      if (data.error) {
+        output.textContent = 'Error: ' + data.error;
+        return;
+      }
+      output.textContent = data.output || '(sin salida)';
+      const link = document.getElementById('docs-link');
+      if (data.docs_exists) link.style.display = 'inline-flex';
+      badge.className = 'result-badge ' + (data.exit_code === 0 ? 'pass' : 'fail');
+      badge.innerHTML = data.exit_code === 0
+        ? '<i class="fas fa-check-circle"></i> Documentacion generada'
+        : '<i class="fas fa-times-circle"></i> Error al generar';
+    })
+    .catch(err => { output.textContent = 'Error de red: ' + String(err); })
+    .finally(() => {
+      btn.disabled = false;
+      icon.className = 'fas fa-sync-alt';
+      lbl.textContent = 'Regenerar docs';
     });
 }
 

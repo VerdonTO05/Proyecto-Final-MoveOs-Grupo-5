@@ -1,10 +1,17 @@
 <?php
 
 /**
- * login-controller.php
+ * @file   login-controller.php
+ * @brief  Endpoint de autenticación de usuario.
  *
- * Recibe username y password por POST (JSON), valida las credenciales
- * y devuelve una respuesta JSON con el resultado y la URL de redirección.
+ * Recibe `username` y `password` por POST (JSON), valida las credenciales
+ * contra la base de datos usando `User::loginByUsername()`, regenera el
+ * ID de sesión para prevenir session fixation y devuelve una respuesta JSON
+ * con `success` y la URL de redirección según el rol del usuario.
+ *
+ * @package Access
+ * @author  MOVEos Grupo 5
+ * @version 1.0.0
  */
 
 if (session_status() === PHP_SESSION_NONE) {

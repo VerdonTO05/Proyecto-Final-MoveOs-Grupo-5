@@ -1,10 +1,15 @@
 <?php
 /**
- * Controlador para obtener las actividades o peticiones aceptadas del usuario.
+ * @file   get-my-registrations.php
+ * @brief  Endpoint para obtener las inscripciones o peticiones aceptadas del usuario.
  *
- * Según el rol del usuario autenticado, devuelve dos listados:
- * - Organizador: peticiones aceptadas activas y finalizadas de su organización.
- * - Participante: actividades en las que está inscrito, activas y finalizadas.
+ * Según el rol devuelve dos listados (activos y finalizados):
+ * - Organizador: peticiones aceptadas de sus actividades.
+ * - Participante: actividades en las que está inscrito.
+ *
+ * @package API
+ * @author  MOVEos Grupo 5
+ * @version 1.0.0
  */
 
 // Establecer el tipo de respuesta como JSON

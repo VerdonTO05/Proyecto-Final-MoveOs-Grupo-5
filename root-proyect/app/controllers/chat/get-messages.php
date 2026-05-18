@@ -1,20 +1,15 @@
 <?php
 /**
- * Controlador: get-messages.php
+ * @file   get-messages.php
+ * @brief  Endpoint de polling para obtener mensajes nuevos de una sala de chat.
  *
- * Endpoint de polling para obtener mensajes nuevos de una sala de chat.
- * El cliente lo llama periódicamente (cada 3 s) enviando el ID del último
- * mensaje recibido para obtener únicamente los mensajes más recientes.
+ * El cliente lo llama periódicamente (cada 3 s) pasando `after_id` para
+ * recibir solo los mensajes posteriores al último conocido.
+ * Parámetros GET: `room_type` (`activity`|`admin`), `room_id` (int), `after_id` (int).
  *
- * Método: GET
- * Parámetros GET:
- *   - room_type  (string) 'activity' | 'admin'
- *   - room_id    (int)    ID de la actividad o del participante
- *   - after_id   (int)    ID del último mensaje conocido (0 = todos)
- *
- * Respuestas JSON:
- *   { success: true,  messages: [...], last_id: N }
- *   { success: false, message: "descripción del error" }
+ * @package Chat
+ * @author  MOVEos Grupo 5
+ * @version 1.0.0
  */
 
 header('Content-Type: application/json');
