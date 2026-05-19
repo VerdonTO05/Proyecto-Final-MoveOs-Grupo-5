@@ -330,11 +330,11 @@ class Activity
     public function getStats()
     {
         $sql = "SELECT 
-                    COUNT(*) as total,
-                    COALESCE(SUM(CASE WHEN state = 'pendiente' THEN 1 ELSE 0 END), 0) as pendiente,
-                    COALESCE(SUM(CASE WHEN state = 'aprobada'  THEN 1 ELSE 0 END), 0) as aprobada,
-                    COALESCE(SUM(CASE WHEN state = 'rechazada' THEN 1 ELSE 0 END), 0) as rechazada
-                FROM {$this->table_name}";
+        COALESCE(SUM(CASE WHEN state != 'pendiente' OR date > CURDATE() THEN 1 ELSE 0 END), 0) as total,
+        COALESCE(SUM(CASE WHEN state = 'pendiente' AND date > CURDATE() THEN 1 ELSE 0 END), 0) as pendiente,
+        COALESCE(SUM(CASE WHEN state = 'aprobada'  THEN 1 ELSE 0 END), 0) as aprobada,
+        COALESCE(SUM(CASE WHEN state = 'rechazada' THEN 1 ELSE 0 END), 0) as rechazada
+        FROM {$this->table_name}";
 
         $stmt = $this->conn->query($sql);
         return $stmt->fetch(PDO::FETCH_ASSOC);

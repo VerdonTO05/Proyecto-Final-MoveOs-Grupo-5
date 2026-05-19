@@ -76,7 +76,7 @@ button {
   --accent-danger: #e74c3c;
   --accent-info: #3498db;
   --border-color: #e0e0e0;
-  --desactivate-color: #aaa6a6;
+  --desactivate-color: #b8b4b4;
   --c-yellow: #d59217;
   --c-yellow-rgb: 213, 146, 23;
   --c-green: #44b363;
@@ -597,17 +597,14 @@ main section {
    ============================================================ */
 /* Overlay de página completa */
 .first {
-  position: fixed;
   inset: 0;
   display: flex;
-  align-items: center;
   background: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
   padding: 1.5rem 1rem;
   box-sizing: border-box;
   z-index: 1000;
-  overflow-y: auto;
   animation: overlayFadeIn 0.2s ease forwards;
   justify-content: center;
 }
@@ -1560,6 +1557,9 @@ main section {
   font-size: 1.1rem;
   margin-bottom: 0.1rem;
   font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .activity .activity-content p {
   color: var(--text-primary);
@@ -2674,6 +2674,7 @@ main section:nth-of-type(3) p {
 
 .btn:disabled {
   background: var(--desactivate-color);
+  border-color: none;
   cursor: not-allowed;
 }
 

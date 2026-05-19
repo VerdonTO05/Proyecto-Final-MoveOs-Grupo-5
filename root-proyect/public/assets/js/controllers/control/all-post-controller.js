@@ -54,10 +54,12 @@ function initTabSwitch() {
             if (type === 'activities') {
                 title.innerHTML = 'Explorar Actividades';
                 subtitle.innerHTML = 'Los organizadores han añadido actividades para los próximos días';
+                activitiesSnapshot = ""; 
                 loadActivities('activities');
             } else if (type === 'requests') {
                 title.innerHTML = 'Explorar Peticiones';
                 subtitle.innerHTML = 'Los participantes han añadido peticiones para llevar a cabo sus ideas';
+                requestsSnapshot = ""; 
                 loadRequests('requests');
             }
         });

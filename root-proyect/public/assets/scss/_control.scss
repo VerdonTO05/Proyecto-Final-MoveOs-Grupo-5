@@ -261,6 +261,7 @@
 
 .btn:disabled {
   background: var(--desactivate-color);
+  border-color: none;
   cursor: not-allowed;
 }
 

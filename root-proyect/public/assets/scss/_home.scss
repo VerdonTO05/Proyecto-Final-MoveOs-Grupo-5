@@ -108,6 +108,9 @@
       font-size: 1.1rem;
       margin-bottom: 0.1rem;
       font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     p {
