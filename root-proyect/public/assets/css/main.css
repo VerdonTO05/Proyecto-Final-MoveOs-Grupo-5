@@ -1887,7 +1887,7 @@ main section {
 }
 
 #gridRegistrationsFinished.visible {
-  display: grid;
+  display: flex;
 }
 
 #toggleFinished {

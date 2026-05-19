@@ -312,8 +312,9 @@ class Request
                 FROM {$this->table_name} r
                 JOIN users u ON r.participant_id = u.id
                 JOIN categories c ON r.category_id = c.id
-                WHERE r.state = :state AND r.is_accepted = 0
-                ORDER BY r.created_at DESC";
+                WHERE r.state = :state AND r.is_accepted = 0 AND r.date > CURDATE()
+                ORDER BY r.created_at DESC"
+                ;
 
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(['state' => $state]);
@@ -452,6 +453,7 @@ class Request
                 LEFT JOIN categories c ON r.category_id = c.id
                 WHERE r.accepted_by = :organizer_id
                 AND r.state = :state
+                AND r.date > CURDATE()
                 ORDER BY r.created_at DESC";
 
         $stmt = $this->conn->prepare($sql);

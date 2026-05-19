@@ -35,15 +35,15 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'administrador') {
 try {
     // Instanciar la conexión y el modelo de peticiones
     $database = new Database();
-    $db       = $database->getConnection();
-    $request  = new Request($db);
+    $db = $database->getConnection();
+    $request = new Request($db);
 
     // Obtener todas las peticiones del sistema
     $requests = $request->getRequests();
 
     echo json_encode([
         'success' => true,
-        'data'    => $requests
+        'data' => $requests
     ]);
 
 } catch (PDOException $e) {

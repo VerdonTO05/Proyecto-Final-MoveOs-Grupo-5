@@ -37,35 +37,35 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['role'])) {
 try {
     // Instanciar la conexión y los modelos
     $database = new Database();
-    $db       = $database->getConnection();
-    $request  = new Request($db);
+    $db = $database->getConnection();
+    $request = new Request($db);
     $activity = new Activity($db);
 
     // Leer los datos del usuario desde la sesión
     $user_id = $_SESSION['user_id'];
-    $role    = $_SESSION['role'];
+    $role = $_SESSION['role'];
 
     // Inicializar los listados como arrays vacíos por defecto
-    $active   = [];
+    $active = [];
     $finished = [];
 
     // Obtener los registros según el rol del usuario autenticado
     if ($role === 'organizador') {
         // El organizador ve las peticiones aceptadas de sus actividades
-        $active   = $request->getAcceptedRequestsByOrganizerId($user_id, 'aprobada');
+        $active = $request->getAcceptedRequestsByOrganizerId($user_id, 'aprobada');
         $finished = $request->getAcceptedRequestsFinishedByOrganizerId($user_id);
     }
 
     if ($role === 'participante') {
         // El participante ve las actividades en las que está inscrito
-        $active   = $activity->getActivitiesByParticipantId($user_id);
+        $active = $activity->getActivitiesByParticipantId($user_id);
         $finished = $activity->getActivitiesFinishedByParticipantId($user_id);
     }
 
     echo json_encode([
         'success' => true,
-        'data'    => [
-            'active'   => $active,
+        'data' => [
+            'active' => $active,
             'finished' => $finished
         ]
     ]);
