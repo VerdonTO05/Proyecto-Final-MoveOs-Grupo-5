@@ -32,11 +32,10 @@ if ($action === 'toggleUser') {
 if (isset($routes[$action])) {
     $file = $routes[$action];
     
-    // Si empieza con '/', es una URL directa → redirigir
-    if (str_starts_with($file, '/')) {
-        header('Location: ' . $file);
-        exit;
-    }
+    if (str_starts_with($file, '/') && !file_exists($file)) {
+    header('Location: ' . $file);
+    exit;
+}
     
     require $file;
 } else {
