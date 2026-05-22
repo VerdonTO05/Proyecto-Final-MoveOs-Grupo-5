@@ -19,3 +19,4 @@ tmp/
 temp/
 
 .phpdoc/
+root-proyect/.phpunit.result.cache
