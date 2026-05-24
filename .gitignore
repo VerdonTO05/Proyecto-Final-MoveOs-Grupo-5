@@ -20,3 +20,7 @@ temp/
 
 .phpdoc/
 root-proyect/.phpunit.result.cache
+root-proyect/.phpunit.result.cache
+root-proyect/composer.json
+root-proyect/composer.lock
+root-proyect/tests/performance/report.html
